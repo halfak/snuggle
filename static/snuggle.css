@@ -1,0 +1,410 @@
+body{
+	height: 100%;
+	font-family: sans-serif;
+	padding: 0px;
+	margin: 0px;
+}
+
+div#header {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 98px;
+	border-bottom: 2px solid #bbb;
+	background: #fff;
+	box-shadow: 0px 10px 30px #000;
+}
+	div#header div.status{
+		position: absolute;
+		width: 200px;
+		top: 0px;
+		bottom: 0px;
+		border: 2px dashed silver;
+		padding: 5px;
+		text-align: center;
+		color: #999;
+		font-style: italic;
+		font-size: 2em;
+	}
+	div#header div.status:after{
+		content: "System status";
+	}
+	div#header div.filters{
+		position: absolute;
+		left: 212px;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		border: 2px dashed silver;
+		padding: 5px;
+		text-align: center;
+		color: #999;
+		font-style: italic;
+		font-size: 2em;
+	}
+	div#header div.filters:after{
+		content: "Filters and other stuff";
+	}
+div#list{
+	position: fixed;
+	top: 100px;
+	bottom: 0px;
+	width: 100%;
+	overflow-y: scroll;
+}
+div#list div.user{
+	box-shadow: 0px 0px 2em #000;
+	height: 2em;
+	background: #f6f6f6;
+	margin: 1em;
+}
+div#list div.user.selected{
+	outline: 4px solid #008;
+	background: #f0f0f0;
+}
+	div.user div.info{
+		position: relative;
+		display: inline-block;
+		vertical-align: top;
+		width: 25%;
+		height: 2em;
+		padding-left: 1%;
+	}
+		div.user.new div.info span.name{
+			text-decoration: underline;
+		}
+		div.info span.name{
+			display: block;
+			position: absolute;
+			top: 50%;
+			margin-top: -0.6em;
+			font-size: 1.2em;
+			white-space: nowrap;
+			overflow: hidden;
+			cursor: default;
+		}
+		div.info div.meta{
+			display: none;
+		}
+		div.info div.menu{
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			margin: 0px;
+			padding: 0px;
+			vertical-align: top;
+			width: 25px;
+			height: 10px;
+			border: 1px solid silver;
+			box-shadow: 2px 2px 2px #eee;
+		}
+		div.info div.menu:hover{
+			height: auto;
+			width: auto;
+			border: 0px;
+		}
+		div.info div.menu ul{
+			display: none;
+			position: absolute;
+			top: -1px;
+			right: -1px;
+			z-index: 3;
+			width: auto;
+			margin: 0px;
+			padding: 0px;
+			border: 1px solid silver;
+		}
+		div.info div.menu:hover ul{
+			display: block;
+			background: #fff;
+			box-shadow: 5px 5px 5px #666;
+			border-bottom: 0px;
+			overflow: none;
+		}
+			div.info div.menu ul li{
+				border-bottom: 1px solid silver;
+				list-style: none;
+				cursor: pointer;
+				padding: 0px 1em;
+				margin: 0px;
+				background-position: left center;
+				background-repeat: no-repeat;
+			}
+			div.info div.menu ul li.talk{
+				background-image: url("img/talk.icon.png");
+			}
+			div.info div.menu ul li.contribs{
+				background-image: url("img/contribs.icon.png");
+			}
+			div.info div.menu ul li.love{
+				background-image: url("img/love.icon.png");
+			}
+			div.info div.menu ul li:hover{
+				background-color: #ddf;
+			}
+	
+	div.user div.activity{
+		display: inline-block;
+		vertical-align: top;
+		width: 40%;
+		margin-left: 2%;
+	}
+		div.user div.activity div.label{
+			display: none;
+		}
+		div.user div.activity div.breaks{
+			display: none;
+		}
+		div.user div.activity div.days{
+			border-width: 0px 1px;
+			height: 100%;
+			width: 100%;
+		}
+			div.user div.activity div.days div.day{
+				position: relative;
+				float:left;
+				box-shadow: inset 0px 0px 2px #ccc;
+				/*border: 1px solid #bbb;
+				margin: -1px;*/
+				width: 3.33%;
+				height: 100%;
+				background: #fff;
+			}
+				div.days div.day div.revs{
+					position: absolute;
+					bottom: 0px;
+					left: 0px;
+					width: 100%;
+				}
+					div.days div.day div.revs div.rev{
+						background: #ddd;
+						width: 100%;
+						cursor: pointer;
+						border-top: 1px solid black;
+						margin-top: -1px;
+					}
+					div.days div.day div.revs div.rev:hover{
+						position: relative;
+						z-index: 1;
+						outline: 2px solid black;
+					}
+					div.days div.day div.revs div.rev.ns_1{
+						background: #8dd;
+					}
+					div.days div.day div.revs div.rev.ns_2{
+						background: #d8d;
+					}
+					div.days div.day div.revs div.rev.ns_3{
+						background: #d88;
+					}
+					div.days div.day div.revs div.rev.ns_4{
+						background: #dd8;
+					}
+					div.days div.day div.revs div.rev.reverted{
+						background-image: url('img/dot.png');
+						background-position: center center;
+						background-repeat: no-repeat;
+					}
+		
+	div.user div.talk{
+		display: inline-block;
+		position: relative;
+		height: 2em;
+		width: 29%;
+		padding-left: 1%;
+	}	
+		div.user div.topics{
+			position: absolute;
+			top: 50%;
+			margin-top: -.5em;
+			width: auto;
+			white-space: nowrap;
+		}
+		div.user div.talk div.topic{
+			display: inline-block;
+			cursor: pointer;
+			vertical-align: top;
+		}
+			div.user div.talk div.topic dt{
+				display: inline-block;
+				width: 1.9em;
+				height: 1em;
+				border-radius: .25em;
+				font-size: .9em;
+				font-weight: bold;
+				text-align:center;
+				margin-right: .5em;
+				color: #000;
+			}
+			div.user div.talk div.topic:hover dt{
+				background-color: #ffb;
+			}
+			div.user div.talk div.topic dd{
+				display: none;
+			}
+			div.user div.talk div dt{
+				border: 1px solid blue;
+				box-shadow: 0px 0px 4px blue;
+				border-radius: 1em;
+			}
+			div.user div.talk div dt:before{
+				content: "\0000a0";
+			}
+			
+			div.user div.talk div.vandal_1 dt{
+				border: 1px solid #600;
+				box-shadow: 0px 0px 4px #600;
+			}
+			div.user div.talk div.vandal_1 dt:before{
+				content: "V";
+			}
+			div.user div.talk div.vandal_1 dt:after{
+				content: "1";
+				vertical-align: super;
+				font-size: .6em;
+			}
+			
+			div.user div.talk div.vandal_2 dt{
+				border: 1px solid #600;
+				box-shadow: 0px 0px 4px #600;
+			}
+			div.user div.talk div.vandal_2 dt:before{
+				content: "V";
+			}
+			div.user div.talk div.vandal_2 dt:after{
+				content: "2";
+				vertical-align: super;
+				font-size: .6em;
+			}
+			
+			div.user div.talk div.csd dt{
+				border: 1px solid #bb0;
+				box-shadow: 0px 0px 4px #bb0;
+			}
+			div.user div.talk div.csd dt:before{
+				content: "csd";
+			}
+			
+			div.user div.talk div.welcome dt{
+				border: 1px solid #66F;
+				box-shadow: 0px 0px 4px #66F;
+			}
+			div.user div.talk div.welcome dt:before{
+				content: "W";
+			}
+			
+			div.user div.talk div.copyright dt{
+				border: 1px solid #660;
+				box-shadow: 0px 0px 4px #660;
+			}
+			div.user div.talk div.copyright dt:before{
+				content: "\00a9";
+			}
+
+	div#list > div.user.expanded{
+		height: 20.5em;
+	}
+		div.user.expanded div.info span.name{
+		}
+		div.user.expanded div.info div.meta{
+			display: block;
+			font-size: .8em;
+			margin-top: 3em;
+		}
+			div.user.expanded div.info div.meta dt{
+				display: block;
+				float: left;
+				height: 1.1em;
+				font-weight: bold;
+				margin-right: .5em;
+			}
+			div.user.expanded div.info div.meta dt:after{
+				content: ":";
+			}
+			div.user.expanded div.info div.meta dd{
+				display: block;
+			}
+	div.user.expanded div.activity{
+		position: relative;
+		height: 20em;
+	}
+		div.user.expanded div.activity div.label{
+			display: block;
+		}
+		div.user.expanded div.activity div.label.y:before{
+			content: "Edits";
+		}
+		div.user.expanded div.activity div.label.y{
+			position: absolute;
+			bottom: 0px;
+			left: -.5em;
+			height: 1em;
+			width: 20em;
+			text-align: center;
+			transform-origin: 0 0;
+			-webkit-transform-origin: 0 0;
+			-moz-transform-origin:    0 0;
+			-ms-transform-origin:     0 0;
+			-o-transform-origin:      0 0;
+			transform: rotate(-90deg);
+			-ms-transform:rotate(-90deg); /* IE 9 */
+			-moz-transform:rotate(-90deg); /* Firefox */
+			-webkit-transform:rotate(-90deg); /* Safari and Chrome */
+			-o-transform:rotate(-90deg); /* Opera */
+			margin-left: -1em;
+		}
+		div.user.expanded div.activity div.label.x:before{
+			content: "Days since registration";
+		}
+		div.user.expanded div.activity div.label.x{
+			display: block;
+			text-align: center;
+			height: 1em;
+			clear: left;
+		}
+		div.user.expanded div.activity div.breaks.x{
+			display: block;
+		}
+			div.user.expanded div.activity div.breaks.x div{
+				display:block;
+				width: 16.66666%;
+				float: left;
+				text-align: right;
+			}
+		div.user.expanded div.activity div.days{
+			display: block;
+			height: 17.5em;
+		}
+			div.user.expanded div.activity div.days div.revs div.rev{
+				box-shadow: inset 0px 0px 2px #000;
+				border-top: none;
+				margin-top: 0px;
+			}
+	
+	div.user.expanded div.talk{
+	}
+		div.user.expanded div.talk div.topics{
+			display: block;
+			overflow: visible;
+			white-space: normal;
+		}
+		div.user.expanded div.talk div.topics div.topic{
+			display: block;
+			margin-bottom: .5em;
+		}
+		div.user.expanded div.talk div.topics div.topic:hover{
+			background: #fff;
+		}
+			div.user.expanded div.talk div.topics div.topic dt{
+				display: block;
+				float: left;
+				margin-right: .5em;
+			}
+			div.user.expanded div.talk div.topics div.topic dd{
+				display: block;
+				margin-left: 0px;
+			}
+			div.user.expanded div.talk div.topics div.topic:hover dd{
+				text-decoration: underline;
+			}

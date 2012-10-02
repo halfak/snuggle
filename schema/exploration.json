@@ -1,0 +1,108 @@
+users: [
+	{
+		name: “EpochFail”,
+		id:   2345678,
+		registered: 1234567890,
+		activity: {
+			last_updated: 1234567890,
+			revisions: [
+				2345678996: {
+					id: 2345678996,
+					timestamp: 1234567891,
+					comment: "",
+					page: {
+						id: 2135436567
+						title: "EpochFail",
+						namespace: 2
+					}
+				},
+				2345679000: {
+					id: 2345679000,
+					timestamp: 1234567893,
+					comment: "link spam",
+					page: {
+						id: 12
+						title: "Anarchism",
+						namespace: 0
+					}
+				}, 
+				2345679001: {
+					id: 2345679001,
+					timestamp: 1234567893,
+					comment: "link spam",
+					page: {
+						id: 12
+						title: "Anarchism",
+						namespace: 0
+					}
+				}, 
+				2345688999: {
+					id: 2345688999,
+					timestamp: 1234567892,
+					comment: "/* Hobbies */",
+					page: {
+						id: 2135436567
+						title: "EpochFail",
+						namespace: 2
+					}
+				}, 
+				2345688999: {
+					id: 2345688999,
+					timestamp: 1234567892,
+					comment: "/* Hobbies */",
+					page: {
+						id: 2135436567
+						title: "EpochFail",
+						namespace: 2
+					}
+				}, 
+				2345688999: {
+					id: 2345688999,
+					timestamp: 1234567892,
+					comment: "/* Hobbies */",
+					page: {
+						id: 2135436567
+						title: "Anachronism",
+						namespace: 0
+					}
+				}
+			]
+		},
+		talk: {
+			updated: 123467890,
+			topics: [
+				{
+					id: "This_is_a_title",
+					title: "This is a title"
+				},
+				{
+					id: "File:AFTv5.FES.form.png_missing_description_details",
+					title: "<a href=\"/wiki/File:AFTv5.FES.form.png\" title="">File:AFTv5.FES.form.png</a> missing description details",
+					class: "vandal_4"
+				}
+			]
+		}
+	}
+]
+
+reverted: [
+	{
+		revision:{ 
+			id: 2345679000,
+			page: {
+				id: 12
+			},
+			sha1: "acbdef12345678901234567890"
+		},
+		processed: {
+			n: 0,
+			last: 2345679001
+		},
+		history: [
+			["abcdef2143524632423423", 2345678996],
+			["abcdef2143524632423400", 2345678900],
+			["abcdef2143524632423499", 2345678000],
+			["abcdef2143524632423466", 2345677500]
+		]
+	}
+]

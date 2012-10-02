@@ -1,0 +1,39 @@
+{
+	type: "new_user",
+	id: 2344,
+	name: "EpochFail"
+	registration: 1234567890
+}
+
+{
+	type: "new_revision",
+	id: 23435465,
+	user: {
+		id: 2344
+	}
+	sha1: "1224523532423asds",
+	page: {
+		id: 21352352,
+		title: "Policies",
+		namespace: 4
+	}
+}
+
+{
+	type: "revert",
+	reverted: {
+		id: 23435465
+		user: {
+			id: 2344
+		}
+	},
+	reverting: {
+		id: 23435467,
+		user: {
+			id: 2300,
+			name: "Hookerboots"
+		},
+		sha1: "134567898765432ab",
+		comment: "rvv"
+	}
+}
