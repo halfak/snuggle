@@ -1,11 +1,19 @@
 import traceback, logging
 import importlib
 
-from snuggle.data import model
-from snuggle.data import source
-from snuggle import mediawiki
+from data import types
 
-logger = logging
+def importClass(path):
+	modules = path.split(".")
+	
+	try:
+		module = importlib.import_module(".".join(modules[:-1]))
+		return getattr(module, modules[-1])
+	except ImportError as e:
+		raise ImportError(str(e) + "(%s)" % path)
+	
+
+logger = logging.getLogger("snuggle.system")
 
 class System:
 	
@@ -50,7 +58,7 @@ class System:
 				logger.error(traceback.format_exc())
 				errored += 1
 			
-		logging.debug("Applied %s changes successfully (%s errored, %s irrelevant)." % (successful, errored, irrelevant))
+		logging.info("Applied %s changes successfully (%s errored, %s irrelevant)." % (successful, errored, irrelevant))
 				
 		
 	def __apply(self, change):
@@ -107,19 +115,19 @@ class System:
 	
 	@staticmethod
 	def fromConfig(config):
-		modelSection = config.get("system", "model")
-		model = importlib.import_module(config.get(modelSection, "module"))
-		
 		sourceSection = config.get("system", "source")
-		source = importlib.import_module(config.get(sourceSection, "module"))
+		source = importClass(config.get(sourceSection, "module"))
+		
+		modelSection = config.get("system", "model")
+		model  = importClass(config.get(modelSection, "module"))
 		
 		apiSection = config.get("system", "api")
-		api    = importlib.import_module(config.get(apiSection, "module"))
+		api    = importClass(config.get(apiSection, "module"))
 		
 		return System(
 			model.fromConfig(config, modelSection),
 			source.fromConfig(config, sourceSection),
 			api.fromConfig(config, apiSection),
-			config.getint("system", "minId")
+			config.getint("system", "min_id")
 		)
 			

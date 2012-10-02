@@ -1,4 +1,4 @@
-from snuggle.data import types
+from data import types
 class Changes: 
 	
 	def __init__(self, db):

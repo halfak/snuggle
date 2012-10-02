@@ -1,6 +1,6 @@
 import MySQLdb, MySQLdb.cursors, sys
 
-from snuggle.data import types
+from .. import types
 
 class MySQL:
 	
@@ -84,7 +84,7 @@ class MySQL:
 				kwargs[key] = value
 			
 		
-		return DB(**kwargs)
+		return MySQL(**kwargs)
 
 class Change(types.Change):
 	

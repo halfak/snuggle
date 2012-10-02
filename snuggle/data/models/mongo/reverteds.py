@@ -1,4 +1,4 @@
-from snuggle.data import types
+from data import types
 
 class Reverteds:
 	

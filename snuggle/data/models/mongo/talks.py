@@ -1,7 +1,7 @@
 import re
 
-from snuggle.mediawiki import parsing, templates
-from snuggle.data import types
+from mediawiki import parsing, templates
+from data import types
 
 MARKUP_HEADER_RE = re.compile(r"(^|\n)==([^=]+)==")
 
