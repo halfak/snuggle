@@ -15,7 +15,7 @@ class Talks:
 	
 	def __contains__(self, title):
 		name = types.User.normalize(title)
-		return self.db.users.find({'name': name}, {'_id': 1}).count() > 0
+		return self.db.users.find_one({'name': name}, {'_id': 1}) != None
 	
 	def get(self, title):
 		name = types.User.normalize(title)

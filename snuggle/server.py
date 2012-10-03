@@ -23,7 +23,7 @@ def main():
 	
 	LOGGING_STREAM = sys.stderr
 	logging.basicConfig(
-		level=logging.DEBUG,
+		level=logging.INFO,
 		stream=LOGGING_STREAM,
 		format='%(asctime)s %(levelname)-8s %(message)s',
 		datefmt='%b-%d %H:%M:%S'

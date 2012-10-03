@@ -6,13 +6,13 @@ class Reverteds:
 		self.db = db
 	
 	def __contains__(self, pageId):
-		return self.db.reverteds.find({'revision.page._id': pageId}).count() > 0
+		return self.db.reverteds.find_one({'revision.page._id': pageId}) != None
 	
 	def new(self, reverted):
 		return self.db.reverteds.insert(reverted.deflate())
 	
 	def get(self, pageId):
-		for json in self.db.users.find({'revision.page.id': pageId}):
+		for json in self.db.reverteds.find({'revision.page._id': pageId}):
 			yield Reverted(self.db, json)
 		
 	
@@ -25,16 +25,16 @@ class Reverted:
 	def __init__(self, db, json):
 		self.db        = db
 		self.id        = json['_id']
-		self.sha1      = json['sha1']
 		self.processed = json['processed']
 		self.revision  = types.Revision.inflate(json['revision'])
 		self.history   = json['history']
+		self.revert    = None
 	
-	def complete():
+	def complete(self):
 		return self.processed >= self.PROCESS_LIMIT or self.revert != None
 	
-	def process(revision):
-		if revision.sha1 in self.history and revision.sha1 != self.sha1:
+	def process(self, revision):
+		if revision.sha1 in self.history and revision.sha1 != self.revision.sha1:
 			self.revert = revision
 			self.db.users.update(
 				{'_id': self.revision.user.id},

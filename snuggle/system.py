@@ -19,22 +19,28 @@ class System:
 	
 	HISTORY_LIMIT = 15
 	
-	def __init__(self, model, source, mwapi, minId=0):
+	def __init__(self, model, source, mwapi, age, minId=0):
 		self.model      = model
 		self.source     = source
 		self.mwapi      = mwapi
 		self.minId      = minId
+		self.age        = age
 		
 		self.last     = self.model.changes.last()
 	
 	def update(self, limit=None):
-		logging.debug("Running update.")
 		if self.last != None:
 			lastId = max(self.last.id, self.minId)
 		else:
 			lastId = self.minId
 		
+		logging.info("Running update (<= %s changes)." % limit)
+		
 		self.apply(self.source.changes(lastId, limit))
+		
+		logging.info("Cleaning up.")
+		self.model.clean(self.last.timestamp - self.age)
+		
 	
 	def apply(self, changes):
 		successful = 0
@@ -128,6 +134,7 @@ class System:
 			model.fromConfig(config, modelSection),
 			source.fromConfig(config, sourceSection),
 			api.fromConfig(config, apiSection),
+			config.getint("system", "age"),
 			config.getint("system", "min_id")
 		)
 			

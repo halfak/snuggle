@@ -7,13 +7,21 @@ from .talks import Talks
 
 class Mongo:
 	
-	def __init__(self, db, age, clear):
+	def __init__(self, db):
 		self.db          = db
 		
 		self.changes   = Changes(db)
-		self.users     = Users(db, age, clear)
+		self.users     = Users(db)
 		self.reverteds = Reverteds(db)
 		self.talks     = Talks(db)
+	
+	
+	def clean(self, olderThan):
+		deaths = [json['_id'] for json in self.db.users.find({'registration': {"$lt": olderThan}})]
+		
+		self.db.users.remove({'_id': {"$in": deaths}})
+		self.db.reverteds.remove({'revision.user._id': {'$in': deaths}})
+		self.db.changes.remove({'timestamp': {"$lt": olderThan}})
 	
 	@staticmethod
 	def fromConfig(config, section):
@@ -22,9 +30,7 @@ class Mongo:
 			pymongo.Connection(
 				host=config.get(section, "host"),
 				port=config.getint(section, "port")
-			)[config.get(section, "database")],
-			config.getint(section, "user_age"),
-			config.getint(section, "user_clear")
+			)[config.get(section, "database")]
 		)
 	
 

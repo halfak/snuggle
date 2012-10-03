@@ -15,7 +15,7 @@ class MySQL:
 		cursor = self.changes_conn.cursor()
 		cursor.execute(
 			"""
-				SELECT
+			SELECT
 				rc_id,
 				UNIX_TIMESTAMP(rc_timestamp) as timestamp,
 				rc_log_type   as log_type,
@@ -29,8 +29,10 @@ class MySQL:
 				rc_minor      as minor,
 				rc_this_oldid as rev_id,
 				rc_old_len    as old_len,
-				rc_new_len    as new_len
+				rc_new_len    as new_len,
+				rev_sha1      as sha1
 			FROM enwiki.recentchanges
+			LEFT JOIN enwiki.revision ON rc_this_oldid = rev_id
 			WHERE rc_id > %(rc_id)s AND
 			(
 				(rc_log_type = "newusers" AND rc_log_action = "create") OR
@@ -115,25 +117,26 @@ class Revision(types.Revision):
 			User.fromRow(row),
 			Page.fromRow(row),
 			int(row['timestamp']),
-			unicode(row['comment'], 'utf-8'),
-			ByteDiff.fromRow(row)
+			unicode(row['comment'], 'utf-8', 'replace'),
+			ByteDiff.fromRow(row),
+			row['sha1']
 		)
 	
 
 class NewUser(types.NewUser):
 	
 	@staticmethod
-	def fromRow(row): return NewUser(row['user_id'], unicode(row['user_name'], 'utf-8'), int(row['timestamp']))
+	def fromRow(row): return NewUser(row['user_id'], unicode(row['user_name'], 'utf-8', 'replace'), int(row['timestamp']))
 
 class User(types.User):
 	
 	@staticmethod
-	def fromRow(row): return User(row['user_id'], unicode(row['user_name'], 'utf-8'))
+	def fromRow(row): return User(row['user_id'], unicode(row['user_name'], 'utf-8', 'replace'))
 
 class Page(types.Page):
 	
 	@staticmethod
-	def fromRow(row): return Page(row['page_id'], unicode(row['page_title'], 'utf-8'), row['page_namespace'])
+	def fromRow(row): return Page(row['page_id'], unicode(row['page_title'], 'utf-8', 'replace'), row['page_namespace'])
 
 class ByteDiff(types.ByteDiff):
 	

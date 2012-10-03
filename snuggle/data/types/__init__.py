@@ -98,13 +98,14 @@ class ByteDiff(DataType):
 
 class Revision(DataType):
 	
-	def __init__(self, id, user, page, timestamp, comment, diff, revert=None):
+	def __init__(self, id, user, page, timestamp, comment, diff, sha1, revert=None):
 		self.id        = int(id)
 		self.user      = user
 		self.page      = page
 		self.timestamp = int(timestamp)
 		self.comment   = unicode(comment)
 		self.diff      = diff
+		self.sha1      = sha1
 		self.revert    = revert
 	
 	def deflate(self):
