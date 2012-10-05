@@ -23,8 +23,8 @@ class System:
 		self.model      = model
 		self.source     = source
 		self.mwapi      = mwapi
-		self.minId      = minId
 		self.age        = age
+		self.minId      = minId
 		
 		self.last     = self.model.changes.last()
 	

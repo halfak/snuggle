@@ -1,20 +1,14 @@
-import MySQLdb, MySQLdb.cursors, sys
+import oursql, sys, time
 
 from .. import types
 
 class MySQL:
 	
 	def __init__(self, *args, **kwargs):
-		kwargs.update({'cursorclass': MySQLdb.cursors.SSDictCursor})
-		self.changes_conn = MySQLdb.connect(*args, **kwargs)
-		
-		kwargs.update({'cursorclass': MySQLdb.cursors.DictCursor})
-		self.conn = MySQLdb.connect(*args, **kwargs)
+		self.conn = oursql.connect(*args, **kwargs)
 	
 	def changes(self, since, limit=None):
-		cursor = self.changes_conn.cursor()
-		cursor.execute(
-			"""
+		query = """
 			SELECT
 				rc_id,
 				UNIX_TIMESTAMP(rc_timestamp) as timestamp,
@@ -33,43 +27,38 @@ class MySQL:
 				rev_sha1      as sha1
 			FROM enwiki.recentchanges
 			LEFT JOIN enwiki.revision ON rc_this_oldid = rev_id
-			WHERE rc_id > %(rc_id)s AND
+			WHERE rc_id > ? AND
 			(
 				(rc_log_type = "newusers" AND rc_log_action = "create") OR
 				rc_this_oldid IS NOT NULL AND rc_this_oldid != 0
 			)
 			ORDER BY rc_id ASC
-			LIMIT %(limit)s
-			""",
-			{
-				'rc_id': since,
-				'limit': limit if limit != None else sys.maxint
-			}
-		)
+			LIMIT ?
+		"""
+		data = (since, limit if limit != None else sys.maxint)
+		
+		cursor = self.conn.cursor(oursql.DictCursor)
+		cursor.execute(query, data)
 		
 		for row in cursor:
-			if row['rev_id'] != None:
-				yield Change.fromRow(row)
-			
+			yield Change.fromRow(row)
 		
+		cursor.close()
+	
 	def history(self, pageId, revId, n):
-		cursor = self.conn.cursor()
+		cursor = self.conn.cursor(oursql.DictCursor)
 		cursor.execute(
 			"""
 				SELECT
 					rev_id,
 					rev_sha1 as sha1
 				FROM revision
-				WHERE rev_page = %(page_id)s
-				AND rev_id < %(rev_id)s
+				WHERE rev_page = ?
+				AND rev_id < ?
 				ORDER BY rev_id DESC
-				LIMIT %(limit)s;
+				LIMIT ?
 			""",
-			{
-				'page_id': pageId,
-				'rev_id':  revId,
-				'limit':   n
-			}
+			(pageId, revId, n)
 		)
 		
 		history = {}
