@@ -9,6 +9,7 @@
 	<script language="javascript" src="lib/ui.list.js"></script>
 	<script language="javascript" src="lib/testing/users.EpochFail.js"></script>
 	<script language="javascript" src="lib/testing/users.Accedie.js"></script>
+	<script language="javascript" src="lib/testing/users.etc.js"></script>
 	</head>
 	<body>
 		<div id="header">
@@ -18,7 +19,7 @@
 		<script>
 			list = new UI.List()
 			$("body").append(list.div)
-			list.append([Users['EpochFail'], Users['Accedie']])
+			list.append(Users.values())
 		</script>
 	<body>
 </html>

@@ -239,6 +239,79 @@ UI.User.Activity = Class.extend({
 		this.div.append(this.breaks.x)
 		this.div.append(this.label.x)
 		
+		this.selected = null
+		
+		this.cursor = {}
+	},
+	select: function(coords){
+		if(this.selected){
+			this.selected.selected(false)
+			this.selected = null
+		}
+		if(coords){
+			//Select the closest revision to the coords
+			var column = this.grid[
+				Math.max(
+					0, 
+					Math.min(
+						this.grid.length-1, 
+						coords.x
+					)
+				)
+			]
+			
+			var revision = column[
+				Math.max(
+					0, 
+					Math.min(
+						column.length-1, 
+						coords.y
+					)
+				)
+			]
+			
+			this.selected = revision
+			this.selected.selected(true)
+		}else{
+			this.cursor = {}
+		}
+	},
+	shift: function(diff){
+		if(this.cursor.x === undefined){
+			this.cursor.x = 0
+			this.cursor.y = 0
+		}else{
+		
+			if(diff.x != 0){
+				//Move on the x, but not below zero, past the last revision or into a column with no revs
+				var x = this.cursor.x
+				for(var i=this.cursor.x+diff.x;i<this.grid.length && i>=0;i=i+diff.x){
+					if(this.grid[i].length > 0){
+						x = i
+						break
+					}
+				}
+				this.cursor.x = Math.max(
+					0, 
+					Math.min(
+						this.grid.length-1, 
+						x
+					)
+				) 
+			}
+			if(diff.y != 0){
+				//Move on the y, but not below zero or past the last revision in the stack
+				this.cursor.y = Math.max(
+					0, 
+					Math.min(
+						this.grid[this.cursor.x].length-1, 
+						this.cursor.y + diff.y
+					)
+				)
+			}
+		}
+		
+		this.select(this.cursor)
 	},
 	render: function(revisions){
 		//clear plotting space
@@ -250,6 +323,9 @@ UI.User.Activity = Class.extend({
 			29
 		)
 		
+		//Set up the in-memory grid
+		this.grid = new Array(days+1)
+	
 		//Group revisions into days
 		var dayRevisions = Set.group(revisions, function(r){return Math.floor((r.timestamp - this.origin)/Constants.DAY)}.bind(this))
 		
@@ -261,6 +337,9 @@ UI.User.Activity = Class.extend({
 			//Create tag for day
 			var day = $('<div>').addClass("day")
 			this.days.append(day)
+			
+			
+			this.grid[d] = []
 			
 			if(dayRevisions[String(d)]){
 				var revisions = dayRevisions[String(d)]
@@ -274,22 +353,53 @@ UI.User.Activity = Class.extend({
 				//Reverse sort for more intuitive layout
 				revisions.sort(function(a,b){return b.timestamp-a.timestamp})
 				
+				
 				//Plot the revisions 
 				for(var i in revisions){var revision = revisions[i]
-					var rev = $('<div>')
-						.addClass("rev")
-						.css("height", (1/revisions.length)*100 + "%")
-						.addClass("ns_" + revision.page.namespace)
-						.click(function(e){
-							alert("Edit to " + this.page.title + ".  This will eventually show you a diff.")
-							e.stopPropagation()
-						}.bind(revision))
-					
-					if(revisions.reverted){
-						rev.addClass("reverted")
-					}
-					revs.append(rev)
+					var rev = new UI.User.Activity.Revision(
+						revision.id, 
+						revision.page, 
+						revision.revert,
+						(1/revisions.length)*100,
+						{x:d,y:i}
+					).click(function(rev){
+						this.cursor = rev.coords
+						this.select(this.cursor)
+					}.bind(this))
+					this.grid[d].push(rev)
+					revs.prepend(rev.div)
 				}
+			}
+		}
+	}
+})
+
+UI.User.Activity.Revision = Class.extend({
+	init: function(id, page, revert, height, coords){
+		this.coords = coords
+		this.div = $('<div>')
+			.addClass("rev")
+			.css("height", height + "%")
+			.addClass("ns_" + page.namespace)
+	},
+	click: function(callback){
+		this.clickCallback = callback
+		this.div.click(
+			function(e){
+				this.clickCallback(this)
+				e.stopPropagation()
+			}.bind(this)
+		)
+		return this
+	},
+	selected: function(select){
+		if(select == undefined){
+			return this.div.hasClass("selected")
+		}else{
+			if(select){
+				this.div.addClass("selected")
+			}else{
+				this.div.removeClass("selected")
 			}
 		}
 	}

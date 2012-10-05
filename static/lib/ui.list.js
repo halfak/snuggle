@@ -26,7 +26,32 @@ UI.List = Class.extend({
 					if(this.selected != -1){
 						this.users[this.selected].toggle()
 					}
+					break;
 			}
+			return false
+		}.bind(this))
+		$(window).keydown(function(e){
+			if(this.selected != -1){
+				switch(e.which){
+					case 37: //left
+						this.users[this.selected].activity.shift({x:-1,y:0})
+						break;
+					case 38: //up
+						this.users[this.selected].activity.shift({x:0,y:1})
+						break;
+					case 39: //right
+						this.users[this.selected].activity.shift({x:1,y:0})
+						break;
+					case 40: //down
+						this.users[this.selected].activity.shift({x:0,y:-1})
+						break;
+					case 27: //down
+						this.users[this.selected].activity.select(null)
+						break;
+						
+				}
+			}
+			return false
 		}.bind(this))
 	},
 	prepend: function(users){
