@@ -16,10 +16,10 @@ UI.List = Class.extend({
 		
 		$(window).keydown(function(e){
 			switch(e.which){
-				case 8:
+				case 33: //page down
 					this.previous()
 					break;
-				case 13:
+				case 34: //page up
 					this.next()
 					break;
 				case 32:
@@ -45,7 +45,7 @@ UI.List = Class.extend({
 					case 40: //down
 						this.users[this.selected].activity.shift({x:0,y:-1})
 						break;
-					case 27: //down
+					case 27: //esc
 						this.users[this.selected].activity.select(null)
 						break;
 						
@@ -75,18 +75,21 @@ UI.List = Class.extend({
 	selectUser: function(user){
 		for(var i in this.users){var luser = this.users[i]
 			if(luser.id == user.id){
-				this.select(i)
+				this.select(parseInt(i))
 				break
 			}
 		}
 				
 	},
 	select: function(i){
-		if(this.selected != -1){
-			this.users[this.selected].selected(false)
-		}
-		if(i != -1){
-			this.users[i].selected(true)
+		if(this.selected != i){
+			if(this.selected != -1){
+				this.users[this.selected].selected(false)
+			}
+			if(i != -1){
+				this.users[i].selected(true)
+				this.scrollToUser(this.users[i])
+			}
 		}
 		this.selected = i
 	},
@@ -105,6 +108,15 @@ UI.List = Class.extend({
 				this.users.length - 1
 			)
 		)
+	},
+	scrollToUser: function(user){
+		if(user){
+			if(user.top() < 25){
+				this.div.scrollTop(this.div.scrollTop() + user.top() - 25)
+			}else if(user.bottom() > this.div.height()){
+				this.div.scrollTop(this.div.scrollTop() + (user.bottom() - this.div.height()) + 25)
+			}
+		}
 	}
 })
 

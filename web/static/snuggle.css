@@ -53,6 +53,9 @@ div#list{
 	width: 100%;
 	overflow-y: scroll;
 }
+div#list div.body{
+	padding-bottom: 600px;
+}
 div#list div.user{
 	box-shadow: 0px 0px 2em #000;
 	height: 2em;
@@ -231,7 +234,7 @@ div#list div.user.selected{
 				width: 1.9em;
 				height: 1em;
 				border-radius: .25em;
-				font-size: .9em;
+				font-size: 1em;
 				font-weight: bold;
 				text-align:center;
 				margin-right: .5em;
@@ -292,10 +295,10 @@ div#list div.user.selected{
 			}
 			
 			div.user div.talk div.vandal_4 dt{
-				border: 1px solid #500;
+				border: 1px solid #a00;
 				box-shadow: 0px 0px 4px #500;
-				background: #000;
-				color: #900;
+				background: #900;
+				color: #ff8;
 			}
 			div.user div.talk div.vandal_4 dt:before{
 				content: "V";

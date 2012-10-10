@@ -231,7 +231,205 @@ $.extend(
 		),
 		Random: new UI.User(
 			1255,
-			"Ranom",
+			"Random",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther1: new UI.User(
+			1256,
+			"RandomOther1",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther2: new UI.User(
+			1257,
+			"RandomOther2",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther3: new UI.User(
+			1258,
+			"RandomOther3",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther4: new UI.User(
+			1259,
+			"RandomOther4",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther5: new UI.User(
+			1260,
+			"RandomOther5",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther6: new UI.User(
+			1261,
+			"RandomOther6",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther7: new UI.User(
+			1262,
+			"RandomOther7",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther8: new UI.User(
+			1263,
+			"RandomOther8",
+			1202510162,
+			true,
+			3,
+			{
+				190055192: {
+					timestamp: 1202510162,
+					page: {
+						namespace: 0,
+						title: "EpochFail"
+					}
+				}
+			},
+			[
+				{
+					title: "October 2009",
+					class: "Vandal_2"
+				}
+			]
+		),
+		RandomOther9: new UI.User(
+			1264,
+			"RandomOther9",
 			1202510162,
 			true,
 			3,

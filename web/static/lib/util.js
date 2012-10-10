@@ -1,5 +1,6 @@
 Constants = {
-	DAY: 60*60*24
+	DAY: 60*60*24,
+	WIKI: "http://en.wikipedia.org"
 }
 
 Set = {
@@ -108,3 +109,37 @@ LOGGING.levels = {
 }
 LOGGING.level = 0 //Default
 
+
+Page = {
+	namespaces: {
+		0: "",
+		1: "Talk",
+		2: "User",
+		3: "User_talk",
+		4: "Wikipedia",
+		5: "Wikipedia_talk",
+		6: "File",
+		7: "File_talk",
+		8: "Mediawiki",
+		9: "Mediawiki_talk",
+		10: "Template",
+		11: "Template_talk",
+		12: "Help",
+		13: "Help_talk",
+		14: "Category",
+		15: "Category_talk",
+		100: "Portal",
+		101: "Portal_talk",
+		108: "Book",
+		109: "Book_talk",
+		"-1": "Special",
+		"-2": "Media"
+	},
+	fullTitle: function(ns, title){
+		if(this.namespaces[ns]){
+			return this.namespaces[ns] + ":" + title
+		}else{
+			return title
+		}
+	}
+}
