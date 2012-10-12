@@ -54,6 +54,7 @@ div#list{
 	overflow-y: scroll;
 }
 div#list div.body{
+	padding-top: 25px;
 	padding-bottom: 600px;
 }
 div#list div.user{
@@ -160,16 +161,21 @@ div#list div.user.selected{
 			display: none;
 		}
 		div.user div.activity div.days{
-			border-width: 0px 1px;
+			position: relative;
+			box-sizing: border-box;
+			border-left: 1px solid silver;
+			border-bottom: 1px solid silver;
+			padding-left: 1px;
+			overflow: hidden;
 			height: 100%;
 			width: 100%;
 		}
 			div.user div.activity div.days div.day{
 				position: relative;
+				box-sizing: border-box;
 				float:left;
-				box-shadow: inset 0px 0px 2px #ccc;
-				/*border: 1px solid #bbb;
-				margin: -1px;*/
+				border-right: 1px solid silver;
+				border-left: none;
 				width: 3.33%;
 				height: 100%;
 				background: #fff;
@@ -181,14 +187,21 @@ div#list div.user.selected{
 					width: 100%;
 				}
 					div.days div.day div.revs div.rev{
+						position: relative;
+						box-sizing: border-box;
 						background: #ddd;
-						width: 100%;
 						cursor: pointer;
-						border-top: 1px solid black;
-						margin-top: -1px;
+						border: 1px solid #666;
+						border-width: 0px 1px;
+						margin: 0px -1px;
+					}
+					div.days div.day div.revs div.rev:first-child{
+						border-top-width: 1px;
+					}
+					div.days div.day div.revs div.rev{
+						border-bottom-width: 1px;
 					}
 					div.days div.day div.revs div.rev.selected{
-						position: relative;
 						z-index: 1;
 						outline: 2px solid black;
 					}
@@ -209,12 +222,58 @@ div#list div.user.selected{
 						background-position: center center;
 						background-repeat: no-repeat;
 					}
+				
+				
+		div.user div.activity div.details{
+			display:none;
+		}
+		div.user.expanded div.activity div.details{
+			position: absolute;
+			top: 1.5em;
+			bottom: 0em;
+			right: 100%;
+			z-index: 1;
+		}		
+			div.user div.activity div.details a.title{
+				display: block;
+				text-align: center;
+				background: #ddd;
+				font-weight: bold;
+				text-decoration: none;
+			}
+			div.user div.activity div.details a.timestamp{
+				display: block;
+				float: left;
+				padding: 0px .5em;
+			}	
+			div.user div.activity div.details div.comment{
+				display: block;
+				padding: 0px .5em;
+				font-style: italic;
+				background: #eee;
+			}	
+			div.user div.activity div.details div.diff{
+				height: 15em;
+				background: #fff;
+				overflow-y: auto;
+			}	
+				div.user div.activity div.details div.diff table{
+					font-size: .8em;
+				}
+			div.user div.activity div.details div.revert{
+				display:none;
+			}
+			div.user div.activity div.details.reverted div.revert{
+				display:block;
+				height: 10%;
+				overflow: hidden;
+			}
 		
 	div.user div.talk{
 		display: inline-block;
 		position: relative;
 		height: 2em;
-		width: 29%;
+		width: 31%;
 		padding-left: 1%;
 	}	
 		div.user div.topics{
@@ -365,6 +424,7 @@ div#list div.user.selected{
 		}
 		div.user.expanded div.activity div.label.y:before{
 			content: "Edits";
+			font-weight: bold;
 		}
 		div.user.expanded div.activity div.label.y{
 			position: absolute;
@@ -387,6 +447,7 @@ div#list div.user.selected{
 		}
 		div.user.expanded div.activity div.label.x:before{
 			content: "Days since registration";
+			font-weight: bold;
 		}
 		div.user.expanded div.activity div.label.x{
 			display: block;
@@ -408,9 +469,6 @@ div#list div.user.selected{
 			height: 17.5em;
 		}
 			div.user.expanded div.activity div.days div.revs div.rev{
-				box-shadow: inset 0px 0px 2px #000;
-				border-top: none;
-				margin-top: 0px;
 			}
 	
 	div.user.expanded div.talk{

@@ -15,43 +15,42 @@ UI.List = Class.extend({
 		this.div.append(this.loader.bottom.div)
 		
 		$(window).keydown(function(e){
-			switch(e.which){
-				case 33: //page down
-					this.previous()
-					break;
-				case 34: //page up
-					this.next()
-					break;
-				case 32:
-					if(this.selected != -1){
-						this.users[this.selected].toggle()
-					}
-					break;
-			}
-			return false
-		}.bind(this))
-		$(window).keydown(function(e){
 			if(this.selected != -1){
+				relevant = false
 				switch(e.which){
+					case 33: //page down
+						this.previous() //Go to previous user
+						relevant = true
+						break;
+					case 34: //page up
+						this.next() //Go to next user
+						relevant = true
+						break;
 					case 37: //left
 						this.users[this.selected].activity.shift({x:-1,y:0})
+						relevant = true
 						break;
 					case 38: //up
 						this.users[this.selected].activity.shift({x:0,y:1})
+						relevant = true
 						break;
 					case 39: //right
 						this.users[this.selected].activity.shift({x:1,y:0})
+						relevant = true
 						break;
 					case 40: //down
 						this.users[this.selected].activity.shift({x:0,y:-1})
+						relevant = true
 						break;
 					case 27: //esc
 						this.users[this.selected].activity.select(null)
+						relevant = true
 						break;
-						
+				}
+				if(relevant){
+					return false
 				}
 			}
-			return false
 		}.bind(this))
 	},
 	prepend: function(users){
