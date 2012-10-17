@@ -1,4 +1,4 @@
-import argparse, logging, sys, time
+import argparse, logging, sys, time, tempfile
 from ConfigParser import SafeConfigParser
 
 from system import System
@@ -19,11 +19,39 @@ def main():
 		type=config,
 		help='the path to the configuration file'
 	)
+	parser.add_argument(
+		'-p', "--profile",
+		action="store_true",
+		default=False,
+		help='the path to the configuration file'
+	)
+	parser.add_argument(
+		'-d', "--debug",
+		action="store_true",
+		default=False,
+		help='the path to the configuration file'
+	)
 	args = parser.parse_args()
 	
+	if args.profile:
+		try:
+			import pstats
+			import cProfile as profile
+		except ImportError:
+			import profile
+			
+		f = tempfile.NamedTemporaryFile()
+		profile.runctx("run(args)", globals(), locals(), f.name)
+		p = pstats.Stats(f.name)
+		p.strip_dirs().sort_stats("time").print_stats(10)
+	else:
+		run(args)
+
+
+def run(args):
 	LOGGING_STREAM = sys.stderr
 	logging.basicConfig(
-		level=logging.INFO,
+		level=logging.DEBUG if args.debug else logging.INFO,
 		stream=LOGGING_STREAM,
 		format='%(asctime)s %(levelname)-8s %(message)s',
 		datefmt='%b-%d %H:%M:%S'
@@ -44,7 +72,6 @@ def main():
 		
 	except KeyboardInterrupt:
 		logger.info("^C received.  Shutting down.")
-
 
 
 if __name__ == "__main__":
