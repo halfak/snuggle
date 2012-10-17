@@ -29,7 +29,13 @@ class User:
 	def revision(self, revision):
 		self.db.users.update(
 			{'_id': self.id}, 
-			{'$set': {'revisions.%s' % revision.id: revision.deflate()}},
+			{
+				'$set': {'revisions.%s' % revision.id: revision.deflate()},
+				'$inc': {
+					'counts.all': 1,
+					'counts.%s' % revision.page.namespace: 1
+				}
+			},
 			safe=True
 		)
 		

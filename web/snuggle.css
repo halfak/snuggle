@@ -1,3 +1,9 @@
+* {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
 body{
 	height: 100%;
 	font-family: sans-serif;
@@ -162,7 +168,6 @@ div#list div.user.selected{
 		}
 		div.user div.activity div.days{
 			position: relative;
-			box-sizing: border-box;
 			border-left: 1px solid silver;
 			border-bottom: 1px solid silver;
 			padding-left: 1px;
@@ -172,28 +177,28 @@ div#list div.user.selected{
 		}
 			div.user div.activity div.days div.day{
 				position: relative;
-				box-sizing: border-box;
 				float:left;
 				border-right: 1px solid silver;
 				border-left: none;
-				width: 3.33%;
+				width: 3.333333%;
 				height: 100%;
 				background: #fff;
 			}
 				div.days div.day div.revs{
 					position: absolute;
+					box-sizing: border-box;
 					bottom: 0px;
 					left: 0px;
 					width: 100%;
 				}
 					div.days div.day div.revs div.rev{
 						position: relative;
-						box-sizing: border-box;
 						background: #ddd;
 						cursor: pointer;
 						border: 1px solid #666;
 						border-width: 0px 1px;
 						margin: 0px -1px;
+						z-index: 1;
 					}
 					div.days div.day div.revs div.rev:first-child{
 						border-top-width: 1px;
@@ -202,8 +207,8 @@ div#list div.user.selected{
 						border-bottom-width: 1px;
 					}
 					div.days div.day div.revs div.rev.selected{
-						z-index: 1;
 						outline: 2px solid black;
+						z-index: 2;
 					}
 					div.days div.day div.revs div.rev.ns_1{
 						background: #8dd;
@@ -229,17 +234,43 @@ div#list div.user.selected{
 		}
 		div.user.expanded div.activity div.details{
 			position: absolute;
-			top: 1.5em;
-			bottom: 0em;
-			right: 100%;
+			top: .2em;
+			height: 17em;
+			width: 60%;
 			z-index: 1;
-		}		
+			background: #eee;
+			border: 2px solid #000;
+			box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+		}	
+			div.user.expanded div.activity div.scroller{
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				bottom: 0px;
+				right: 0px;
+				overflow: auto;
+				font-size: .75em;
+			}		
+			div.user div.activity div.details div.pointer{
+				position: absolute;
+				width: 40px;
+				border-top: 5px solid transparent;
+				border-bottom: 5px solid transparent;
+			}		
+			div.user div.activity div.details.right div.pointer{
+				border-right: 20px solid #000;
+				right: 100%;
+			}		
+			div.user div.activity div.details.left div.pointer{
+				border-left: 20px solid #000;
+				left: 100%;
+			}
 			div.user div.activity div.details a.title{
 				display: block;
 				text-align: center;
-				background: #ddd;
 				font-weight: bold;
 				text-decoration: none;
+				word-wrap: break-word;
 			}
 			div.user div.activity div.details a.timestamp{
 				display: block;
@@ -250,24 +281,62 @@ div#list div.user.selected{
 				display: block;
 				padding: 0px .5em;
 				font-style: italic;
-				background: #eee;
 			}	
 			div.user div.activity div.details div.diff{
-				height: 15em;
+				bottom: 0px;
 				background: #fff;
 				overflow-y: auto;
+				clear: both;
+				margin-top: .5em;
 			}	
-				div.user div.activity div.details div.diff table{
-					font-size: .8em;
+				div.user div.activity div.details div.diff div{
+					font-size: .9em;
+					margin-bottom: .5em;
+					padding: 0px .5em;
+				}
+				div.user div.activity div.details div.diff div.lineno{
+					font-weight: bold;
+					text-align: center;
+					border-bottom: 1px solid black;
+				}
+				div.user div.activity div.details div.diff div.lineno:before{
+					content: "Line ";
+				}
+				div.user div.activity div.details div.diff div.context{
+					text-align: center;
+					height: 1px;
+					margin: .1em;
+					border: 1px solid silver;
+				}
+				div.user div.activity div.details div.diff div.change{
+					word-wrap: break-word;
+				}
+				div.user div.activity div.details div.diff div.change span.context{
+					color: #555;
+				}
+				div.user div.activity div.details div.diff div.change span.add{
+					text-decoration: underline;
+					background: #BFB;
+				}
+				div.user div.activity div.details div.diff div.change span.remove{
+					color: #000;
+					background: #FBB;
+					text-decoration: line-through;
 				}
 			div.user div.activity div.details div.revert{
-				display:none;
-			}
-			div.user div.activity div.details.reverted div.revert{
 				display:block;
-				height: 10%;
-				overflow: hidden;
+				clear: both;
+				margin-top: .5em;
 			}
+				div.user div.activity div.details div.revert div.header{
+					float: left;
+					padding-right: .5em;
+					margin-left: 2px;
+					padding-left: 10px;
+					background-image: url(img/dot.png);
+					background-position: center left;
+					background-repeat: no-repeat;
+				}
 		
 	div.user div.talk{
 		display: inline-block;
@@ -467,6 +536,7 @@ div#list div.user.selected{
 		div.user.expanded div.activity div.days{
 			display: block;
 			height: 17.5em;
+			overflow: visible;
 		}
 			div.user.expanded div.activity div.days div.revs div.rev{
 			}

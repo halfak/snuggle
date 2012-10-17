@@ -41,9 +41,11 @@ class Talk:
 		for title, body in self.sections(markup):
 			display = "".join(t.display() for t in tokenizer.tokenize(title))
 			
+			
+			
 			topics.append({
 				'title': display,
-				'classes': [t.className() for t in templates.find(body)]
+				'classes': templates.find(body)
 			})
 		
 		self.db.users.update(

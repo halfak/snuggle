@@ -16,7 +16,7 @@ $.extend(
 						namespace: 2,
 						title: "EpochFail"
 					},
-					comment: "I am a comment"
+					comment: "I am a comment. I am a comment. I am a comment. I am a comment. I am a comment. I am a comment. I am a comment. I am a comment. "
 				},
 				190057686: {
 					id: 190057686,

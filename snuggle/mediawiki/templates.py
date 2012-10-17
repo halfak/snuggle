@@ -1,4 +1,7 @@
-import re
+import re, heapq
+
+#One liner to create a heap class
+Heap = type("Heap", (list,), {item: (lambda item2: (lambda self, *args: getattr(heapq, "heap" + item2)(self, *args)))(item)  for item in ("pop", "push", "pushpop", "replace")})
 
 class Template:
 	expression = NotImplemented
@@ -8,93 +11,101 @@ class Template:
 
 
 class VandalWarning(Template):
-	expression = r'uw-vandalism([1-4])(im)?'
+	expression = r'uw-vandalism([1-4])?(im)?'
 	groups     = 2
+	priority   = 2
 	
 	def __init__(self, match, offset):
-		self.level = int(match.group(offset+1))
+		self.level     = match.group(offset+1)
 		self.immediate = match.group(offset+2) != None
 	
-	def className(self):
-		return "%s-%s%s" % (
-			self.__class__.__name__, 
-			self.level, 
-			"im" if self.immediate else ""
-		)
+	def classes(self):
+		return [
+			"warning",
+			"vandal"
+		] + ["level_" + self.level] if self.level else []
 
-class SpanWarning(Template):
-	expression = r'uw-spam([1-4])(im)?'
+class SpamWarning(Template):
+	expression = r'uw-spam([1-4])?(im)?'
 	groups     = 2
+	priority   = 1
 	
 	def __init__(self, match, offset):
-		self.level = int(match.group(offset+1))
+		self.level     = match.group(offset+1)
 		self.immediate = match.group(offset+2) != None
 	
-	def className(self):
-		return "%s-%s%s" % (
-			self.__class__.__name__, 
-			self.level, 
-			"im" if self.immediate else ""
-		)
+	def classes(self):
+		return [
+			"warning",
+			"spam"
+		] + ["level_" + self.level] if self.level else []
 	
 
 class CopyrightWarning(Template):
-	expression = r'uw-copyright(-([a-z]+))?'
+	expression = r'uw-copyright(-([a-z]+))?([1-4])?'
 	groups     = 2
+	priority   = 1
 	
 	def __init__(self, match, offset):
-		self.type = match.group(offset+2) != None
+		self.type  = match.group(offset+1) != None
+		self.level = match.group(offset+2)
 	
-	def className(self): return self.__class__.__name__
-
-class MultiLevelWarning(Template):
-	expression = r'uw-[a-z]+([1-4])(im)?'
-	groups     = 2
-	
-	def __init__(self, match, offset):
-		self.level = int(match.group(offset+1))
-		self.immediate = match.group(offset+2) != None
-	
-	def className(self):
-		return "%s-%s%s" % (
-			self.__class__.__name__, 
-			self.level, 
-			"im" if self.immediate else ""
-		)
-
-class OtherWarning(Template):
-	expression = r'uw-.+?'
-	groups     = 0
-	
-	def className(self): return self.__class__.__name__
+	def classes(self): [
+			"warning",
+			"copyright"
+		] + ["level_" + self.level] if self.level else []
 	
 class Block(Template):
 	expression = r'.*block|uw-[a-z]*block[a-z]*'
 	groups     = 0
+	priority   = 0
 	
-	def className(self): return self.__class__.__name__
+	def classes(self): ["block"]
+	
+
+class GeneralWarning(Template):
+	expression = r'uw-.+([1-4])?(im)?'
+	groups     = 2
+	priority   = 2
+	
+	def __init__(self, match, offset):
+		self.level = match.group(offset+1)
+		self.immediate = match.group(offset+2) != None
+	
+	def classes(self):[
+			"warning",
+		] + ["level_" + self.level] if self.level else []
 	
 class Welcome(Template):
 	expression = r'w-[a-z]+|welcome'
-	groups     = 0
+	groups     = 1
+	priority   = 3
 	
-	def className(self): return self.__class__.__name__
+	def classes(self): ["welcome"]
+
+class CSD(Template):
+	expression = r'csd|db-|speedy'
+	groups     = 0
+	priority   = 0
+	
+	def classes(self): ["csd"]
+	
 
 class Deletion(Template):
-	expression = r'csd|db-|speedy|delet(e|tion)'
-	groups     = 1
+	expression = r'delet(e|tion)'
+	groups     = 0
+	priority   = 1
 	
-	def className(self): return self.__class__.__name__
+	def classes(self): ["deletion"]
 	
-
 TEMPLATES = [
 	VandalWarning,
-	SpanWarning,
+	SpamWarning,
 	CopyrightWarning,
-	MultiLevelWarning,
-	OtherWarning,
 	Block,
+	GeneralWarning,
 	Welcome,
+	CSD,
 	Deletion
 ]
 
@@ -116,7 +127,16 @@ class Templates:
 			offset += template.groups + 1
 		
 	def find(self, markup):
+		h = Heap()
 		for match in self.re.finditer(markup):
 			template, offset = self.templateMap[match.lastindex]
 			
-			yield template(match, offset)
+			t = template(match, offset)
+			h.push(t.priority, t)
+		
+		try:
+			return h.pop().classes()
+		except IndexError:
+			return []
+		
+		

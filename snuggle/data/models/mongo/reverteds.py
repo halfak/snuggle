@@ -41,6 +41,9 @@ class Reverted:
 				{
 					'$set': {
 						'revisions.%s.revert' % revision.id: revision.deflate()
+					},
+					'$inc': {
+						'reverted': 1
 					}
 				}
 			)

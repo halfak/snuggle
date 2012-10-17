@@ -105,7 +105,38 @@ WikipediaAPI = MediaWikiAPI.extend({
 					if(json.query.pages){
 						var page = json.query.pages.values()[0]
 						var revision = page.revisions[0]
-						success(revision.revid, $(revision.diff['*']))
+						success(revision.revid, revision.diff['*'])
+					}else if(json.query.badrevids){
+						error("Could not find diff for revid=" + json.query.badrevids.values()[0]["revid"])
+					}else{
+						error("Unexpected response from the api: " + JSON.stringify(json))
+					}
+				}else{
+					error("Unexpected response from the api: " + JSON.stringify(json))
+				}
+			}.bind(this),
+			error,
+			{
+				cache: true,
+				timeout: 5000
+			}
+		)
+	},
+	markup: function(id, success, error){
+		this.jsonp(
+			{
+				action: "query",
+				prop:   "revisions",
+				revids: id,
+				rvprop: "ids|content",
+				format: "json"
+			},
+			function(json){
+				if(json.query){
+					if(json.query.pages){
+						var page = json.query.pages.values()[0]
+						var revision = page.revisions[0]
+						success(revision.revid, revision['*'])
 					}else if(json.query.badrevids){
 						error("Could not find diff for revid=" + json.query.badrevids.values()[0]["revid"])
 					}else{

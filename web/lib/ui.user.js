@@ -362,7 +362,7 @@ UI.User.Activity = Class.extend({
 				day.append(revs)
 				
 				//Reverse sort for more intuitive layout
-				revisions.sort(function(a,b){return b.timestamp-a.timestamp})
+				revisions.sort(function(a,b){return a.timestamp-b.timestamp})
 				
 				
 				//Plot the revisions 
@@ -412,6 +412,21 @@ UI.User.Activity.Revision = Class.extend({
 			this.div.addClass("reverted")
 		}
 	},
+	width: function(){
+		return this.div.outerWidth(true)
+	},
+	height: function(){
+		return this.div.outerHeight(true)
+	},
+	left: function(){
+		return this.div.parent().parent().position().left	
+	},
+	right: function(){
+		return this.left() + this.width()	
+	},
+	top: function(){
+		return this.div.parent().position().top+this.div.position().top	
+	},
 	click: function(callback){
 		this.clickCallback = callback
 		this.div.click(
@@ -441,57 +456,62 @@ UI.User.Activity.Details = Class.extend({
 		this.div = $('<div>')
 			.addClass("details")
 			.hide()
+			.click(function(e){e.stopPropagation()})
+		
+		this.scroller = $('<div>')
+			.addClass("scroller")
+		this.div.append(this.scroller)
+		
+		this.pointer = $('<div>').addClass("pointer")
+		this.div.append(this.pointer)
 		
 		this.title = $('<a>')
 			.addClass("title")
 			.attr('target', "_blank")
-		this.div.append(this.title)
+		this.scroller.append(this.title)
 		
 		this.timestamp = $('<a>')
 			.addClass("timestamp")
 			.attr('target', "_blank")
-		this.div.append(this.timestamp)
+		this.scroller.append(this.timestamp)
 		
 		this.comment = $('<div>')
 			.addClass("comment")
-		this.div.append(this.comment)
-		
-		this.diff = new UI.User.Activity.Diff()
-		this.div.append(this.diff.div)
+		this.scroller.append(this.comment)
 		
 		this.revert = new UI.User.Activity.Revert()
-		this.div.append(this.revert.div)
+		this.scroller.append(this.revert.div)
+		
+		this.diff = new UI.User.Activity.Diff()
+		this.scroller.append(this.diff.div)
 		
 		this.loadingId = null
 	},
-	expand: function(callback){
-		callback = callback || function(){}
-		if(!this.div.hasClass("expanded")){
-			this.div.css("width", "0%")
-			this.div.show()
-			this.div.animate(
-				{'width': "62.5%"},
-				200,
-				function(){
-					this.div.addClass("expanded")
-					callback()
-				}.bind(this)
-			)	
+	show: function(revision){
+		if(revision.coords.x < 15){//show on the right
+			this.div.css("right", '')
+			this.div.css("left", revision.right() + this.div.parent().innerWidth()/15)
+			this.div.addClass("right")
+			this.div.removeClass("left")
+		}else{//show on the left
+			this.div.css("left", '')
+			this.div.css("right", this.div.parent().innerWidth() - revision.left() + this.div.parent().innerWidth()/15)
+			this.div.addClass("left")
+			this.div.removeClass("right")
 		}
+		this.pointer.css("top", 
+			(
+				revision.top()-this.div.position().top - 
+				8
+			) + 
+			revision.height()/2
+		)
+		this.div.show()
+		this.div.addClass("expanded")
 	},
-	collapse: function(callback){
-		callback = callback || function(){}
-		if(this.div.hasClass("expanded")){
-			this.div.animate(
-				{'width': "0%"},
-				200,
-				function(){
-					this.div.removeClass("expanded")
-					this.div.hide()
-					callback()
-				}.bind(this)
-			)
-		}
+	hide: function(){
+		this.div.hide()
+		this.div.removeClass("expanded")
 	},
 	load: function(revision){
 		if(revision){
@@ -513,15 +533,29 @@ UI.User.Activity.Details = Class.extend({
 			this.loadingId = revision.id
 			system.api.diff(
 				revision.id,
-				function(id, rows){
-					if(id == this.loadingId){
-						this.diff.loading(false)
-						this.diff.load(rows)
+				function(id, diff){
+					if(diff){
+						if(id == this.loadingId){
+							this.diff.loading(false)
+							this.diff.diff(diff)
+						}
+					}else{
+						system.api.markup(
+							id,
+							function(id, markup){
+								this.diff.loading(false)
+								this.diff.create(markup)
+							}.bind(this),
+							function(message){
+								this.diff.loading(false)
+								this.diff.error("Failed to load diff: " + message)
+							}.bind(this)
+						)
 					}
 				}.bind(this),
 				function(message){
 					this.diff.loading(false)
-					this.diff.load("Failed to load diff: " + message)
+					this.diff.error("Failed to load diff: " + message)
 				}.bind(this)
 			)
 			
@@ -531,9 +565,9 @@ UI.User.Activity.Details = Class.extend({
 			}else{
 				this.revert.visible(false)
 			}
-			this.expand()
+			this.show(revision)
 		}else{
-			this.collapse()
+			this.hide()
 		}
 	}
 })
@@ -554,110 +588,52 @@ UI.User.Activity.Diff = Class.extend({
 	clear: function(){
 		this.div.children().remove()
 	},
-	load: function(rows){
+	diff: function(diff){
 		this.clear()
-		ops = this.parse(rows)
+		ops = WikiDiff.parse($("<table>" + diff + "</table>"))
 		for(var i in ops){var op = ops[i]
 			if(op.op == "change"){
 				var change = $('<div>')
-					.addClass("change")
+					.addClass(op.op)
 				
 				for(var j in op.ops){
-					change.append('<span>')
+					change.append(
+						$('<span>')
 						.addClass(op.ops[j].op)
 						.text(op.ops[j].content)
-					
-				}
-				this.div.append(change)
-			}
-		}
-	},
-	parse: function(rows){
-		
-		var ops = []
-		for(var i in rows){var tr = $(rows[i])
-			
-			if(tr.find('td.diff-lineno')){
-				var match = UI.User.Activity.Diff.line_re.exec(tr.find('td.diff-lineno').first().text())
-				if(match){
-					ops.push({
-						op: "lineno", 
-						line: parseInt(match[1])
-					})
-				}else{
-					LOGGING.error(
-						"Could not interpret line number of diff: " + 
-						tr.find('td.diff-lineno').first().text()
 					)
 				}
-			}else if(tr.find('td.diff-context')){
-				ops.push({
-					op: "context", 
-					content: tr.find('td.diff-context').first().text()
-				})
-			}else if(tr.find('td.diff-addedline') || tr.find('td.diff-deletedline')){
-				ops.push({
-					op: "change",
-					ops: this.parseChange(tr)
-				})
+				this.div.append(change)
+			}else if(op.op == "lineno"){
+				var line = $('<div>')
+					.addClass(op.op)
+					.text(op.line)
+				this.div.append(line)
+			}else{
+				var context = $('<div>')
+					.addClass("context")
+				this.div.append(context)
 			}
-			
 		}
-		return ops
 	},
-	parseChange: function(tr){
-		ops = []
-		var added = []
-		var removed = []
-		if(tr.find('td.diff-addedline')){
-			added = tr.find('td.diff-addedline > div').contents()
-		}
-		if(tr.find('td.diff-addedline')){
-			removed = tr.find('td.diff-deletedline > div').contents()
-		}
+	create: function(markup){
+		this.clear()
+		var create = $('<div>')
+			.addClass("change")
+			.append($('<span>').addClass('add').text(markup))
+			
+		this.div.append(create)
+	},
+	error: function(message){
+		this.clear()
+		var error = $('<div>')
+			.addClass("error")
+			.text(message)
 		
-		if(added && removed){
-			//Most difficult case :( 
-			for(var i in removed){var node = removed[i]
-				if(node.noteType == 3){//Text node!
-					ops.append({
-						op: "context",
-						content: node.textContent
-					})
-				}else{
-					ops.append({
-						op: "remove",
-						content: node.textContent
-					})
-					ops.append({
-						op: "add",
-						content: node.textContent
-					})
-				}
-			}
-		}else if(added){
-			for(var i in added){
-				ops.append({
-					op: "add",
-					content: node.textContent
-				})
-			}
-		}else if(removed){
-			for(var i in added){
-				ops.append({
-					op: "remove",
-					content: node.textContent
-				})
-			}
-		}else{
-			LOGGING.error("Strangeness in diffland")
-		}
-		return ops
-		
+		this.div.append(error)
 	}
 	
 })
-UI.User.Activity.Diff.line_re = /Line\ ([0-9]+):/
 
 UI.User.Activity.Revert = Class.extend({
 	init: function(){
