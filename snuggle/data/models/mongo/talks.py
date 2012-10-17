@@ -45,7 +45,7 @@ class Talk:
 			
 			topics.append({
 				'title': display,
-				'classes': templates.find(body)
+				'classes': templates.classes(body)
 			})
 		
 		self.db.users.update(

@@ -1,11 +1,10 @@
 UI = window.UI || {}
 
 UI.User = Class.extend({
-	init: function(id, name, registered, hasEmail, views, revisions, topics){
+	init: function(id, name, registered, views, revisions, topics){
 		this.id         = id
 		this.name       = name
 		this.registered = registered
-		this.hasEmail   = hasEmail ? true : false
 		this.views      = views || 0
 		
 		this.revisions  = revisions || {}
@@ -53,20 +52,6 @@ UI.User = Class.extend({
 	},
 	lastActivity: function(){
 		return Set.max(this.revisions.values().map(function(r){return r.timestamp}))
-	},
-	updateInfo: function(info){
-		if(this.id != info.id){
-			throw "Can't update info.  User Ids do not match " + 
-			"(" + this.id + " != " + info.id + ")"
-		}
-		this.name       = info.name
-		this.registered = info.registered
-		this.hasEmail   = info.hasEmail
-		this.views      = info.views
-		
-		this.info.update(this)
-		
-		
 	},
 	updateRevision: function(revision){
 		if(revisions[revision.id]){
@@ -118,6 +103,16 @@ UI.User = Class.extend({
 		return this.div.outerHeight(true)
 	}
 })
+UI.User.fromJSON = function(json){
+	return new UI.User(
+		json._id, 
+		json.name, 
+		json.registration, 
+		0,
+		json.revisions, 
+		((json.talk || {}).topics || [])
+	)
+}
 
 UI.User.Info = Class.extend({
 	init: function(name){
@@ -165,13 +160,20 @@ UI.User.Meta = Class.extend({
 		this.div.append(this.lastActivity)
 	},
 	update: function(registered, hasEmail, revisions, lastActivity){
+		console.log(registered)
 		this.registered.text(new Date(registered*1000).format("wikiDate"))
 		
 		this.hasEmail.text(hasEmail ? "yes" : "no")
 		
 		this.revisions.text(revisions)
-			
-		this.lastActivity.text(new Date(lastActivity*1000).format("wikiDate"))
+		
+		if(lastActivity){
+			var lastActivityText = new Date(lastActivity*1000).format("wikiDate")
+		}else{
+			var lastActivityText = ''
+		}
+		
+		this.lastActivity.text(lastActivityText)
 	}
 	
 })
@@ -370,7 +372,7 @@ UI.User.Activity = Class.extend({
 					i = parseInt(i)
 					var revision = revisions[i]
 					var rev = new UI.User.Activity.Revision(
-						revision.id, 
+						revision._id, 
 						revision.page, 
 						revision.timestamp,
 						revision.comment,
@@ -560,7 +562,7 @@ UI.User.Activity.Details = Class.extend({
 			)
 			
 			if(revision.revert){
-				this.revert.load(revision.revert.id, revision.revert.user, revision.revert.comment)
+				this.revert.load(revision.revert._id, revision.revert.user, revision.revert.comment)
 				this.revert.visible(true)
 			}else{
 				this.revert.visible(false)
@@ -685,6 +687,7 @@ UI.User.Talk = Class.extend({
 		//clear space for new topics
 		this.topics.children().remove()
 		
+		console.log(topics)
 		//For each topic, added it. 
 		for(var i in topics){var t = topics[i]
 			var topic = $('<div>')
@@ -696,8 +699,10 @@ UI.User.Talk = Class.extend({
 			
 			this.topics.append(topic)
 				
-			if(t.class){
-				topic.addClass(t.class)
+			if(t.classes){
+				for(var i=0;i<t.classes.length;i++){
+					topic.addClass(t.classes[i])
+				}
 			}
 			
 			icon = $('<dt>')

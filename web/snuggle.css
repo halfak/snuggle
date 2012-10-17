@@ -77,9 +77,9 @@ div#list div.user.selected{
 		position: relative;
 		display: inline-block;
 		vertical-align: top;
-		width: 25%;
+		width: 26%;
 		height: 2em;
-		padding-left: 1%;
+		padding-left: .5em;
 	}
 		div.user.new div.info span.name{
 			text-decoration: underline;
@@ -157,8 +157,8 @@ div#list div.user.selected{
 	div.user div.activity{
 		display: inline-block;
 		vertical-align: top;
-		width: 40%;
-		margin-left: 2%;
+		width: 42%;
+		margin-left: .5em;
 	}
 		div.user div.activity div.label{
 			display: none;
@@ -342,8 +342,8 @@ div#list div.user.selected{
 		display: inline-block;
 		position: relative;
 		height: 2em;
-		width: 31%;
-		padding-left: 1%;
+		width: 30%;
+		padding-left: .5em;
 	}	
 		div.user div.topics{
 			position: absolute;
@@ -359,17 +359,15 @@ div#list div.user.selected{
 		}
 			div.user div.talk div.topic dt{
 				display: inline-block;
-				width: 1.9em;
-				height: 1em;
+				width: 3em;
+				height: 1.2em;
 				border-radius: .25em;
 				font-size: 1em;
 				font-weight: bold;
 				text-align:center;
 				margin-right: .5em;
 				color: #000;
-			}
-			div.user div.talk div.topic:hover dt{
-				background-color: #ffb;
+				text-align: center;
 			}
 			div.user div.talk div.topic dd{
 				display: none;
@@ -383,58 +381,48 @@ div#list div.user.selected{
 				content: "\0000a0";
 			}
 			
-			div.user div.talk div.vandal_1 dt{
+			div.user div.talk div.warning dt{
+				border: 1px solid #933;
+				box-shadow: 0px 0px 4px #933;
+			}
+			div.user div.talk div.warning dt:before{
+				content: "W";
+			}
+			
+			div.user div.talk div.warning.vandal dt{
 				border: 1px solid #600;
 				box-shadow: 0px 0px 4px #600;
 			}
-			div.user div.talk div.vandal_1 dt:before{
+			div.user div.talk div.warning.vandal dt:before{
 				content: "V";
 			}
-			div.user div.talk div.vandal_1 dt:after{
+			div.user div.talk div.level_1 dt:after{
 				content: "1";
 				vertical-align: super;
 				font-size: .6em;
 			}
-			
-			div.user div.talk div.vandal_2 dt{
-				border: 1px solid #600;
-				box-shadow: 0px 0px 4px #600;
-			}
-			div.user div.talk div.vandal_2 dt:before{
-				content: "V";
-			}
-			div.user div.talk div.vandal_2 dt:after{
+			div.user div.talk div.level_2 dt:after{
 				content: "2";
 				vertical-align: super;
 				font-size: .6em;
 			}
-			
-			div.user div.talk div.vandal_3 dt{
-				border: 1px solid #600;
-				box-shadow: 0px 0px 4px #600;
-			}
-			div.user div.talk div.vandal_3 dt:before{
-				content: "V";
-			}
-			div.user div.talk div.vandal_3 dt:after{
+			div.user div.talk div.level_3 dt:after{
 				content: "3";
 				vertical-align: super;
 				font-size: .6em;
 			}
-			
-			div.user div.talk div.vandal_4 dt{
-				border: 1px solid #a00;
-				box-shadow: 0px 0px 4px #500;
-				background: #900;
-				color: #ff8;
-			}
-			div.user div.talk div.vandal_4 dt:before{
-				content: "V";
-			}
-			div.user div.talk div.vandal_4 dt:after{
+			div.user div.talk div.level_4 dt:after{
 				content: "4";
 				vertical-align: super;
 				font-size: .6em;
+			}
+			
+			div.user div.talk div.block dt{
+				border: 1px solid #000;
+				box-shadow: 0px 0px 4px #000;
+			}
+			div.user div.talk div.block dt:before{
+				content: "block";
 			}
 			
 			div.user div.talk div.csd dt{
@@ -542,10 +530,20 @@ div#list div.user.selected{
 			}
 	
 	div.user.expanded div.talk{
+		position: relative;
+		margin: 0px;
+		height: 100%;
 	}
 		div.user.expanded div.talk div.topics{
 			display: block;
-			overflow: visible;
+			position: absolute;
+			top: 0px;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			padding: .5em;
+			margin: 0px;
+			overflow: auto;
 			white-space: normal;
 		}
 		div.user.expanded div.talk div.topics div.topic{
