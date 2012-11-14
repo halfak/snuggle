@@ -1,0 +1,20 @@
+div.edit_count {
+	position: relative;
+}
+	div.edit_count .header dd{
+		border: 3px double black;
+	}
+	div.edit_count .namespaces{
+		display: none;
+		position: absolute;
+		top: 100%;
+		right: 0px;
+		background: #eee;
+		border: 2px solid black;
+		box-shadow: 5px 5px 5px rgba(0, 0, 0, .4);
+		padding: .5em;
+		margin: 0px;
+	}
+	div.edit_count:hover .namespaces{
+		display: block;
+	}

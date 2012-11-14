@@ -5,14 +5,11 @@ UI.List = Class.extend({
 		this.users = []
 		this.selected = -1
 		
-		this.loader = {
-			//top: $('<div>').addClass("loader"),
-			bottom: new UI.List.Loader()
-		}
 		this.body = $('<div>').addClass("body")
-		//this.div.append(this.loader.top)
 		this.div.append(this.body)
-		this.div.append(this.loader.bottom.div)
+		
+		this.loader = new UI.List.Loader()
+		this.div.append(this.loader.div)
 		
 		$(window).keydown(function(e){
 			if(this.selected != -1){
@@ -70,6 +67,7 @@ UI.List = Class.extend({
 			this.users.push(user)
 			user.click(this.selectUser.bind(this))
 		}
+		this.select(0)
 	},
 	selectUser: function(user){
 		for(var i in this.users){var luser = this.users[i]
@@ -78,7 +76,6 @@ UI.List = Class.extend({
 				break
 			}
 		}
-				
 	},
 	select: function(i){
 		if(this.selected != i){
@@ -90,6 +87,7 @@ UI.List = Class.extend({
 				this.scrollToUser(this.users[i])
 			}
 		}
+		console.log(i)
 		this.selected = i
 	},
 	previous: function(){

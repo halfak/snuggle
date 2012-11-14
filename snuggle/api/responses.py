@@ -23,10 +23,10 @@ class Error(Response):
 	def deflate(self):
 		return {
 			'error': {
-				'code':    self.code,
-				'message': self.message,
-				'meta':    self.meta
-			}
+				'code': self.code,
+				'info': self.message
+			},
+			'meta':    self.meta
 		}
 		
 
@@ -38,8 +38,6 @@ class Success(Response):
 	
 	def deflate(self):
 		return {
-			'success': {
-				'payload': self.payload,
-				'meta':    self.meta
-			}
+			'success': self.payload,
+			'meta':    self.meta
 		}

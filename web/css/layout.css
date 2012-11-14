@@ -1,0 +1,31 @@
+* {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body{
+	height: 100%;
+	font-family: sans-serif;
+	padding: 0px;
+	margin: 0px;
+	box-shadow: inset 0px 0px 250px #000;
+}
+
+div#help{
+	position: fixed;
+	z-index: 10;
+	top: 0px;
+	right: 2em;
+	white-space: nowrap;
+}
+
+div#status{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+
+
+

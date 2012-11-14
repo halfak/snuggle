@@ -1,0 +1,204 @@
+div.revision_graph{
+	position: relative;
+	height: 100%;
+	width: 100%;
+	padding: 0px 0px 0px 1.5em;
+	overflow: hidden;
+}
+div.revision_graph div.label{
+	display: none;
+	font-weight: bold;
+	text-align: center;
+}
+div.revision_graph div.label.y{
+	position: absolute;
+	bottom: 0px;
+	left: -.5em;
+	height: 1em;
+	width: 20em;
+	transform-origin: 0 0;
+	-webkit-transform-origin: 0 0;
+	-moz-transform-origin:    0 0;
+	-ms-transform-origin:     0 0;
+	-o-transform-origin:      0 0;
+	transform: rotate(-90deg);
+	-ms-transform:rotate(-90deg); /* IE 9 */
+	-moz-transform:rotate(-90deg); /* Firefox */
+	-webkit-transform:rotate(-90deg); /* Safari and Chrome */
+	-o-transform:rotate(-90deg); /* Opera */
+	margin-left: 1em;
+}
+div.revision_graph div.breaks{
+	display: none;
+}
+div.revision_graph div.breaks.x div{
+	display:block;
+	width: 16.66666%;
+	float: left;
+	text-align: right;
+	font-size: .9em;
+}
+
+div.revision_graph.expanded{
+	padding-bottom: 2.5em;
+	overflow: visible;
+}
+div.revision_graph.expanded div.label{
+	display: block;
+}
+div.revision_graph.expanded div.label.x{
+	clear: left;
+}
+div.revision_graph.expanded div.breaks{
+	display: block;
+}
+
+div.revision_graph div.day_grid{
+	border-left: 1px solid #bbb;
+	height: 100%;
+	width: 100%;
+}
+div.revision_graph.expanded div.day_grid{
+	border-bottom: 1px solid #bbb;
+}
+	div.day_grid div.day{
+		position: relative;
+		float:left;
+		border-right: 1px solid #bbb;
+		border-left: none;
+		width: 3.333333%;
+		height: 100%;
+		background: #fff;
+	}
+		div.day_grid div.day div.container{
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			margin: -1px;
+		}
+		div.day_grid div.day div.container div.revision{
+			position: relative;
+			cursor: pointer;
+			border: 1px solid #666;
+			border-top: 0px;
+			z-index: 2;
+		}
+		div.day_grid div.day div.container div.revision:first-child{
+			border-top: 1px solid #666;
+		}
+		div.day_grid div.day div.container div.revision.selected{
+			outline: 2px solid black;
+			z-index: 3;
+		}
+
+div.revision_graph div.revision_details{
+	position: absolute;
+	top: 5px;
+	height: 17em;
+	width: 60%;
+	z-index: 2;
+	background: #eee;
+	border: 2px solid #000;
+	box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+}
+	div.revision_details div.body{
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		bottom: 0px;
+		right: 0px;
+		overflow: auto;
+		font-size: .75em;
+	}
+	div.revision_details div.pointer{
+		position: absolute;
+		width: 40px;
+		border-top: 10px solid transparent;
+		border-bottom: 10px solid transparent;
+	}		
+	div.revision_details.right div.pointer{
+		border-right: 10px solid #000;
+		right: 103%;
+	}
+	div.revision_details.left div.pointer{
+		border-left: 10px solid #000;
+		left: 103%;
+	}
+	div.revision_details a.title{
+		display: block;
+		background: #fff;
+		text-align: center;
+		font-weight: bold;
+		text-decoration: none;
+		word-wrap: break-word;
+		font-size: 1.1em;
+		border-bottom: 3px double #000;
+	}
+	div.revision_details a.timestamp{
+		padding: 0px .5em;
+	}	
+	div.revision_details span.comment{
+		padding: 0px .5em;
+		font-style: italic;
+		word-wrap: break-word;
+	}	
+	div.revision_details div.diff{
+		bottom: 0px;
+		background: #fff;
+		overflow-y: auto;
+		clear: both;
+		margin-top: .5em;
+	}	
+		div.revision_details div.diff div{
+			font-size: .9em;
+			margin-bottom: .5em;
+			padding: 0px .5em;
+			word-wrap: break-word;
+		}
+		div.revision_details div.diff div.lineno{
+			font-weight: bold;
+			text-align: center;
+			border-bottom: 1px solid black;
+		}
+		div.revision_details div.diff div.lineno:before{
+			content: "Line ";
+		}
+		div.revision_details div.diff div.context{
+			text-align: center;
+			height: 1px;
+			margin: .1em;
+			border: 1px solid silver;
+		}
+		div.revision_details div.diff div.change{
+			word-wrap: break-word;
+		}
+		div.revision_details div.diff div.change span.context{
+			color: #555;
+		}
+		div.revision_details div.diff div.change span.add{
+			text-decoration: underline;
+			background: #BFB;
+		}
+		div.revision_details div.diff div.change span.remove{
+			color: #000;
+			background: #FBB;
+			text-decoration: line-through;
+		}
+	
+	div.revision_details div.revision{
+		display:block;
+		clear: both;
+		padding: .25em;
+	}
+	div.revision_details div.revert{
+		display:block;
+		clear: both;
+		padding: .25em;
+	}
+		div.revision_details div.revert span.preamble{
+			padding-left: 10px;
+			background-image: url(../img/dot.png);
+			background-position: center left;
+			background-repeat: no-repeat;
+		}

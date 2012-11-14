@@ -1,0 +1,66 @@
+div.slider{
+	position: relative;
+	z-index: 10;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: -1px;
+	margin-top: -1px;
+	white-space: normal;
+}
+div.slider:first-of-type{
+	margin-left: 0px;
+}
+	div.slider div.pane{
+		max-height: 1px;
+		background: #fff;
+		overflow: hidden;
+		padding: 0px 1em;
+		overflow-y: auto;
+	}
+	div.slider.expanded div.pane{
+		border-bottom: 2px solid #333;
+		background: #fff;
+		box-shadow: 2px 2px 5px rgba(0,0,0, .5);
+	}
+	div.slider div.tab{
+		position: relative;
+		z-index: 11;
+		color: #000;
+		text-shadow: rgba(255, 255, 255, .5) 1px 1px 1px;
+		background: #88e;
+		border: 1px solid #333;
+		border-top: 0px;
+		box-shadow: inset 0px .4em 4px #aaf;
+		box-shadow: 2px 2px 5px rgba(0,0,0, .5);
+		cursor: pointer;
+	}
+	div.slider div.tab span{
+		display: block;
+		padding: 0em 1em;
+		box-shadow: inset 0px .4em 4px #aaf;
+	}
+	div.slider.help div.tab{
+		float:right;
+		border-radius: 0px 0px 0px 1em;
+	}
+	div.slider.help div.tab span{
+		border-radius: 0px 0px 0px 1em;
+	}
+	div.slider.help div.pane{
+		width: 30em;
+	}
+	
+	div.slider.about div.tab{
+		float:left;
+		border-radius: 0px 0px 1em 0px;
+	}
+	div.slider.about div.tab span{
+		border-radius: 0px 0px 1em 0px;
+	}
+	div.slider.about div.pane{
+		width: 20em;
+	}
+
+div.slider div.pane a{
+	text-decoration: none;
+}

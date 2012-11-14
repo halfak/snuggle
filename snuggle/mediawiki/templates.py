@@ -94,7 +94,7 @@ class CSD(Template):
 	
 
 class Deletion(Template):
-	expression = r'afd|.*?delet.*?'
+	expression = r'prod|afd|.*?delet.*?'
 	groups     = 1
 	priority   = 1
 	

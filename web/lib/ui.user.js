@@ -160,7 +160,6 @@ UI.User.Meta = Class.extend({
 		this.div.append(this.lastActivity)
 	},
 	update: function(registered, hasEmail, revisions, lastActivity){
-		console.log(registered)
 		this.registered.text(new Date(registered*1000).format("wikiDate"))
 		
 		this.hasEmail.text(hasEmail ? "yes" : "no")
@@ -345,6 +344,7 @@ UI.User.Activity = Class.extend({
 		//Find maximum number of day revisions
 		var maxRevs = Set.max(dayRevisions.values().map(function(revs){return revs.length}))
 		
+		
 		//Render days
 		for(var d=0;d<=days;d++){
 			//Create tag for day
@@ -365,7 +365,6 @@ UI.User.Activity = Class.extend({
 				
 				//Reverse sort for more intuitive layout
 				revisions.sort(function(a,b){return a.timestamp-b.timestamp})
-				
 				
 				//Plot the revisions 
 				for(var i in revisions){
@@ -687,7 +686,6 @@ UI.User.Talk = Class.extend({
 		//clear space for new topics
 		this.topics.children().remove()
 		
-		console.log(topics)
 		//For each topic, added it. 
 		for(var i in topics){var t = topics[i]
 			var topic = $('<div>')

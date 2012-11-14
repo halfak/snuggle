@@ -116,7 +116,8 @@ class Revision(DataType):
 			'timestamp': self.timestamp,
 			'comment':   self.comment,
 			'diff':      self.diff.deflate(),
-			'revert':    self.revert
+			'revert':    self.revert,
+			'sha1':      self.sha1
 		}
 	
 	@staticmethod
@@ -128,6 +129,7 @@ class Revision(DataType):
 			json['timestamp'],
 			json['comment'],
 			ByteDiff.inflate(json['diff']),
+			json['sha1'],
 			Revision.inflate(json['revert']) if json['revert'] != None else None
 		)
 	

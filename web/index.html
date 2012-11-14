@@ -1,392 +1,96 @@
 <html>
 	<head>
-	<link rel="stylesheet" href="snuggle.css" />
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="css/general.css" />
+		<link rel="stylesheet" href="css/revision_graph.css" />
+		<link rel="stylesheet" href="css/ui.css" />
+		<link rel="stylesheet" href="css/layout.css" />
+		<link rel="stylesheet" href="css/help.css" />
+		<link rel="stylesheet" href="css/controls.css" />
+		<link rel="stylesheet" href="css/snuggle.css" />
+		<link rel="stylesheet" href="css/user.css" />
+		<script language="javascript" src="lib/jquery-1.8.1.min.js"></script>
+		<script language="javascript" src="lib/class.js"></script>
+		<script language="javascript" src="lib/date.format.js"></script>
+		<script language="javascript" src="js/env.js"></script>
+		<script language="javascript" src="js/util.js"></script>
+		<script language="javascript" src="js/api.js"></script>
+		<script language="javascript" src="js/server.js"></script>
+		<script language="javascript" src="js/ui.js"></script>
+		<script language="javascript" src="js/ui.revision_graph.js"></script>
+		<script language="javascript" src="js/models.js"></script>
+		<script language="javascript" src="js/views.js"></script>
+		<script language="javascript" src="js/controller.js"></script>
 	</head>
 	<body>
-		<div id="header">
-			<div class="status"></div>
-			<div class="filters"></div>
-		</div>
-		<div id="list">
-			<div class="user new">
-				<div class="info">
-					<span class="name">EpochFail</span>
-					<div class="meta">
-						<dt>Registration</dt>
-						<dd>14:05 December 10th, 2008</dd>
-						<dt>Has email</dt>
-						<dd>yes</dd>
-						<dt>Last updated</dt>
-						<dd>06:05 September 5th, 2012</dd>
-					</div>
-					<div class="menu">
-						<ul>
-							<li class="talk">Talk</li>
-							<li class="contribs">Contribs</li>
-							<li class="love">Love</li>
-						</ul>
-					</div>
+		<div id="status" class="online"><span class="element"><!--
+				--><span class="number"></span><!--
+				--><span class="right"></span><!--
+				--><span class="symbol">Sn</span><!--
+				--><span class="footer"><!--
+					--><span class="name"></span><!--
+					--><span class="mass"></span><!--
+				--></span><!--
+			--></span><!--
+		--></div><!-- status -->
+		<div id="help" class="dual-slider">
+			<div class="slider help">
+				<div class="pane">
+					<h3>Help!</h3>
+					<p>
+						Snuggle is a tool for watching newly registered users as they 
+						enter Wikipedia.  
+					</p>
+					<p>
+						When you find a bug, please take a 
+						<a target="_blank" href="http://en.wikipedia.org/wiki/Screenshot">screenshot</a> 
+						to demonstrate the problem and
+						<a target="_blank" href="https://bitbucket.org/halfak/snuggle/issues">file a bug</a>
+						in the issue tracker.
+					</p>
+					<h2>See also:</h2>
+					<ul>
+						<li><a target="_blank" href="http://en.wikipedia.org/wiki/WP:SN">Full documentation</a></li>
+						<li><a target="_blank" href="irc://freenet.org/#wikimedia-snuggle">irc://freenet.org/#wikimedia-snuggle</a></li>
+						<li><a target="_blank" href="https://bitbucket.org/halfak/snuggle">Source code</a></li>
+					</ul>
 				</div>
-				<div class="activity">
-					<div class="label y">Edits</div>
-					<div class="breaks x">
-						<div style="height:33.3%;">3</div>
-						<div style="height:33.3%;">2</div>
-						<div style="height:33.3%;">1</div>
-					</div><!--breaks x-->
-					<div class="days">
-						<div class="day">
-							<div class="revs" style="height: 100%;">
-								<div class="rev" style="height:33.3%;"></div>
-								<div class="rev" style="height:33.3%;"></div>
-								<div class="rev ns_1" style="height:33.3%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 66.6%;">
-								<div class="rev ns_1" style="height:50%;"></div>
-								<div class="rev ns_1" style="height:50%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 33.3%;">
-								<div class="rev" style="height:100%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 66.6%;">
-								<div class="rev" style="height:50%;"></div>
-								<div class="rev reverted" style="height:50%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 33.3%;">
-								<div class="rev ns_4" style="height:100%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-					</div><!--days-->
-					<div class="breaks x">
-						<div>5</div>
-						<div>10</div>
-						<div>15</div>
-						<div>20</div>
-						<div>25</div>
-					</div>
-				</div><!--activity-->
-				<div class="talk">
-					<div class="topics">
-						<div class="topic vandal_1">
-							<dt title="Your edits to herpa derpa"></dt>
-							<dd>Your edits to herpa derpa.</dd>
-						</div>
-						<div class="topic vandal_2">
-							<dt></dt>
-							<dd>Your edits to herpa derpa.</dd>
-						</div>
-						<div class="topic general">
-							<dt></dt>
-							<dd>This is just a notification of a long topic title that should need to wrap around the edge of the list item.</dd>
-						</div>
-					</div>
-				</div><!--talk-->
-			</div><!--user-->
-			<div class="user expanded">
-				<div class="info">
-					<span class="name">EpochFail</span>
-					<div class="meta">
-						<dt>Registration</dt>
-						<dd>14:05, 10 December 2008</dd>
-						<dt>Has email</dt>
-						<dd>yes</dd>
-						<dt>Most recent activity</dt>
-						<dd>06:23, 5th September 2012</dd>
-						<dt>Viewed</dt>
-						<dd>3 times</dd>
-					</div>
-					<div class="menu">
-						<ul>
-							<li class="talk">Talk</li>
-							<li class="contribs">Contribs</li>
-							<li class="love">Love</li>
-						</ul>
-					</div>
+				<div class="tab"><span>help</span></div>
+			</div>
+			<div class="slider about">
+				<div class="pane">
+					<h3>Snuggle Beta</h3>
+					<p>
+						Snuggle is an experimental user interface
+						designed to aid in the identification of productive
+						new Wikipedians.  The system is still under heavy 
+						development, but your use of the system and feedback 
+						is welcome.
+					</p>
+					<p>
+						The system is developed and maintained by
+						<a target="_blank" href="http://halfaker.info">Aaron Halfaker</a>.
+						The original idea for the system came from 
+						<a target="_blank" href="http://halfaker.info/publications/The_Rise_and_Decline">his research</a>
+						into the cause of the decline of active editors in the 
+						English Wikipedia. 
+					</p>
 				</div>
-				
-				<div class="activity">
-					<div class="label y"></div>
-					<div class="breaks y" style="">
-						<div style="height:33.3%;">3</div>
-						<div style="height:33.3%;">2</div>
-						<div style="height:33.3%;">1</div>
-					</div><!--breaks y-->
-					<div class="days">
-						<div class="day">
-							<div class="revs" style="height: 100%;">
-								<div class="rev" style="height:33.3%;"></div>
-								<div class="rev" style="height:33.3%;"></div>
-								<div class="rev ns_1" style="height:33.3%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 66.6%;">
-								<div class="rev ns_1" style="height:50%;"></div>
-								<div class="rev ns_1" style="height:50%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 33.3%;">
-								<div class="rev" style="height:100%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 66.6%;">
-								<div class="rev" style="height:50%;"></div>
-								<div class="rev reverted" style="height:50%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 33.3%;">
-								<div class="rev ns_4" style="height:100%;"></div>
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-						<div class="day">
-							<div class="revs" style="height: 0%;">
-							</div>
-						</div>
-					</div><!--days-->
-					<div class="breaks x">
-						<div>5</div>
-						<div>10</div>
-						<div>15</div>
-						<div>20</div>
-						<div>25</div>
-						<div>&nbsp;</div>
-					</div><!--breaks x-->
-					<div class="label x"></div>
-				</div><!--activity-->
-				<div class="talk">
-					<div class="topics">
-						<div class="topic vandal_1">
-							<dt></dt>
-							<dd>Your edits to herpa derpa.</dd>
-						</div>
-						<div class="topic vandal_2">
-							<dt></dt>
-							<dd>Your edits to herpa derpa.</dd>
-						</div>
-						<div class="topic general">
-							<dt></dt>
-							<dd>This is just a notification of a long topic title that should need to wrap around the edge of the list item.</dd>
-						</div>
-					</div>
-				</div>
-			</div><!--user-->
-		</div><!--list-->
-		
-		<!--
-		
-		<div style="height: 300px; border: 1px solid black;position:relative;width:20px;">
-			<div style="position:absolute;bottom:0px;width:100%;">
-				<div style="border: 1px solid black">1</div>
-				<div style="border: 1px solid black">2</div>
+				<div class="tab"><span>about</span></div>
 			</div>
 		</div>
-		-->
+		<script type="text/javascript">
+			SYSTEM = {
+				wiki_root: "http://en.wikipedia.org",
+				help: {
+					help: new UI.Slider($("#help .slider.help")),
+					about: new UI.Slider($("#help .slider.about"))
+				}
+			}
+			SYSTEM.local = new LocalServer("http://stat1.wikimedia.org:8080"),
+			SYSTEM.mediawiki = new MediaWiki(SYSTEM.wiki_root + "/w/api.php")
+			SYSTEM.controller = new Controller(SYSTEM.local, SYSTEM.mediawiki)
+			
+		</script>
 	<body>
 </html>

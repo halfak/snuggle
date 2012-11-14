@@ -84,6 +84,15 @@ class System:
 	def __newRevision(self, revision):
 		relevant = False
 		
+		
+		#Update for all revisions to a page that could have reverted one of our user's revisions
+		for reverted in self.model.reverteds.get(revision.page.id):
+			logger.debug("Updating reverted status of %s for %s." % (reverted.id, reverted.revision.user.name))
+			reverted.process(revision)
+			if reverted.complete(): logging.debug("Completed processing revisions for %s" % reverted.id)
+			
+			relevant = True
+		
 		#Check if this revision was made by one of our users
 		if revision.user.id in self.model.users:
 			logger.debug("Adding revision %s for %s." % (revision.id, revision.user.name))
@@ -96,14 +105,6 @@ class System:
 			)
 			
 			self.model.reverteds.new(reverted)
-			
-			relevant = True
-		
-		#Update for all revisions to a page that could have reverted one of our user's revisions
-		for reverted in self.model.reverteds.get(revision.page.id):
-			logger.debug("Updating reverted status of %s for %s." % (reverted.id, reverted.revision.user.name))
-			reverted.process(revision)
-			if reverted.complete(): logging.debug("Completed processing revisions for %s" % reverted.id)
 			
 			relevant = True
 		

@@ -4,9 +4,10 @@ db = pymongo.Connection().newbies
 
 users = db.users.find(
 	{
-		'counts.all': {"$gt": 4}
+		'counts.0': {"$gt": 1}
 	},
-	limit=100
+	limit=200,
+	sort=[('_id', 1)]
 )
 print("SAMPLE = [")
 for document in users:

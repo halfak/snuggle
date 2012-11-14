@@ -1,0 +1,59 @@
+div.controls div.container{
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+}
+
+div.controls div.categories{
+	display: inline-block;
+	text-align: bottom;
+	white-space: nowrap;
+	margin-left: 4em;
+}
+	div.controls div.categories div{
+		position: relative;
+		display: inline-block;
+		text-align: bottom;
+		border: 1px solid #999;
+		border-bottom: 0px;
+		font-size: 1em;
+		padding: .25em 2em;
+		border-radius: .5em 1em 0px 0px;
+		cursor: pointer;
+		background: #e0e0e0;
+		box-shadow: inset 0px -.25em 1em rgba(0,0,0,.1);
+	}
+	div.controls div.categories div:hover{
+		background: #eee;
+		box-shadow: inset 0px .5em .5em rgba(255,255,255,.8);
+	}
+	div.controls div.categories div.selected{
+		top: 1px;
+		z-index: 2;
+		background: #eee;
+		font-weight: bold;
+		box-shadow: inset 0px .5em .5em rgba(255,255,255,.8);
+	}
+	
+div.controls div.filters{
+	position: relative;
+	z-index: 1;
+	background: #eee;
+	border-top: 1px solid #999;
+	border-bottom: 1px solid #999;
+	padding: .25em 1em;
+	box-shadow: inset 0px -.75em 1em rgba(0,0,0,.2);
+	font-size: .9em;
+}	
+	div.controls div.filters span.category{
+		text-decoration: underline;
+	}
+
+
+div.radios {
+	display: inline-block;
+}
+	div.radios div.radio {
+		display: inline-block;
+	}

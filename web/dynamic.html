@@ -1,6 +1,11 @@
 <html>
 	<head>
 	<link rel="stylesheet" href="snuggle.css" />
+	<link rel="stylesheet" href="header.css" />
+	<link rel="stylesheet" href="controls.css" />
+	<link rel="stylesheet" href="form.css" />
+	<link rel="stylesheet" href="menu.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
 	<script language="javascript" src="lib/jquery-1.8.1.min.js"></script>
 	<script language="javascript" src="lib/config.js"></script>
 	<script language="javascript" src="lib/util.js"></script>
@@ -9,18 +14,115 @@
 	<script language="javascript" src="lib/api.js"></script>
 	<script language="javascript" src="lib/ui.user.js"></script>
 	<script language="javascript" src="lib/ui.list.js"></script>
+	<script language="javascript" src="lib/ui.menu.js"></script>
 	<script language="javascript" src="lib/testing/users.sample.js"></script>
 	<script language="javascript" src="lib/system.js"></script>
 	</head>
 	<body>
 		<div id="header">
-			<div class="status"></div>
-			<div class="filters"></div>
+			<div class="status online"><span class="element"><!--
+					--><span class="number"></span><!--
+					--><span class="right"></span><!--
+					--><span class="symbol">Sn</span><!--
+					--><span class="footer"><!--
+						--><span class="name"></span><!--
+						--><span class="mass"></span><!--
+					--></span><!--
+				--></span></div>
+			<div id="controls">
+				<div class="lists">
+					<div class="unsorted selected"><span>new</span></div><!--
+					--><div class="desirable"><span>desirable</span></div><!--
+					--><div class="vandals"><span>vandals</span></div>
+				</div>
+				<div class="filters">
+					<span class="list">
+						Unsorted newcomers
+					</span>
+					with more than
+					<select class="edits">
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+						<option>9</option>
+						<option>10</option>
+						<option>15</option>
+						<option>20</option>
+						<option>25</option>
+						<option>30</option>
+						<option>35</option>
+						<option>40</option>
+					</select>
+					edits to
+					<select class="namespace">
+						<option value="all">any namespace</option>
+						<option value="0">Articles</option>
+						<option value="1">Article talk</option>
+						<option value="2">User</option>
+						<option value="3">User talk</option>
+						<option value="4">Wikipedia</option>
+						<option value="5">Wikipedia talk</option>
+					</select>
+					sorted by
+					<select class="sort">
+						<option value="registration">registration date</option>
+						<option value="counts.all">total edits</option>
+						<option value="reverted.prop">reverted edits</option>
+						<option value="stiki.score">stiki score</option>
+					</select>:
+					<div class="radio-group">
+						<div class="radio">
+							<input type="radio" name="direction" id="direction_ascending" checked="checked"/>
+							<label for="direction_ascending">ascending</label>
+						</div>
+						<div class="radio">
+							<input type="radio" name="direction" id="direction_descending" />
+							<label for="direction_descending">descending</label>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<script>
 			list = new UI.List()
 			$("body").append(list.div)
 			list.append(SAMPLE)
+			$("body").append($("#menu"))
+			menu = new UI.Menu(
+				"<h2>Help</h2>" + 
+				"<p>This user interface is still experimental. Once the form and function stabilize, this tab will contain help pages and documentation.  Until then hold tight.</p>" + 
+				"<h3>Using the inteface</h3>" + 
+				"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at nibh neque, et vestibulum orci. Mauris luctus ornare metus non tristique. Phasellus sodales lacus et quam molestie quis condimentum dui ultrices. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer lobortis placerat nulla eu tincidunt. Praesent a quam mauris. Vestibulum pretium nunc sit amet tellus suscipit tincidunt. Donec at pretium nunc. Etiam vitae velit vel justo fringilla commodo. Sed non metus rhoncus dolor fermentum ullamcorper non ut mauris. Suspendisse sed metus tellus.</p>" + 
+				"<h3>See also </h3>" + 
+				"<ul>" + 
+				"<li><a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/WP:SN\">Full documentation</a></li>" + 
+				"<li><a target=\"_blank\" href=\"irc://freenet.org/#wikimedia-snuggle\">irc://freenet.org/#wikimedia-snuggle</a></li>" + 
+				"<li><a target=\"_blank\" href=\"https://bitbucket.org/halfak/snuggle/issues/new\">Report a bug</a>(please take a screenshot)</li>" + 
+				"</ul>",
+				"<h2>Snuggle</h2>" + 
+				"<p>" + 
+					"This is a demo of the " +  
+					"snuggle visualization " + 
+					"of newcomer activity. " + 
+				"</p>" + 
+				"<p>" + 
+					"This interface is still " + 
+					"under development and " + 
+					"is still largely incomplete. " + 
+					"Please email " + 
+					"<a href=\"mailto:aaron.halfaker@gmail.com\">aaron.halfaker@gmail.com</a> " + 
+					"or see " + 
+					"<a href=\"http://enwp.org/User:EpochFail\">User:EpochFail</a> " + 
+					"with any questions or " + 
+					"concerns." + 
+				"</p>"
+			)
+			$("body").append(menu.node)
 		</script>
 	<body>
 </html>

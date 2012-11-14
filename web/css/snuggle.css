@@ -1,0 +1,86 @@
+div.controls{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 6em;
+}
+
+div.user_list{
+	position: fixed;
+	top: 6em;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	overflow-y: auto;
+	background: #fff;
+}
+div.user_list.loading{
+	padding-bottom: 50px;
+	background: #fff url(http://upload.wikimedia.org/wikipedia/commons/5/53/Loading_bar.gif) no-repeat bottom center;
+}
+
+div#status{
+	margin: .25em;
+	font-size: 1.4em;
+}
+
+span.element{
+	display: inline-block;
+	position: relative;
+	padding: .4em .5em .7em .5em;
+	background: #ff0;
+	border: 1px solid #880;
+	border-radius: 4px;
+	box-shadow: inset -2px -5px 10px rgba(0,0,0,.2);
+	font-weight: bold;
+}
+	span.element span.number{
+		display: block;
+		position: absolute;
+		top: .2em;
+		left: .5em;
+		font-size: .4em;
+	}
+	span.element span.number:after{
+		content: "50";
+	}
+	span.element span.right{
+		display: block;
+		position: absolute;
+		top: .5em;
+		right: .5em;
+		width: 1em;
+		font-size: .08em;
+		font-weight: normal;
+		text-align: right;
+	}
+	span.element span.right:after{
+		content: "2 8 18 18 4";
+	}
+	span.element span.symbol{
+		display: block;
+	}
+	span.element span.footer{
+		display: block;
+		position: absolute;
+		bottom: .13em;
+		left: .25em;
+	}
+	span.element span.name{
+		display: block;
+		font-size: .35em;
+		font-weight: normal;
+	}
+	span.element span.name:after{
+		content: "Snuggle";
+	}
+	span.element span.mass{
+		display: block;
+		font-size: .2em;
+		font-weight: normal;
+	}
+	span.element span.mass:after{
+		content: "118.7";
+	}
+
