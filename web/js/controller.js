@@ -17,6 +17,8 @@ Controller = Class.extend({
 			}
 		}.bind(this))
 		
+		this.list.user_categorized.attach(this._categorize_user.bind(this))
+		
 		this.list.view_changed.attach(this._fill_list.bind(this))
 		
 		this.controls.changed.attach(function(_, filters){
@@ -103,5 +105,26 @@ Controller = Class.extend({
 				}.bind(this)
 			)
 		}
+	},
+	_categorize_user: function(_, args){
+		user = args[0]
+		category = args[1]
+		
+		user.category.disabled(true)
+		this.local.users.categorize(
+			user.model, category,
+			function(response){
+				user.category.disabled(false)
+				user.model.category.update(
+					response.category.current, 
+					response.category.history
+				)
+				this.list.model.shift_selection(1)
+			}.bind(this),
+			function(message){
+				user.category.disabled(false)
+				alert(message)
+			}
+		)
 	}
 })

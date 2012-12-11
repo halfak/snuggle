@@ -215,12 +215,13 @@ Model.User = Selectable.extend({
 		talk : `Model.User.Talk`
 			the user's talk page activity
 	*/
-	init: function(id, info, contribs, talk){
+	init: function(id, info, contribs, talk, category){
 		this._super(this)
 		this.id        = id
 		this.info      = info
 		this.contribs  = contribs
 		this.talk      = talk
+		this.category  = category
 		
 		this.was_viewed  = info.views > 0
 		
@@ -254,7 +255,8 @@ Model.User.inflate = function(doc){
 		doc.id,
 		Model.User.Info.inflate(doc.info),
 		Model.User.Contribs.inflate(doc.contribs, new Date(doc.info.registration*1000)),
-		Model.User.Talk.inflate(doc.talk, doc.name)
+		Model.User.Talk.inflate(doc.talk, doc.name),
+		Model.User.Category.inflate(doc.category)
 	)
 }
 
@@ -273,12 +275,13 @@ Model.User.inflate = function(doc){
 			has_email : true | false
 				did the user include an email address when registering?
 		*/
-		init: function(name, registration, views, has_email, counts){
+		init: function(name, registration, views, has_email, counts, category){
 			this.name         = name
 			this.registration = registration
 			this.views        = views || 0
 			this.has_email    = has_email
 			this.counts       = counts
+			this.category     = category
 			
 			this.changed  = new Event(this)
 		},
@@ -455,5 +458,26 @@ Model.User.inflate = function(doc){
 				this.classes = classes || []
 			}
 		})
+	
+	Model.User.Category = Class.extend({
+		init: function(current, history){
+			this.current = current
+			this.history = history
+			
+			this.changed = new Event(this)
+		},
+		update: function(current, history){
+			this.current = current
+			this.history = history
+			this.changed.notify()
+		}
+	})
+	Model.User.Category.inflate = function(doc){
+		doc = doc || {}
+		return new Model.User.Category(
+			doc.current || null,
+			doc.history || []
+		)
+	}
 		
 

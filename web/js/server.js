@@ -56,7 +56,7 @@ LocalServer.Users = Class.extend({
 	},
 	categorize: function(user, category, success, error){
 		this.api.post(
-			'user', 'view', 
+			'user', 'categorize', 
 			{
 				id: user.id,
 				category: category
@@ -113,7 +113,8 @@ LocalServer.Users.Cursor = Class.extend({
 				name: doc.name,
 				registration: doc.registration,
 				reverted: doc.reverted,
-				counts: doc.counts
+				counts: doc.counts,
+				views: doc.views
 			},
 			contribs: doc.revisions,
 			talk: {

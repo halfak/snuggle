@@ -36,6 +36,13 @@ div.controls div.categories{
 		box-shadow: inset 0px .5em .5em rgba(255,255,255,.8);
 	}
 	
+	div.controls div.categories div.good-faith {
+		background: #afa;
+	}
+	div.controls div.categories div.bad-faith {
+		background: #faa;
+	}
+	
 div.controls div.filters{
 	position: relative;
 	z-index: 1;

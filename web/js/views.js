@@ -17,9 +17,9 @@ View.Controls = Class.extend({
 		
 		this.categories = new UI.SingleSelect(
 			[
-				{value: null, label: "unsorted"},
-				{value: "good-faith"},
-				{value: "bad-faith"}
+				{value: null, label: "unsorted", o: {class: "unsorted"}},
+				{value: "good-faith", o: {class: "good-faith"}},
+				{value: "bad-faith", o: {class: "bad-faith"}}
 			],
 			{class: "categories"}
 		)
@@ -137,7 +137,7 @@ View.Filters = Class.extend({
 				//{value: "predicted quality"}, Sadly, not ready yet
 				{value: "registration", label: "registration date"},
 				{value: "reverted", label: "reverted edits"},
-				{value: "counts.all", laebel: "total edits"}
+				{value: "counts.all", label: "total edits"}
 			]
 		)
 		this.node.append(this.sorted_by.node)
@@ -213,7 +213,8 @@ View.UserList = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("user_list")
-			.scroll(this._handle_scroll.bind(this))
+			.scroll(this._handle_view_change.bind(this))
+			.resize(this._handle_view_change.bind(this))
 		
 		this._appended(null, model.list)
 		
@@ -222,8 +223,9 @@ View.UserList = Class.extend({
 		this.model.is_loading.attach(this._is_loading.bind(this))
 		this.model.user_selected.attach(this._show_user.bind(this))
 		
-		this.view_changed    = new Event(this)
-		this.user_clicked    = new Event(this)
+		this.view_changed      = new Event(this)
+		this.user_clicked      = new Event(this)
+		this.user_categorized  = new Event(this)
 	},
 	/**
 	Generates the ranges of the current view pane.
@@ -242,12 +244,12 @@ View.UserList = Class.extend({
 		if(user){
 			if(user.top() < 25){
 				this.node.scrollTop(this.node.scrollTop() + user.top() - 25)
-			}else if(user.bottom() > this.node.height()){
+			}else if(user.bottom() + 25 > this.node.height()){
 				this.node.scrollTop(this.node.scrollTop() + (user.bottom() - this.node.height()) + 25)
 			}
 		}
 	},
-	_handle_scroll: function(e){
+	_handle_view_change: function(e){
 		this.view_changed.notify(this.view())
 	},
 	_appended: function(_, users){
@@ -256,6 +258,11 @@ View.UserList = Class.extend({
 			user_view.clicked.attach(
 				function(user_view){
 					this.user_clicked.notify(user_view)
+				}.bind(this)
+			)
+			user_view.categorized.attach(
+				function(user_view, category){
+					this.user_categorized.notify([user_view, category])
 				}.bind(this)
 			)
 			this.node.append(user_view.node)
@@ -294,8 +301,13 @@ View.User = Class.extend({
 		this.talk = new View.User.Talk(model.talk)
 		this.node.append(this.talk.node)
 		
+		this.category = new View.User.Category(model.category)
+		this.node.append(this.category.node)
+		this.category.button_clicked.attach(this._handle_category_click.bind(this))
+		
 		//The only event we care about.  Is someone clicking on me?
 		this.clicked = new Event(this)
+		this.categorized = new Event(this)
 		
 		//When the model is selected, we need to be selected too.
 		this.model.selection.attach(
@@ -332,20 +344,24 @@ View.User = Class.extend({
 			this.info.expanded(expanded)
 			this.contribs.expanded(expanded)
 			this.talk.expanded(expanded)
+			this.category.expanded(expanded)
 		}
 	},
 	_handle_click: function(e){
 		this.contribs.clear()
 		this.clicked.notify()
 	},
+	_handle_category_click: function(_, value){
+		this.categorized.notify(value)
+	},
 	top: function(){
 		return this.node.position().top
 	},
 	bottom: function(){
-		return this.top() + this.node.outerHeight()
+		return this.top() + this.height()
 	},
 	height: function(){
-		return this.node.outerHeight()
+		return this.node.outerHeight(true)
 	}
 })
 	View.User.Info = Class.extend({
@@ -364,7 +380,6 @@ View.User = Class.extend({
 			
 			this.meta = new UI.DefinitionList()
 			this.node.append(this.meta.node)
-			this.meta.hide()
 			
 			/*this.counts = new UI.EditCount()
 			this.node.append(this.counts.node)
@@ -372,6 +387,7 @@ View.User = Class.extend({
 			
 			this.model.changed.attach(this._render.bind(this))
 			
+			this.expanded(false)
 			this._render()
 		},
 		expanded: function(expanded){
@@ -399,6 +415,12 @@ View.User = Class.extend({
 				/*'Last activity': this.model.last_activity.format('wikiDate'),*/
 				'Views': this.model.views
 			})
+			
+			if(this.model.views > 0){
+				this.node.addClass("viewed")
+			}else{
+				this.node.removeClass("viewed")
+			}
 			/*this.counts.render(this.model.counts)*/
 		}
 	})
@@ -418,6 +440,7 @@ View.User = Class.extend({
 			this.model.revision_added.attach(this._insert_revision.bind(this))
 			this.model.revision_replaced.attach(this._replace_revision.bind(this))
 			
+			this.expanded(false)
 		},
 		clear: function(){
 			this.grid.clear_cursor()
@@ -470,7 +493,7 @@ View.User = Class.extend({
 			this.thread_clicked = new Event(this)
 			
 			this.model.changed.attach(this._render.bind(this))
-			
+			this.expanded(false)
 			this._render()
 		},
 		expanded: function(expanded){
@@ -523,5 +546,137 @@ View.User = Class.extend({
 				
 				
 				this.clicked = new Event(this)
+			}
+		})
+	
+	View.User.Category = Class.extend({
+		init: function(model){
+			this.model = model
+			
+			this.node = $("<div>")
+				.addClass("category")
+				
+			this.header = {
+				node: $("<span>")
+					.addClass("header")
+					.text("Sorting")
+			}
+			this.node.append(this.header.node)
+			
+			this.history = new View.User.Category.History()
+			this.node.append(this.history.node)
+			
+			this.buttons = {
+				node: $("<div>")
+					.addClass("buttons"),
+				good_faith: new UI.Button(
+					'good-faith', 
+					{
+						class: "good-faith",
+						label: "good",
+						attrs: {
+							title: "This editor is at least trying to do something useful. (or press #1)"
+						}
+					}
+				),
+				bad_faith: new UI.Button(
+					'bad-faith', 
+					{
+						class: "bad-faith",
+						label: "bad",
+						attrs: {
+							title: "This editor is trying to cause harm or be disruptive. (or press #2)"
+						}
+					}
+				)
+			}
+			this.buttons.node.append(this.buttons.good_faith.node)
+			this.buttons.node.append(this.buttons.bad_faith.node)
+			this.node.append(this.buttons.node)
+			
+			this.buttons.good_faith.clicked.attach(this._button_clicked.bind(this))
+			this.buttons.bad_faith.clicked.attach(this._button_clicked.bind(this))
+			
+			this.button_clicked = new Event(this)
+			
+			this.model.changed.attach(this._render.bind(this))
+			this.expanded(false)
+			this._render()
+		},
+		expanded: function(expanded){
+			if(expanded == undefined){
+				return this.node.hasClass("expanded")
+			}else{
+				if(expanded){
+					this.node.addClass("expanded")
+					this.node.show()
+				}else{
+					this.node.removeClass("expanded")
+					this.node.hide()
+				}
+			}
+		},
+		disabled: function(disabled){
+			if(disabled === undefined){
+				return this.hasClass("disabled")
+			}else{
+				if(disabled){
+					this.node.addClass("disabled")
+				}else{
+					this.node.removeClass("disabled")
+				}
+				
+				this.buttons.good_faith.disabled(disabled)
+				this.buttons.bad_faith.disabled(disabled)
+			}
+		},
+		_button_clicked: function(button){
+			this.button_clicked.notify(button.value)
+		},
+		_render: function(){
+			this.buttons.good_faith.selected(this.model.current == "good-faith")
+			this.buttons.bad_faith.selected(this.model.current == "bad-faith")
+			
+			this.history.render(this.model.history)
+		}
+	})
+		View.User.Category.History = UI.Dropper.extend({
+			init: function(){
+				this._super("history")
+				
+				this.node.addClass("history")
+			},
+			_item_node: function(category, timestamp, user_name){
+				return $("<li>")
+					.addClass("item")
+					.append(
+						$("<span>")
+							.addClass("category")
+							.addClass(category)
+							.text(category)
+					)
+					.append(
+						$("<span>")
+							.addClass("timestamp")
+							.text(new Date(timestamp*1000).format('wikiDate'))
+					)
+					/*.append(
+						$("<a>")
+							.addClass("user")
+							.text(user_name)
+							.attr('href', SYSTEM.wiki_root + "/wiki/" + user_name)
+					)*/
+			},
+			render: function(history){
+				if(!history || history.length == 0){
+					this.pane.node.html("<p>This user had yet to be categorized.</p>")
+				}
+				else{
+					this.pane.node.html("")
+					for(var i=0;i<history.length;i++){
+						var cat = history[i]
+						this.pane.node.append(this._item_node(cat.category, cat.timestamp))
+					}
+				}
 			}
 		})
