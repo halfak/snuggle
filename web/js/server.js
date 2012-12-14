@@ -119,7 +119,8 @@ LocalServer.Users.Cursor = Class.extend({
 			contribs: doc.revisions,
 			talk: {
 				threads: (doc.talk || {}).topics || []
-			}
+			},
+			category: doc.category
 		}
 	}
 })

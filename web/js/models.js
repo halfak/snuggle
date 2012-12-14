@@ -146,13 +146,21 @@ Model.UserList = Class.extend({
 			the user to select
 	*/
 	select: function(user){
-		if(!this.map[user.id]){
-			throw "User " + user.id + " does not appear in the list."
+		if(user == undefined){
+			if(this.selection){
+				return this.selection.user || null
+			}else{
+				return null
+			}
 		}else{
-			return this._update_selection({
-				user: user,
-				i: null
-			})
+			if(!this.map[user.id]){
+				throw "User " + user.id + " does not appear in the list."
+			}else{
+				return this._update_selection({
+					user: user,
+					i: null
+				})
+			}
 		}
 	},
 	

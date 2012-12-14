@@ -36,16 +36,16 @@ UI.Dropper = Class.extend({
 	},
 	expanded: function(expanded){
 		if(expanded === undefined){
-			return this.pane.node.hasClass("expanded")
+			return this.node.hasClass("expanded")
 		}else{
 			if(expanded){
-				this.pane.node.addClass("expanded")
-				this.pane.node.slideDown(200)
+				this.node.addClass("expanded")
+				this.pane.node.slideDown(0)
 			}else{
 				this.pane.node.slideUp(
-					200,
+					0,
 					function(){
-						this.pane.node.removeClass("expanded")
+						this.node.removeClass("expanded")
 					}.bind(this)
 				)
 			}

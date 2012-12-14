@@ -17,7 +17,7 @@ Controller = Class.extend({
 			}
 		}.bind(this))
 		
-		this.list.user_categorized.attach(this._categorize_user.bind(this))
+		this.list.user_categorized.attach(this._categorize_clicked.bind(this))
 		
 		this.list.view_changed.attach(this._fill_list.bind(this))
 		
@@ -61,6 +61,16 @@ Controller = Class.extend({
 			var user = this.list.model.shift_selection(-1)
 			this.add_view(user)
 			return false
+		}else if(e.which == KEYS.NUM_1 || e.which == KEYS.NUM_PAD_1){
+			if(this.list.selected()){
+				var user = this.list.selected()
+				this._categorize_user(user, "bad-faith")
+			}
+		}else if(e.which == KEYS.NUM_2 || e.which == KEYS.NUM_PAD_2){
+			if(this.list.selected()){
+				var user = this.list.selected()
+				this._categorize_user(user, "good-faith")
+			}
 		}else{
 			return true
 		}
@@ -82,7 +92,7 @@ Controller = Class.extend({
 		view = view || this.list.view()
 		
 		if(view.end - view.bottom < 200 && !this.loading){
-			console.log(view)
+			//console.log(view)
 			this._load_users()
 		}
 	},
@@ -106,10 +116,13 @@ Controller = Class.extend({
 			)
 		}
 	},
-	_categorize_user: function(_, args){
+	_categorize_clicked: function(_, args){
 		user = args[0]
 		category = args[1]
 		
+		this._categorize_user(user, category)
+	},
+	_categorize_user: function(user, category){
 		user.category.disabled(true)
 		this.local.users.categorize(
 			user.model, category,

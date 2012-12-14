@@ -23,6 +23,7 @@ div.controls div.categories{
 		cursor: pointer;
 		background: #e0e0e0;
 		box-shadow: inset 0px -.25em 1em rgba(0,0,0,.1);
+		text-shadow: 1px 2px #fff;
 	}
 	div.controls div.categories div:hover{
 		background: #eee;
@@ -36,11 +37,17 @@ div.controls div.categories{
 		box-shadow: inset 0px .5em .5em rgba(255,255,255,.8);
 	}
 	
-	div.controls div.categories div.good-faith {
-		background: #afa;
+	div.controls div.categories div.good-faith:before {
+		position: absolute;
+		left: .7em;
+		content: "\2714";
+		font-size: 1.2em;
 	}
-	div.controls div.categories div.bad-faith {
-		background: #faa;
+	div.controls div.categories div.bad-faith:before {
+		position: absolute;
+		left: .7em;
+		content: "\2718";
+		font-size: 1.2em;
 	}
 	
 div.controls div.filters{

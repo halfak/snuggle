@@ -22,7 +22,7 @@ db = pymongo.MongoClient().newbies
 def get(doc_string): return queried(doc_string)
 
 @bottle.route("/users/get/", method="POST")
-def get_post(): return queried(bottle.request.body.read())
+def get(): return queried(bottle.request.body.read())
 
 @bottle.route("/user/view/<user_id:int>", method="GET")
 def view(user_id): return viewed(user_id)

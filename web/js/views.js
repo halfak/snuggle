@@ -237,6 +237,16 @@ View.UserList = Class.extend({
 			end: this.node[0].scrollHeight
 		}
 	},
+	/**
+	Gets the selected user if there is one.
+	*/
+	selected: function(){
+		if(this.model.select()){
+			return this.users[this.model.select().id]
+		}else{
+			return null
+		}
+	},
 	_show_user: function(_, user){
 		var user = this.users[user.id]
 		var view = this.view()
@@ -316,6 +326,7 @@ View.User = Class.extend({
 				this.expanded(selected)
 			}.bind(this)
 		)
+		this.model.category.changed.attach(this._category_changed.bind(this))
 		
 		
 	},
@@ -353,6 +364,11 @@ View.User = Class.extend({
 	},
 	_handle_category_click: function(_, value){
 		this.categorized.notify(value)
+	},
+	_category_changed: function(category){
+		this.node.removeClass("good-faith")
+		this.node.removeClass("bad-faith")
+		this.node.addClass(category.current)
 	},
 	top: function(){
 		return this.node.position().top
@@ -573,9 +589,9 @@ View.User = Class.extend({
 					'good-faith', 
 					{
 						class: "good-faith",
-						label: "good",
+						label: "&#x2714;",
 						attrs: {
-							title: "This editor is at least trying to do something useful. (or press #1)"
+							title: "This editor is at least trying to do something useful. (or press #2)"
 						}
 					}
 				),
@@ -583,15 +599,15 @@ View.User = Class.extend({
 					'bad-faith', 
 					{
 						class: "bad-faith",
-						label: "bad",
+						label: "&#x2718;",
 						attrs: {
-							title: "This editor is trying to cause harm or be disruptive. (or press #2)"
+							title: "This editor is trying to cause harm or be disruptive. (or press #1)"
 						}
 					}
 				)
 			}
-			this.buttons.node.append(this.buttons.good_faith.node)
 			this.buttons.node.append(this.buttons.bad_faith.node)
+			this.buttons.node.append(this.buttons.good_faith.node)
 			this.node.append(this.buttons.node)
 			
 			this.buttons.good_faith.clicked.attach(this._button_clicked.bind(this))

@@ -45,6 +45,12 @@ div.user div.info .name{
 	margin: -.10em;
 	font-weight: bold;
 }
+div.user.good-faith div.info .name:before{
+	content: "\2714 ";
+}
+div.user.bad-faith div.info .name:before{
+	content: "\2718 ";
+}
 div.user div.info.viewed .name{
 	font-weight: normal;
 }
@@ -255,6 +261,7 @@ div.user div.category div.history{
 	position: absolute;
 	top: 0px;
 	right: 1em;
+	font-size: .9em;
 }
 	div.user div.category div.history div.tab{
 		position: relative;
@@ -263,7 +270,10 @@ div.user div.category div.history{
 		border-top: 0px;
 		padding: 0px 1em;
 		box-shadow: inset 0px -.25em .5em rgba(0,0,0,.2);
-		text-shadow: 1px 1px rgba(255,255,255,.5);;
+		text-shadow: 1px 1px rgba(255,255,255,.5);
+	}
+	div.user div.category div.history.expanded div.tab{
+		box-shadow: inset 0px .25em .5em rgba(0,0,0,.2);
 	}
 	
 	div.user div.category div.history div.pane{
@@ -284,10 +294,10 @@ div.user div.category div.buttons {
 	text-align: right;
 }
 	div.user div.category div.button{
+		position: relative;
 		display: inline-block;
 		border: 1px solid black;
 		border-radius: .25em;
-		box-shadow: 0px 0px 10px rgba(0,0,0,.2);
 		white-space: nowrap;
 		overflow: hidden;
 		text-align: center;
@@ -295,18 +305,24 @@ div.user div.category div.buttons {
 		div.user div.category div.button span{
 			display: block;
 			border-radius: .25em;
-			box-shadow: inset 0px -.25em .5em rgba(0,0,0,.2);
+			box-shadow: inset 0px -.25em .5em rgba(0,0,0,.3);
 			padding: .25em 0px;
 			text-shadow: 1px 1px rgba(255,255,255,.5);;
+		}
+		div.user div.category div.button:hover, div.user div.category div.button.selected{
+			box-shadow: 0px 0px .2em rgba(0,0,0,.8);
+		}
+		div.user div.category div.button.selected span{
+			box-shadow: inset 0px .25em .5em rgba(0,0,0,.3);
 		}
 	div.user div.category div.button.good-faith{
 		width: 60%;
 		background: #afa;
-		margin-right: 5%;
 	}
 	div.user div.category div.button.bad-faith{
 		width: 35%;
 		background: #faa;
+		margin-right: 5%;
 	}
 
 
