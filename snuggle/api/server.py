@@ -1,4 +1,5 @@
-import bottle, os.path, time, sys
+import bottle, os.path, time, sys, hashlib
+from beaker.middleware import SessionMiddleware
 
 from responses import Error, Success
 import users
@@ -20,6 +21,16 @@ def static(path):
 	return bottle.static_file(path, root=WEB_DIR)
 
 def main():
-	bottle.run(host="0.0.0.0", port=8080, reloader=True, server='cherrypy')
+	app = SessionMiddleware(
+		bottle.default_app(),
+		{
+			'session.type': "memory",
+			'key': "s_id",
+			'secret': hashlib.md5(str(time.time())).hexdigest(),
+			'timeout': 60*30, #30 minutes
+			'auto': True
+		}
+	)
+	bottle.run(app=app, host="0.0.0.0", port=8080, reloader=True, server='cherrypy')
 
 if __name__ == "__main__": main()

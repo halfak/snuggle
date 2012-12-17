@@ -41,7 +41,6 @@ def categorize(doc): return categorized(doc)
 @bottle.route("/user/categorize/", method="POST")
 def categorize(): return categorized(bottle.request.body.read())
 
-	
 def queried(query):
 	try:
 		doc = json.loads(query)
