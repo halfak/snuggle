@@ -4,12 +4,14 @@ div.user_list div.user {
 	height: 2em;
 	background: #eee;
 	margin: 1em;
+	overflow: hidden;
 }
 div.user_list div.user.selected {
 	outline: 3px solid rgba(0,0,200,.5);
 }
 div.user_list div.user.expanded {
 	height: 20em;
+	overflow: visible;
 }
 	div.user_list div.user div.info{
 		display: inline-block;
@@ -44,12 +46,13 @@ div.user div.info .name{
 	padding: .10em;
 	margin: -.10em;
 	font-weight: bold;
+	white-space: nowrap;
 }
 div.user.good-faith div.info .name:before{
-	content: "\2714 ";
+	content: "\2714\0000a0";
 }
 div.user.bad-faith div.info .name:before{
-	content: "\2718 ";
+	content: "\2718\0000a0";
 }
 div.user div.info.viewed .name{
 	font-weight: normal;

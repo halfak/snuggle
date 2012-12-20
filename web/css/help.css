@@ -21,6 +21,7 @@ div.slider:first-of-type{
 		border-bottom: 2px solid #333;
 		background: #fff;
 		box-shadow: 2px 2px 5px rgba(0,0,0, .5);
+		padding: .5em 1em;
 	}
 	div.slider div.tab{
 		position: relative;

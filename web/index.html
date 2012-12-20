@@ -41,46 +41,46 @@
 				<div class="pane">
 					<h3>Help!</h3>
 					<p>
-						Snuggle is a tool for watching newly registered users as they 
-						enter Wikipedia.  This user interface has been written to take
-						advantage of the functionality of modern browsers 
+						Snuggle is designed to help you identify desirable new Wikipedia editors.  
+						The interface below lists all accounts registered in the last 30 days along with 
+						contributions.
 					</p>
 					<p>
-						When you find a bug, please take a 
+						If you find a bug, please take a 
 						<a target="_blank" href="http://en.wikipedia.org/wiki/Screenshot">screenshot</a> 
 						to demonstrate the problem and
 						<a target="_blank" href="https://bitbucket.org/halfak/snuggle/issues">file a bug</a>
 						in the issue tracker.
 					</p>
-					<h2>See also:</h2>
+					<h4>See also:</h4>
 					<ul>
-						<li><a target="_blank" href="http://en.wikipedia.org/wiki/WP:SN">Full documentation</a></li>
+						<li><a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">Full documentation</a></li>
 						<li><a target="_blank" href="irc://freenet.org/#wikimedia-snuggle">irc://freenet.org/#wikimedia-snuggle</a></li>
 						<li><a target="_blank" href="https://bitbucket.org/halfak/snuggle">Source code</a></li>
+						<li><a target="_blank" href="http://en.wkipedia.org/wiki/User:EpochFail">EpochFail</a>, the developer</li>
 					</ul>
 				</div>
 				<div class="tab"><span>help</span></div>
 			</div>
 			<div class="slider about">
 				<div class="pane">
-					<h3>Snuggle Beta</h3>
+					<h3>Log in</h3>
 					<p>
-						Snuggle is an experimental user interface
-						designed to aid in the identification of productive
-						new Wikipedians.  The system is still under heavy 
-						development, but your use of the system and feedback 
-						is welcome.
+					Log into Wikipedia using your 
+					username and password to add functionality
+					to Snuggle.
 					</p>
-					<p>
-						The system is developed and maintained by
-						<a target="_blank" href="http://halfaker.info">Aaron Halfaker</a>.
-						The original idea for the system came from 
-						<a target="_blank" href="http://halfaker.info/publications/The_Rise_and_Decline">his research</a>
-						into the cause of the decline of active editors in the 
-						English Wikipedia. 
-					</p>
+					<div class="user_name">
+						<label>Username</label><br/>
+						<input type="text" />
+					</div>
+					<div class="password">
+						<label>Password</label><br/>
+						<input type="password" />
+					</div>
+					<div class="button"><span>submit</span></div>
 				</div>
-				<div class="tab"><span>about</span></div>
+				<div class="tab"><span>&bull; The one who destroys all things</span></div>
 			</div>
 		</div>
 		<script type="text/javascript">
@@ -91,7 +91,7 @@
 					about: new UI.Slider($("#help .slider.about"))
 				}
 			}
-			SYSTEM.local = new LocalServer("http://stat1.wikimedia.org:8080"),
+			SYSTEM.local = new LocalServer("http://stat1.wikimedia.org:8081"),
 			SYSTEM.mediawiki = new MediaWiki(SYSTEM.wiki_root + "/w/api.php")
 			SYSTEM.controller = new Controller(SYSTEM.local, SYSTEM.mediawiki)
 			
