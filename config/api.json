@@ -1,0 +1,17 @@
+{
+	"server": {
+		"host": "0.0.0.0",
+		"port": 8081
+	},
+	"database": {
+		"host": "localhost",
+		"database": "newbies"
+	},
+	"mediawiki": {
+		"api_url": "https://en.wikipedia.org/w/api.php"
+	},
+	"sessions": {
+		"secret": "lasndlnaln23ln23l9d3onu27u"
+	},
+	"root_directory": "~/Sandbox/snuggle/"
+}

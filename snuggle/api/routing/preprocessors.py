@@ -1,6 +1,6 @@
 from bottle import request
 
-from . import responses
+from ..util import responses
 
 class query_data:
 	def __init__(self, decoder=unicode):
@@ -10,6 +10,7 @@ class query_data:
 		
 		def wrapped_f(*args, **kwargs):
 			query_data = kwargs['query']
+			del kwargs['query']
 			try:
 				kwargs['data'] = self.decoder(query_data)
 			except ValueError:
@@ -45,7 +46,7 @@ class session:
 		session = request.environ.get('beaker.session')
 		if session != None:
 			kwargs['session'] = session
-			return self.f(session, *args, **kwargs)
+			return self.f(*args, **kwargs)
 		else:
 			return responses.session_error()
 		
@@ -58,8 +59,8 @@ class authenticated:
 	def __call__(self, *args, **kwargs):
 		session = request.environ.get('beaker.session')
 		
-		if session != None and 'mw_user' in session:
+		if session != None and 'snuggler' in session:
 			kwargs['session'] = session
-			return self.f(session, *args, **kwargs)
+			return self.f(*args, **kwargs)
 		else:
 			return responses.session_error()

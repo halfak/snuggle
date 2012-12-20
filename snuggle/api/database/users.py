@@ -19,8 +19,8 @@ class Users:
 	def __init__(self, db):
 		self.db = db
 	
-	def search(self, query):
-		return list(self.db.mongo.find(
+	def get(self, query):
+		return list(self.db.mongo.users.find(
 			{
 				'category.current': query['category'] if query['category'] != "unsorted" else {'$exists': false},
 				'counts.%s' % query['namespace']: {'$gt': query['min_edits']}
@@ -32,7 +32,7 @@ class Users:
 		))
 	
 	def view(self, user_id, snuggler=None):
-		db.users.update(
+		self.db.mongo.users.update(
 			{'_id': user_id},
 			{
 				'$inc': {'views': 1},
@@ -45,11 +45,11 @@ class Users:
 		if category not in CATEGORIES:
 			raise ValueError("Invalid category '%s' not in potential categories %s." % (category, tuple(CATEGORIES)))
 		
-		db.users.update(
+		self.db.mongo.users.update(
 			{"_id": user_id},
 			{
 				"$set": {'category.current': category},
-				"$push": {'category.history': {'snuggler': snuggler.name, 'category': category, 'timestamp': time.time()}}
+				"$push": {'category.history': {'snuggler': snuggler, 'category': category, 'timestamp': time.time()}}
 			},
 			w=1
 		)

@@ -38,5 +38,11 @@ def decoding_error(input, decoder):
 def database_error(action):
 	return error("database", "An error occurred while attempting to %s" % action)
 
+def general_error(action):
+	return error("general", "An error occurred while attempting to %s" % action)
+
 def session_error():
 	return error("session", "The user session does not exist or has been lost.")
+	
+def auth_error(type):
+	return error("authentication", "Authentication failed.", meta={'type': type})
