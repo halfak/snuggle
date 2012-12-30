@@ -57,38 +57,20 @@
 						<li><a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">Full documentation</a></li>
 						<li><a target="_blank" href="irc://freenet.org/#wikimedia-snuggle">irc://freenet.org/#wikimedia-snuggle</a></li>
 						<li><a target="_blank" href="https://bitbucket.org/halfak/snuggle">Source code</a></li>
-						<li><a target="_blank" href="http://en.wkipedia.org/wiki/User:EpochFail">EpochFail</a>, the developer</li>
+						<li><a target="_blank" href="http://en.wikipedia.org/wiki/User:EpochFail">EpochFail</a>, the developer</li>
 					</ul>
 				</div>
 				<div class="tab"><span>help</span></div>
 			</div>
-			<div class="slider about">
-				<div class="pane">
-					<h3>Log in</h3>
-					<p>
-					Log into Wikipedia using your 
-					username and password to add functionality
-					to Snuggle.
-					</p>
-					<div class="user_name">
-						<label>Username</label><br/>
-						<input type="text" />
-					</div>
-					<div class="password">
-						<label>Password</label><br/>
-						<input type="password" />
-					</div>
-					<div class="button"><span>submit</span></div>
-				</div>
-				<div class="tab"><span>&bull; The one who destroys all things</span></div>
-			</div>
 		</div>
 		<script type="text/javascript">
 			SYSTEM = {
-				wiki_root: "http://en.wikipedia.org",
+				wiki: {
+					name: "English Wikipedia",
+					root: "http://en.wikipedia.org"
+				},
 				help: {
-					help: new UI.Slider($("#help .slider.help")),
-					about: new UI.Slider($("#help .slider.about"))
+					help: new UI.Slider($("#help .slider.help"))
 				}
 			}
 			SYSTEM.local = new LocalServer("http://stat1.wikimedia.org:8081"),

@@ -21,12 +21,12 @@ class Users:
 		
 		return responses.success(users)
 	
-	def rate(self, user_id, rating):
+	def rate(self, session, rating):
 		try:
-			self.db.users.rate(user_id, rating, session['snuggler']['meta'])
+			doc = self.db.users.rate(rating['id'], rating['category'], session['snuggler']['meta'])
 		except Exception:
-			return responses.database_error("storing a rating for user %s" % user_id)
+			return responses.database_error("storing a rating for user %s" % rating['id'])
 		
-		return responses.success(True)
+		return responses.success(doc)
 	
 	

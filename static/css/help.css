@@ -27,13 +27,13 @@ div.slider:first-of-type{
 		position: relative;
 		z-index: 11;
 		color: #000;
-		text-shadow: rgba(255, 255, 255, .5) 1px 1px 1px;
+		text-shadow: 1px 1px rgba(255, 255, 255, .5);
 		background: #88e;
 		border: 1px solid #333;
 		border-top: 0px;
-		box-shadow: inset 0px .4em 4px #aaf;
 		box-shadow: 2px 2px 5px rgba(0,0,0, .5);
 		cursor: pointer;
+		font-size: 1.2em;
 	}
 	div.slider div.tab span{
 		display: block;

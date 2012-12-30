@@ -59,8 +59,11 @@ class authenticated:
 	def __call__(self, *args, **kwargs):
 		session = request.environ.get('beaker.session')
 		
-		if session != None and 'snuggler' in session:
-			kwargs['session'] = session
-			return self.f(*args, **kwargs)
+		if session != None:
+			if 'snuggler' in session:
+				kwargs['session'] = session
+				return self.f(*args, **kwargs)
+			else:
+				return responses.permission_error()
 		else:
 			return responses.session_error()

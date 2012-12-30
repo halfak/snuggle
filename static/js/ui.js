@@ -325,3 +325,68 @@ UI.Radio = Class.extend({
 	}
 })
 
+UI.TextField = Class.extend({
+	/**
+	:Parameters:
+		opts : object
+			password : boolean
+				should the field hide the characters like a password
+			value : string
+				default value to be placed in the field
+			empty : string
+				a value to be placed in the field when it is left empty
+	*/
+	init: function(opts){
+		
+		this.node = $("<div>")
+			.addClass("text_field")
+		
+		var id = "text_field_" + new Date().getTime()
+		
+		this.label = {
+			node: $("<label>")
+				.attr('id', id)
+				.append(opts.label || '')
+		}
+		this.node.append(this.label.node)
+		
+		this.input = {
+			node: $("<input>")
+				.attr('id', id)
+				.attr('type', opts.password ? "password" : "text")
+				
+		}
+		this.node.append(this.input.node)
+		
+		if(opts.value){
+			this.input.node.val(opts.value)
+		}else if(opts.empty){
+			this.empty = opts.empty
+			this.input.node.val(this.empty)
+			this.input.node.bind("focus blur", this._input_blur_empty.bind(this))
+		}
+		
+	},
+	_input_blur_empty: function(e){
+		if(e.type == "focus"){
+			if(this.input.node.val() == this.empty){
+				this.input.node.val("")
+			}
+		}else if(e.type == "blur"){
+			if(this.input.node.val().trim() == ""){
+				this.input.node.val(this.empty)
+			}
+		}
+	},
+	val: function(val){
+		if(val === undefined){
+			if(this.input.node.val() == this.empty){
+				return ''
+			}else{
+				return this.input.node.val()
+			}
+		}else{
+			this.input.node.val(val)
+		}
+	}
+})

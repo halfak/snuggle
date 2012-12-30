@@ -43,6 +43,11 @@ def general_error(action):
 
 def session_error():
 	return error("session", "The user session does not exist or has been lost.")
-	
+
+def permission_error():
+	return error("permissions", "You do not have permission to perform this action.")
+
 def auth_error(type):
 	return error("authentication", "Authentication failed.", meta={'type': type})
+	
+

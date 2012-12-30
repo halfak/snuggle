@@ -292,6 +292,35 @@ div.user div.category div.history{
 			padding: .5em;
 		}
 		
+		div.user div.category div.history div.pane ul{
+			padding: .5em;
+			margin: 0px;
+		}
+			div.user div.category div.history div.pane ul li{
+				list-style: none;
+				border-bottom: 1px dashed #888;
+			}
+				div.user div.category div.history div.pane ul li span,
+				div.user div.category div.history div.pane ul li a {
+					margin: .25em;
+				}
+				div.user div.category div.history div.pane ul li span.timestamp{
+					width: 10em;
+					text-align: right;
+				}
+				div.user div.category div.history div.pane ul li span.category{
+					width: 6em;
+					border-width: 3px;
+					border-style: double;
+				}
+					div.user div.category div.history div.pane ul li span.category.good-faith{
+						background: #afa;
+					}
+					div.user div.category div.history div.pane ul li span.category.bad-faith{
+						background: #faa;
+					}
+				div.user div.category div.history div.pane ul li a.snuggler {}
+		
 
 div.user div.category div.buttons {
 	text-align: right;

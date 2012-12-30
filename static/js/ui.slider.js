@@ -25,7 +25,7 @@ UI.Slider = Class.extend({
 		}else{
 			if(expand){
 				this.pane.node.animate(
-					{"max-height": "20em"},
+					{"max-height": "100em"},
 					300
 				)
 				this.node.addClass("expanded")

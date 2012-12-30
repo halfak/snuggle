@@ -79,11 +79,11 @@ Controller = Class.extend({
 		this.list.model.append(users)
 	},
 	_update_query: function(filters){
-		//Clear list
-		this.list.model.clear()
-		
 		//initialize query
 		this.users_query = this.local.users.query(filters)
+		
+		//Clear list
+		this.list.model.clear()
 		
 		this._fill_list()
 		
@@ -102,11 +102,13 @@ Controller = Class.extend({
 			this.list.model.loading(true)
 			this.users_query.next(
 				10,
-				function(users){
+				function(query, users){
 					this.list.model.loading(false)
-					this._append_users(users)
 					this.loading = false
-					this._fill_list()
+					if(query == this.users_query){ //If we are still running the same query
+						this._append_users(users)
+						this._fill_list()
+					}
 				}.bind(this),
 				function(message){
 					this.list.model.loading(false)
@@ -132,7 +134,8 @@ Controller = Class.extend({
 					response.category.current, 
 					response.category.history
 				)
-				this.list.model.shift_selection(1)
+				user = this.list.model.shift_selection(1)
+				this.add_view(user)
 			}.bind(this),
 			function(message){
 				user.category.disabled(false)

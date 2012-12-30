@@ -29,6 +29,7 @@ class Snugglers:
 			},
 			'cookie': cookie
 		}
+		return responses.success(session['snuggler']['meta'])
 	
 	def log_out(self, session):
 		if 'snuggler' in session:

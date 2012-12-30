@@ -56,7 +56,7 @@ LocalServer.Users = Class.extend({
 	},
 	categorize: function(user, category, success, error){
 		this.api.post(
-			'user', 'categorize', 
+			'user', 'rate', 
 			{
 				id: user.id,
 				category: category
@@ -91,7 +91,7 @@ LocalServer.Users.Cursor = Class.extend({
 					}
 					try{
 						user_docs = user_docs.map(this.convert.bind(this))
-						success(user_docs.map(Model.User.inflate))
+						success(this, user_docs.map(Model.User.inflate))
 						this.skip += user_docs.length
 					}catch(e){
 						error("An error occured while constructing a user: " + e)

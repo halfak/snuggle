@@ -1,3 +1,4 @@
+import time 
 
 CATEGORIES = ("bad-faith", "good-faith")
 
@@ -45,12 +46,13 @@ class Users:
 		if category not in CATEGORIES:
 			raise ValueError("Invalid category '%s' not in potential categories %s." % (category, tuple(CATEGORIES)))
 		
-		self.db.mongo.users.update(
+		return self.db.mongo.users.find_and_modify(
 			{"_id": user_id},
 			{
 				"$set": {'category.current': category},
 				"$push": {'category.history': {'snuggler': snuggler, 'category': category, 'timestamp': time.time()}}
 			},
-			w=1
+			w=1,
+			fields=['category']
 		)
 	

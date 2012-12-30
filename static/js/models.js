@@ -1,5 +1,43 @@
 Model = {}
 
+/**
+Represents the current snuggle user's status.
+*/
+Model.Snuggler = Class.extend({
+		
+	/** */
+	init: function(){
+		this.creds = null
+		this.changed = new Event(this)
+	},
+	
+	/**
+	Sets the credentials (usually after login).
+		
+	:Parameters:
+		id : int
+			Wikipedia user identifier
+		name : string
+			Wikipedia username
+	*/
+	set: function(id, name){
+		this.creds = {
+			id: id,
+			name: name
+		}
+		this.changed.notify(this.creds)
+	},
+	
+	/**
+	Clears the credentials (usually after logging out.
+	*/
+	clear: function(){
+		this.creds = null
+		this.changed.notify(this.creds)
+	}
+})
+
+
 /** 
 Represents a list of `Model.User`.  Users can be appended to the end.  This 
 model keeps track of a single selection.  The selection can be shifted (see 

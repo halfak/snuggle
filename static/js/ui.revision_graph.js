@@ -48,7 +48,7 @@ UI.RevisionDetails = Class.extend({
 			
 			var page_title = Page.fullTitle(revision.page().namespace, revision.page().title).replace(/_/g, " ")
 			this.title.node.text(page_title)
-			this.title.node.attr('href', SYSTEM.wiki_root + "/wiki/" + page_title)
+			this.title.node.attr('href', SYSTEM.wiki.root + "/wiki/" + page_title)
 			
 			this.revision.render(revision.id(), revision.timestamp(), revision.comment())
 			
@@ -167,7 +167,7 @@ UI.RevisionDetails.Revision = Class.extend({
 	*/
 	render: function(id, timestamp, comment){
 		this.timestamp.node.text(timestamp.format('wikiDate'))
-		this.timestamp.node.attr('href', SYSTEM.wiki_root + "/wiki/?diff=prev&oldid=" + id)
+		this.timestamp.node.attr('href', SYSTEM.wiki.root + "/wiki/?diff=prev&oldid=" + id)
 		
 		this.comment.node.text(comment || "")
 	}
@@ -236,9 +236,9 @@ UI.RevisionDetails.Revert = Class.extend({
 	*/
 	render: function(revert){
 		if(revert){
-			this.reverted.node.attr('href', SYSTEM.wiki_root + "/wiki/?diff=prev&oldid=" + revert._id)
+			this.reverted.node.attr('href', SYSTEM.wiki.root + "/wiki/?diff=prev&oldid=" + revert._id)
 			this.user.node.text(revert.user.name)
-			this.user.node.attr('href', SYSTEM.wiki_root + "/wiki/User:" + revert.user.name)
+			this.user.node.attr('href', SYSTEM.wiki.root + "/wiki/User:" + revert.user.name)
 			
 			this.comment.node.text(revert.comment || "")
 			this.show()

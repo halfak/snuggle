@@ -9,7 +9,7 @@ from .. import processing
 def default(): return processing.processor.static_file("index.html")
 
 # /user/view/
-@get("/user/view/<query>")
+@get("/user/view/<id:int>")
 @preprocessors.authenticated
 def user_view(session, id): return processing.processor.users.view(session, id)
 

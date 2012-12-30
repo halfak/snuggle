@@ -1,6 +1,85 @@
 View = {}
 
 /**
+Represents a visual control for managing logged in status as a snuggler
+
+TODO:
+* Finish login/logout form functionality
+*/
+View.Snuggler = Class.extend({
+	init: function(model){
+		this.model = model
+		
+		this.node = $("<div>")
+			.addClass("snuggler")
+			
+		this.preamble = {
+			node: $("<span>")
+				.addClass("preamble")
+		}
+		this.node.append(this.preamble.node)
+		
+		this.name = {
+			node: $("<a>")
+				.addClass("name")
+		}
+		this.node.append("name")
+		
+		this.menu = new View.Snuggler.Menu()
+	},
+	
+	/**
+	Produces a visual ping to draw the users attention to the element.
+	*/
+	ping: function(steps, opts){
+		opts.duration = opts.duration || 250
+		opts.callback = opts.callback || function(){}
+		
+		if(steps > 0){
+			this.node.addClass("pinging")
+			setTimeout(function(){this.node.removeClass("pinging")}.bind(this), opts.duration/2)
+			setTimeout(function(){this.ping(steps-1, opts)}.bind(this), opts.duration)
+		}else{
+			opts.callback()
+		}
+	}
+})
+
+View.Snuggler.Menu = UI.Dropper.extend({
+	init: function(){
+		this._super("", "")
+		
+		this.login = new View.Snuggler.Login()
+		
+		this.logout = new View.Snuggler.Logout()
+	},
+	ready_login: function(){
+		this.set_content(this.login.node)
+	},
+	ready_logout: function(){
+		this.set_content(this.logout.node)
+	}
+})
+
+View.Snuggler.Menu.Login = Class.extend({
+	init: function(){
+		this.node = $("<div>")
+			.addClass("login")
+		
+		this.preamble = $("<p>")
+			.addClass("preamble")
+			.text("Log in using your " + SYSTEM.wiki.name + " username and password.")
+		
+		this.name = new UI.TextField({label: "User name"})
+		this.node.append(this.name.node)
+		
+		this.pass = new UI.TextField({label: "Password", password: true})
+		this.node.append(this.pass.node)
+	}
+})
+
+
+/**
 Represents the menu for selecting a subset and filters.
 */
 View.Controls = Class.extend({
@@ -662,9 +741,15 @@ View.User = Class.extend({
 				
 				this.node.addClass("history")
 			},
-			_item_node: function(category, timestamp, user_name){
+			_item_node: function(category, timestamp, snuggler){
+				snuggler = snuggler || {}
 				return $("<li>")
 					.addClass("item")
+					.append(
+						$("<span>")
+							.addClass("timestamp")
+							.text(new Date(timestamp*1000).format('wikiDate'))
+					)
 					.append(
 						$("<span>")
 							.addClass("category")
@@ -672,16 +757,12 @@ View.User = Class.extend({
 							.text(category)
 					)
 					.append(
-						$("<span>")
-							.addClass("timestamp")
-							.text(new Date(timestamp*1000).format('wikiDate'))
-					)
-					/*.append(
 						$("<a>")
-							.addClass("user")
-							.text(user_name)
-							.attr('href', SYSTEM.wiki_root + "/wiki/" + user_name)
-					)*/
+							.addClass("snuggle")
+							.text(String(snuggler.name))
+							.attr('href', SYSTEM.wiki.root + "/wiki/User:" + snuggler.name)
+							.attr('target', "_blank")
+					)
 			},
 			render: function(history){
 				if(!history || history.length == 0){
@@ -689,9 +770,11 @@ View.User = Class.extend({
 				}
 				else{
 					this.pane.node.html("")
+					var ul = $("<ul>")
+					this.pane.node.append(ul)
 					for(var i=0;i<history.length;i++){
 						var cat = history[i]
-						this.pane.node.append(this._item_node(cat.category, cat.timestamp))
+						ul.append(this._item_node(cat.category, cat.timestamp, cat.snuggler))
 					}
 				}
 			}
