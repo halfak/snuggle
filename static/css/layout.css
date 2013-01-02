@@ -5,6 +5,11 @@
 }
 
 body{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
 	height: 100%;
 	font-family: sans-serif;
 	padding: 0px;
@@ -21,9 +26,14 @@ div#help{
 }
 
 div#status{
-	position: absolute;
-	top: 0px;
-	left: 0px;
+	display: inline-block;
+}
+
+div#snuggler{
+	display: inline-block;
+	position: relative;
+	z-index: 10;
+	vertical-align: top;
 }
 
 

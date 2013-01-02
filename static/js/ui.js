@@ -333,6 +333,8 @@ UI.TextField = Class.extend({
 				should the field hide the characters like a password
 			value : string
 				default value to be placed in the field
+			label : string
+				the label to be used for the field
 			empty : string
 				a value to be placed in the field when it is left empty
 	*/
@@ -366,6 +368,9 @@ UI.TextField = Class.extend({
 			this.input.node.bind("focus blur", this._input_blur_empty.bind(this))
 		}
 		
+		this.key_pressed = new Event(this)
+		this.node.keydown(function(e){this.key_pressed.notify(e.keyCode)}.bind(this))
+		
 	},
 	_input_blur_empty: function(e){
 		if(e.type == "focus"){
@@ -387,6 +392,19 @@ UI.TextField = Class.extend({
 			}
 		}else{
 			this.input.node.val(val)
+		}
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+				this.input.node.attr('disabled', true)
+			}else{
+				this.node.removeClass("disabled")
+				this.input.node.removeAttr('disabled')
+			}
 		}
 	}
 })

@@ -15,7 +15,8 @@ KEYS = {
 	NUM_1: 49,
 	NUM_2: 50,
 	NUM_PAD_1: 97,
-	NUM_PAD_2: 98
+	NUM_PAD_2: 98,
+	ENTER: 13
 }
 
 NAMESPACES = {

@@ -37,4 +37,12 @@ class Snugglers:
 			return responses.success(True)
 		else:
 			return responses.success("Not logged in.")
+		
+	def status(self, session):
+		if 'snuggler' in session:
+			return responses.success({'logged_in': True, 'user': session['snuggler']['meta']})
+		else:
+			return responses.success({'logged_in': False})
+		
+	
 	

@@ -1,9 +1,13 @@
 UI = UI || {}
 
 UI.Dropper = Class.extend({
-	init: function(tab, content){
+	init: function(tab, content, opts){
+		opts = opts || {}
+		
 		this.node = $("<div>")
 			.addClass("dropper")
+			
+		if(opts.class){this.node.addClass(opts.class)}
 		
 		this.tab = {
 			node: $("<div>")

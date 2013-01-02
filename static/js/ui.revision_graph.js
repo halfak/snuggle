@@ -664,14 +664,14 @@ UI.DayGrid.Day = Class.extend({
 		
 		for(var i=0;i<this.list.length;i++){
 			var current = this.list[i]
-			if(current.timestamp() < revision.timestamp()){
+			if(current.timestamp() > revision.timestamp()){
 				this.list.splice(i, 0, revision)
 				revision.node.insertAfter(current.node)
 				return
 			}
 		}
 		this.list.push(revision)
-		this.container.node.append(revision.node)
+		this.container.node.prepend(revision.node)
 	},
 	_normalize: function(){
 		var proportion = 1/this.list.length

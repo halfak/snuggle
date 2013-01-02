@@ -1,13 +1,47 @@
 LocalServer = Class.extend({
 	init: function(url){
-		this.api   = new LocalAPI(url)
-		this.users = new LocalServer.Users(this.api)
+		this.api      = new LocalAPI(url)
+		this.snuggler = new LocalServer.Snuggler(this.api)
+		this.users    = new LocalServer.Users(this.api)
 	},
 	/**
 	Gets the local server's status.
 	*/
 	status: function(success, error){
 		this.api.post("server", "status", null, success, error)
+	}
+})
+
+LocalServer.Snuggler = Class.extend({
+	init: function(api){
+		this.api = api
+	},
+	status: function(success, error){
+		this.api.post(
+			'snuggler', 'status',
+			null,
+			success,
+			error
+		)
+	},
+	authenticate: function(name, pass, success, error){
+		this.api.post(
+			'snuggler', 'authenticate',
+			{
+				user: name,
+				pass: pass
+			},
+			success, 
+			error
+		)
+	},
+	log_out: function(success, error){
+		this.api.post(
+			'snuggler', 'log_out',
+			null,
+			success,
+			error
+		)
 	}
 })
 

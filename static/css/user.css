@@ -4,7 +4,6 @@ div.user_list div.user {
 	height: 2em;
 	background: #eee;
 	margin: 1em;
-	overflow: hidden;
 }
 div.user_list div.user.selected {
 	outline: 3px solid rgba(0,0,200,.5);
@@ -47,7 +46,38 @@ div.user div.info .name{
 	margin: -.10em;
 	font-weight: bold;
 	white-space: nowrap;
+	position: relative;
 }
+div.user div.info .name:hover{
+	background: #fff;
+}
+	div.user div.info .name .dropper{
+		display: none;
+		position: absolute;
+		top: .1em;
+		right: .5em;
+	}
+	div.user div.info .name:hover .dropper, div.user div.info .name .dropper.expanded{
+		display: block;
+	}
+	div.user div.info .name .dropper .pane{
+		background: #fff;
+		border: 1px solid black;
+		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+		z-index: 9;
+	}
+	div.user div.info .name .dropper .pane a{
+		display: block;
+		text-decoration: none;
+		border-bottom: 1px solid #008;
+		text-align: center;
+		font-weight: normal;
+		width: 7em;
+	}
+	div.user div.info .name .dropper .pane a:hover{
+		background: #ddF;
+	}
+
 div.user.good-faith div.info .name:before{
 	content: "\2714\0000a0";
 }
@@ -56,9 +86,6 @@ div.user.bad-faith div.info .name:before{
 }
 div.user div.info.viewed .name{
 	font-weight: normal;
-}
-div.user div.info .name:hover{
-	background: #fff;
 }
 
 div.user div.info dl{
@@ -69,6 +96,12 @@ div.user div.info dl{
 
 
 /********************************Contribs**************************************/
+div.user div.contribs {
+	max-height: 100%;
+	overflow: hidden;
+}
+
+
 div.user div.contribs div.revision{
 	/*background: #eee;*/
 }

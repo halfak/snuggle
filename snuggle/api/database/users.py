@@ -46,13 +46,15 @@ class Users:
 		if category not in CATEGORIES:
 			raise ValueError("Invalid category '%s' not in potential categories %s." % (category, tuple(CATEGORIES)))
 		
-		return self.db.mongo.users.find_and_modify(
+		doc = self.db.mongo.users.find_and_modify(
 			{"_id": user_id},
 			{
 				"$set": {'category.current': category},
 				"$push": {'category.history': {'snuggler': snuggler, 'category': category, 'timestamp': time.time()}}
 			},
 			w=1,
-			fields=['category']
+			fields=['category'],
+			new=True
 		)
+		return doc
 	

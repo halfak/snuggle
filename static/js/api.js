@@ -119,7 +119,7 @@ LocalAPI = API.extend({
 			success: function(doc){
 				if(!doc.success){
 					if(doc.error){
-						error(doc.error.code + ": " + doc.error.message)
+						error(doc.error.code + ": " + doc.error.message, doc.error, doc.meta)
 					}else{
 						error("Unknown response format.")
 						LOGGING.error(doc)

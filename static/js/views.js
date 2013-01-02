@@ -2,9 +2,6 @@ View = {}
 
 /**
 Represents a visual control for managing logged in status as a snuggler
-
-TODO:
-* Finish login/logout form functionality
 */
 View.Snuggler = Class.extend({
 	init: function(model){
@@ -12,6 +9,7 @@ View.Snuggler = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("snuggler")
+			.attr('id', "snuggler")
 			
 		this.preamble = {
 			node: $("<span>")
@@ -23,35 +21,63 @@ View.Snuggler = Class.extend({
 			node: $("<a>")
 				.addClass("name")
 		}
-		this.node.append("name")
+		this.node.append(this.name.node)
 		
 		this.menu = new View.Snuggler.Menu()
+		this.node.append(this.menu.node)
+		
+		this.model.changed.attach(this._render.bind(this))
 	},
 	
 	/**
 	Produces a visual ping to draw the users attention to the element.
 	*/
 	ping: function(steps, opts){
-		opts.duration = opts.duration || 250
-		opts.callback = opts.callback || function(){}
-		
+		opts = opts || {}
+		this._ping(
+			steps || 3, 
+			opts.duration || 500,
+			opts.callback || function(){}
+		)
+	},
+	_ping: function(steps, duration, callback){
 		if(steps > 0){
 			this.node.addClass("pinging")
-			setTimeout(function(){this.node.removeClass("pinging")}.bind(this), opts.duration/2)
-			setTimeout(function(){this.ping(steps-1, opts)}.bind(this), opts.duration)
+			setTimeout(function(){this.node.removeClass("pinging")}.bind(this), duration/2)
+			setTimeout(function(){this._ping(steps-1, duration, callback)}.bind(this), duration)
 		}else{
-			opts.callback()
+			callback()
+		}
+	},
+	_render: function(){
+		if(this.model.loading){
+			this.preamble.node.text("Checking for previous session...")
+			this.name.node.text("")
+			this.name.node.attr("")
+			this.menu.ready_login()
+		}else if(this.model.creds){
+			this.preamble.node.text("Logged in as ")
+			this.name.node.text(this.model.creds.name)
+			this.name.node.attr('href', SYSTEM.wiki.root + "/wiki/User:" + this.model.creds.name)
+			this.name.node.attr('target', "_blank")
+			this.menu.ready_logout()
+		}else{
+			this.preamble.node.text("Not logged in... ")
+			this.name.node.text("")
+			this.name.node.attr('href', "")
+			this.menu.ready_login()
 		}
 	}
 })
 
 View.Snuggler.Menu = UI.Dropper.extend({
 	init: function(){
-		this._super("", "")
+		this._super("", "", {class: "simple"})
+		this.node.addClass("menu")
 		
-		this.login = new View.Snuggler.Login()
+		this.login = new View.Snuggler.Menu.Login()
 		
-		this.logout = new View.Snuggler.Logout()
+		this.logout = new View.Snuggler.Menu.Logout()
 	},
 	ready_login: function(){
 		this.set_content(this.login.node)
@@ -66,15 +92,55 @@ View.Snuggler.Menu.Login = Class.extend({
 		this.node = $("<div>")
 			.addClass("login")
 		
-		this.preamble = $("<p>")
+		this.preamble = {
+			node: $("<p>")
 			.addClass("preamble")
 			.text("Log in using your " + SYSTEM.wiki.name + " username and password.")
+		}
+		this.node.append(this.preamble.node)
 		
 		this.name = new UI.TextField({label: "User name"})
+		this.name.key_pressed.attach(this._check_for_enter.bind(this))
 		this.node.append(this.name.node)
 		
 		this.pass = new UI.TextField({label: "Password", password: true})
+		this.pass.key_pressed.attach(this._check_for_enter.bind(this))
 		this.node.append(this.pass.node)
+		
+		this.login = new UI.Button("log in")
+		this.node.append(this.login.node)
+	},
+	_check_for_enter: function(field, key){
+		if(key == KEYS.ENTER){
+			if(!this.disabled()){
+				this.login.clicked.notify()
+			}
+		}
+	},
+	disabled: function(disabled){
+		this.name.disabled(disabled)
+		this.pass.disabled(disabled)
+		this.login.disabled(disabled)
+	}
+})
+
+View.Snuggler.Menu.Logout = Class.extend({
+	init: function(){
+		this.node = $("<div>")
+			.addClass("logout")
+		
+		this.preamble = {
+			node: $("<p>")
+			.addClass("preamble")
+			.text("Clicking the button below log you out of Snuggle.")
+		}
+		this.node.append(this.preamble.node)
+		
+		this.logout = new UI.Button("log out")
+		this.node.append(this.logout.node)
+	},
+	disabled: function(disabled){
+		this.logout.disabled(disabled)
 	}
 })
 
@@ -472,6 +538,32 @@ View.User = Class.extend({
 					.text(model.name)
 			}
 			this.node.append(this.name.node)
+			
+			this.menu = new UI.Dropper(
+				'',
+				$("<div>")
+				.addClass("user_links")
+				.append(
+					$("<a>")
+						.text("User page")
+						.attr('href', SYSTEM.wiki.root + "/wiki/User:" + model.name)
+						.attr('target', "_blank")
+				)
+				.append(
+					$("<a>")
+						.text("User talk")
+						.attr('href', SYSTEM.wiki.root + "/wiki/User_talk:" + model.name)
+						.attr('target', "_blank")
+				)
+				.append(
+					$("<a>")
+						.text("Contributions")
+						.attr('href', SYSTEM.wiki.root + "/wiki/Special:Contribs/" + model.name)
+						.attr('target', "_blank")
+				),
+				{class: "simple"}
+			)
+			this.name.node.append(this.menu.node)
 			
 			this.meta = new UI.DefinitionList()
 			this.node.append(this.meta.node)

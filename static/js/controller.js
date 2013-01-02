@@ -5,9 +5,24 @@ Controller = Class.extend({
 		
 		this.users_query = null
 		
+		//Snuggler
+		this.snuggler = new View.Snuggler(new Model.Snuggler())
+		$("#status").after(this.snuggler.node)
+		this._load_snuggler()
+		
+		this.snuggler.menu.login.login.clicked.attach(this._login_snuggler.bind(this))
+		this.snuggler.menu.logout.logout.clicked.attach(this._logout_snuggler.bind(this))
+		
+		
+		//Controls
 		this.controls = new View.Controls()
 		$("body").append(this.controls.node)
 		
+		this.controls.changed.attach(function(_, filters){
+			this._update_query(filters)
+		}.bind(this))
+		
+		//User list
 		this.list = new View.UserList(new Model.UserList())
 		$("body").append(this.list.node)
 		
@@ -21,12 +36,9 @@ Controller = Class.extend({
 		
 		this.list.view_changed.attach(this._fill_list.bind(this))
 		
-		this.controls.changed.attach(function(_, filters){
-			this._update_query(filters)
-		}.bind(this))
-		
 		this._update_query(this.controls.val())
 		
+		//Handle key presses
 		$(window).keydown(this._handle_keydown.bind(this))
 		
 		this.loading = false
@@ -137,10 +149,73 @@ Controller = Class.extend({
 				user = this.list.model.shift_selection(1)
 				this.add_view(user)
 			}.bind(this),
-			function(message){
+			function(message, doc, meta){
+				doc = doc || {}
+				if(doc.code == "permissions"){
+					this.snuggler.ping()
+					alert("You must be logged in to rate newcomers.")
+				}else{
+					alert(message)
+				}
 				user.category.disabled(false)
+			}.bind(this)
+		)
+	},
+	_load_snuggler: function(){
+		this.local.snuggler.status(
+			function(doc){
+				if(doc.logged_in){
+					this.snuggler.model.set(doc.user.id, doc.user.name)
+				}else{
+					this.snuggler.model.clear()
+				}
+			}.bind(this),
+			function(message, doc){
 				alert(message)
-			}
+			}.bind(this)
+		)
+	},
+	_login_snuggler: function(){
+		this.snuggler.menu.login.disabled(true)
+		this.local.snuggler.authenticate(
+			this.snuggler.menu.login.name.val(),
+			this.snuggler.menu.login.pass.val(),
+			function(doc){
+				this.snuggler.model.set(doc.id, doc.name)
+				this.snuggler.menu.login.disabled(false)
+				this.snuggler.menu.expanded(false)
+			}.bind(this),
+			function(message, doc, meta){
+				if(doc && doc.code && doc.code == "authentication"){
+					if(meta.type == "password"){
+						alert("Could not log in.  Password incorrect.")
+					}else if(meta.type == "username"){
+						alert("Could not log in.  No user by the name '" + this.snuggler.menu.login.name.val() + "'.")
+					}else if(meta.type == "connection"){
+						alert("Could not log in.  Connection to " + SYSTEM.wiki.root + " failed.")
+					}else{
+						alert(message)
+					}
+				}else{
+					alert(message)
+				}
+				this.snuggler.menu.login.disabled(false)
+			}.bind(this)
+		)
+	},
+	_logout_snuggler: function(){
+		this.snuggler.menu.logout.disabled(true)
+		this.local.snuggler.log_out(
+			function(doc){
+				this.snuggler.model.clear()
+				this.snuggler.menu.logout.disabled(false)
+				this.snuggler.menu.expanded(false)
+			}.bind(this),
+			function(message, doc){
+				alert(message)
+				this.snuggler.menu.logout.disabled(false)
+			}.bind(this)
 		)
 	}
+	
 })

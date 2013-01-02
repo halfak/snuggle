@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="css/controls.css" />
 		<link rel="stylesheet" href="css/snuggle.css" />
 		<link rel="stylesheet" href="css/user.css" />
+		<link rel="stylesheet" href="css/snuggler.css" />
 		<script language="javascript" src="lib/jquery-1.8.1.min.js"></script>
 		<script language="javascript" src="lib/class.js"></script>
 		<script language="javascript" src="lib/date.format.js"></script>
@@ -43,7 +44,7 @@
 					<p>
 						Snuggle is designed to help you identify desirable new Wikipedia editors.  
 						The interface below lists all accounts registered in the last 30 days along with 
-						contributions.
+						contributions and talk page messages.
 					</p>
 					<p>
 						If you find a bug, please take a 
@@ -55,7 +56,6 @@
 					<h4>See also:</h4>
 					<ul>
 						<li><a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">Full documentation</a></li>
-						<li><a target="_blank" href="irc://freenet.org/#wikimedia-snuggle">irc://freenet.org/#wikimedia-snuggle</a></li>
 						<li><a target="_blank" href="https://bitbucket.org/halfak/snuggle">Source code</a></li>
 						<li><a target="_blank" href="http://en.wikipedia.org/wiki/User:EpochFail">EpochFail</a>, the developer</li>
 					</ul>
@@ -74,7 +74,7 @@
 				}
 			}
 			SYSTEM.local = new LocalServer("http://stat1.wikimedia.org:8081"),
-			SYSTEM.mediawiki = new MediaWiki(SYSTEM.wiki_root + "/w/api.php")
+			SYSTEM.mediawiki = new MediaWiki(SYSTEM.wiki.root + "/w/api.php")
 			SYSTEM.controller = new Controller(SYSTEM.local, SYSTEM.mediawiki)
 			
 		</script>

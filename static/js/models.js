@@ -8,6 +8,7 @@ Model.Snuggler = Class.extend({
 	/** */
 	init: function(){
 		this.creds = null
+		this.loading = true
 		this.changed = new Event(this)
 	},
 	
@@ -25,6 +26,7 @@ Model.Snuggler = Class.extend({
 			id: id,
 			name: name
 		}
+		this.loading = false
 		this.changed.notify(this.creds)
 	},
 	
@@ -33,6 +35,7 @@ Model.Snuggler = Class.extend({
 	*/
 	clear: function(){
 		this.creds = null
+		this.loading = false
 		this.changed.notify(this.creds)
 	}
 })

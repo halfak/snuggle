@@ -1,24 +1,35 @@
 UI = UI || {}
 
 UI.Button = Class.extend({
-	init: function(value, o){
-		o = o || {}
+	init: function(value, opts){
+		//Clean inpout
+		opts = opts || {}
+		if(value === undefined){value = ''}
 		this.value = value
 		
+		//Figure out what the label will be
+		if(opts.label === undefined){opts.label = value}
+		
+		//Create the nodes
 		this.node = $("<div>")
 			.addClass("button")
-			.append($("<span>").append(o.label || ""))
-			.click(this._handle_click.bind(this))
-	
-		if(o.class){
-			this.node.addClass(o.class)
+			.click(this._clicked.bind(this))
+		
+		this.label = $("<span>")
+			.append(opts.label)
+		this.node.append(this.label)
+		
+		//Consume options
+		if(opts.class){
+			this.node.addClass(opts.class)
 		}
-		if(o.attrs){
-			for(key in o.attrs){
-				this.node.attr(key, o.attrs[key])
+		if(opts.attrs){
+			for(key in opts.attrs){
+				this.node.attr(key, opts.attrs[key])
 			}
 		}
 		
+		//Only event that matters
 		this.clicked = new Event(this)
 	},
 	disabled: function(disabled){
@@ -43,7 +54,9 @@ UI.Button = Class.extend({
 			}
 		}
 	},
-	_handle_click: function(e){
-		this.clicked.notify()
+	_clicked: function(e){
+		if(!this.disabled()){
+			this.clicked.notify()
+		}
 	}
 })

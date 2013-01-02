@@ -25,7 +25,7 @@ dl {
 	background: #ddd;
 	box-shadow: inset 0px -5px 10px rgba(0,0,0,.3);
 	text-shadow: 2px 2px rgba(255,255,255,.5);
-	border-radius: 3px;
+	border-radius: 2px;
 	border: 1px solid #666;
 }
 	.button span{
@@ -49,4 +49,24 @@ div.dropper {
 		position: absolute;
 		top: 100%;
 		left: 0px;
+	}
+
+div.dropper.simple div.tab {
+	border: 1px solid black;
+	width: 1em;
+	height: 1em;
+	border-radius: 3px;
+	text-align: center;
+}
+	div.dropper.simple div.tab span {
+		display: inline-block;
+		border: .4em solid #000;
+		border-color: #000 transparent transparent transparent;
+		border-width: .4em .3em 0px .3em;
+		vertical-align: center;
+		margin-top: .3em;
+	}
+	div.dropper.simple.expanded div.tab span {
+		border-color: transparent transparent #000 transparent;
+		border-width: 0px .3em .4em .3em;
 	}
