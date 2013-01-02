@@ -141,6 +141,11 @@ LocalServer.Users.Cursor = Class.extend({
 		}
 	},
 	convert: function(doc){
+		for(var id in doc.revisions){
+			if(doc.revisions[id].revert && doc.revisions[id].revert.user._id == doc._id){
+				doc.revisions[id].revert.self = true
+			}
+		}
 		return {
 			id: doc._id,
 			info: {

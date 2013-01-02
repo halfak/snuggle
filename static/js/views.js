@@ -162,7 +162,7 @@ View.Controls = Class.extend({
 		
 		this.categories = new UI.SingleSelect(
 			[
-				{value: null, label: "unsorted", o: {class: "unsorted"}},
+				{value: null, label: "uncategorized", o: {class: "unsorted"}},
 				{value: "good-faith", o: {class: "good-faith"}},
 				{value: "bad-faith", o: {class: "bad-faith"}}
 			],
@@ -645,7 +645,7 @@ View.User = Class.extend({
 				this.model = model
 				
 				this.node.addClass("ns_" + this.model.page.namespace)
-				this.reverted(Boolean(this.model.revert))
+				this.reverted(Boolean(this.model.revert && !this.model.revert.self))
 				
 				this.model.reverted.attach(function(_, rvt){this._reverted(rvt)}.bind(this))
 			},

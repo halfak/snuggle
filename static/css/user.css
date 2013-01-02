@@ -97,8 +97,12 @@ div.user div.info dl{
 
 /********************************Contribs**************************************/
 div.user div.contribs {
-	max-height: 100%;
+	height: 100%;
 	overflow: hidden;
+}
+div.user.expanded div.contribs {
+	height: auto;
+	overflow: visible;
 }
 
 
