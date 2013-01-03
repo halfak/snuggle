@@ -56,7 +56,7 @@ UI.Dropper = Class.extend({
 		}
 	},
 	set_content: function(content){
-		this.pane.node.html("") //Clear out the old content
+		this.pane.node.children().detach() //Clear out the old content
 		this.pane.node.append(content || "")
 	}
 })

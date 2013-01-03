@@ -123,14 +123,14 @@ LocalServer.Users.Cursor = Class.extend({
 					if(user_docs.length == 0){
 						this.complete = true
 					}
-					try{
+					//try{
 						user_docs = user_docs.map(this.convert.bind(this))
 						success(this, user_docs.map(Model.User.inflate))
 						this.skip += user_docs.length
-					}catch(e){
-						error("An error occured while constructing a user: " + e)
-						window.lastError = e
-					}
+					//}catch(e){
+					//	error("An error occured while constructing a user: " + e)
+					//	window.lastError = e
+					//}
 				}.bind(this),
 				error,
 				n,
@@ -146,12 +146,13 @@ LocalServer.Users.Cursor = Class.extend({
 				doc.revisions[id].revert.self = true
 			}
 		}
+		
 		return {
 			id: doc._id,
 			info: {
 				name: doc.name,
 				registration: doc.registration,
-				reverted: doc.reverted,
+				reverted: doc.reverted || 0,
 				counts: doc.counts,
 				views: doc.views
 			},

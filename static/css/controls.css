@@ -23,7 +23,7 @@ div.controls div.categories{
 		cursor: pointer;
 		background: #e0e0e0;
 		box-shadow: inset 0px -.25em 1em rgba(0,0,0,.1);
-		text-shadow: 1px 2px #fff;
+		text-shadow: 1px 1px #fff;
 	}
 	div.controls div.categories div:hover{
 		background: #eee;
@@ -41,6 +41,13 @@ div.controls div.categories{
 		position: absolute;
 		left: .7em;
 		content: "\2714";
+		font-size: 1.2em;
+	}
+	div.controls div.categories div.ambiguous:before {
+		position: absolute;
+		left: .7em;
+		content: "?";
+		font-weight: bold;
 		font-size: 1.2em;
 	}
 	div.controls div.categories div.bad-faith:before {

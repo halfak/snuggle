@@ -309,9 +309,15 @@ UI.RevisionDetails.Diff = Class.extend({
 					.addClass(op.op)
 					.text(op.line)
 				this.node.append(line)
-			}else{
+			}else if(op.op == "context"){
 				var context = $('<div>')
 					.addClass("context")
+					
+				next = ops[i+1]
+				if(next && next.op == "change" && !next.context){
+					context.html(op.content)
+					console.log("context!")
+				}
 				this.node.append(context)
 			}
 		}

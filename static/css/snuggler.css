@@ -1,14 +1,14 @@
 #snuggler{
-	background: rgba(255,255,255,0.25);
+	background: rgba(255,255,255,0.4);
 	padding: .1em .5em;
 	font-size: .9em;
 }
 #snuggler:hover{
-	background: rgba(255,255,255,0.5);
+	background: rgba(255,255,255,0.6);
 }
 
 #snuggler.pinging{
-	outline: 3px solid rgba(0,0,0,.5);
+	outline: 6px solid rgba(0,0,0,.6);
 	background: rgba(255,255,255,1);
 }
 

@@ -324,13 +324,13 @@ Model.User.inflate = function(doc){
 			has_email : true | false
 				did the user include an email address when registering?
 		*/
-		init: function(name, registration, views, has_email, counts, category){
+		init: function(name, registration, views, has_email, counts, reverted){
 			this.name         = name
 			this.registration = registration
 			this.views        = views || 0
 			this.has_email    = has_email
 			this.counts       = counts
-			this.category     = category
+			this.reverted     = reverted
 			
 			this.changed  = new Event(this)
 		},
@@ -361,7 +361,8 @@ Model.User.inflate = function(doc){
 			new Date(doc.registration*1000),
 			doc.views,
 			doc.has_email || false,
-			doc.counts
+			doc.counts,
+			doc.reverted
 		)
 	}
 	

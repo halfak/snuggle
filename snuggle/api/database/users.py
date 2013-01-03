@@ -1,6 +1,6 @@
 import time 
 
-CATEGORIES = ("bad-faith", "good-faith")
+CATEGORIES = ("bad-faith", "good-faith", "ambiguous")
 
 USER_FIELDS = [
 	'_id',

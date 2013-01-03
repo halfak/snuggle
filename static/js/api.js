@@ -117,7 +117,7 @@ LocalAPI = API.extend({
 			timeout: this.timeout,
 			dataType: "json",
 			success: function(doc){
-				if(!doc.success){
+				if(doc.success === undefined){
 					if(doc.error){
 						error(doc.error.code + ": " + doc.error.message, doc.error, doc.meta)
 					}else{

@@ -94,11 +94,18 @@ class CSD(Template):
 	
 
 class Deletion(Template):
-	expression = r'prod|afd|.*?delet.*?'
+	expression = r'proposed del.*?|prod|afd|.*?delet.*?'
 	groups     = 1
 	priority   = 1
 	
 	def classes(self): return ["deletion"]
+
+class AFC(Template):
+	expression = r'afc.*?'
+	groups     = 1
+	priority   = 0
+	
+	def classes(self): return ["afc"]
 	
 TEMPLATES = [
 	VandalWarning,
@@ -108,7 +115,8 @@ TEMPLATES = [
 	GeneralWarning,
 	Welcome,
 	CSD,
-	Deletion
+	Deletion,
+	AFC
 ]
 
 class Templates:

@@ -81,6 +81,11 @@ Controller = Class.extend({
 		}else if(e.which == KEYS.NUM_2 || e.which == KEYS.NUM_PAD_2){
 			if(this.list.selected()){
 				var user = this.list.selected()
+				this._categorize_user(user, "ambiguous")
+			}
+		}else if(e.which == KEYS.NUM_3 || e.which == KEYS.NUM_PAD_3){
+			if(this.list.selected()){
+				var user = this.list.selected()
 				this._categorize_user(user, "good-faith")
 			}
 		}else{
@@ -117,10 +122,10 @@ Controller = Class.extend({
 				function(query, users){
 					this.list.model.loading(false)
 					this.loading = false
-					if(query == this.users_query){ //If we are still running the same query
+					if(query.filters == this.users_query.filters){ //If we are still running the same query
 						this._append_users(users)
-						this._fill_list()
 					}
+					this._fill_list()
 				}.bind(this),
 				function(message){
 					this.list.model.loading(false)
@@ -137,23 +142,26 @@ Controller = Class.extend({
 		this._categorize_user(user, category)
 	},
 	_categorize_user: function(user, category){
+		if(!user){return}
 		user.category.disabled(true)
 		this.local.users.categorize(
 			user.model, category,
 			function(response){
-				user.category.disabled(false)
-				user.model.category.update(
-					response.category.current, 
-					response.category.history
-				)
+				if(response){
+					user.category.disabled(false)
+					user.model.category.update(
+						response.category.current, 
+						response.category.history
+					)
+				}
 				user = this.list.model.shift_selection(1)
 				this.add_view(user)
 			}.bind(this),
 			function(message, doc, meta){
 				doc = doc || {}
 				if(doc.code == "permissions"){
-					this.snuggler.ping()
 					alert("You must be logged in to rate newcomers.")
+					this.snuggler.menu.expanded(true)
 				}else{
 					alert(message)
 				}
@@ -176,32 +184,37 @@ Controller = Class.extend({
 		)
 	},
 	_login_snuggler: function(){
-		this.snuggler.menu.login.disabled(true)
-		this.local.snuggler.authenticate(
-			this.snuggler.menu.login.name.val(),
-			this.snuggler.menu.login.pass.val(),
-			function(doc){
-				this.snuggler.model.set(doc.id, doc.name)
-				this.snuggler.menu.login.disabled(false)
-				this.snuggler.menu.expanded(false)
-			}.bind(this),
-			function(message, doc, meta){
-				if(doc && doc.code && doc.code == "authentication"){
-					if(meta.type == "password"){
-						alert("Could not log in.  Password incorrect.")
-					}else if(meta.type == "username"){
-						alert("Could not log in.  No user by the name '" + this.snuggler.menu.login.name.val() + "'.")
-					}else if(meta.type == "connection"){
-						alert("Could not log in.  Connection to " + SYSTEM.wiki.root + " failed.")
+		if(this.snuggler.menu.login.name.val().length > 0){
+			this.snuggler.menu.login.disabled(true)
+			this.local.snuggler.authenticate(
+				this.snuggler.menu.login.name.val(),
+				this.snuggler.menu.login.pass.val(),
+				function(doc){
+					this.snuggler.model.set(doc.id, doc.name)
+					this.snuggler.menu.login.clear()
+					this.snuggler.menu.login.disabled(false)
+					this.snuggler.menu.expanded(false)
+				}.bind(this),
+				function(message, doc, meta){
+					if(doc && doc.code && doc.code == "authentication"){
+						if(meta.type == "password"){
+							alert("Could not log in.  Password incorrect.")
+						}else if(meta.type == "username"){
+							alert("Could not log in.  No user by the name '" + this.snuggler.menu.login.name.val() + "'.")
+						}else if(meta.type == "connection"){
+							alert("Could not log in.  Connection to " + SYSTEM.wiki.root + " failed.")
+						}else{
+							alert(message)
+						}
 					}else{
 						alert(message)
 					}
-				}else{
-					alert(message)
-				}
-				this.snuggler.menu.login.disabled(false)
-			}.bind(this)
-		)
+					this.snuggler.menu.login.disabled(false)
+				}.bind(this)
+			)
+		}else{
+			alert("You must specify a username in order to log in.")
+		}
 	},
 	_logout_snuggler: function(){
 		this.snuggler.menu.logout.disabled(true)

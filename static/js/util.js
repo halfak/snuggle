@@ -182,10 +182,7 @@ WikiDiff = {
 		}else if(tr.find('td.diff-context').length > 0){
 			return this.parseContext(tr)
 		}else if(tr.find('td.diff-addedline').length > 0 || tr.find('td.diff-deletedline').length > 0){
-			return {
-				op: "change",
-				ops: this.parseChange(tr)
-			}
+			return this.parseChange(tr)
 		}else{
 			throw ["Could not parse.", tr]
 		}
@@ -212,7 +209,10 @@ WikiDiff = {
 		}	
 	},
 	parseChange: function(tr){
-		ops = []
+		op = {
+			op: "change",
+			ops: []
+		}
 		removed = {
 			contents: tr.find('td.diff-deletedline > div').contents(),
 			c: 0, //content pointer
@@ -237,8 +237,9 @@ WikiDiff = {
 						remove.textContent.length - removed.i,//Potential steps for removal
 						add.textContent.length - added.i  //Potential steps for addition
 					)
+					op.context = Boolean(op.context || consumable >= 3)
 					
-					ops.push({
+					op.ops.push({
 						op: "context",
 						content: remove.textContent.slice(removed.i, removed.i+consumable)
 					})
@@ -254,7 +255,7 @@ WikiDiff = {
 					}
 				}else{
 					if(remove && remove.nodeType != 3){
-						ops.push({
+						op.ops.push({
 							op: "remove",
 							content: remove.textContent
 						})
@@ -262,7 +263,7 @@ WikiDiff = {
 						removed.i = 0
 					}
 					if(add && add.nodeType != 3){
-						ops.push({
+						op.ops.push({
 							op: "add",
 							content: add.textContent
 						})
@@ -274,14 +275,14 @@ WikiDiff = {
 			}
 		}else if(added.contents.length){
 			for(var i=0;i<added.contents.length;i++){
-				ops.push({
+				op.ops.push({
 					op: "add",
 					content: added.contents[i].textContent
 				})
 			}
 		}else if(removed.contents.length){
 			for(var i=0;i<removed.contents.length;i++){
-				ops.push({
+				op.ops.push({
 					op: "remove",
 					content: removed.contents[i].textContent
 				})
@@ -289,7 +290,7 @@ WikiDiff = {
 		}else{
 			LOGGING.debug(["Empty change diff", tr])
 		}
-		return ops
+		return op
 		
 	}
 }

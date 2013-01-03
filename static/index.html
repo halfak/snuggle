@@ -22,8 +22,12 @@
 		<script language="javascript" src="js/ui.slider.js"></script>
 		<script language="javascript" src="js/ui.button.js"></script>
 		<script language="javascript" src="js/ui.revision_graph.js"></script>
+		<script language="javascript" src="js/ui.form.js"></script>
 		<script language="javascript" src="js/models.js"></script>
-		<script language="javascript" src="js/views.js"></script>
+		<script language="javascript" src="js/view.controls.js"></script>
+		<script language="javascript" src="js/view.snuggler.js"></script>
+		<script language="javascript" src="js/view.user_list.js"></script>
+		<script language="javascript" src="js/view.user.js"></script>
 		<script language="javascript" src="js/controller.js"></script>
 	</head>
 	<body>
@@ -40,24 +44,56 @@
 		<div id="help" class="dual-slider">
 			<div class="slider help">
 				<div class="pane">
-					<h3>Help!</h3>
+					<h3>Quick Reference</h3>
+					<p class="note">See the <a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">full documentation</a></p>
 					<p>
 						Snuggle is designed to help you identify desirable new Wikipedia editors.  
-						The interface below lists all accounts registered in the last 30 days along with 
+						The interface lists all accounts registered in the last 30 days along with 
 						contributions and talk page messages.
 					</p>
-					<p>
-						If you find a bug, please take a 
-						<a target="_blank" href="http://en.wikipedia.org/wiki/Screenshot">screenshot</a> 
-						to demonstrate the problem and
-						<a target="_blank" href="https://bitbucket.org/halfak/snuggle/issues">file a bug</a>
-						in the issue tracker.
-					</p>
+					
+					<h4 class="left">New users</h4>
+					<div class="figure center">
+						<a target="_blank" href="img/user.callout.png"><img src="img/user.callout.400.png"></a>
+					</div>
+					<ol>
+						<li>User account metadata and statistics.</li>
+						<li>
+							Interactive graph of user contribs for the first 30 days.  
+							Different colors represent different namespaces. E.g.,
+							<span class="revision ns_0">Articles</span>,
+							<span class="revision ns_1">Talk</span>,
+							<span class="revision ns_2">User</span>,
+							<span class="revision ns_3">User_talk</span>,
+							<span class="revision ns_4">Wikipedia</span>,
+							<span class="revision ns_5">Wikipedia_talk</span>,
+							etc.
+						</ul>
+						<li>
+							Talk page activity.  Templated messages are noted with an icon. E.g. 
+							<span class="thread_icon warning level_2" title="Level 2 warning"></span>
+							<span class="thread_icon welcome" title="Welcome"></span>
+							<span class="thread_icon csd" title="Criteria for speedy deletion"></span>
+						</li>
+						<li>Categorization buttons.  This will move the user into one of the category lists.</li>
+					</ol>
+					
+					<h4 class="left">Category lists</h4>
+					<div class="figure center">
+						<a target="_blank" href="img/categories.png"><img src="img/categories.400.png"></a>
+					</div>
+					<p>Clicking on the tabs on the top of the interface allows you to view different categories of newcomers.</p>
+					
+					<h4 class="left">Controls</h4>
+					<div class="figure center">
+						<a target="_blank" href="img/controls.png"><img src="img/controls.400.png"></a>
+					</div>
+					<p>A set of filters allow you to limit and sort the users that are listed in the interface.</p>
 					<h4>See also:</h4>
 					<ul>
-						<li><a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">Full documentation</a></li>
-						<li><a target="_blank" href="https://bitbucket.org/halfak/snuggle">Source code</a></li>
-						<li><a target="_blank" href="http://en.wikipedia.org/wiki/User:EpochFail">EpochFail</a>, the developer</li>
+						<li>The <a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">full documentation</a></li>
+						<li>The open <a target="_blank" href="https://bitbucket.org/halfak/snuggle">source code repository</a></li>
+						<li>The developer's <a target="_blank" href="http://en.wikipedia.org/wiki/User:EpochFail">user page</a></li>
 					</ul>
 				</div>
 				<div class="tab"><span>help</span></div>

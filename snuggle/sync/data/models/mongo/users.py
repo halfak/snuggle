@@ -30,7 +30,10 @@ class User:
 		self.db.users.update(
 			{'_id': self.id}, 
 			{
-				'$set': {'revisions.%s' % revision.id: revision.deflate()},
+				'$set': {
+					'revisions.%s' % revision.id: revision.deflate(),
+					'last_activity': revision.timestamp
+				},
 				'$inc': {
 					'counts.all': 1,
 					'counts.%s' % revision.page.namespace: 1

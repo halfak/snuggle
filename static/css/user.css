@@ -32,9 +32,9 @@ div.user_list div.user.expanded {
 	}
 	div.user_list div.user div.category{
 		position: absolute;
-		bottom: .4em;
-		right: 75%;
-		width: 23%;
+		bottom: 0px;
+		left: 0px;
+		width: 25%;
 	}
 
 
@@ -54,8 +54,8 @@ div.user div.info .name:hover{
 	div.user div.info .name .dropper{
 		display: none;
 		position: absolute;
-		top: .1em;
-		right: .5em;
+		top: .2em;
+		right: .2em;
 	}
 	div.user div.info .name:hover .dropper, div.user div.info .name .dropper.expanded{
 		display: block;
@@ -84,6 +84,10 @@ div.user.good-faith div.info .name:before{
 div.user.bad-faith div.info .name:before{
 	content: "\2718\0000a0";
 }
+div.user.ambiguous div.info .name:before{
+	content: "?\0000a0";
+	font-weight: bold;
+}
 div.user div.info.viewed .name{
 	font-weight: normal;
 }
@@ -92,6 +96,41 @@ div.user div.info dl{
 	margin: .5em 0px;
 	font-size: .9em;
 }
+
+div.user div.info span.edit_counts div.dropper{
+	margin-left: .25em;
+	vertical-align: top;
+}
+
+	div.user div.info span.edit_counts div.dropper .pane{
+		background: #fff;
+		border: 1px solid black;
+		padding: .5em;
+		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+		z-index: 8;
+		width: 15em;
+	}
+	div.user div.info span.edit_counts div.dropper .pane table{
+		width: 100%;
+		font-size: .9em;
+	}
+		div.user div.info span.edit_counts div.dropper .pane th{
+			text-align: right;
+		}
+		div.user div.info span.edit_counts div.dropper .pane td{
+			width: 100%;
+			position: relative;
+			padding-left: .5em;
+		}
+		div.user div.info span.edit_counts div.dropper .pane td div.bar{
+			border: 1px solid #666;
+			overflow: visible;
+		}
+		div.user div.info span.edit_counts div.dropper .pane td div.bar span{
+			padding-left: .5em;
+		}
+	
+
 
 
 
@@ -113,43 +152,43 @@ div.user div.contribs div.revision{
 	background: #dfd;
 }
 .revision.ns_1{
-	background: #cfc;
+	background: #afa;
 }
 .revision.ns_2{
 	background: #ddf;
 }
 .revision.ns_3{
-	background: #ccf;
+	background: #aaf;
 }
 .revision.ns_4{
 	background: #dff;
 }
 .revision.ns_5{
-	background: #cff;
+	background: #aff;
 }
 .revision.ns_6{
 	background: #ffd;
 }
 .revision.ns_7{
-	background: #ffc;
+	background: #ffa;
 }
 .revision.ns_10{
 	background: #fdd;
 }
 .revision.ns_11{
-	background: #fcc;
+	background: #faa;
 }
 .revision.ns_12{
 	background: #eee;
 }
 .revision.ns_13{
-	background: #fff;
+	background: #ddd;
 }
 .revision.ns_14{
 	background: #afd;
 }
 .revision.ns_15{
-	background: #afc;
+	background: #8fa;
 }
 .revision.reverted{
 	background-image: url('../img/dot.png');
@@ -180,9 +219,14 @@ div.user div.talk.expanded div.thread{
 	display: block;
 	margin-bottom: .5em;
 	white-space: nowrap;
+	width: 100%;
+}
+div.user div.talk.expanded div.thread dt{
+	display: block;
+	float: left;
 }
 div.user div.talk.expanded div.thread dd{
-	display: inline-block;
+	display: inline;
 	white-space: normal;
 	word-wrap: break-word;
 	margin-left: 0px;
@@ -192,99 +236,7 @@ div.user div.talk.expanded div.thread dd{
 div.user div.talk div.thread dt{
 	display: inline-block;
 	vertical-align: top;
-	height: 1.4em;
-	border-radius: .25em;
-	font-size: .9em;
-	font-weight: bold;
-	text-align:center;
-	margin-right: .5em;
-	color: #000;
-	text-align: center;
-	border: 2px solid blue;
-	padding: 0px .5em;
 }
-	div.user div.talk div.thread dt{
-		border-color: blue;
-		background: #ccf;
-		box-shadow: 0px 0px 4px blue;
-		border-radius: 1em;
-	}
-	div.user div.talk div.thread dt:before{
-		content: "\0000a0";
-	}
-	
-	div.user div.talk div.thread.warning dt{
-		border-color: #933;
-		background: #fcc;
-		box-shadow: 0px 0px 4px #933;
-	}
-	div.user div.talk div.thread.warning dt:before{
-		content: "W";
-	}
-	
-	div.user div.talk div.thread.warning.vandal dt{
-		border-color: #600;
-		background: #e00;
-		box-shadow: 0px 0px 4px #600;
-	}
-	div.user div.talk div.thread.warning.vandal dt:before{
-		content: "V";
-	}
-	div.user div.talk div.thread.level_1 dt:after{
-		content: "1";
-		vertical-align: super;
-		font-size: .6em;
-	}
-	div.user div.talk div.thread.level_2 dt:after{
-		content: "2";
-		vertical-align: super;
-		font-size: .6em;
-	}
-	div.user div.talk div.thread.level_3 dt:after{
-		content: "3";
-		vertical-align: super;
-		font-size: .6em;
-	}
-	div.user div.talk div.thread.level_4 dt:after{
-		content: "4";
-		vertical-align: super;
-		font-size: .6em;
-	}
-	
-	div.user div.talk div.thread.block dt{
-		border-color: #000;
-		background: #ccc;
-		box-shadow: 0px 0px 4px #000;
-	}
-	div.user div.talk div.thread.block dt:before{
-		content: "block";
-	}
-	
-	div.user div.talk div.thread.csd dt{
-		border-color: #bb0;
-		background: #ff0;
-		box-shadow: 0px 0px 4px #bb0;
-	}
-	div.user div.talk div.thread.csd dt:before{
-		content: "csd";
-	}
-	
-	div.user div.talk div.thread.welcome dt{
-		border-color: #66F;
-		background: #eef;
-		box-shadow: 0px 0px 4px #66F;
-	}
-	div.user div.talk div.thread.welcome dt:before{
-		content: "W";
-	}
-	
-	div.user div.talk div.thread.copyright dt{
-		border-color: #660;
-		box-shadow: 0px 0px 4px #660;
-	}
-	div.user div.talk div.thread.copyright dt:before{
-		content: "\00a9";
-	}
 	
 /**************************Category   *****************************************/
 div.user div.category {
@@ -294,7 +246,10 @@ div.user div.category {
 }
 
 div.user div.category span.header{
-	display: none;
+	position: absolute;
+	top: 0px;
+	left: 1em;
+	font-weight: bold;
 }
 
 div.user div.category div.history{
@@ -302,6 +257,7 @@ div.user div.category div.history{
 	top: 0px;
 	right: 1em;
 	font-size: .9em;
+	z-index: 2;
 }
 	div.user div.category div.history div.tab{
 		position: relative;
@@ -370,6 +326,8 @@ div.user div.category div.buttons {
 		white-space: nowrap;
 		overflow: hidden;
 		text-align: center;
+		width: 30%;
+		margin-right: 2%;
 	}
 		div.user div.category div.button span{
 			display: block;
@@ -385,13 +343,13 @@ div.user div.category div.buttons {
 			box-shadow: inset 0px .25em .5em rgba(0,0,0,.3);
 		}
 	div.user div.category div.button.good-faith{
-		width: 60%;
 		background: #afa;
 	}
+	div.user div.category div.button.ambiguous{
+		font-weight: bold;
+	}
 	div.user div.category div.button.bad-faith{
-		width: 35%;
 		background: #faa;
-		margin-right: 5%;
 	}
 
 

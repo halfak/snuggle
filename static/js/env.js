@@ -14,8 +14,10 @@ KEYS = {
 	DOWN_ARROW: 40,
 	NUM_1: 49,
 	NUM_2: 50,
+	NUM_3: 51,
 	NUM_PAD_1: 97,
 	NUM_PAD_2: 98,
+	NUM_PAD_3: 99,
 	ENTER: 13
 }
 
