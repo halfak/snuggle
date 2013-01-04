@@ -148,6 +148,9 @@ div.user.expanded div.contribs {
 div.user div.contribs div.revision{
 	/*background: #eee;*/
 }
+.revision{
+	min-width: 1em;
+}
 .revision.ns_0{
 	background: #dfd;
 }

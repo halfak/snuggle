@@ -31,6 +31,7 @@ UI.Dropper = Class.extend({
 		//click event, it will bubble up to the body and then we can 
 		//know to close the dropper. 
 		$("body").click(function(e){this.expanded(false)}.bind(this))
+		$("body").keydown(function(e){if(e.which == KEYS.ESCAPE){this.expanded(false)}}.bind(this))
 		
 		this.expanded(false)
 	},
