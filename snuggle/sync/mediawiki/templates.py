@@ -102,7 +102,7 @@ class Deletion(Template):
 
 class AFC(Template):
 	expression = r'afc.*?'
-	groups     = 1
+	groups     = 0
 	priority   = 0
 	
 	def classes(self): return ["afc"]

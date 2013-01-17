@@ -76,7 +76,7 @@ Controller = Class.extend({
 		}else if(e.which == KEYS.NUM_1 || e.which == KEYS.NUM_PAD_1){
 			if(this.list.selected()){
 				var user = this.list.selected()
-				this._categorize_user(user, "bad-faith")
+				this._categorize_user(user, "good-faith")
 			}
 		}else if(e.which == KEYS.NUM_2 || e.which == KEYS.NUM_PAD_2){
 			if(this.list.selected()){
@@ -86,7 +86,7 @@ Controller = Class.extend({
 		}else if(e.which == KEYS.NUM_3 || e.which == KEYS.NUM_PAD_3){
 			if(this.list.selected()){
 				var user = this.list.selected()
-				this._categorize_user(user, "good-faith")
+				this._categorize_user(user, "bad-faith")
 			}
 		}else{
 			return true
