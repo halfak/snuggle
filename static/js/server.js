@@ -181,7 +181,7 @@ MediaWiki.Revisions = Class.extend({
 			action: "query",
 			prop: "revisions",
 			revids: id,
-			rvprop: "ids",
+			rvprop: "ids|content",
 			rvdiffto: "prev"
 		}
 		this.api.jsonp(
