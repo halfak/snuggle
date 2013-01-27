@@ -95,7 +95,7 @@ class CSD(Template):
 
 class Deletion(Template):
 	expression = r'proposed del.*?|prod|afd|.*?delet.*?'
-	groups     = 1
+	groups     = 0
 	priority   = 1
 	
 	def classes(self): return ["deletion"]

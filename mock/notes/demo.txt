@@ -1,0 +1,659 @@
+Users can have minimum font sizes in their browser and that will mess up the logo
+
+It might be nice to be able to minimize a user since new Snugglers will want to minimize the visual input. 
+ - Also, consider a quick demo for users when they first log in. :)
+ 
+Tooltip everything
+
+Consider cross-hatches for Talk namespaces.
+
+Link to contribs by namespace in EditCounter
+
+Move user menu into metadata area (user - talk - contribs)
+
+User categorization history - "undefined"
+
+Follow newcomers - Auto watch user & user_talk of this user for Wikipedia integration
+
+Revision graph should define boundaries. 
+
+Consider login in top-right.
+
+Quick links to report user to AIV, UAA and ANI
+
+Revert a revision from Snuggle (and send a warning)
+
+Simplify the deleted-diff error message. 
+
+This user has (had) yet to be categorized.
+
+Remove permissions error for views with logged out users.
+
+Send invite for teahouse. 
+
+Topic set by halfak to: Demo and feedback for WP:Snuggle | http://stat1.wikimedia.org:8080 - http://enwp.org/WP:Snuggle 09:35:06 AM	
+wolfgang42 has disconnected (Ping timeout: 276 seconds) 09:37:15 AM	
+MelBee has joined the room 09:38:49 AM	
+yuvipanda_ has disconnected (Ping timeout: 248 seconds) 09:39:16 AM	
+MelBee has disconnected (Ping timeout: 265 seconds) 09:43:30 AM	
+MelBee has joined the room 09:45:15 AM	
+yuvipanda_ has joined the room 09:45:27 AM	
+Tpt has joined the room 09:46:00 AM	
+Denny_WMDE1 has disconnected (Quit: Leaving.) 09:51:50 AM	
+yuvipanda__ has joined the room 09:55:25 AM	
+yuvipanda_ has disconnected (Ping timeout: 248 seconds) 09:57:24 AM	
+AnjaJ_WMDE has disconnected (Quit: AnjaJ_WMDE) 09:58:19 AM	
+MelBee has disconnected (Quit: Computer has gone to sleep.) 10:02:25 AM	
+yuvipanda__ has disconnected (Remote host closed the connection) 10:15:08 AM	
+yuvipanda_ has joined the room 10:16:23 AM	
+Disconnected 10:23:40 AM	
+No topic defined 10:24:10 AM	
+Connected 10:24:10 AM	
+Topic set to: Demo and feedback for WP:Snuggle | http://stat1.wikimedia.org:8080 - http://enwp.org/WP:Snuggle 10:24:10 AM	
+ragesoss_ has joined the room 10:24:10 AM	
+jorm has joined the room 10:24:10 AM	
+Thehelpfulone has joined the room 10:24:10 AM	
+ragesoss has joined the room 10:24:10 AM	
+Isarra has joined the room 10:24:10 AM	
+Susan has joined the room 10:24:10 AM	
+wm-bot has joined the room 10:24:10 AM	
+ChanServ has joined the room 10:24:10 AM	
+Ocaasi_ has joined the room 10:24:10 AM	
+yuvipanda_ has joined the room 10:24:10 AM	
+Tpt has joined the room 10:24:10 AM	
+aude has joined the room 10:24:10 AM	
+zeljkof_ has joined the room 10:24:10 AM	
+Nikerabbit has joined the room 10:24:10 AM	
+Dantman has joined the room 10:24:10 AM	
+heatherw has joined the room 10:24:10 AM	
+wing2 has joined the room 10:24:10 AM	
+sgardner has joined the room 10:24:10 AM	
+aharoni has joined the room 10:24:10 AM	
+Snowolf has joined the room 10:24:10 AM	
+jem- has joined the room 10:24:10 AM	
+qgil has joined the room 10:24:10 AM	
+Lydia_WMDE has joined the room 10:24:10 AM	
+Vito has joined the room 10:24:10 AM	
+Reedy has joined the room 10:24:10 AM	
+jeremyb has joined the room 10:24:10 AM	
+BlastHardcheese has joined the room 10:24:10 AM	
+RD has joined the room 10:24:10 AM	
+preilly has joined the room 10:24:10 AM	
+Kingpin13 has joined the room 10:24:10 AM	
+guillom has joined the room 10:24:10 AM	
+idoru has joined the room 10:24:10 AM	
+stwalkerster has joined the room 10:24:10 AM	
+dungodung|away has joined the room 10:24:10 AM	
+QueenOfFrance has joined the room 10:24:10 AM	
+Guest28108 has joined the room 10:24:10 AM	
+sankarshan_away has joined the room 10:24:10 AM	
+itu has joined the room 10:24:10 AM	
+Barras has joined the room 10:24:10 AM	
+lego|away has joined the room 10:24:10 AM	
+[ceradon] has joined the room 10:24:10 AM	
+LoganCloud has joined the room 10:24:10 AM	
+tommorris has joined the room 10:24:10 AM	
+Nischay|Away has joined the room 10:24:10 AM	
+Riley has joined the room 10:24:10 AM	
+RoanKattouw has joined the room 10:24:10 AM	
+Merlissimo has joined the room 10:24:10 AM	
+Danny_B has joined the room 10:24:10 AM	
+Elfix has joined the room 10:24:10 AM	
+blobaugh has joined the room 10:24:10 AM	
+Dereckson has joined the room 10:24:10 AM	
+Spitfire has joined the room 10:24:10 AM	
+Nemo_bis has joined the room 10:24:10 AM	
+Krinkle|detached has joined the room 10:24:10 AM	
+mrmist has joined the room 10:24:10 AM	
+James_F|Away has joined the room 10:24:10 AM	
+danmichaelo has joined the room 10:28:58 AM	
+Beria has joined the room 10:30:16 AM	
+Beria has disconnected (Changing host) 10:30:16 AM	
+Beria has joined the room 10:30:16 AM	
+JohnLewis has joined the room 10:39:16 AM	
+wing2 has disconnected (Quit: Nettalk6 - www.ntalk.de) 10:42:27 AM	
+Ironholds has joined the room 10:43:29 AM	
+ppena|away has joined the room 10:49:48 AM	
+yuvipanda__ has joined the room 10:49:57 AM	
+yuvipanda_ has disconnected (Ping timeout: 248 seconds) 10:51:16 AM	
+
+halfak 10:59:00 AM
+Hey folks, I'll be kicking off the Snuggle demo in a few minutes.  I've put the two most important links in the channel topic: http://stat1.wikimedia.org:8080 - http://enwp.org/WP:Snuggle	
+yuvipanda_ has joined the room 10:59:58 AM	
+yuvipanda__ has disconnected (Ping timeout: 255 seconds) 11:00:02 AM	
+Waldir has joined the room 11:01:20 AM	
+JohnLewis has disconnected (Ping timeout: 252 seconds) 11:01:43 AM	
+JohnLewis_ has joined the room 11:01:48 AM	
+
+Ironholds 11:02:09 AM
+a wild halfak emerges . Hey dude.	
+
+halfak 11:02:38 AM
+Hey Ironholds.  
+Are you ready to demo? 11:02:41 AM
+JohnLewis_ is now known as JohnLewis 11:02:46 AM	
+JohnLewis has disconnected (Changing host) 11:02:47 AM	
+JohnLewis has joined the room 11:02:47 AM	
+
+Ironholds 11:02:51 AM
+sure! are there new things since I saw it last?	
+
+halfak 11:03:03 AM
+Yes.  Lots. 	
+
+Ironholds 11:03:05 AM
+JohnLewis, as a devmonkey and also as an editor you'll want to pay attention to this session 
+halfak: with pleasure, then . You poked #wikipedia-en? 11:03:16 AM
+ 
+halfak 11:03:22 AM
+You can now log in an categorize users. 	
+
+JohnLewis 11:03:24 AM
+Will do Oliver.	
+
+Ironholds 11:03:29 AM
+sweet!	
+Nettrom has joined the room 11:03:50 AM	
+
+halfak 11:05:01 AM
+Alright.  Welcome everyone. 
+My goal here today is to introduce you to Snuggle and get your feedback so that I can figure out how to make it better. 11:05:31 AM
+The links you'll need are in the topic.  http://stat1.wikimedia.org:8080 - http://enwp.org/WP:Snuggle 11:05:51 AM
+The first link brings you to an instance of the tool.  The second brings you to the documentation and the sign-up list. 11:06:12 AM
+Soapy has joined the room 11:06:19 AM	
+
+halfak 11:06:40 AM
+If you want to hear about new developments with the tool, make sure to get on that signup list so I know to ping you. 	
+
+Waldir 11:08:24 AM
+maybe WPnuggle shouldn't list the hangout link in the "links you *need* list	
+
+halfak 11:08:41 AM
+Anyway, the current version of the tool does not affect Wikipedia in any way. 
+Ahh.  good point.  I hope to only use the google hangout to do screen sharing in case we need it. 11:09:00 AM
+ppena|away is now known as ppena 11:09:06 AM	
+
+halfak 11:10:21 AM
+When you use the tool to categorize users, it will only have an effect within Snuggle for the time being.  	
+
+Waldir 11:10:35 AM
+btw this is a minor issue, but worth taking a look. here's how the icon looks to me: http://img210.imageshack.us/img210/4369/selection002ln.png
+(firefox @ ubuntu 12.04) 11:10:48 AM
+ 
+halfak 11:11:13 AM
+Interesting.  I specifically made that icon as a browser compatibility test. 
+The most recent firefox should be fine.  Let me check that out quick. 11:11:26 AM
+Hmm... It looks fine to me.  Could you provide me with a screenshot of the whole UI? 11:12:03 AM
+ 
+Waldir 11:12:15 AM
+wait, I think I have minimum font size set up. just a sec
+yep, looks fine now 11:12:38 AM
+sorry for the false alarm 11:12:43 AM
+but now it's a known issue 11:12:49 AM
+ 
+halfak 11:12:57 AM
+Not at all.  I didn't know that minimum font sizes were a thing. 
+Thanks for pointing it out. 11:13:02 AM
+ 
+Waldir 11:13:37 AM
+so... as a first time user... are we supposed to login before doing anyhting?	
+
+halfak 11:13:50 AM
+You can use most of the features without logging in. 
+Once you try to categorize a user, it should ask you to log in. 11:14:00 AM
+You can log in without going anywhere else in the interface. 11:14:11 AM
+ 
+Waldir 11:14:16 AM
+cool	
+
+halfak 11:14:23 AM
+So, you're safe to wait and log in when you are ready. 	
+
+Waldir 11:14:58 AM
+how do I minimize a user's "box"?	
+
+halfak 11:15:19 AM
+Once you select a user, there will always be exactly one user selected. 
+You can minimize the current user by selecting another. 11:15:31 AM
+You can also use the Page Up and Page Down keys to navigate the list. 11:15:45 AM
+ 
+Waldir 11:16:10 AM
+hmm. it might be a little daunting for new users of snuggle, wanting to reduce visual elements to get a sense of what to do first	
+
+halfak 11:16:20 AM
+That
+'s a good point. 11:16:24 AM
+ 
+Waldir 11:16:38 AM
+I expected there would be a way to unselect a user	
+superm401 has joined the room 11:16:59 AM	
+dschoon has joined the room 11:17:08 AM	
+dschoon has disconnected (Remote host closed the connection) 11:17:32 AM	
+
+JohnLewis 11:17:42 AM
+halfak: While attempting to log is, I am being pestered with notices.
+*log in 11:17:46 AM
+dschoon has joined the room 11:17:53 AM	
+
+halfak 11:18:23 AM
+What are the notices saying?	
+
+JohnLewis 11:18:57 AM
+'You must be logged in to rate newcomers'
+That is while logging in. 11:19:02 AM
+ 
+halfak 11:19:34 AM
+Hmm... Is there any chance you could join the google hangout and screenshare for me?	
+
+superm401 11:19:51 AM
+halfak, I think I got a bogus password failure before it let me in, but I'm not sure.	
+
+JohnLewis 11:20:14 AM
+iPads done have Google Hangout on them. I can take an image though for you.	
+
+halfak 11:20:21 AM
+That would work. 
+JohnLewis: ^^^ 11:20:29 AM
+superm401: I'm not sure what you mean.  Did the interface tell you your password was wrong, but also log you in. 11:21:00 AM
+ 
+superm401 11:21:38 AM
+halfak, no, I just think I may have entered it right the first time.
+How are you logging people in? 11:21:48 AM
+ 
+halfak 11:22:37 AM
+I'm forwarding the creds to the Wikipedia API and storing the cookie.  
+I feel gross, but it looks like this is only way. 11:22:45 AM
+AnjaJ_WMDE has joined the room 11:23:05 AM	
+
+halfak 11:23:05 AM
+The creds are never stored.  I just forward them on and then store the cookie that I get back from the Wikipedia API. 	
+
+Waldir 11:23:23 AM
+does the purple line above a user box (when we select it) mean anything?	
+
+halfak 11:23:53 AM
+Could you screenshare that.  The box should have a border surrounding it. 	
+sgardner has disconnected (Ping timeout: 264 seconds) 11:24:03 AM	
+
+Waldir 11:24:06 AM
+hmmm
+I'll screenshare 11:24:15 AM
+ 
+halfak 11:24:23 AM
+Eeek.  I just tried in Firefox and I think I see what you mean
+If you look inside the quick reference ("Help" in the upper right) I have a screenshot of what a selected user should look like. 11:25:13 AM
+gwicke has joined the room 11:25:20 AM	
+
+halfak 11:25:29 AM
+I'll file that as a bug and figure out why FF isn't participating in a proper outline, 	
+JohnLewis_ has joined the room 11:25:37 AM	
+
+JohnLewis_ 11:25:57 AM
+Damn router.	
+
+superm401 11:26:31 AM
+halfak, a lot of things are missing title tooltips.	
+
+halfak 11:27:05 AM
+Ahh that's a good point.  I could add them to all of the metadata items at least. 	
+
+JohnLewis_ 11:27:11 AM
+halfak: Check your chat, sent it.	
+
+Waldir 11:27:11 AM
+superm401: +1	
+
+superm401 11:27:20 AM
+Including the thread icon and the tiny rectangles	
+JohnLewis has disconnected (Ping timeout: 252 seconds) 11:27:45 AM	
+
+JohnLewis_ 11:28:01 AM
+//nick JohnLewis	
+JohnLewis_ is now known as JohnLewis 11:28:08 AM	
+JohnLewis has disconnected (Changing host) 11:28:08 AM	
+JohnLewis has joined the room 11:28:08 AM	
+
+halfak 11:28:12 AM
+JohnLewis_: Not sure what you are talking about.  My IRC client could be misbehaving. 	
+
+Waldir 11:28:18 AM
+instead of the drobdown menu, navbox-style P-T-C links (with tooltips) would be nicer I think
+no interface elements appearing/disappearing 11:28:27 AM
+ 
+Danny_B 11:28:49 AM
+p-t-c links are evil, they should be on demand only	
+
+halfak 11:28:55 AM
+superm401: Good point on the tooltips.  It never occurred to me that I could clue you in on what namespace and whether the revision was reverted. 	
+
+superm401 11:29:09 AM
+halfak, the colors are too close together.  Yes, Article and Talk namespaces are related (I assume that's why they're close), but I still want to easily visually distinguish.	
+
+halfak 11:29:10 AM
+P-T-C?	
+
+Waldir 11:29:11 AM
+For clarity, PTC = User (P)age, User (T)alk, User (C)contributions	
+
+superm401 11:29:19 AM
+Same goes for User and User talk colors.	
+Nettrom has disconnected (Quit: poof) 11:29:28 AM	
+
+Waldir 11:29:45 AM
+Hi Danny_B 	
+
+Danny_B 11:29:52 AM
+hello	
+
+Waldir 11:29:55 AM
+why evil?	
+
+superm401 11:30:20 AM
+halfak, I don't see the red dot documented.  does it mean reverted (just a guess)?	
+
+Waldir 11:30:28 AM
+superm401: +1	
+
+halfak 11:30:37 AM
+For the colors, I'm limited because there are a lot of namespaces to represent.  If I add differentiation to a few namespaces, I lose it in others.  	
+
+Danny_B 11:31:05 AM
+i apologize, ignore me, please. i misread your post. i thought you're talking about links in navboxes (template, edit, history - or whatever is there)	
+
+superm401 11:31:05 AM
+Hmm, maybe there's an alternative, like cross-hatching background,t that could work.	
+
+Danny_B 11:31:27 AM
+we have those on demand by gadget
+which is the correct solution 11:31:41 AM
+ 
+superm401 11:31:46 AM
+halfak, when I click the revisions drop down, I see talk, article, etc., and counts for each.  It would be nice if the counts linked to their Special:Contributions, filtered to that namespace.	
+
+halfak 11:31:47 AM
+Superm401.  I like that.  I'll look into it. 	
+
+Waldir 11:31:52 AM
+Danny_B no, I meant instead of the current dropdown menu
+with user liks 11:31:56 AM
+*links 11:31:58 AM
+ 
+Danny_B 11:32:28 AM
+Waldir: as i said, just ignore me, pls. it's misunderstanding	
+
+Waldir 11:32:35 AM
+sure 	
+
+superm401 11:33:27 AM
+halfak, like the cross-hatching, the links, or both?	
+
+Waldir 11:33:31 AM
+halfak: what do you think about replacing the menu as I suggested (or somehow else)?	
+
+halfak 11:33:43 AM
+Both
+(Sorry, frantically taking notes. 11:33:49 AM
+ 
+Waldir 11:33:55 AM
+lol	
+
+halfak 11:35:11 AM
+Waldir, when you say "Navbox style" do you mean that the links should just be visible without having to click the drop-down or is there more to it?	
+
+Waldir 11:35:38 AM
+basically, yes. I assumed you didn't want to take up space for the username itself	
+
+halfak 11:36:02 AM
+That's do-able.  	
+
+Waldir 11:36:15 AM
+so I thought of the navbox-style links in the top rigt of the boxes which are small and mostly unintrusive
+but there may be other solutions 11:36:20 AM
+ 
+halfak 11:36:41 AM
+Could you link me to an example?	
+
+Waldir 11:36:47 AM
+even just keeping the white background + arrow visible when the username isn't hovered may help
+sorry I meant top left 11:37:26 AM
+ 
+halfak 11:37:31 AM
+I gotcha.  I was mimicking gmail's with the hover for drop down.  	
+
+Waldir 11:37:35 AM
+http://en.wikipedia.org/wiki/Template:Navbox#Parameter_list
+for navboxes its "VTE" 11:37:49 AM
+View/Talk/Edit 11:38:05 AM
+ 
+Danny_B 11:38:10 AM
+Waldir: that's what i was talking about actually 	
+
+halfak 11:38:51 AM
+Ahh... I see.  	
+
+Waldir 11:38:51 AM
+Danny_B: I kinda figured but I didn't get the evil part. I assumed it wasnt relevant for this discussion so I didn't pursue the discussion 	
+
+halfak 11:39:20 AM
+so I might do something like "user - talk - contribs" as the first item in the metadata area?	
+
+Waldir 11:40:38 AM
+well, I thought about one-letter links with tooltips, so it wouldn't take up so much space
+but when you mean metadata area, it's when the box is expanded? that might make sense 11:40:53 AM
+ 
+halfak 11:41:23 AM
+Yes.  When it is expanded with "Registered" and "Views"	
+
+Waldir 11:41:45 AM
+halfak: agreed
+makes more sense like that 11:41:49 AM
+ 
+superm401 11:42:26 AM
+halfak, this requires a bit longer discussion (we can follow up later), but I think the process and language should accord more with https://en.wikipedia.org/wiki/Wikipedia:Assume_good_faith	
+
+Waldir 11:42:51 AM
+"See the full documentation" shouldn't be the first line in the help box! Not in the same style as regular text at least.	
+
+superm401 11:43:04 AM
+E.g. "possibly disruptive" instead of bad-faith.  I don't want people to say, "well, they're categorized bad-faith in snuggle, so forget them"	
+AnjaJ_WMDE has disconnected (Read error: Connection reset by peer) 11:43:11 AM	
+
+superm401 11:43:21 AM
+Because some people are going to be borderline, especially on their first few edits.	
+
+Waldir 11:43:22 AM
+Maybe it could be styled differently (italics? smaller?) and rephrased ("Full documentation available <here>")	
+AnjaJ_WMDE has joined the room 11:43:35 AM	
+
+Waldir 11:44:30 AM
+superm401: +1 again 	
+
+halfak 11:44:59 AM
+superm401: agreed.  on the AGF.  I was assuming that Snugglers might apply their best judgement about when it was appropriate to label users "Bad-faith", but I'm open to some changes if you think it will make more sense.  																
+
+superm401 11:45:45 AM
+halfak, yeah, for one thing, I don't think you should be categorizing someone who literally made two edits period.	
+
+halfak 11:45:54 AM
+I added the "ambiguous" category based on some discussion to handle the cases where the snuggler thought it was too late to be sure whether they were acting in good or bad-faith. 	
+
+superm401 11:46:01 AM
+There should be a minimum of 5 or maybe more before you can truly categorize.	
+
+halfak 11:46:11 AM
+It turns out you can learn a lot from those first two edits -- at least on the good-faith side of things. 	
+
+superm401 11:46:12 AM
+Also, are the cats shared, or specific to the user?
+halfak, look at my first two, they're pretty stupid. 11:46:22 AM
+ 
+halfak 11:46:25 AM
+Many users are blocked before they make 5 edits. 
+Cats are shared. 11:46:34 AM
+ 
+superm401 11:46:41 AM
+halfak, true, but others are definitely borderline, and not everyone will categorize correclty.	
+
+Waldir 11:46:41 AM
+lol	
+
+superm401 11:47:15 AM
+And I'm not saying no one should be blocked before 5, just that you can't always categorize reliably.	
+
+halfak 11:47:31 AM
+Indeed.  I don't want to enforce what "right categorization" is just yet though.  Instead, I want to figure out the categories that make sense.  It sounds like the categories I have don't really make sense. 	
+
+superm401 11:47:49 AM
+E.g. I just saw on Snuggle someone adding a porn actress to a list of alumni.	
+
+halfak 11:47:59 AM
+It might be that categories are not the right way to look at the problem. 	
+
+superm401 11:48:04 AM
+Were they a PR/spammer person for the porn company, or just an interested reader/fellow alumnus?	
+
+halfak 11:48:12 AM
+superm201, that sounds ambiguous to me. 	
+
+superm401 11:48:19 AM
+Right, too early to say.
+But since the cats are shared, someone else good still tag them bad-faith. 11:48:36 AM
+MelBee has joined the room 11:48:44 AM	
+awjr has joined the room 11:48:45 AM	
+
+halfak 11:48:45 AM
+Does it feel unnatural to put that user in the "ambiguous" category?	
+
+superm401 11:49:07 AM
+No, that's what I did, I just wonder if other people will be appropriately hesistant to categorize too early.	
+
+halfak 11:49:19 AM
+Again, you're right.  However, you can see the history of user's categorizations. 	
+
+superm401 11:49:41 AM
+That is useful.  Now, does 3RR apply? 	
+
+halfak 11:49:49 AM
+LOL good question!	
+
+superm401 11:50:05 AM
+In a related note, you have a JS bug in the cat history:	
+
+halfak 11:50:13 AM
+I was considering implementing some sort of disagreement handling, but I'm not sure what it will look like. 	
+
+superm401 11:50:15 AM
+<li class="item"><span class="timestamp">07:34, 19 Dec 2012</span><span class="category bad-faith">bad-faith</span><a class="snuggle" href="http://en.wikipedia.org/wiki/User:undefined" target="_blank">undefined</a></li>
+Note undefined. 11:50:23 AM
+ 
+halfak 11:50:25 AM
+Oh yes.  That was before I made people log in. 
+Sorry I forgot to mention.  The authentication functionality has only been active for 4 days. 11:50:39 AM
+ 
+superm401 11:50:49 AM
+Right, but it's on the list not to link to User:undefined, right? 	
+
+halfak 11:51:06 AM
+You're right.  I need to put something more reasonable there. 
+Thanks for the reminder. 11:51:12 AM
+ 
+superm401 11:51:16 AM
+Take a look at that page, too. 	
+
+halfak 11:51:38 AM
+LOL	
+
+Waldir 11:51:41 AM
+	
+
+halfak 11:51:46 AM
+How appropriate	
+
+Waldir 11:51:50 AM
+halfak, there should be a clear division between the user contribs graph and the talk page message icons. a line at least.	
+
+halfak 11:52:57 AM
+Interesting.   I'm not sure I understand the problem though.  Is your suggestion based on aesthetics or did you get confused by the lack of separation? 	
+AnjaJ_WMDE has disconnected (Read error: Connection reset by peer) 11:53:01 AM	
+
+Waldir 11:53:06 AM
+on second thought, I'll send you a screenshot showing what confused me	
+
+superm401 11:53:11 AM
+halfak, how about an optional "and fewer than X edits"?	
+
+halfak 11:53:11 AM
+Sounds good. 	
+AnjaJ_WMDE has joined the room 11:53:32 AM	
+
+halfak 11:53:43 AM
+superm401.  Good question.  I couldn't imagine a use-case, but that is definitely something I *could* support. 	
+
+superm401 11:53:50 AM
+Because I see people with 340, and at that point (good or bad) we're well into https://en.wikipedia.org/wiki/Wikipedia:Don%27t_template_the_regulars
+In other words, editors with hundreds of editors aren't always perfect. 11:54:14 AM
+ 
+halfak 11:54:19 AM
+Ahh.  Yeah that is a good point.  	
+
+Waldir 11:54:25 AM
+halfak: http://img832.imageshack.us/img832/9365/selection003fn.png	
+
+superm401 11:54:27 AM
+But if they're not blocked indefinitely we need to deal with them one on one.	
+AnjaJ_WMDE has disconnected (Read error: Connection reset by peer) 11:54:53 AM	
+
+halfak 11:55:12 AM
+Ahh yeah, waldir, you found a bit of cool/lame visualization.  The user you are looking at in that screenshot has only been around for 29 days. 	
+AnjaJ_WMDE has joined the room 11:55:14 AM	
+
+halfak 11:55:18 AM
+So the last day bar is empty. 
+If you look in the good-faith list, you can see a lot of users with less than 30 days of activity. 11:55:32 AM
+ 
+Waldir 11:55:39 AM
+halfak: also, the graph should probably not extend all the way to the top in the expanded view (makes sense in the compact view, of course)	
+
+halfak 11:55:39 AM
+Was that confusing?  	
+
+Waldir 11:56:20 AM
+ok, definitely
+the graph should be white for the full 30 days 11:56:30 AM
+ 
+superm401 11:56:32 AM
+halfak, since you said "It might be that categories are not the right way to look at the problem.", this is a bigger idea but:
+What about not sharing the cats at all? 11:56:37 AM
+So you could keep your own list without publically tagging people or edit wars. 11:56:52 AM
+Or you could leave it up to the editor whether to use the public or private list. 11:57:03 AM
+ 
+halfak 11:58:38 AM
+Ahh!  One of the features I'd like to implement is a private "following" list. 
+That way you can keep track of newcomers you took an interest in, privately. 11:59:00 AM
+ 
+superm401 11:59:39 AM
+It would be nice if it were optionally synced with your watchlist too (i.e. follow == watch of user page).	
+
+halfak 11:59:43 AM
+I could implement the private categorization, but I'm not sure I understand the use.  How would you use a private categorization of "good-faith" or "bad-faith"?
+That could be done too.  12:00:04 PM
+ 
+superm401 12:01:11 PM
+Just to follow-up, make sure I help the good ones, and the temporarily blocked disruptive users don't go back to disruption when it expires.
+Same reason I currently watch user pages (which also automatically allows watching their talk) 12:01:51 PM
+ 
+halfak 12:02:21 PM
+I gotcha.  I might ping you again for ideas when I get down to implementing that functionality.  This sounds really crucial for working between Snuggle and Wikipedia. 	
+
+superm401 12:03:03 PM
+Bear in mind I'm not as active as I used to be, so I hope you're getting feedback from the people doing the real daily grind.	
+
+halfak 12:03:14 PM
+I'm trying my best  	
+
+Waldir 12:03:17 PM
+halfak: did you keep a log of this chat?	
+DarTar has joined the room 12:03:40 PM	
+
+halfak 12:03:44 PM
+Isn't wikimedia-office publicly logged?
