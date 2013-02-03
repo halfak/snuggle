@@ -1,12 +1,6 @@
 /*
-var menu = new UI.UserMenu(
-	"actions",
-	[
-		{tab: "message", pane: UI.Message()},
-		{tab: "welcome", pane: UI.Welcome()},
-		{tab: "invite", pane: UI.Invite()},
-		{tab: "report", pane: UI.Report()}
-	]
+var menu = new UI.UserMenu("actions",
+	[...]
 )
 menu.post.attach(function(menu, action){
 	server.user_action(
@@ -20,7 +14,137 @@ menu.post.attach(function(menu, action){
 		}
 	)
 })
+
+var menu = new UI.FlyoutMenu()
+menu.append(new UI.FlyoutMenu.MessageForm())
+menu.append(new UI.FlyoutMenu.InviteForm())
+menu.append(new UI.FlyoutMenu.ReportForm())
 */
+
+
+/*
+
+Responsibilities:
+ - Connect handle clicks to form loads in a PostFlyout
+*/
+UI.FlyoutMenu = Class.extend({
+	init: function(){
+		this.node = $("<div>")
+			.addClass("flyout_menu")
+		
+		this.items = {
+			node: $("<div>")
+				.addClass("items")
+		}
+		this.node.append(this.actions.node)
+		
+		this.flyout = new UI.FlyoutMenu.PostFlyout()
+	},
+	append: function(form){
+		this.items.append(form.handle.node)
+		form.handle.node.click(function(e){this._handle_clicked(form)}.bind(this))
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+			}else{
+				this.node.removeClass("disabled")	
+			}
+			this.flyout.disabled()
+		}
+	},
+	_handle_clicked: function(form){
+		if(!this.disabled()){
+			this.flyout.load(form)
+		}
+	},
+	collapse: function(){
+		this.flyout.unload()
+	}
+	
+	
+})
+
+/*
+Responsibilities
+ - Load general form content. 
+ - Keep form appraised of its status
+ - 
+*/
+UI.FlyoutMenu.PostFlyout = Class.extend({
+	init: function(){
+		this.node = $("<div>")
+			.addClass("flyout")
+		
+		this.form = null
+		
+		this.preview = new UI.WikiPreview()
+		this.node.append(this.preview.node)
+		
+		this.controls = new UI.FlyoutMenu.PostFlyout.Controls()
+		this.node.append(this.controls.node)
+	},
+	expanded: function(expanded){
+		if(expanded === undefined){
+			return this.node.hasClass("expanded")
+		}else{
+			if(expanded){
+				this.node.addClass("expanded")
+			}else{
+				this.node.removeClass("expanded")
+			}
+		}
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+			}else{
+				this.node.removeClass("disabled")	
+			}
+			if(this.form){
+				this.form.disabled(disabled)	
+			}
+		}
+	},
+	load: function(form){
+		if(form && form != this.form){
+			this._clear()
+			form.attach(this)
+			this.form = form
+			this.expanded(true)
+		}
+	},
+	unload: function(){
+		this._clear()
+		this.expanded(false)
+	},
+	_clear: function(){
+		if(this.form){
+			this.form.detach()
+			this.form = null
+		}
+	}
+})
+
+UI.FlyoutMenu.Form = Class.extend({
+	init: function(display, content){
+		this.handle = {
+			node: $("<div>")
+				.addClass("handle")
+				.append(display)
+		}
+		
+		this.content = content
+	}
+})
+
+
 
 UI.WikiPreview = Class.extend({
 	init: function(){
@@ -92,68 +216,6 @@ UI.DropperMenu = UI.Dropper.extend({
 	}
 })
 
-UI.FlyoutMenu = Class.extend({
-	init: function(){
-		this.node = $("<div>")
-			.addClass("flyout_menu")
-		
-		this.items = {
-			node: $("<div>")
-				.addClass("items")
-		}
-		this.node.append(this.actions.node)
-		
-		this.flyout = new UI.UserMenu.Flyout()
-		
-	}		
-})
-
-UI.FlyoutMenu.Item = Class.extend({
-	init: function(display, content){
-		this.handle = {
-			node: $("<div>")
-				.addClass("handle")
-				.append(display)
-		}
-		
-		this.content = content
-	}
-})
-
-UI.FlyoutMenu.PostFlyout = Class.extend({
-	init: function(){
-		this.node = $("<div>")
-			.addClass("flyout")
-		
-		this.form_pane = {
-			node: $("<div>")
-				.addClass("form_pane")
-		}
-		this.node.append(this.form_pane.node)
-		
-		this.preview = new UI.WikiPreview()
-		this.node.append(this.preview.node)
-		
-		this.controls = new UI.FlyoutMenu.PostFlyout.Controls()
-		this.node.append(this.controls.node)
-	},
-	expanded: function(expanded){
-		if(expanded === undefined){
-			return this.node.hasClass("expanded")
-		}else{
-			if(expanded){
-				this.node.addClass("expanded")
-			}else{
-				this.node.removeClass("expanded")
-			}
-		}
-	},
-	load: function(form){
-		this.form_pane.node.chilren().detach()
-		
-		this.form_pane.node.append(content_node)
-	}
-})
 
 UI.PostWidget = UI.Dropper.extend({
 	init: function(tab, opts){
