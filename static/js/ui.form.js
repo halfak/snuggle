@@ -39,22 +39,33 @@ UI.Select = Class.extend({
 	}
 })
 
-UI.Radios = Class.extend({
-	init: function(name, options, o){
-		this.name = name
-		this.options = {}
+UI.RadioSet = Class.extend({
+	init: function(opts){
+		opts = opts || {}
 		
 		this.node = $("<div>")
-			.attr('name', name)
-			.attr('id', name)
-			.addClass("radios")
+			.addClass("radio_set")
+		
+		this.name = opts.name || "radio_set_" + new Date().getTime()
+		
+		if(opts.label){
+			this.label = {
+				node: $("<label>")
+					.append(opts.label || '')
+			}
+			this.node.append(this.label.node)
+		}
+			
+		this.radios = {
+			node: $("<div>")
+				.addClass("radios"),
+			map: {}
+		}
+		this.node.append(this.radios.node)
 		
 		this.changed = new Event(this)
 		
 		this.selection = null
-		
-		this._render(options || [])
-		
 	},
 	val: function(val){
 		if(val === undefined){
@@ -64,68 +75,101 @@ UI.Radios = Class.extend({
 				return null
 			}
 		}else{
-			this.selection = this.options[val] || null
+			this.selection = this.radios.map[val] || null
 			if(this.selection){
-				this.options[val].checked(true)
+				this.radios.map[val].val(true)
+			}else{
+				throw val + " not available in radio set (" + 
+				      this.radios.map.keys().join(", ") + ")"
 			}
-			
 		}
 	},
-	_render: function(options){
-		for(var i=0;i<options.length;i++){
-			var option = options[i]
-			var radio = new UI.Radio(this.name, option.value, option.label)
-			radio.button_checked.attach(this._radio_checked.bind(this))
-			this.node.append(radio.node)
-			this.options[radio.value] = radio
-		}
+	append: function(radio){
+		radio.set_name(this.name)
+		this.radios.node.append(radio.node)
+		this.radios.map[radio.value] = radio
+		radio.changed.attach(this._radio_changed.bind(this))
 	},
-	_radio_checked: function(radio, value){
-		this.selection = radio
-		this.changed.notify(value)
+	_radio_changed: function(radio, checked){
+		if(checked){
+			this.selection = radio
+			this.changed.notify(value)
+		}
 	}
 })
 
+
 UI.Radio = Class.extend({
-	init: function(name, value, label){
+	init: function(value, opts){
+		this._super(this)
+		
+		opts = opts || {}
 		this.value = value
 		
 		this.node = $("<div>")
 			.addClass("radio")
 		
+		id = value + "_" + new Date().getTime()
+		
 		this.button = {
 			node: $("<input>")
 				.attr('type', "radio")
-				.attr('id', name + "_" + value)
-				.attr('name', name)
+				.attr('id', id)
 				.change(this._handle_change.bind(this))
 		}
 		this.node.append(this.button.node)
 		
 		this.label = {
 			node: $("<label>")
-				.attr('for', name + "_" + value)
-				.text(label || value)
+				.attr('for', id)
+				.text(opts.label || opts.value)
 		}
 		this.node.append(this.label.node)
 		
-		this.button_checked = new Event(this)
+		this.changed = new Event(this)
+		this.status = false
 	},
-	checked: function(checked){
-		if(checked === undefined){
-			return this.button.node.is(":checked")
+	set_name: function(name){
+		this.button.node.attr('name', name)
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
 		}else{
-			if(checked){
+			if(disabled){
+				this.node.addClass("disabled")
+				this.button.node.attr('disabled', true)
+			}else{
+				this.node.removeClass("disabled")
+				this.button.node.removeAttr('disabled')
+			}
+		}
+	},
+	selected: function(selected){
+		if(selected === undefined){
+			return this.status
+		}else{
+			if(selected){
 				this.button.node.attr('checked', "checked")
 			}else{
 				this.button.node.removeAttr('checked', "checked")
 			}
 		}
 	},
-	_handle_change: function(e){
-		if(this.checked()){
-			this.button_checked.notify(this.value)
+	_update_status: function(checked){
+		this.status = Boolean(checked)
+		if(this.status){
+			this.node.addClass("selected")
+		}else{
+			this.node.removeClass("selected")
 		}
+	},
+	_handle_change: function(e){
+		//update status
+		this._update_status(this.button.node.is(":checked"))
+		
+		//notify of change
+		this.changed.notify(this.selected())
 	}
 })
 
@@ -151,7 +195,7 @@ UI.TextField = Class.extend({
 		
 		this.label = {
 			node: $("<label>")
-				.attr('id', id)
+				.attr('for', id)
 				.append(opts.label || '')
 		}
 		this.node.append(this.label.node)

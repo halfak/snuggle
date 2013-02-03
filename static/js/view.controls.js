@@ -146,13 +146,9 @@ View.Filters = Class.extend({
 		
 		this.node.append(":")
 		
-		this.direction = new UI.Radios(
-			"direction",
-			[
-				{value: "ascending"},
-				{value: "descending"}
-			]
-		)
+		this.direction = new UI.Radios({label: "direction"})
+		this.direction.add(new UI.Radio("ascending"))
+		this.direction.add(new UI.Radio("descending"))
 		this.direction.val("ascending")
 		this.node.append(this.direction.node)
 		

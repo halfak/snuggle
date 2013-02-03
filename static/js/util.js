@@ -295,5 +295,14 @@ WikiDiff = {
 	}
 }
 
+function wiki_link(title, display){
+	if(display == undefined){
+		display = title
+	}
+	return 	$("<a>")
+		.text(display)
+		.attr('target', "_blank")
+		.attr('href', SYSTEM.wiki.root + "/wiki/" + title)
+}
 
 

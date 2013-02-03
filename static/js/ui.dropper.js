@@ -34,6 +34,8 @@ UI.Dropper = Class.extend({
 		$("body").keydown(function(e){if(e.which == KEYS.ESCAPE){this.expanded(false)}}.bind(this))
 		
 		this.expanded(false)
+		
+		this.dropped = new Event(this)
 	},
 	_handle_tab_click: function(e){
 		this.expanded(!this.expanded())
@@ -46,11 +48,13 @@ UI.Dropper = Class.extend({
 			if(expanded){
 				this.node.addClass("expanded")
 				this.pane.node.slideDown(0)
+				this.dropped.notify(true)
 			}else{
 				this.pane.node.slideUp(
 					0,
 					function(){
 						this.node.removeClass("expanded")
+						this.dropped.notify(false)
 					}.bind(this)
 				)
 			}
