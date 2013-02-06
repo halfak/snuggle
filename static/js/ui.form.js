@@ -40,6 +40,21 @@ UI.Select = Class.extend({
 })
 
 UI.RadioSet = Class.extend({
+	/**
+	:Parameters:
+		value : <mixed>
+			The value to associate with this radio button
+		opts : object
+			name : string
+				a name to be used for the associated radio buttons
+			label : string
+				a label to associate with the field
+			title : string
+				a tooltip for the field
+			class : string
+				a classname to add to the node
+	
+	*/
 	init: function(opts){
 		opts = opts || {}
 		
@@ -48,13 +63,12 @@ UI.RadioSet = Class.extend({
 		
 		this.name = opts.name || "radio_set_" + new Date().getTime()
 		
-		if(opts.label){
-			this.label = {
-				node: $("<label>")
-					.append(opts.label || '')
-			}
-			this.node.append(this.label.node)
+		
+		this.label = {
+			node: $("<label>")
+				.append(opts.label || '')
 		}
+		this.node.append(this.label.node)
 			
 		this.radios = {
 			node: $("<div>")
@@ -66,6 +80,13 @@ UI.RadioSet = Class.extend({
 		this.changed = new Event(this)
 		
 		this.selection = null
+		
+		if(opts.title){
+			this.node.attr("title", opts.title)
+		}
+		if(opts.class){
+			this.node.addClass(opts.class)
+		}
 	},
 	val: function(val){
 		if(val === undefined){
@@ -93,16 +114,29 @@ UI.RadioSet = Class.extend({
 	_radio_changed: function(radio, checked){
 		if(checked){
 			this.selection = radio
-			this.changed.notify(value)
+			this.changed.notify(radio.value)
 		}
 	}
 })
 
 
 UI.Radio = Class.extend({
+	/**
+	:Parameters:
+		value : <mixed>
+			The value to associate with this radio button
+		opts : object
+			checked : boolean
+				checked by default?
+			label : string
+				a label to associate with the field (defaults to value)
+			title : string
+				a tooltip for the field
+			class : string
+				a classname to add to the node
+	
+	*/
 	init: function(value, opts){
-		this._super(this)
-		
 		opts = opts || {}
 		this.value = value
 		
@@ -115,19 +149,27 @@ UI.Radio = Class.extend({
 			node: $("<input>")
 				.attr('type', "radio")
 				.attr('id', id)
-				.change(this._handle_change.bind(this))
+				.change(this._changed.bind(this))
 		}
 		this.node.append(this.button.node)
 		
 		this.label = {
 			node: $("<label>")
 				.attr('for', id)
-				.text(opts.label || opts.value)
+				.text(opts.label || value)
 		}
 		this.node.append(this.label.node)
 		
 		this.changed = new Event(this)
-		this.status = false
+		
+		
+		if(opts.title){
+			this.node.attr("title", opts.title)
+		}
+		if(opts.class){
+			this.node.addClass(opts.class)
+		}
+		this.checked(opts.checked)
 	},
 	set_name: function(name){
 		this.button.node.attr('name', name)
@@ -145,31 +187,26 @@ UI.Radio = Class.extend({
 			}
 		}
 	},
-	selected: function(selected){
-		if(selected === undefined){
-			return this.status
+	checked: function(checked){
+		if(checked === checked){
+			return this.button.node.is(":checked")
 		}else{
-			if(selected){
+			if(checked){
 				this.button.node.attr('checked', "checked")
 			}else{
 				this.button.node.removeAttr('checked', "checked")
 			}
 		}
 	},
-	_update_status: function(checked){
-		this.status = Boolean(checked)
-		if(this.status){
-			this.node.addClass("selected")
+	_changed: function(e){
+		if(this.checked()){
+			this.node.addClass("checked")
 		}else{
-			this.node.removeClass("selected")
+			this.node.removeClass("checked")
 		}
-	},
-	_handle_change: function(e){
-		//update status
-		this._update_status(this.button.node.is(":checked"))
 		
 		//notify of change
-		this.changed.notify(this.selected())
+		this.changed.notify(this.checked())
 	}
 })
 
@@ -179,17 +216,24 @@ UI.TextField = Class.extend({
 		opts : object
 			password : boolean
 				should the field hide the characters like a password
-			value : string
-				default value to be placed in the field
 			label : string
 				the label to be used for the field
-			empty : string
-				a value to be placed in the field when it is left empty
+			title : string
+				a tooltip for the field
+			class : string
+				a classname to add to the node
 	*/
 	init: function(opts){
-		
+		opts = opts || {}
 		this.node = $("<div>")
 			.addClass("text_field")
+			
+		if(opts.title){
+			this.node.attr("title", title)
+		}
+		if(opts.class){
+			this.node.addClass(opts.class)
+		}
 		
 		var id = "text_field_" + new Date().getTime()
 		
@@ -208,36 +252,15 @@ UI.TextField = Class.extend({
 		}
 		this.node.append(this.input.node)
 		
-		if(opts.value){
-			this.input.node.val(opts.value)
-		}else if(opts.empty){
-			this.empty = opts.empty
-			this.input.node.val(this.empty)
-			this.input.node.bind("focus blur", this._input_blur_empty.bind(this))
-		}
-		
 		this.key_pressed = new Event(this)
-		this.node.keydown(function(e){this.key_pressed.notify(e.keyCode)}.bind(this))
+		this.input.node.keydown(function(e){this.key_pressed.notify(e.keyCode)}.bind(this))
 		
-	},
-	_input_blur_empty: function(e){
-		if(e.type == "focus"){
-			if(this.input.node.val() == this.empty){
-				this.input.node.val("")
-			}
-		}else if(e.type == "blur"){
-			if(this.input.node.val().trim() == ""){
-				this.input.node.val(this.empty)
-			}
-		}
+		this.changed = new Event(this)
+		this.input.node.change(function(e){this.changed.notify()}.bind(this))
 	},
 	val: function(val){
 		if(val === undefined){
-			if(this.input.node.val() == this.empty){
-				return ''
-			}else{
-				return this.input.node.val()
-			}
+			return this.input.node.val()
 		}else{
 			this.input.node.val(val)
 		}
@@ -252,6 +275,162 @@ UI.TextField = Class.extend({
 			}else{
 				this.node.removeClass("disabled")
 				this.input.node.removeAttr('disabled')
+			}
+		}
+	},
+	focus: function(){
+		this.input.node.focus()
+	}
+})
+
+UI.TextareaField = Class.extend({
+	/**
+	:Parameters:
+		opts : object
+			label : string
+				the label to be used for the field
+			title : string
+				a tooltip for the field
+			class : string
+				a classname to add to the node
+	*/
+	init: function(opts){
+		opts = opts || {}
+		
+		this.node = $("<div>")
+			.addClass("textarea_field")
+			
+		if(opts.title){
+			this.node.attr("title", title)
+		}
+		if(opts.class){
+			this.node.addClass(opts.class)
+		}
+		
+		var id = "textarea_field_" + new Date().getTime()
+		
+		this.label = {
+			node: $("<label>")
+				.attr('for', id)
+				.append(opts.label || '')
+		}
+		this.node.append(this.label.node)
+		
+		this.textarea = {
+			node: $("<textarea>")
+				.attr('id', id)
+		}
+		this.node.append(this.textarea.node)
+		
+		this.key_pressed = new Event(this)
+		this.node.keydown(function(e){this.key_pressed.notify(e.keyCode)}.bind(this))
+		
+		this.changed = new Event(this)
+		this.textarea.node.change(function(e){this.changed.notify()}.bind(this))
+	},
+	val: function(val){
+		if(val === undefined){
+			return this.input.node.val()
+		}else{
+			this.input.node.val(val)
+		}
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+				this.textarea.node.attr('disabled', true)
+			}else{
+				this.node.removeClass("disabled")
+				this.textarea.node.removeAttr('disabled')
+			}
+		}
+	},
+	focus: function(){
+		this.input.node.focus()
+	}
+})
+
+UI.CheckField = Class.extend({
+	/**
+	:Parameters:
+		opts : object
+			checked : boolean
+				checked by default?
+			label : string
+				the label to be used for the field
+			title : string
+				tooltip text for this field
+			class : string
+				a classname to add to the node
+	*/
+	init: function(value, opts){
+		this.value = value
+		opts = opts || {}
+		
+		this.node = $("<div>")
+			.addClass("check_field")
+		
+		
+		var id = "check_field_" + new Date().getTime()
+		
+		this.checkbox = {
+			node: $("<input>")
+				.attr('id', id)
+				.attr('type', "checkbox")
+				.change(this._changed.bind(this))
+				
+		}
+		this.node.append(this.checkbox.node)
+		
+		this.label = {
+			node: $("<label>")
+				.attr('for', id)
+				.append(opts.label || '')
+		}
+		this.node.append(this.label.node)
+		
+		this.changed = new Event(this)
+		
+		if(opts.title){
+			this.node.attr("title", opts.title)
+		}
+		if(opts.class){
+			this.node.addClass(opts.class)
+		}
+		this.checked(opts.checked)
+	},
+	_changed: function(e){
+		if(this.checked()){
+			this.node.addClass("checked")
+		}else{
+			this.node.removeClass("checked")
+		}
+		this.changed.notify(this.checked())
+	},
+	checked: function(checked){
+		if(checked === undefined){
+			return this.checkbox.node.is(":checked")
+		}else{
+			if(checked){
+				this.checkbox.node.attr("checked", "checked")
+			}else{
+				this.checkbox.node.removedAttr("checked")
+			}
+		}
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+				this.checkbox.node.attr('disabled', true)
+			}else{
+				this.node.removeClass("disabled")
+				this.checkbox.node.removeAttr('disabled')
 			}
 		}
 	},
