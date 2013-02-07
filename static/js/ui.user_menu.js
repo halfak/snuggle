@@ -16,9 +16,9 @@ menu.post.attach(function(menu, action){
 })
 
 var menu = new UI.FlyoutMenu()
-menu.append(new UI.FlyoutMenu.Message())
-menu.append(new UI.FlyoutMenu.Invite())
-menu.append(new UI.FlyoutMenu.Report())
+menu.append(new View.UserMenu.Message())
+menu.append(new View.UserMenu.Invite())
+menu.append(new View.UserMenu.Report())
 */
 
 
@@ -41,11 +41,29 @@ UI.FlyoutMenu = Class.extend({
 		
 		this.flyout = new UI.FlyoutMenu.PostFlyout()
 		this.node.append(this.flyout.node)
+		
+		this.submitted     = new Event(this)
+		this.changed       = new Event(this)
+		this.action_loaded = new Event(this)
+	},
+	_submitted: function(_ action){
+		this.submitted.notify(action)
+	},
+	_action_clicked: function(action){
+		if(!this.disabled()){
+			if(this.flyout.load(action)){
+				this.action_loaded.notify(action)
+			}
+		}
+	},
+	_action_changed: function(action){
+		this.changed.notify(action)
 	},
 	add: function(action){
-		this.handles.append(action.node)
-		action.handle.clicked.attach(function(){this._handle_clicked(action)}.bind(this))
-		this.handles.list.push(from.handle)
+		this.actions.append(action.node)
+		action.clicked.attach(this._action_clicked.bind(this))
+		action.changed.attach(this._action_changed.bind(this))
+		this.actions.list.push(action)
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -60,16 +78,9 @@ UI.FlyoutMenu = Class.extend({
 			this.actions.list.map(function(action){action.disabled(disabled)})
 		}
 	},
-	_handle_clicked: function(action){
-		if(!this.disabled()){
-			this.flyout.load(action)
-		}
-	},
 	collapse: function(){
 		this.flyout.unload()
 	}
-	
-	
 })
 
 /*
@@ -101,7 +112,7 @@ UI.FlyoutMenu.PostFlyout = Class.extend({
 		this.unload()
 	},
 	_submitted: function(){
-		this.submitted.notify(this.val())
+		this.submitted.notify(this.action)
 	},
 	expanded: function(expanded){
 		if(expanded === undefined){
@@ -136,10 +147,16 @@ UI.FlyoutMenu.PostFlyout = Class.extend({
 				this.action = action
 				this.node.prepend(action.form.node)
 				this.action.selected(true)
-				this.expanded(true) //make sure we expanded. 
+				this.expanded(true) //make sure we expanded
+				return true
 			}else{
 				this.unload()
 			}
+		}
+	},
+	preview: function(action, html){
+		if(action == this.action){
+			this.preview.load(html)
 		}
 	},
 	unload: function(){
@@ -212,9 +229,9 @@ UI.WikiPreview = Class.extend({
 })
 
 UI.FlyoutMenu.Action = Class.extend({
-	init: function(display, action){
+	init: function(display, opts){
 		this.node = $("<div>")
-			.addClass("handle")
+			.addClass("action")
 			.append($("<span>").append(display))
 			.click(this._clicked.bind(this))
 		
@@ -223,8 +240,12 @@ UI.FlyoutMenu.Action = Class.extend({
 				.addClass("form")
 		}
 		
-		this.clicked = new Event(action)
-		this.changed = new Event(action)
+		this.clicked = new Event(this)
+		this.changed = new Event(this)
+		
+		if(opts.title){
+			this.node.attr("title", opts.title)
+		}
 	},
 	_clicked: function(e){
 		if(!this.disabled()){
@@ -267,7 +288,7 @@ UI.FlyoutMenu.Action = Class.extend({
 
 View.UserMenu.Message = UI.FlyoutMenu.Action.extend({
 	init: function(){
-		this._super("send message", this)
+		this._super("send message", {title: "Posts a new topic on the user's talk page"})
 		
 		this.header = UI.TextField({label: "Header:"})
 		this.form.node.append(this.header.node)
@@ -298,9 +319,9 @@ View.UserMenu.Message = UI.FlyoutMenu.Action.extend({
 	}
 })
 
-UI.UserMenu.Invite = UI.PostWidget.extend({
+UI.UserMenu.Invite = UI.FlyoutMenu.Action.extend({
 	init: function(){
-		this._super("invite to teahouse", this)
+		this._super("invite to teahouse",  {title: "Posts an invitation to WP:Teahouse on the user's talk page"})
 		
 		this.header = UI.TextField({label: "Header:"})
 		this.form.node.append(this.header.node)
@@ -340,14 +361,15 @@ UI.UserMenu.Invite = UI.PostWidget.extend({
 	}
 })
 
-UI.UserMenu.Report = UI.PostWidget.extend({
+UI.UserMenu.Report = UI.FlyoutMenu.Action.extend({
 	init: function(){
-		this._super("report abuse", this)
+		this._super("report abuse", {title: "Posts a {{Vandal}} template for the user on WP:AIV")
 		
 		this.preamble = {
 			node: $("<p>")
 				.append(
-					"Reports obvious and persistent cases " + 
+					"Reports <b>obvious</b> and " + 
+					"<b>persistent<b> cases " + 
 					"of vandals and spammers to admins. " + 
 					"Please review "
 				)
@@ -382,49 +404,27 @@ UI.UserMenu.Report = UI.PostWidget.extend({
 	}
 })
 
-
-UI.DropperMenu = UI.Dropper.extend({
-	init: function(user, tab, actions){
-		this._super(tab)
-		this.user = user
+View.UserMenu = UI.Dropper.extend({
+	init: function(){
 		
-		this.actions = {
-			node: $("<div>")
-				.addClass("actions"),
-			list: []
-		}
+		this.menu = new UI.FlyoutMenu()
+		this.menu.add(new View.UserMenu.Message())
+		this.menu.add(new View.UserMenu.Invite())
+		this.menu.add(new View.UserMenu.Report())
 		
-		for(var i in actions){
-			var action = actions[i]
-			this.actions.node.append(action.node)
-			this.actions.push(action)
-			action.dropped.attach(this._dropped_action.bind(this))
-			action.submitted.attach(this._submitted_action.bind(this)) //Doesn't exist yet
-		}
+		this.menu.submitted.attach(this._submitted.bind(this))
+		this.menu.changed.attach(this._changed.bind(this))
+		this.menu.action_loaded.attach(this._action_loaded.bind(this))
 		
-		this.submitted = new Event(this)
+		this._super("actions", this.menu.node)
 		
-		this.dropped.attach(this._dropped.bind(this))
+		this.submitted = new Event()
 	},
-	_dropped_action: function(action, expanded){
-		//If any of the actions are interacted with, we want to retract
-		//all of the other potential actions.
-		this.reset(action)
-	},
-	_submitted_action: function(action){
+	_submitted: function(_, action){
 		this.submitted.notify(action)
 	},
 	_dropped: function(_, expanded){
-		if(!expanded){this.reset()}
-	},
-	reset: function(except){
-		//Retract all of the actions -- except the specified action
-		for(var i in this.actions.list){
-			var action = this.actions.list[i]
-			if(action != except){
-				actions.expanded(false)
-			}
-		}
+		if(!expanded){this.menu.collapse()}
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -441,153 +441,3 @@ UI.DropperMenu = UI.Dropper.extend({
 })
 
 
-UI.PostWidget = UI.Dropper.extend({
-	init: function(tab, opts){
-		this._super(tab)
-		opts = opts || {}
-		
-		this.node.addClass("post_widget")
-		
-		this.fields = {
-			node: $("<div>")
-				.addClass("fields")
-		}
-		this.pane.append(this.fields.node)
-		
-		this.preview   = new UI.PostPreview()
-		this.pane.append(this.preview.node)
-		
-		this.controls  = new UI.PostWidget.Controls({watchable: opts.watchable})
-		this.controls.submitted.attach(this._submitted.bind(this))
-		this.controls.cancelled.attach(this._cancelled.bind(this))
-		this.pane.append(this.controls)
-		
-		this.submitted = new Event(this)
-		this.cancelled = new Event(this)
-		this.changed   = new Event(this)
-	},
-	_changed: function(){this.changed.notify()},
-	_submitted: function(){
-		this.submitted.notify()
-	},
-	_cancelled: function(){
-		this.cancelled.notify()
-	},
-	disabled: function(disabled){
-		this.controls.disabled(disabled)
-	}
-	reset: function(){
-		throw "Not Implemented"
-	},
-	format: function(){
-		throw "Not Implemented"
-	}
-})
-
-UI.UserMenu.Message = UI.PostWidget.extend({
-	init: function(){
-		this._super("send message", {watchable: true})
-		
-		this.header = UI.TextField({label: "Header:"})
-		this.fields.node.append(this.header.node)
-		this.header.changed.attach(this._changed.bind(this))
-		
-		this.message = UI.TextareaField({label: "Message:"})
-		this.fields.node.append(this.message.node)
-		this.message.changed.attach(this._changed.bind(this))
-		
-		this.reset()
-	},
-	disabled: function(disabled){
-		this._super(disabled)
-		this.header.disabled(disabled)
-		this.message.disabled(disabled)
-	},
-	reset: function(){
-		this.header.val("")
-		this.message.val("")
-		this.controls.watch.selected(false)
-	},
-	format: function(){
-		return "== " + this.header.val() + " ==\n" + 
-		       this.message.val() + "~~" + " ~~"
-	}
-})
-
-UI.UserMenu.Invite = UI.PostWidget.extend({
-	init: function(){
-		this._super("invite to teahouse", {watchable: true})
-		
-		this.header = UI.TextField({label: "Header:"})
-		this.fields.node.append(this.header.node)
-		this.header.changed.attach(this._changed.bind(this))
-		
-		this.template = new UI.Radios({label: "Template:"})
-		this.template.add(new UI.Radio({value: "Invitation"}))
-		this.template.add(new UI.Radio({value: "Invitation2"}))
-		this.fields.node.append(this.template.node)
-		
-		this.message = UI.TextareaField({label: "Message:"})
-		this.fields.node.append(this.message.node)
-		this.message.changed.attach(this._changed.bind(this))
-		
-		this.reset()
-	},
-	disabled: function(disabled){
-		this._super(disabled)
-		this.header.disabled(disabled)
-		this.template.disabled(disabled)
-		this.message.disabled(disabled)
-	},
-	reset: function(){
-		this.header.val("")
-		this.message.val("")
-		this.controls.watch.selected(false)
-	},
-	format: function(){
-		return "==" + this.header.val() + "==\n" +
-		       "{{subst:" + 
-		       this.template.val() + 
-		       "|sign=~~" + "~~" + 
-		       "|message=" + this.message.val().replace("|", "{{!}}") + 
-		       "}}"
-	}
-})
-
-UI.UserMenu.Report = UI.PostWidget.extend({
-	init: function(){
-		this._super("report abuse", {watchable: true})
-		
-		this.preamble = {
-			node: $("<p>")
-				.append(
-					"Reports obvious and persistent cases " + 
-					"of vandals and spammers to admins. " + 
-					"Please review "
-				)
-				.append(wiki_link("WP:Spam"))
-				.append(", ")
-				.append(wiki_link("WP:Vandaism"))
-				.append(" and the ")
-				.append(wiki_link("WP:AIV guide", "AIV Guide")
-		}
-		
-		this.reason = UI.TextareaField({label: "Reason for listing: <small>Optional.  Keep it brief."})
-		this.fields.node.append(this.reason.node)
-		this.reason.changed.attach(this._changed.bind(this))
-		
-		this.reset()
-	},
-	disabled: function(disabled){
-		this._super(disabled)
-		this.reason.disabled(disabled)
-	},
-	reset: function(){
-		this.reason.val("")
-		this.controls.watch.selected(false)
-	},
-	format: function(){
-		return "* {{Vandal|" + "/* ToDo username */" + "}}" + 
-			this.reason.val()
-	}
-})
