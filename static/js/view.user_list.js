@@ -24,6 +24,9 @@ View.UserList = Class.extend({
 		this.view_changed      = new Event(this)
 		this.user_clicked      = new Event(this)
 		this.user_categorized  = new Event(this)
+		this.action_changed    = new Event(this) //TODO: Not
+		this.action_loaded     = new Event(this) //TODO: quite
+		this.action_submitted  = new Event(this) //TODO: sure about this
 	},
 	/**
 	Generates the ranges of the current view pane.
@@ -73,6 +76,16 @@ View.UserList = Class.extend({
 					this.user_categorized.notify([user_view, category])
 				}.bind(this)
 			)
+			user_view.info.menu.submitted.attach(
+				function(_, action){
+					this.action_submitted.notify([user_view, action])
+				}
+			)
+			/*user_view.info.menu.action_loaded.attach(
+				function(_, action){
+					this.action_loaded.notify([user_view, action])
+				}
+			)*/
 			this.node.append(user_view.node)
 			this.users[user_view.model.id] = user_view
 		}

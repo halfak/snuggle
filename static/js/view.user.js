@@ -104,30 +104,7 @@ View.User = Class.extend({
 			}
 			this.node.append(this.name.node)
 			
-			this.menu = new UI.Dropper(
-				'',
-				$("<div>")
-				.addClass("user_links")
-				.append(
-					$("<a>")
-						.text("User page")
-						.attr('href', SYSTEM.wiki.root + "/wiki/User:" + model.name)
-						.attr('target', "_blank")
-				)
-				.append(
-					$("<a>")
-						.text("User talk")
-						.attr('href', SYSTEM.wiki.root + "/wiki/User_talk:" + model.name)
-						.attr('target', "_blank")
-				)
-				.append(
-					$("<a>")
-						.text("Contributions")
-						.attr('href', SYSTEM.wiki.root + "/wiki/Special:Contribs/" + model.name)
-						.attr('target', "_blank")
-				),
-				{class: "simple"}
-			)
+			this.menu = new View.UserMenu()
 			this.name.node.append(this.menu.node)
 			
 			this.meta = new UI.DefinitionList()
