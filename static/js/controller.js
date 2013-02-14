@@ -31,10 +31,12 @@ Controller = Class.extend({
 				this.add_view(user.model)
 			}
 		}.bind(this))
-		
-		this.list.user_categorized.attach(this._categorize_clicked.bind(this))
-		
+		this.list.user_categorized.attach(this._categorize_user.bind(this))
 		this.list.view_changed.attach(this._fill_list.bind(this))
+		
+		this.list.action_submitted.attach(this._user_action.bind(this))
+		this.list.action_loaded.attach(this._user_action_preview.bind(this))
+		this.list.action_changed.attach(this._user_action_preview_timeout.bind(this))
 		
 		this._update_query(this.controls.val())
 		
@@ -135,13 +137,7 @@ Controller = Class.extend({
 			)
 		}
 	},
-	_categorize_clicked: function(_, args){
-		user = args[0]
-		category = args[1]
-		
-		this._categorize_user(user, category)
-	},
-	_categorize_user: function(user, category){
+	_categorize_user: function(_, user, category){
 		if(!user){return}
 		user.category.disabled(true)
 		this.local.users.categorize(
@@ -215,6 +211,56 @@ Controller = Class.extend({
 		}else{
 			alert("You must specify a username in order to log in.")
 		}
+	},
+	_user_action: function(_, user, action, watch){
+		
+		user.info.menu.disabled(true)
+		
+		this.local.users.action(
+			user.model,
+			action,
+			watch,
+			function(doc){
+				user.info.menu.disabled(false)
+				action.reset()
+				user.info.menu.expanded(false)
+				//TODO confirm to user that action was completed.
+			},
+			function(message, doc){
+				doc = doc || {}
+				if(doc.code == "permissions"){
+					alert("You must be logged in to perform actions.")
+					this.snuggler.menu.expanded(true)
+				}else{
+					alert(message)
+				}
+				user.info.menu.disabled(false)
+			}
+		)
+		
+	},
+	_user_action_preview: function(_, user, action){
+		this.local.users.preview_action(
+			user,
+			action,
+			function(doc){
+				user.info.menu.menu.flyout.preview(action, html)
+			},
+			function(message, doc){
+				LOGGING.error(message)
+			}
+		)
+	},
+	_user_action_preview_timeout: function(_, user, action){
+		if(this.action_preview){
+			clearTimeout(this.action_preview)
+		}
+		this.action_preview = setTimeout(
+			function(){
+				this._user_action_preview(user, action)
+			}.bind(this),
+			1500
+		)
 	},
 	_logout_snuggler: function(){
 		this.snuggler.menu.logout.disabled(true)

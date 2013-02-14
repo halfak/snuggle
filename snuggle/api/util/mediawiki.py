@@ -10,7 +10,38 @@ class MW:
 	def __init__(self, url):
 		self.url = url
 		self.users = Users(url)
+		self.pages = Pages(url)
 	
+
+class ConnectionError(Exception); pass
+class MWAPIError(Exception):
+	
+	def __init__(self, code, info)
+		Exception.__init__(self, "%s: %s" % (code, info))
+		self.code = code
+		self.info = info
+		
+
+
+class MWAPI:
+	
+	def __init__(self, url):
+		self.url = url
+	
+	def post(self, params):
+		params['format'] = "json"
+		
+		try:
+			r = requests.post(
+				self.url,
+				params
+			)
+		except requests.ConnectionError as e:
+			raise MWAPIError("Could not reach the API at %s: %s" % (self.url, e))
+		except requests.HTTPError as e:
+			raise MWAPIError("The API responded with an error."
+		
+		
 
 class Users:
 	
@@ -56,3 +87,36 @@ class Users:
 		else:
 			raise Exception("no")
 		
+	
+class Pages:
+	
+	def init(self, url):
+		self.url = url
+	
+	def append(self, page_name, markup, cookies=None):
+		
+		r = requests.post(
+			self.url,
+			params={
+				'action': "query",
+				'prop': "info|revisions",
+				'titles': page_name,
+				'intoken': "edit"
+			},
+			cookies = cookies
+		)
+		response_doc = json.loads(r.content)
+		
+		token = response_doc['query']
+		
+		r = requests.post(
+			self.url,
+			params={
+				'action': "edit",
+				'appendtext': "\n\n" + markup
+				'token': 
+				'format': "json"
+			},
+			cookies = r.cookies
+		)
+		response_doc = json.loads(r.content)

@@ -11,9 +11,11 @@ Event = Class.extend({
 	attach: function(callback){
 		this.listeners.push(callback)
 	},
-	notify: function(args){
+	notify: function(){
+		arguments = Array.prototype.slice.call(arguments)
+		arguments.unshift(this.source)
 		for(var i=0;i<this.listeners.length;i++){
-			this.listeners[i](this.source, args)
+			this.listeners[i].apply(this.source, arguments)
 		}
 	}
 })

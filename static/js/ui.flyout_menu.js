@@ -23,7 +23,7 @@ UI.FlyoutMenu = Class.extend({
 		this.action_loaded = new Event(this)
 	},
 	_submitted: function(_ action){
-		this.submitted.notify(action)
+		this.submitted.notify(action, this.flyout.controls.watch.val())
 	},
 	_action_clicked: function(action){
 		if(!this.disabled()){

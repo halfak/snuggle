@@ -101,6 +101,45 @@ LocalServer.Users = Class.extend({
 	},
 	query: function(filters){
 		return new LocalServer.Users.Cursor(this, filters)
+	},
+	watch: function(user, success, error){
+		this.api.post(
+			'user', 'watch',
+			{
+				id: user.id,
+				name: user.name
+			},
+			success,
+			error
+		)
+	},
+	action: function(user, action, success, error){
+		this.api.post(
+			'user', 'action',
+			{
+				user: {
+					id: user.id,
+					name: user.name
+				},
+				action: action.val()
+			},
+			success,
+			error
+		)
+	},
+	preview_action: function(user, action, success, error){
+		this.api.post(
+			'user', 'preview_action',
+			{
+				user: {
+					id: user.id,
+					name: user.name
+				},
+				action: action.val()
+			},
+			success,
+			error
+		)
 	}
 })
 

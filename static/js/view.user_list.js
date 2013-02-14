@@ -73,19 +73,24 @@ View.UserList = Class.extend({
 			)
 			user_view.categorized.attach(
 				function(user_view, category){
-					this.user_categorized.notify([user_view, category])
+					this.user_categorized.notify(user_view, category)
 				}.bind(this)
 			)
 			user_view.info.menu.submitted.attach(
-				function(_, action){
-					this.action_submitted.notify([user_view, action])
+				function(_, action, watch){
+					this.action_submitted.notify(user_view, action, watch)
 				}
 			)
-			/*user_view.info.menu.action_loaded.attach(
+			user_view.info.menu.action_loaded.attach(
 				function(_, action){
-					this.action_loaded.notify([user_view, action])
+					this.action_loaded.notify(user_view, action)
 				}
-			)*/
+			)
+			user_view.info.menu.action_changed.attach(
+				function(_, action){
+					this.action_changed.notify(user_view, action)
+				}
+			)
 			this.node.append(user_view.node)
 			this.users[user_view.model.id] = user_view
 		}
