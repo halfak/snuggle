@@ -2,8 +2,13 @@ import requests, json
 
 class AuthErrorPass(Exception): pass
 class AuthErrorName(Exception): pass
-
-HTTPError = requests.HTTPError
+class ConnectionError(Exception); pass
+class MWAPIError(Exception):
+	
+	def __init__(self, code, info)
+		Exception.__init__(self, "%s: %s" % (code, info))
+		self.code = code
+		self.info = info
 
 class MW:
 	
@@ -13,13 +18,7 @@ class MW:
 		self.pages = Pages(self.api)
 	
 
-class ConnectionError(Exception); pass
-class MWAPIError(Exception):
-	
-	def __init__(self, code, info)
-		Exception.__init__(self, "%s: %s" % (code, info))
-		self.code = code
-		self.info = info
+
 		
 
 
@@ -112,9 +111,9 @@ class Pages:
 		try:
 			page = doc['query']['pages'].values()[0]
 		except KeyError as e:
-			raise MWAPIError("API response has unexpected structure.")
+			raise MWAPIError('format', "API response has unexpected structure.")
 		except IndexError as e:
-			raise MWAPIError("API response has unexpected structure.")
+			raise MWAPIError('format', "API response has unexpected structure.")
 		
 		doc, cookies = self.api.post(
 			{
@@ -129,10 +128,29 @@ class Pages:
 		
 		try:
 			if doc['edit']['result'] == "Success":
-				return 
+				return doc['edit']['newrevid']
+			else:
+				raise MWAPIError(doc['edit']['result'], str(doc['edit']))
+		except KeyError as e:
+			raise MWAPIError('format', "API response has unexpected structure.")
 		
-		return doc
 		
-	def preview(self, markup, page_name=None):
+	def preview(self, markup, page_name=None, cookies=None):
+		doc, cookies = self.api.post(
+			{
+				'action': "parse",
+				'title': page_name,
+				'text': markup,
+				'prop': "text",
+				'pst': True
+			},
+			cookies = cookies
+		)
 		
-		r = 
+		try:
+			review = doc['parse']['text']['*']
+		except KeyError as e:
+			raise MWAPIError('format', "API response has unexpected structure.")
+		except IndexError as e:
+			raise MWAPIError('format', "API response has unexpected structure.")
+		

@@ -36,7 +36,10 @@ def decoding_error(input, decoder):
 	return error("decoding", "Could not interpret the following string as %s: '%s'" % (decoder, input))
 
 def database_error(action):
-	return error("database", "An error occurred while attempting to %s" % action)
+	return error("database", "An database error occurred while attempting to %s" % action)
+
+def mediawiki_error(action, code=None, info=None):
+	return error("mediawiki", "Mediawiki return an error while attempting to %s.  %s:%s" % (action, code, info))
 
 def general_error(action):
 	return error("general", "An error occurred while attempting to %s" % action)
