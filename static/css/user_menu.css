@@ -1,0 +1,69 @@
+div.user_menu {
+	font-weight: normal;
+}
+	div.user_menu.dropper .pane{
+		background: transparent;
+		border: 0px;
+		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+		z-index: 9;
+		left: auto;
+		right: 0px;
+		font-size: .9em;
+	}
+	
+div.user_menu div.input_field{
+	padding: .2em .5em;
+	background: #e0e0e0;
+	margin-bottom: .5em;
+}
+	div.user_menu div.form{
+		display: inline-block;
+		width: 25em;
+		padding-right: .5em;
+		margin-right: .5em;
+		border-right: 1px solid black;
+	}
+	div.user_menu div.form div.input_field label{
+		font-weight: bold;
+	}
+	div.user_menu div.form div.input_field.text label,
+	div.user_menu div.form div.input_field.textarea label{
+		display: block;
+	}
+	div.user_menu div.form div.input_field.text input,
+	div.user_menu div.form div.input_field.textarea textarea{
+		font-weight: normal;
+		font-family: monospace;
+		width: 100%;
+	}
+	div.user_menu div.form div.input_field.textarea textarea{
+		height: 7em;
+	}
+	div.user_menu div.form div.input_field.radio{
+		display: inline-block;
+	}
+	
+	div.user_menu div.wiki_preview{
+		display: inline-block;
+		white-space: normal;
+		width: 30em;
+		margin-bottom: 2em;
+		background: #fff;
+		min-height: 1em;
+		vertical-align: top;
+		padding: .2em .5em;
+		overflow: auto;
+	}
+	
+	div.user_menu div.controls{
+		position: absolute;
+		right: .5em;
+		bottom: .5em;
+		white-space: nowrap;
+	}
+		div.user_menu div.controls div.input_field.check{
+			display: inline;
+		}
+		div.user_menu div.controls div{
+			margin-left: .5em;
+		}

@@ -17,7 +17,7 @@
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="user.deborah.svg"
    enable-background="new"
-   inkscape:export-filename="/home/halfak/remote/stat1/Sandbox/snuggle/mock/user.deborah.invite.png"
+   inkscape:export-filename="/home/halfak/remote/stat1/Sandbox/snuggle/mock/user.deborah.report.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -394,7 +394,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Menu - Report"
-     style="display:none">
+     style="display:inline">
     <rect
        style="fill:#dcdcdc;fill-opacity:1;stroke:#000000;stroke-width:0.84203869;stroke-opacity:1;display:inline"
        id="rect3787-3"
@@ -1306,7 +1306,7 @@ mJiYmIxx/n9102bGRnjg7AAAAABJRU5ErkJggg==
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Menu - Message"
-     style="display:inline">
+     style="display:none">
     <rect
        style="fill:#eeeeee;fill-opacity:1;stroke:#000000;stroke-width:0.84203869;stroke-opacity:1;display:inline"
        id="rect3787-8"

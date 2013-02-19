@@ -212,18 +212,17 @@ Controller = Class.extend({
 			alert("You must specify a username in order to log in.")
 		}
 	},
-	_user_action: function(_, user, action, watch){
+	_user_action: function(_, user_view, action, watch){
 		
-		user.info.menu.disabled(true)
+		user_view.info.menu.disabled(true)
 		
 		this.local.users.action(
-			user.model,
+			user_view.model,
 			action,
-			watch,
 			function(doc){
-				user.info.menu.disabled(false)
+				user_view.info.menu.disabled(false)
 				action.reset()
-				user.info.menu.expanded(false)
+				user_view.info.menu.expanded(false)
 				//TODO confirm to user that action was completed.
 			},
 			function(message, doc){
@@ -234,32 +233,32 @@ Controller = Class.extend({
 				}else{
 					alert(message)
 				}
-				user.info.menu.disabled(false)
+				user_view.info.menu.disabled(false)
 			}
 		)
 		
 	},
-	_user_action_preview: function(_, user, action){
+	_user_action_preview: function(_, user_view, action){
 		this.local.users.preview_action(
-			user,
+			user_view.model,
 			action,
-			function(doc){
-				user.info.menu.menu.flyout.preview(action, html)
+			function(html){
+				user_view.info.menu.menu.flyout.load_preview(action, html)
 			},
 			function(message, doc){
 				LOGGING.error(message)
 			}
 		)
 	},
-	_user_action_preview_timeout: function(_, user, action){
+	_user_action_preview_timeout: function(_, user_view, action){
 		if(this.action_preview){
 			clearTimeout(this.action_preview)
 		}
 		this.action_preview = setTimeout(
 			function(){
-				this._user_action_preview(user, action)
+				this._user_action_preview({}, user_view, action)
 			}.bind(this),
-			1500
+			500
 		)
 	},
 	_logout_snuggler: function(){

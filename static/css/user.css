@@ -60,7 +60,7 @@ div.user div.info .name:hover{
 	div.user div.info .name:hover .dropper, div.user div.info .name .dropper.expanded{
 		display: block;
 	}
-	div.user div.info .name .dropper .pane{
+	/*div.user div.info .name .dropper .pane{
 		background: #fff;
 		border: 1px solid black;
 		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
@@ -76,7 +76,7 @@ div.user div.info .name:hover{
 	}
 	div.user div.info .name .dropper .pane a:hover{
 		background: #ddF;
-	}
+	}*/
 
 div.user.good-faith div.info .name:before{
 	content: "\2714\0000a0";

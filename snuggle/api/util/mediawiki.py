@@ -2,10 +2,10 @@ import requests, json
 
 class AuthErrorPass(Exception): pass
 class AuthErrorName(Exception): pass
-class ConnectionError(Exception); pass
+class ConnectionError(Exception): pass
 class MWAPIError(Exception):
 	
-	def __init__(self, code, info)
+	def __init__(self, code, info):
 		Exception.__init__(self, "%s: %s" % (code, info))
 		self.code = code
 		self.info = info
@@ -16,11 +16,6 @@ class MW:
 		self.api = MWAPI(url)
 		self.users = Users(self.api)
 		self.pages = Pages(self.api)
-	
-
-
-		
-
 
 class MWAPI:
 	
@@ -58,7 +53,7 @@ class Users:
 		self.api = api
 	
 	def authenticate(self, username, password):
-		doc, cookies  = api.post(
+		doc, cookies  = self.api.post(
 			{
 				'action': "login",
 				'lgname': username,
@@ -94,7 +89,7 @@ class Users:
 	
 class Pages:
 	
-	def init(self, api):
+	def __init__(self, api):
 		self.api = api
 	
 	def append(self, page_name, markup, cookies=None):
@@ -148,9 +143,11 @@ class Pages:
 		)
 		
 		try:
-			review = doc['parse']['text']['*']
+			html = doc['parse']['text']['*']
 		except KeyError as e:
 			raise MWAPIError('format', "API response has unexpected structure.")
 		except IndexError as e:
 			raise MWAPIError('format', "API response has unexpected structure.")
+		
+		return html
 		

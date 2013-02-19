@@ -16,14 +16,15 @@ UI.FlyoutMenu = Class.extend({
 		this.node.append(this.actions.node)
 		
 		this.flyout = new UI.FlyoutMenu.PostFlyout()
+		this.flyout.submitted.attach(this._submitted.bind(this))
 		this.node.append(this.flyout.node)
 		
 		this.submitted     = new Event(this)
 		this.changed       = new Event(this)
 		this.action_loaded = new Event(this)
 	},
-	_submitted: function(_ action){
-		this.submitted.notify(action, this.flyout.controls.watch.val())
+	_submitted: function(_, action){
+		this.submitted.notify(action, this.flyout.controls.watch.checked())
 	},
 	_action_clicked: function(action){
 		if(!this.disabled()){
@@ -36,10 +37,10 @@ UI.FlyoutMenu = Class.extend({
 		this.changed.notify(action)
 	},
 	add: function(action){
-		this.actions.append(action.node)
+		this.actions.node.append(action.node)
+		this.actions.list.push(action)
 		action.clicked.attach(this._action_clicked.bind(this))
 		action.changed.attach(this._action_changed.bind(this))
-		this.actions.list.push(action)
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -111,7 +112,7 @@ UI.FlyoutMenu.PostFlyout = Class.extend({
 				this.node.removeClass("disabled")
 			}
 			if(this.action){
-				this.action.form.disabled(disabled)
+				this.action.disabled(disabled)
 			}
 			this.controls.disabled(disabled)
 		}
@@ -130,7 +131,7 @@ UI.FlyoutMenu.PostFlyout = Class.extend({
 			}
 		}
 	},
-	preview: function(action, html){
+	load_preview: function(action, html){
 		if(action == this.action){
 			this.preview.load(html)
 		}
@@ -164,13 +165,13 @@ UI.FlyoutMenu.PostFlyout.Controls = Class.extend({
 		this.node = $("<div>")
 			.addClass("controls")
 		
-		this.watch = new UI.CheckField({label: "add user to watchlist"})
+		this.watch = new UI.CheckField("watch", {label: "add user to watchlist"})
 		this.node.append(this.watch.node)
 		
-		this.cancel = new UI.Button({label: "cancel", title: "Click here to cancel the action."})
+		this.cancel = new UI.Button("cancel", {title: "Click here to cancel the action."})
 		this.node.append(this.cancel.node)
 		
-		this.post = new UI.Button({label: "post", title: "Click here to to complete the action."})
+		this.post = new UI.Button("post", {title: "Click here to to complete the action."})
 		this.node.append(this.post.node)
 		
 		this.reset()
@@ -229,8 +230,8 @@ UI.FlyoutMenu.Action = Class.extend({
 		}
 	},
 	_changed: function(){
-		this.changed.notify()
-	}
+		this.changed.notify(this)
+	},
 	selected: function(selected){
 		if(selected === undefined){
 			return this.node.hasClass("selected")
@@ -251,7 +252,6 @@ UI.FlyoutMenu.Action = Class.extend({
 			}else{
 				this.node.removeClass("disabled")
 			}
-			this.form.disabled(disabled)
 		}
 	},
 	val: function(val){

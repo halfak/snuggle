@@ -28,6 +28,9 @@ View.User = Class.extend({
 		//The only event we care about.  Is someone clicking on me?
 		this.clicked = new Event(this)
 		this.categorized = new Event(this)
+		this.action_submitted = new Event(this)
+		this.action_loaded    = new Event(this)
+		this.action_changed   = new Event(this)
 		
 		//When the model is selected, we need to be selected too.
 		this.model.selection.attach(
@@ -36,7 +39,25 @@ View.User = Class.extend({
 				this.expanded(selected)
 			}.bind(this)
 		)
+		
+		
 		this.model.category.changed.attach(this._category_changed.bind(this))
+		
+		this.info.menu.submitted.attach(
+			function(_, action, watch){
+				this.action_submitted.notify(action, watch)
+			}.bind(this)
+		)
+		this.info.menu.action_loaded.attach(
+			function(_, action){
+				this.action_loaded.notify(action)
+			}.bind(this)
+		)
+		this.info.menu.changed.attach(
+			function(_, action){
+				this.action_changed.notify(action)
+			}.bind(this)
+		)
 		
 		
 	},

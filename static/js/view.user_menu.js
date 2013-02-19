@@ -1,12 +1,58 @@
+View.UserMenu = UI.Dropper.extend({
+	init: function(){
+		
+		this.menu = new UI.FlyoutMenu()
+		this.menu.add(new View.UserMenu.Message())
+		this.menu.add(new View.UserMenu.Invite())
+		this.menu.add(new View.UserMenu.Report())
+		
+		this.menu.submitted.attach(this._submitted.bind(this))
+		this.menu.changed.attach(this._changed.bind(this))
+		this.menu.action_loaded.attach(this._action_loaded.bind(this))
+		
+		this._super("", this.menu.node)
+		this.node.addClass("user_menu")
+		this.node.addClass("simple")
+		
+		this.submitted = new Event(this)
+		this.changed = new Event(this)
+		this.action_loaded = new Event(this)
+	},
+	_submitted: function(_, action, watch){
+		this.submitted.notify(action, watch)
+	},
+	_changed: function(_, action){
+		this.changed.notify(action)
+	},
+	_action_loaded: function(_, action){
+		this.action_loaded.notify(action)
+	},
+	_dropped: function(_, expanded){
+		if(!expanded){this.menu.collapse()}
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+			}else{
+				this.node.removeClass("disabled")
+			}
+			this.menu.disabled(disabled)
+		}
+	}
+})
+
 View.UserMenu.Message = UI.FlyoutMenu.Action.extend({
 	init: function(){
 		this._super("send message", {title: "Posts a new topic on the user's talk page"})
 		
-		this.header = UI.TextField({label: "Header:"})
+		this.header = new UI.TextField({label: "Header:"})
 		this.form.node.append(this.header.node)
 		this.header.changed.attach(this._changed.bind(this))
 		
-		this.message = UI.TextareaField({label: "Message:"})
+		this.message = new UI.TextareaField({label: "Message:"})
 		this.form.node.append(this.message.node)
 		this.message.changed.attach(this._changed.bind(this))
 		
@@ -31,21 +77,21 @@ View.UserMenu.Message = UI.FlyoutMenu.Action.extend({
 	}
 })
 
-UI.UserMenu.Invite = UI.FlyoutMenu.Action.extend({
+View.UserMenu.Invite = UI.FlyoutMenu.Action.extend({
 	init: function(){
 		this._super("invite to teahouse",  {title: "Posts an invitation to WP:Teahouse on the user's talk page"})
 		
-		this.header = UI.TextField({label: "Header:"})
+		this.header = new UI.TextField({label: "Header:"})
 		this.form.node.append(this.header.node)
 		this.header.changed.attach(this._changed.bind(this))
 		
-		this.template = new UI.Radios({label: "Template:"})
-		this.template.add(new UI.Radio({value: "Invitation"}))
-		this.template.add(new UI.Radio({value: "Invitation2"}))
+		this.template = new UI.RadioSet({label: "Template:"})
+		this.template.append(new UI.Radio("Invitation"))
+		this.template.append(new UI.Radio("Invitation2"))
 		this.form.node.append(this.template.node)
 		this.template.changed.attach(this._changed.bind(this))
 		
-		this.message = UI.TextareaField({label: "Message:"})
+		this.message = new UI.TextareaField({label: "Message:"})
 		this.form.node.append(this.message.node)
 		this.message.changed.attach(this._changed.bind(this))
 		
@@ -65,7 +111,7 @@ UI.UserMenu.Invite = UI.FlyoutMenu.Action.extend({
 	},
 	val: function(){
 		return {
-			action: "invite to teahouse",
+			action: "invite",
 			header: this.header.val(),
 			template: this.template.val(),
 			message: this.message.val()
@@ -73,15 +119,15 @@ UI.UserMenu.Invite = UI.FlyoutMenu.Action.extend({
 	}
 })
 
-UI.UserMenu.Report = UI.FlyoutMenu.Action.extend({
+View.UserMenu.Report = UI.FlyoutMenu.Action.extend({
 	init: function(){
-		this._super("report abuse", {title: "Posts a {{Vandal}} template for the user on WP:AIV")
+		this._super("report abuse", {title: "Posts a {{Vandal}} template for the user on WP:AIV"})
 		
 		this.preamble = {
 			node: $("<p>")
 				.append(
 					"Reports <b>obvious</b> and " + 
-					"<b>persistent<b> cases " + 
+					"<b>persistent</b> cases " + 
 					"of vandals and spammers to admins. " + 
 					"Please review "
 				)
@@ -89,12 +135,12 @@ UI.UserMenu.Report = UI.FlyoutMenu.Action.extend({
 				.append(", ")
 				.append(wiki_link("WP:Vandaism"))
 				.append(" and the ")
-				.append(wiki_link("WP:AIV guide", "AIV Guide")
+				.append(wiki_link("WP:AIV guide", "AIV Guide"))
 		}
 		this.form.node.append(this.preamble.node)
 		
 		
-		this.reason = UI.TextareaField({label: "Reason for listing: <small>Optional.  Keep it brief.</small>"})
+		this.reason = new UI.TextareaField({label: "Reason for listing: <small>Optional.  Keep it brief.</small>"})
 		this.form.node.append(this.reason.node)
 		this.reason.changed.attach(this._changed.bind(this))
 		
@@ -108,54 +154,10 @@ UI.UserMenu.Report = UI.FlyoutMenu.Action.extend({
 		this._super()
 		this.reason.val("")
 	},
-	format: function(){
+	val: function(){
 		return {
-			action: "report abuse",
+			action: "report",
 			reason: this.reason.val()
-		}
-	}
-})
-
-View.UserMenu = UI.Dropper.extend({
-	init: function(){
-		
-		this.menu = new UI.FlyoutMenu()
-		this.menu.add(new View.UserMenu.Message())
-		this.menu.add(new View.UserMenu.Invite())
-		this.menu.add(new View.UserMenu.Report())
-		
-		this.menu.submitted.attach(this._submitted.bind(this))
-		this.menu.changed.attach(this._changed.bind(this))
-		this.menu.action_loaded.attach(this._action_loaded.bind(this))
-		
-		this._super("actions", this.menu.node)
-		
-		this.submitted = new Event(this)
-		this.changed = new Event(this)
-		this.action_loaded = new Event(this)
-	},
-	_submitted: function(_, action){
-		this.submitted.notify(action)
-	},
-	_changed: function(_, action){
-		this.changed.notify(action)
-	},
-	_action_loaded: function(_, action){
-		this.action_loaded.notify(action)
-	},
-	_dropped: function(_, expanded){
-		if(!expanded){this.menu.collapse()}
-	},
-	disabled: function(disabled){
-		if(disabled === undefined){
-			return this.node.hasClass("disabled")
-		}else{
-			if(disabled){
-				this.node.addClass("disabled")
-			}else{
-				this.node.removedClass("disabled")
-			}
-			this.actions.list.map(function(a){a.disabled(disabled)})//Not sure if this will work
 		}
 	}
 })

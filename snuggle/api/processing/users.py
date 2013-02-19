@@ -1,5 +1,4 @@
-from ..util import responses
-from util import mediawiki
+from ..util import responses, mediawiki
 
 def send_message(user, action):
 	return (
@@ -12,7 +11,7 @@ def invite(user, action):
 	return (
 		"\n" + 
 		"==%(header)s==\n" + 
-		"{{%(template)s|message=%(message)s|sign=~~~~}}\n"
+		"{{subst:Wikipedia:Teahouse/%(template)s|message=%(message)s|sign=~~~~}}\n"
 	) % action
 
 def report(user, action):
@@ -56,31 +55,62 @@ class Users:
 		
 		return responses.success(doc)
 	
+	def action(self, session, doc):
+		try:
+			if doc['action']['action'] == "send message":
+				self.mw.pages.append(
+					send_message(doc['user'], doc['action']), 
+					page_name="User:" + doc['user']['name'],
+					cookies=session['snuggler']['cookie']
+				)
+			elif doc['action']['action'] == "invite":
+				self.mw.pages.append(
+					invite(doc['user'], doc['action']), 
+					page_name="User:" + doc['user']['name'],
+					cookies=session['snuggler']['cookie']
+				)
+			elif doc['action']['action'] == "report":
+				self.mw.pages.append(
+					report(doc['user'], doc['action']), 
+					page_name="Wikipedia:Administrator intervention against vandalism",
+					cookies=session['snuggler']['cookie']
+				)
+			else:
+				return responses.general_error("performing a user action.  The action %s is not recognized." % doc['action']['action'])
+			
+			return responses.success(True)
+			
+		except mediawiki.MWAPIError as e:
+			return responses.mediawiki_error("preview some markup", e.code, e.info)
+		except mediawiki.ConnectionError as e:
+			return responses.mediawiki_error("preview some markup", "Connection Failed", e.info)
+		except Exception as e:
+			return responses.general_error("preview some markup")
+	
 	def action_preview(self, session, doc):
-		
 		try:
 			if doc['action']['action'] == "send message":
 				html = self.mw.pages.preview(
 					send_message(doc['user'], doc['action']), 
 					page_name="User:" + doc['user']['name'],
-					session['snuggler']['cookie']
+					cookies=session['snuggler']['cookie']
 				)
 			elif doc['action']['action'] == "invite":
 				html = self.mw.pages.preview(
 					invite(doc['user'], doc['action']), 
 					page_name="User:" + doc['user']['name'],
-					session['snuggler']['cookie']
+					cookies=session['snuggler']['cookie']
 				)
 			elif doc['action']['action'] == "report":
 				html = self.mw.pages.preview(
 					report(doc['user'], doc['action']), 
 					page_name="Wikipedia:Administrator intervention against vandalism",
-					session['snuggler']['cookie']
+					cookies=session['snuggler']['cookie']
 				)
 			else:
 				return responses.general_error("preview some markup.  The action %s is not recognized." % doc['action']['action'])
 			
-			return html
+			return responses.success(html)
 			
 		except mediawiki.MWAPIError as e:
 			return responses.mediawiki_error("preview some markup", e.code, e.info)

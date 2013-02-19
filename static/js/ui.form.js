@@ -59,6 +59,7 @@ UI.RadioSet = Class.extend({
 		opts = opts || {}
 		
 		this.node = $("<div>")
+			.addClass("input_field")
 			.addClass("radio_set")
 		
 		this.name = opts.name || "radio_set_" + new Date().getTime()
@@ -98,11 +99,23 @@ UI.RadioSet = Class.extend({
 		}else{
 			this.selection = this.radios.map[val] || null
 			if(this.selection){
-				this.radios.map[val].val(true)
+				this.radios.map[val].checked(true)
 			}else{
 				throw val + " not available in radio set (" + 
 				      this.radios.map.keys().join(", ") + ")"
 			}
+		}
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+			}else{
+				this.node.removeClass("disabled")
+			}
+			this.radios.map.values().map(function(radio){radio.disabled(disabled)})
 		}
 	},
 	append: function(radio){
@@ -141,6 +154,7 @@ UI.Radio = Class.extend({
 		this.value = value
 		
 		this.node = $("<div>")
+			.addClass("input_field")
 			.addClass("radio")
 		
 		id = value + "_" + new Date().getTime()
@@ -188,7 +202,7 @@ UI.Radio = Class.extend({
 		}
 	},
 	checked: function(checked){
-		if(checked === checked){
+		if(checked === undefined){
 			return this.button.node.is(":checked")
 		}else{
 			if(checked){
@@ -226,7 +240,8 @@ UI.TextField = Class.extend({
 	init: function(opts){
 		opts = opts || {}
 		this.node = $("<div>")
-			.addClass("text_field")
+			.addClass("input_field")
+			.addClass("text")
 			
 		if(opts.title){
 			this.node.attr("title", title)
@@ -248,15 +263,16 @@ UI.TextField = Class.extend({
 			node: $("<input>")
 				.attr('id', id)
 				.attr('type', opts.password ? "password" : "text")
-				
+				.keydown(this._key_pressed.bind(this))
 		}
 		this.node.append(this.input.node)
 		
 		this.key_pressed = new Event(this)
-		this.input.node.keydown(function(e){this.key_pressed.notify(e.keyCode)}.bind(this))
-		
 		this.changed = new Event(this)
-		this.input.node.change(function(e){this.changed.notify()}.bind(this))
+	},
+	_key_pressed: function(e){
+		this.key_pressed.notify(e.keyCode)
+		this.changed.notify()
 	},
 	val: function(val){
 		if(val === undefined){
@@ -298,7 +314,8 @@ UI.TextareaField = Class.extend({
 		opts = opts || {}
 		
 		this.node = $("<div>")
-			.addClass("textarea_field")
+			.addClass("input_field")
+			.addClass("textarea")
 			
 		if(opts.title){
 			this.node.attr("title", title)
@@ -319,20 +336,22 @@ UI.TextareaField = Class.extend({
 		this.textarea = {
 			node: $("<textarea>")
 				.attr('id', id)
+				.keydown(this._key_pressed.bind(this))
 		}
 		this.node.append(this.textarea.node)
 		
 		this.key_pressed = new Event(this)
-		this.node.keydown(function(e){this.key_pressed.notify(e.keyCode)}.bind(this))
-		
 		this.changed = new Event(this)
-		this.textarea.node.change(function(e){this.changed.notify()}.bind(this))
+	},
+	_key_pressed: function(e){
+		this.key_pressed.notify(e.keyCode)
+		this.changed.notify()
 	},
 	val: function(val){
 		if(val === undefined){
-			return this.input.node.val()
+			return this.textarea.node.val()
 		}else{
-			this.input.node.val(val)
+			this.textarea.node.val(val)
 		}
 	},
 	disabled: function(disabled){
@@ -371,7 +390,8 @@ UI.CheckField = Class.extend({
 		opts = opts || {}
 		
 		this.node = $("<div>")
-			.addClass("check_field")
+			.addClass("input_field")
+			.addClass("check")
 		
 		
 		var id = "check_field_" + new Date().getTime()
@@ -417,7 +437,7 @@ UI.CheckField = Class.extend({
 			if(checked){
 				this.checkbox.node.attr("checked", "checked")
 			}else{
-				this.checkbox.node.removedAttr("checked")
+				this.checkbox.node.removeAttr("checked")
 			}
 		}
 	},

@@ -107,33 +107,35 @@ LocalServer.Users = Class.extend({
 			'user', 'watch',
 			{
 				id: user.id,
-				name: user.name
+				name: user.info.name
 			},
 			success,
 			error
 		)
 	},
 	action: function(user, action, success, error){
-		this.api.post(
+		/*this.api.post(
 			'user', 'action',
 			{
 				user: {
 					id: user.id,
-					name: user.name
+					name: user.info.name
 				},
 				action: action.val()
 			},
 			success,
 			error
-		)
+		)*/
+		alert("Not actually performing the action in DEBUG mode.")
+		success(true)
 	},
 	preview_action: function(user, action, success, error){
 		this.api.post(
-			'user', 'preview_action',
+			'user', 'action_preview',
 			{
 				user: {
 					id: user.id,
-					name: user.name
+					name: user.info.name
 				},
 				action: action.val()
 			},

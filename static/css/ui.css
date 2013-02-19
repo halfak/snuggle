@@ -18,3 +18,48 @@ div.edit_count {
 	div.edit_count:hover .namespaces{
 		display: block;
 	}
+	
+div.flyout_menu {
+	
+}
+	div.flyout_menu div.action{
+		position: relative;
+		border: 1px solid black;
+		margin-top: -1px;
+		padding: .2em .5em;
+		background: #e0e0e0;
+		z-index: 9;
+		cursor: default;
+	}
+	
+	div.flyout_menu div.action:hover{
+		background: #eee;
+	}
+	div.flyout_menu div.action.selected{
+		background: #eee;
+		border-right: 0px;
+		margin-right: -1px; 
+	}
+		div.flyout_menu div.action.selected span{
+			padding-right: 1px;
+		}
+	
+	div.flyout_menu div.flyout{
+		display: none;
+		position: absolute;
+		margin-top: -1px;
+		margin-left: -1px;
+		top: 0px;
+		left: 100%;
+		background: #eee;
+		z-index: 8;
+		border: 1px solid black;
+		padding: .5em;
+		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+	}
+	div.flyout_menu div.flyout.expanded{
+		display: block;
+	}
+
+
+

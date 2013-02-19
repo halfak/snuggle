@@ -6,7 +6,7 @@ Represents the menu for selecting a subset and filters.
 View.Controls = Class.extend({
 	init: function(){
 		this.node = $("<div>")
-			.addClass("controls")
+			.attr('id', "controls")
 		
 		
 		this.container = {
@@ -146,9 +146,9 @@ View.Filters = Class.extend({
 		
 		this.node.append(":")
 		
-		this.direction = new UI.Radios({label: "direction"})
-		this.direction.add(new UI.Radio("ascending"))
-		this.direction.add(new UI.Radio("descending"))
+		this.direction = new UI.RadioSet({label: ""})
+		this.direction.append(new UI.Radio("ascending", {title: "Change the sort direction to increasing order."}))
+		this.direction.append(new UI.Radio("descending", {title: "Change the sort direction to descreasing order."}))
 		this.direction.val("ascending")
 		this.node.append(this.direction.node)
 		

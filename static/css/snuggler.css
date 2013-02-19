@@ -41,12 +41,12 @@
 		background: rgba(255,255,255,0.8);
 	}
 	
-	#snuggler div.menu div.pane div.text_field{
+	#snuggler div.menu div.pane div.input_field.text{
 		text-align: left;
 		margin-bottom: 1em;
 	}
 	
-		#snuggler div.menu div.pane div.text_field input{
+		#snuggler div.menu div.pane div.input_field.text input{
 			width: 95%;
 		}
 	

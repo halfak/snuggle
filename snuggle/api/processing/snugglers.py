@@ -17,8 +17,8 @@ class Snugglers:
 			return responses.auth_error("password")
 		except mediawiki.AuthErrorName:
 			return responses.auth_error("username")
-		except mediawiki.HTTPError:
-			return responses.auth_error("connection")
+		except mediawiki.ConnectionError as e:
+			return responses.mediawiki_error("authenticating a snuggler", "connection", str(e))
 		except:
 			return responses.general_error("checking credentials with mediawiki")
 		
