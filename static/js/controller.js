@@ -190,6 +190,18 @@ Controller = Class.extend({
 					this.snuggler.menu.login.clear()
 					this.snuggler.menu.login.disabled(false)
 					this.snuggler.menu.expanded(false)
+					
+					//Update any previews that are waiting.
+					if(this._waiting_action_view){
+						if(this._waiting_action_view.action.selected()){
+							this._user_action_preview(
+								{},
+								this._waiting_action_view.user_view,
+								this._waiting_action_view.action
+							)
+						}
+						this._waiting_action_view = null
+					}
 				}.bind(this),
 				function(message, doc, meta){
 					if(doc && doc.code && doc.code == "authentication"){
@@ -228,7 +240,7 @@ Controller = Class.extend({
 			function(message, doc){
 				doc = doc || {}
 				if(doc.code == "permissions"){
-					alert("You must be logged in to perform actions.")
+					alert("You must be logged in to Snuggle perform actions.")
 					this.snuggler.menu.expanded(true)
 				}else{
 					alert(message)
@@ -246,7 +258,16 @@ Controller = Class.extend({
 				user_view.info.menu.menu.flyout.load_preview(action, html)
 			},
 			function(message, doc){
-				LOGGING.error(message)
+				if(doc.code == "permissions"){
+					user_view.info.menu.menu.flyout.load_preview(
+						action, 
+						'<div class="error">You must be logged in to Snuggle perform actions.</div>"
+					)
+					this.snuggler.menu.expanded(true)
+					this._waiting_action_view = {action: action, user_view: user_view}
+				}else{
+					alert(message)
+				}
 			}
 		)
 	},
