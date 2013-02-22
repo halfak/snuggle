@@ -59,20 +59,20 @@ class Users:
 		try:
 			if doc['action']['action'] == "send message":
 				self.mw.pages.append(
-					send_message(doc['user'], doc['action']), 
 					page_name="User:" + doc['user']['name'],
+					send_message(doc['user'], doc['action']), 
 					cookies=session['snuggler']['cookie']
 				)
 			elif doc['action']['action'] == "invite":
 				self.mw.pages.append(
-					invite(doc['user'], doc['action']), 
 					page_name="User:" + doc['user']['name'],
+					invite(doc['user'], doc['action']), 
 					cookies=session['snuggler']['cookie']
 				)
 			elif doc['action']['action'] == "report":
 				self.mw.pages.append(
-					report(doc['user'], doc['action']), 
 					page_name="Wikipedia:Administrator intervention against vandalism",
+					report(doc['user'], doc['action']), 
 					cookies=session['snuggler']['cookie']
 				)
 			else:
