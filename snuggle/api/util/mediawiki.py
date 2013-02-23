@@ -92,6 +92,41 @@ class Pages:
 	def __init__(self, api):
 		self.api = api
 	
+	def watch(self, page_name,  cookies=None):
+		doc, cookies = self.api.post(
+			{
+				'action': "query",
+				'prop': "info",
+				'titles': page_name,
+				'intoken': "watch"
+			},
+			cookies = cookies
+		)
+		
+		try:
+			page = doc['query']['pages'].values()[0]
+		except KeyError as e:
+			raise MWAPIError('format', "API response has unexpected structure.")
+		except IndexError as e:
+			raise MWAPIError('format', "API response has unexpected structure.")
+		
+		doc, cookies = self.api.post(
+			{
+				'action': "watch",
+				'title': page_name,
+				'token': page['watchtoken']
+			},
+			cookies = cookies
+		)
+		
+		try:
+			if 'watched' in doc['watch']:
+				return True
+			else:
+				raise MWAPIError('format', "API response has unexpected structure %s" % doc)
+		except KeyError as e:
+			raise MWAPIError('format', "API response has unexpected structure %s" % doc)
+	
 	def append(self, page_name, markup, cookies=None):
 		doc, cookies = self.api.post(
 			{

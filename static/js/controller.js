@@ -249,6 +249,25 @@ Controller = Class.extend({
 			}
 		)
 		
+		//TODO: This is just sort of tacked on here.  
+		if(watch){
+			this.local.users.watch(
+				user_view.model,
+				function(doc){
+					//nothing to do
+				},
+				function(message, doc){
+					doc = doc || {}
+					if(doc.code == "permissions"){
+						alert("You must be logged in to Snuggle perform actions.")
+						this.snuggler.menu.expanded(true)
+					}else{
+						alert(message)
+					}
+				}
+			)
+		}
+		
 	},
 	_user_action_preview: function(_, user_view, action){
 		this.local.users.preview_action(
@@ -261,7 +280,7 @@ Controller = Class.extend({
 				if(doc.code == "permissions"){
 					user_view.info.menu.menu.flyout.load_preview(
 						action, 
-						'<div class="error">You must be logged in to Snuggle perform actions.</div>"
+						'<div class="error">You must be logged in to Snuggle perform actions.</div>'
 					)
 					this.snuggler.menu.expanded(true)
 					this._waiting_action_view = {action: action, user_view: user_view}

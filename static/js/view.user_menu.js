@@ -48,6 +48,16 @@ View.UserMenu.Message = UI.FlyoutMenu.Action.extend({
 	init: function(){
 		this._super("send message", {title: "Posts a new topic on the user's talk page"})
 		
+		this.preamble = {
+			node: $("<p>")
+				.append(
+					"Posts a free-form message  on the " + 
+					"user's talk page."
+				)
+		}
+		this.form.node.append(this.preamble.node)
+		
+		
 		this.header = new UI.TextField({label: "Header:"})
 		this.form.node.append(this.header.node)
 		this.header.changed.attach(this._changed.bind(this))
@@ -80,6 +90,14 @@ View.UserMenu.Message = UI.FlyoutMenu.Action.extend({
 View.UserMenu.Invite = UI.FlyoutMenu.Action.extend({
 	init: function(){
 		this._super("invite to teahouse",  {title: "Posts an invitation to WP:Teahouse on the user's talk page"})
+		
+		this.preamble = {
+			node: $("<p>")
+				.append("Posts an invitation to ")
+				.append(wiki_link("WP:Teahouse"))
+				.append(" on the user's talk page.")
+		}
+		this.form.node.append(this.preamble.node)
 		
 		this.header = new UI.TextField({label: "Header:"})
 		this.form.node.append(this.header.node)
@@ -126,9 +144,9 @@ View.UserMenu.Report = UI.FlyoutMenu.Action.extend({
 		this.preamble = {
 			node: $("<p>")
 				.append(
-					"Reports <b>obvious</b> and " + 
-					"<b>persistent</b> cases " + 
-					"of vandals and spammers to admins. " + 
+					"Reports vandals and spammers to admins. " + 
+					"Use only for <b>obvious</b> and " + 
+					"<b>persistent</b> cases. " + 
 					"Please review "
 				)
 				.append(wiki_link("WP:Spam"))

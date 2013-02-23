@@ -67,3 +67,8 @@ div.user_menu div.input_field{
 		div.user_menu div.controls div{
 			margin-left: .5em;
 		}
+	
+	div.user_menu p{
+		white-space: normal;
+		margin: .5em 0em;
+	}

@@ -24,27 +24,38 @@ def user_rate(session, data): return processing.processor.users.rate(session, da
 @preprocessors.authenticated
 def user_rate(session, data): return processing.processor.users.rate(session, data)
 
-# /user/action_preview/
+# /user/action/
 @get("/user/action/<query>")
 @preprocessors.query_data(json.loads)
 @preprocessors.authenticated
-def users_get(session, data): return processing.processor.users.action(session, data)
+def users_action(session, data): return processing.processor.users.action(session, data)
 
 @post("/user/action/")
 @preprocessors.post_data(json.loads)
 @preprocessors.authenticated
-def users_get(session, data): return processing.processor.users.action(session, data)
+def users_action(session, data): return processing.processor.users.action(session, data)
 
 # /user/action_preview/
 @get("/user/action_preview/<query>")
 @preprocessors.query_data(json.loads)
 @preprocessors.authenticated
-def users_get(session, data): return processing.processor.users.action_preview(session, data)
+def users_action_preview(session, data): return processing.processor.users.action_preview(session, data)
 
 @post("/user/action_preview/")
 @preprocessors.post_data(json.loads)
 @preprocessors.authenticated
-def users_get(session, data): return processing.processor.users.action_preview(session, data)
+def users_action_preview(session, data): return processing.processor.users.action_preview(session, data)
+
+# /user/watch/
+@get("/user/watch/<query>")
+@preprocessors.query_data(json.loads)
+@preprocessors.authenticated
+def user_watch(session, data): return processing.processor.users.watch(session, data)
+
+@post("/user/watch/")
+@preprocessors.post_data(json.loads)
+@preprocessors.authenticated
+def user_watch(session, data): return processing.processor.users.watch(session, data)
 
 # /users/get/
 @get("/users/get/<query>")

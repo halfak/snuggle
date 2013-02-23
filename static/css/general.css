@@ -150,6 +150,15 @@ div.dropper.simple div.tab {
 		content: "csd";
 	}
 	
+	.thread_icon.deletion{
+		border-color: #b90;
+		background: #fa0;
+		box-shadow: 0px 0px 4px #b90;
+	}
+	.thread_icon.deletion:before{
+		content: "del";
+	}
+	
 	.thread_icon.afc{
 		border-color: #aaf;
 		background: #fff;
@@ -174,4 +183,13 @@ div.dropper.simple div.tab {
 	}
 	.thread_icon.copyright:before{
 		content: "\00a9";
+	}
+	
+	.thread_icon.teahouse{
+		border-color: #6d6;
+		background: #9f9;
+		box-shadow: 0px 0px 4px #6d6;
+	}
+	.thread_icon.teahouse:before{
+		content: "TH";
 	}

@@ -55,23 +55,43 @@ class Users:
 		
 		return responses.success(doc)
 	
+	def watch(self, session, user):
+		try:
+			self.mw.pages.watch(
+				"User:" + user['name'],
+				cookies=session['snuggler']['cookie']
+			)
+			self.mw.pages.watch(
+				"User_talk:" + user['name'],
+				cookies=session['snuggler']['cookie']
+			)
+			
+			return responses.success(True)
+			
+		except mediawiki.MWAPIError as e:
+			return responses.mediawiki_error("Adding %r to watchlist " % user['name'], e.code, e.info)
+		except mediawiki.ConnectionError as e:
+			return responses.mediawiki_error("Adding %r to watchlist " % user['name'], "Connection Failed", e.info)
+		except Exception as e:
+			return responses.general_error("Adding %r to watchlist " % user['name'])
+	
 	def action(self, session, doc):
 		try:
 			if doc['action']['action'] == "send message":
 				self.mw.pages.append(
-					page_name="User:" + doc['user']['name'],
+					"User_talk:" + doc['user']['name'],
 					send_message(doc['user'], doc['action']), 
 					cookies=session['snuggler']['cookie']
 				)
 			elif doc['action']['action'] == "invite":
 				self.mw.pages.append(
-					page_name="User:" + doc['user']['name'],
+					"User_talk:" + doc['user']['name'],
 					invite(doc['user'], doc['action']), 
 					cookies=session['snuggler']['cookie']
 				)
 			elif doc['action']['action'] == "report":
 				self.mw.pages.append(
-					page_name="Wikipedia:Administrator intervention against vandalism",
+					"Wikipedia:Administrator intervention against vandalism",
 					report(doc['user'], doc['action']), 
 					cookies=session['snuggler']['cookie']
 				)
@@ -81,24 +101,24 @@ class Users:
 			return responses.success(True)
 			
 		except mediawiki.MWAPIError as e:
-			return responses.mediawiki_error("preview some markup", e.code, e.info)
+			return responses.mediawiki_error("performing an action %r" % doc['action'], e.code, e.info)
 		except mediawiki.ConnectionError as e:
-			return responses.mediawiki_error("preview some markup", "Connection Failed", e.info)
+			return responses.mediawiki_error("performing an action", "Connection Failed", e.info)
 		except Exception as e:
-			return responses.general_error("preview some markup")
+			return responses.general_error("performing an action %r" % doc['action'])
 	
 	def action_preview(self, session, doc):
 		try:
 			if doc['action']['action'] == "send message":
 				html = self.mw.pages.preview(
 					send_message(doc['user'], doc['action']), 
-					page_name="User:" + doc['user']['name'],
+					page_name="User_talk:" + doc['user']['name'],
 					cookies=session['snuggler']['cookie']
 				)
 			elif doc['action']['action'] == "invite":
 				html = self.mw.pages.preview(
 					invite(doc['user'], doc['action']), 
-					page_name="User:" + doc['user']['name'],
+					page_name="User_talk:" + doc['user']['name'],
 					cookies=session['snuggler']['cookie']
 				)
 			elif doc['action']['action'] == "report":

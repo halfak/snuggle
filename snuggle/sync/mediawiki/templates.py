@@ -106,6 +106,13 @@ class AFC(Template):
 	priority   = 0
 	
 	def classes(self): return ["afc"]
+
+class Teahouse(Template):
+	expression = r'teahouse.*?'
+	groups     = 0
+	priority   = 0
+	
+	def classes(self): return ["teahouse"]
 	
 TEMPLATES = [
 	VandalWarning,
@@ -116,7 +123,8 @@ TEMPLATES = [
 	Welcome,
 	CSD,
 	Deletion,
-	AFC
+	AFC,
+	Teahouse
 ]
 
 class Templates:

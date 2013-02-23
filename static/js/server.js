@@ -114,7 +114,7 @@ LocalServer.Users = Class.extend({
 		)
 	},
 	action: function(user, action, success, error){
-		/*this.api.post(
+		this.api.post(
 			'user', 'action',
 			{
 				user: {
@@ -125,9 +125,7 @@ LocalServer.Users = Class.extend({
 			},
 			success,
 			error
-		)*/
-		alert("Not actually performing the action in DEBUG mode.")
-		success(true)
+		)
 	},
 	preview_action: function(user, action, success, error){
 		this.api.post(
