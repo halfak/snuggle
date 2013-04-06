@@ -1,0 +1,90 @@
+unscored_revisions
+{_id: 42356789, user: {id: 10}}
+
+
+Two potential architectures:
+ - Integrate into sync
+ - Separate server
+
+If I integrate it, then the server will have access to more info, but it's 
+fagility could cause hangs in the server.
+
+If I keep it separate, there could potentially be a lot of duplicated 
+boilerplate, but if it goes down, 
+
+
+#Main loop -- sleep N seconds
+	#Get unscored revisions
+	
+	#For score in scores
+		#Update user record
+		#Update desirability score
+	
+
+Either way, the main sync system will need to keep track of which revisions 
+need scores. 
+
+I'll likely want to populate a new collection and use it as a work queue.
+
+-----
+
+
+I could have the separate process be part of a completely different system that
+reads the changes collection.  If I did that, I'd probably have some difficulty 
+coordinating the two processes.  
+
+Since I expect less uptime from Andrew's API than Wikipedia, I'd like to keep 
+two processes disentangled.
+
+I still need to work out how fast I can query his API.  
+
+----
+
+It looks like he populates his scores faster than I can copy-paste from 
+Special:RecentChanges.  I think that the best way to do this is to set up a 
+separately configured server that reads through the changes collection -- or 
+maybe some collection. 
+
+scores_config = {
+	request_delay: <30 seconds>,
+	max_attempts: <5>
+}
+
+I'll need to have two collections (or maybe one with a categorical field. 
+
+scorable = {
+	_id: <revision identifier>,
+	user: {
+		id: <user's id>
+	},
+	attempts: <0>,
+	timestamp: <revision timestamp>,
+	listed: <when was this record added to the work list>,
+	touched: <when was this record last modified>
+}
+
+When I get a score, I'll need to update the corresponding user doc.  Note that 
+this is why I included the user info in the scorable doc above.  
+
+user = {
+	_id: <user's identifier>,
+	(...)
+	desirability: {
+		p: <probabiltiy>,
+		ratio: <ratio>,
+		scores: {
+			<revision identifier>: <STiki score>,
+			...
+		}
+	}
+}
+
+----
+
+Almost to work.  I'll need to pick this back up later.  For now, a little 
+planning:
+
+ - Get desirability up and running.  (on a mirror?)
+ - Get logging system working
+ - Clean up UI
+ - Release!
