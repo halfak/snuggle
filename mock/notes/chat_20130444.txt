@@ -1,0 +1,129 @@
+halfak:  Hey!  
+TOS:  yes
+halfak:  Thanks for coming to the chat today. 
+halfak:  So... snuggle has been largely on hold for a lot of reasons.  
+halfak:  Majority of which is other work. 
+halfak:  I just finished my contract with google. 
+TOS:  Hm
+TOS:  Congrats!
+halfak:  Thanks!
+halfak:  I'm happy to be working on more important things (that incidentally pay me less :S)
+– everton137 has joined the room
+halfak:  Hi everton
+everton137:  I don't have time to discuss this now
+everton137:  hi
+halfak:  I'm glad you could join us. 
+halfak:  Oh boo
+everton137:  I think it would be useful if Henrique came here
+halfak:  Well grab me when you do :) 
+everton137:  I have an answer to you on my draft!
+everton137:  it is half written
+everton137:  since I am quinting WMF to OKFN, things has been hermtical here
+everton137:  I will try to answer and see if henrique can continue the conversation to bring snuglle to pt.wiki (IMO it is very much necessary(
+everton137:  I think you all should outreach a little about the basics of snnugle and invite the wikimedia community :)
+everton137:  like in on 1 to 1,5 month
+halfak:  Interesting.  This is something that I can't put at the top of the ToDo list.  For better or worse, EN comes first.  I already have a crowd waiting. 
+– jonas_agx has joined the room
+halfak:  BUT I think internationalization is important
+everton137:  halfak, I am aware of that :)
+– HenriqueCrang has joined the room
+jonas_agx:  everton137: ciao
+everton137:  ciao
+halfak:  Hi Jonas.  
+TOS:  @halfak - Lead the meeting
+– Ocastro has joined the room
+jonas_agx:  hello halfak 
+TOS:  Where are you exaclty? And how can we help?
+halfak:  So.  I was just telling TOS that my ability to work on Snuggle has just massively increased.
+halfak:  Today is my first day of full time work on Snuggle
+TOSapplauds
+halfak:  Right now, I'm working on a robust system to gathering scores from STiki's API so that I can generate a "desirability" metric for newcomers. 
+halfak:  Essentially, you'll be able to sort newcomers by the probability that they are editing in good-faith. 
+halfak:  I'm planning to officially release the tool once that is complete and stable. 
+halfak:  I intend this to happen on May 1st. 
+halfak:  there are some stoppers in the way though. 
+halfak:  The WMF does not want me to host production snuggle from the server I'm currently using. 
+jonas_agx:  what about a host on Labs?
+halfak:  Switching to a "production" server is non-trivial.  I've already converted the open source repo to their format and started migrating, but I'm blocked on some work from Operations. 
+halfak:  Labs doesn't yet have direct database access (like the toolserver). 
+halfak:  Sadly, I need that in order to be able to keep up with EnWiki., 
+halfak:  I've been hearing that direct DB access on Labs is just around the corner for about a year. 
+halfak:  So, I'm not betting on labs, but I do hope that will eventually be the home of Snuggle. 
+halfak:  So, that's where I am and what the next couple of weeks looks like.  I plan to start publishing daily updates for my work on Snuggle over the next couple of weeks leading to May 1st. 
+halfak:  Is there any questions you guys have right now?
+halfak:  *are
+HenriqueCrang:  halfak, this sign up list is working? http://en.wikipedia.org/wiki/Wikipedia:Snuggle#Sign_up
+TOS:  How much of it is done?
+TOS:  Compared to what we have now, and what you plan it to be, whats the current prototype's status
+TOS:  HenriqueCrang: I believe so
+halfak:  The current prototype represents the minimum viable system.   It allows sorting and visualizing newcomer activity.  Newcomers can be categorized by their activities.  The most recent release added the ability to send messages to users, invite them to the Teahouse or report them to AIV. 
+halfak:  So here's where I can use some help:  Right now, I think I have some problems in the workflow.  
+halfak:  I'd like to get a few rounds of testing in with feedback so that I can have the system mostly usable *and* have the important features. 
+– erosen has joined the room
+halfak:  It looks like the model is about a month behind due to some server downtime, so *right now* might not be the best time to test. 
+halfak:  I just kicked the server.  It should be up to speed within 24 hours. 
+halfak:  Probably more like 5 hours. 
+halfak:  Henrique, I missed your question.  the sign up is "working" in that I send out periodic pings when I think enough has changed to warrant bugging people. 
+halfak:  This has only happened 3 times so far. 
+halfak:  I recommend watching http://en.wikipedia.org/wiki/Wikipedia:Snuggle/Work_log if you want to keep track of me on a more granular level. 
+halfak:  I could be convinced that pinging the sign-up list should happen more often though. 
+TOS:  halfak: Do type a "eom" when you've ended your message
+halfak:  Oh sure.  eom :) 
+HenriqueCrang:  great halfak 
+jonas_agx:  TOS what exactly eom means? END-OF-ME? 
+TOS:  The prrototype that we can see- Which version is it? The 7 april update?
+HenriqueCrang:  im watching
+TOS:  End of message jonas_agx!
+jonas_agx:  okay :) TOS 
+halfak:  Actually.  The current build represents work up to Mar. 7th. 
+TOS:  Is everyone here signed up, and has watchlisted the work log? jonas_agx? erosen? everton137? Ocastro?
+TOS:  And we'll have the next update by... ?
+TOS:  halfak: ?
+jonas_agx:  TOS: I'm not
+halfak:  This is more complicated than it seems. 
+halfak:  To estimate software development. 
+HenriqueCrang:  halfak, once you have a stable version the software will be available for i18n?
+TOS:  jonas_agx: You should. It looks like a cool feature, and you should certainly try it out if you havent
+halfak:  Henrique, that's not currently on my list for the first release. 
+jonas_agx:  TOS: I've tried it before, and yes, it's great
+TOS:  jonas_agx: Then?
+halfak:  TOS: I'm aiming to get the desirability score out by the end of this week (the 26th)
+halfak:  But this estimate must be considered to be just that, an estimate. 
+halfak:  Sadly, software complexity grows exponentially, so my error is distributed exponentially as well. 
+TOS:  halfak: I am assuming to get the results of the desirablity score, you'll need more people to use Snuggle, right? Or do you have the data already?
+halfak:  I have a simple model already built.  With that, I should be able to get a relatively useful desirability score out of STiki.  As people use Snuggle, I'll be able to refine that model. 
+TOS:  eom halfak?
+halfak:  yes, eom 
+halfak:  :P 
+TOS:  Alright.
+TOS:  If we test it right now, would that help?
+TOS:  Or will it help more if we do it after you've updated it
+Ocastro:  TOS, I actually haven't
+halfak:  Yes.  Testing right now would be useful.  I have a bug tracker that I'm working from.   See https://bitbucket.org/halfak/snuggle/issues?status=new&status=open
+halfak:  eom
+TOS:  Ocastro: You should. I suggest you check out Snuggle right now, and also sign up for it. I think you'll find it cool
+Ocastro:  Thanks! I will
+TOS:  :)
+– jonas_agx_ has joined the room
+– jonas_agx has disconnected (Ping timeout: 245 seconds)
+jonas_agx_:  sorry for quit this way, I'm on web client :P
+halfak:  No worries. 
+halfak:  So, are there any more questions or should I get back to hacking?
+TOS:  halfak: I am going to check it out right now, and I'll report back here with whatever bugs I see. erosen, everton137, HenriqueCrang, jonas_agx_ I suggest you do the same as soon as possible
+TOS:  No more Qs from me
+halfak:  That would be great guys. 
+erosen:  sounds good
+halfak:  Keep in mind, the system is lagging about 20 days behind right now, so you won't see new users. 
+TOS:  So we contact you the usual way right? http://en.wikipedia.org/wiki/User:EpochFail
+halfak:  It should catch up over the next few hours. 
+halfak:  Yes.  That works just fine. 
+TOS:  halfak: That explains a lot about my last experience with it
+halfak:  If you really need to get my attention, use my WMF email address ahalfaker@wikimedia.org. 
+Ocastro:  No questions from me at the moment. Thanks all for long talk and hard work on this
+halfak:  Happy to do it.  
+halfak:  Thanks for your patience and feedback. 
+TOS:  Thanks a lot everyone. I hope we can get some results out of it.
+TOS:  Cheers to halfak erosen everton137 HenriqueCrang jonas_agx_ Ocastro. I think I'll be going over to check Snuggle out right now
+jonas_agx_:  Yeah, TOS the same to me!
+HenriqueCrang:  thanks halfak !
+halfak:  :)  

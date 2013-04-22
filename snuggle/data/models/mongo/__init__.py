@@ -16,12 +16,12 @@ class Mongo:
 		self.talks     = Talks(db)
 	
 	
-	def clean(self, olderThan):
-		deaths = [json['_id'] for json in self.db.users.find({'registration': {"$lt": olderThan}})]
+	def cull(self, older_than):
+		deaths = [json['_id'] for json in self.db.users.find({'registration': {"$lt": older_than}})]
 		
 		self.db.users.remove({'_id': {"$in": deaths}})
 		self.db.reverteds.remove({'revision.user._id': {'$in': deaths}})
-		self.db.changes.remove({'timestamp': {"$lt": olderThan}})
+		self.db.changes.remove({'timestamp': {"$lt": older_than}})
 	
 	@staticmethod
 	def fromConfig(config, section):

@@ -61,8 +61,4 @@ class Reverted:
 				self.delete()
 		
 	def delete(self):
-		self.db.reverteds.remove({'_id': self.id})
-			
-			
-		
-		
+		self.db.reverteds.remove({'_id': self.id})	

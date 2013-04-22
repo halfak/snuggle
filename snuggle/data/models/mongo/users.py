@@ -8,11 +8,11 @@ class Users:
 		return self.db.users.find_one({'_id': id}, {'_id': 1}) != None
 	
 	def get(self, id):
-		json = self.db.users.find_one({'_id': id}, {'_id': 1})
-		if json == None:
+		doc = self.db.users.find_one({'_id': id}, {'_id': 1})
+		if doc == None:
 			raise KeyError(id)
 		else:
-			return User(self.db, json['_id'])
+			return User(self.db, doc['_id'])
 	
 	def new(self, user):
 		
@@ -25,6 +25,9 @@ class User:
 	def __init__(self, db, id):
 		self.id = id
 		self.db = db
+	
+	def score(self, score):
+		raise NotImplementedError()
 	
 	def revision(self, revision):
 		self.db.users.update(
