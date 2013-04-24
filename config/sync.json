@@ -1,0 +1,54 @@
+{
+	"synchronizers": [
+		"sync_recent_changes",
+		"sync_scores"
+	],
+	"sync_recent_changes": {
+		"model": "mongo_model",
+		"source": "mysql_source",
+		// 5 second loop delay
+		"loop_delay": 5,
+		// Read 1000 changes per request
+		"changes_per_request": 1000,
+		// The minimum rc_id to consider
+		"min_id": 534910597,
+		// 30 days in seconds = 60*60*24*30
+		"max_age": 2592000
+	},
+	"sync_scores": {
+		"model": "mongo_model",
+		"source": "stiki_source",
+		// 5 second loop delay
+		"loop_delay": 5,
+		// Lookup 1000 scores per request
+		"scores_per_request": 1000,
+		// The maximum diff between an ID that's been scored and one
+		// that has not before it gets dropped. 
+		"max_id_distance": 1000
+	},
+	"mongo_model": {
+		"module": "data.models.Mongo",
+		"host": "localhost",
+		"port": 27017,
+		"database": "newbies"
+	},
+	"mysql_source": {
+		"module": "data.sources.MySQL",
+		"host": "db1047.eqiad.wmnet",
+		"user": "halfak",
+		"db": "enwiki",
+		"read_default_file": "/home/halfak/.my.cnf"
+	},
+	"stiki": {
+		"uri": "http://armstrong.cis.upenn.edu/stiki_api.php",
+		"headers": {
+			"User-Agent": "Snuggle synchronizer (WP:Snuggle)"
+		}
+	},
+	"mwapi": {
+		"uri": "http://en.wikipedia.org/w/api.php",
+		"headers": {
+			"User-Agent": "Snuggle synchronizer (WP:Snuggle)"
+		}
+	}
+}

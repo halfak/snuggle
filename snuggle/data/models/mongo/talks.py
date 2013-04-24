@@ -19,20 +19,20 @@ class Talks:
 	
 	def get(self, title):
 		name = types.User.normalize(title)
-		json = self.db.users.find_one({'name': name})
+		doc = self.db.users.find_one({'name': name})
 		
-		if json == None:
+		if doc == None:
 			raise KeyError(title)
 		else:
-			return Talk(self.db, json['_id'], json.get('talk', {}).get('rev_id', 0))
+			return Talk(self.db, doc['_id'])
+		
 
 
 class Talk:
 	
-	def __init__(self, db, id, lastId):
+	def __init__(self, db, id):
 		self.db = db
 		self.id = id
-		self.lastId = lastId
 	
 	
 	def update(self, revId, markup):

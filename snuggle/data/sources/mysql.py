@@ -96,6 +96,7 @@ class Change(types.Change):
 		)
 	
 
+# TODO: Fix all the stuff below for new work in data.types
 class Revision(types.Revision):
 	
 	@staticmethod

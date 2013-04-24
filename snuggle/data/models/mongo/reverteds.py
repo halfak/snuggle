@@ -40,10 +40,10 @@ class Reverted:
 				{'_id': self.revision.user.id},
 				{
 					'$set': {
-						'revisions.%s.revert' % self.id: revision.deflate()
+						'activity.revisions.%s.revert' % self.id: revision.deflate()
 					},
 					'$inc': {
-						'reverted': 1
+						'activity.reverted': 1
 					}
 				}
 			)

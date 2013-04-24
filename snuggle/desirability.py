@@ -1,3 +1,11 @@
+"""
+This module provides functionality for determining a desirability score for a 
+user based on vandal fighting scores from STiki.
+
+Parameters to beta distributions are hard-coded based on an analysis performed
+using datasets derived from hand coding.
+http://blog.wikimedia.org/2012/03/27/analysis-of-the-quality-of-newcomers-in-wikipedia-over-time/
+"""
 from scipy.stats import beta
 from math import log, factorial, exp
 

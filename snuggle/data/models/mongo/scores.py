@@ -18,3 +18,8 @@ class Scores:
 	
 	def complete(self, score):
 		self.db.scores.remove(score.id)
+	
+	def clean(self, id_less_than):
+		self.db.scores.remove(
+			{"_id": {"$lt": id_less_than}}
+		)

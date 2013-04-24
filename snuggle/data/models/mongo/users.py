@@ -1,3 +1,4 @@
+from snuggle.data import types
 
 class Users:
 	
@@ -17,49 +18,36 @@ class Users:
 	def new(self, user):
 		self.db.users.insert(user.deflate(), safe=True)
 	
-	def score(self, id, score):
-		doc = self.db.users.find_one({'_id': id}, {'scores': 1})
+	def add_score(self, user_id, score):
+		doc = self.db.users.find_one({'_id': user_id}, {'desirability': 1})
 		if doc != None:
+			#Inflate
+			desirability = type.Desirability.inflate(doc)
 			
-	
-	def add_revision(self, id, revision):
-		self.db.users.update(
-			{'_id': self.id}, 
-			{
-				'$set': {
-					'revisions.%s' % revision.id: revision.deflate(),
-					'last_activity': revision.timestamp
-				},
-				'$inc': {
-					'counts.all': 1,
-					'counts.%s' % revision.page.namespace: 1
+			#Update
+			desirability.add_score(score)
+			
+			#Re-save
+			self.db.users.update(
+				{'_id': user_id},
+				{'$set': 
+					{'desirability': desirability.deflate()}
 				}
-			},
-			safe=True
-		)
-
-class User:
-	
-	def __init__(self, db, id):
-		self.id = id
-		self.db = db
-	
-	def score(self, score):
-		self.db.users.find_one({'_id': id}, )
-	
-	def revision(self, revision):
-		self.db.users.update(
-			{'_id': self.id}, 
-			{
-				'$set': {
-					'revisions.%s' % revision.id: revision.deflate(),
-					'last_activity': revision.timestamp
-				},
-				'$inc': {
-					'counts.all': 1,
-					'counts.%s' % revision.page.namespace: 1
-				}
-			},
-			safe=True
-		)
+			)
 		
+	
+	def add_revision(self, user_id, revision):
+		self.db.users.update(
+			{'_id': user_id}, 
+			{
+				'$set': {
+					'revisions.%s' % revision.id: revision.deflate(),
+					'last_activity': revision.timestamp
+				},
+				'$inc': {
+					'counts.all': 1,
+					'counts.%s' % revision.page.namespace: 1
+				}
+			},
+			safe=True
+		)
