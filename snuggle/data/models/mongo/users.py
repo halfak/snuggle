@@ -15,10 +15,28 @@ class Users:
 			return User(self.db, doc['_id'])
 	
 	def new(self, user):
-		
-		#Insert new user
 		self.db.users.insert(user.deflate(), safe=True)
-		
+	
+	def score(self, id, score):
+		doc = self.db.users.find_one({'_id': id}, {'scores': 1})
+		if doc != None:
+			
+	
+	def add_revision(self, id, revision):
+		self.db.users.update(
+			{'_id': self.id}, 
+			{
+				'$set': {
+					'revisions.%s' % revision.id: revision.deflate(),
+					'last_activity': revision.timestamp
+				},
+				'$inc': {
+					'counts.all': 1,
+					'counts.%s' % revision.page.namespace: 1
+				}
+			},
+			safe=True
+		)
 
 class User:
 	
@@ -27,7 +45,7 @@ class User:
 		self.db = db
 	
 	def score(self, score):
-		raise NotImplementedError()
+		self.db.users.find_one({'_id': id}, )
 	
 	def revision(self, revision):
 		self.db.users.update(

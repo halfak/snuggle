@@ -9,14 +9,14 @@ class User(DataType):
 	def deflate(self):
 		return {
 			'_id':   self.id,
-			'name': self.name
+			'name':  self.name
 		}
 	
 	@staticmethod
-	def inflate(js):
+	def inflate(doc):
 		return User(
-			js['_id'],
-			js['name']
+			doc['_id'],
+			doc['name']
 		)
 	
 	@staticmethod

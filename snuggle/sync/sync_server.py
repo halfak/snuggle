@@ -1,6 +1,7 @@
+import 
 logger = logging.get("snuggle.sync.recent_changes")
 
-class SyncServer:
+class Synchronizer:
 	
 	def __init__(self):
 		raise NotImplementedError()
@@ -18,36 +19,112 @@ class SyncServer:
 
 class Scores(Synchronizer):
 	"""
-	Synchronizes vandal scores for users' main namespace edits.
-	
-	TODO: threading
+	Synchronizes vandal scores for users' main namespace edits.  This 
+	synchronizer is used to keep the "desirability" score up to date for a 
+	user.
 	"""
 	def __init__(self, model, source, 
 		sleep, scores_per_request, max_id_distance):
+		"""
+		:Parameters:
+			model: `snuggle.data.models.Model`
+			source: `snuggle.data.models.Source`
+			scores_per_request: int
+			max_id_distance: int
+		"""
+		# Resources
 		self.model = model
 		self.source = source
 		
+		# Behavior
 		self.sleep = sleep
-		self.scores_per_request = scores_per_request
-		self.max_id_distance    = max_id_distance
+		self.scores_per_batch = scores_per_batch
+		self.max_id_distance  = max_id_distance
 		
+		# Status
+		self.up = False
 		self.stop_requested = False
 	
 	def run(self):
-		#Status
+		# Status
 		self.up = True
-		self.requests_made = 0
-		self.requests_fulfilled = 0
+		self.scores_completed = 0
 		self.scores_dropped = 0
+		self.errored_batches = 0
 		self.up_timestamp = time.time()
 		
+		last_scored_id = 0
+		
 		while not self.stop_requested:
-			#Get scores from model
 			
-			#Retrieve scores from source
+			start = time.time()
 			
-			#Sleep for a bit
+			# Get scores from model
+			scores = self.model.scores.get(self.scores_per_request)
+			
+			try:
+				# Lookup scores
+				updated_scores = self.__lookup_scores(scores)
+				for score in updated_scores:
+					# Update user
+					user = self.model.users.get(score.user.id)
+					user.score(score)
+					
+					# Clear the score
+					self.model.scores.complete(score)
+					
+					# Record this ID
+					last_scored_id = score.id
+					self.scores_completed += 1
+					
+				#Cleanup scores.
+				dropped_scores = self.model.scores.clean(
+					id_less_than=last_scored_id - max_id_distance
+				)
+				for score in dropped_scores:
+					self.scores_dropped += 1
+			except Exception as e:
+				logger.error(
+					"An error occurred while looking up " + 
+					"a revision score: %s" % traceback.format_exc()
+				)
+				
+				self.errored_batches += 1
+			
+			# Sleep for a bit
+			time.sleep(self.sleep - (time.time() - start))
+			
+		
+		logger.info(
+			"Stopped processing scores. " +
+			"(last_scored_id=%s, scores_completed=%s, )" % (
+				last_scored_id, last_timestamp
+			)
+		)
+		self.up = False
 	
+	def __lookup_scores(self, scores):
+		"""
+		Looks up the scores using the data source.  Yields scores
+		that were successfully looked up.  Also increments the attempts
+		for scores that could not be looked up.
+		"""
+		for score in scores:
+			try:
+				# Get score
+				value = self.sources.scores.lookup(score.id)
+				score.set(value)
+				
+			except NoScore as e:
+				# Note the attempt
+				score.add_attempt()
+				
+				# Resave the score
+				self.model.scores.update(score)
+				
+			finally:
+				yield score
+		
 	
 	def stop(self):
 		logging.info("Stop request recieved.")
@@ -55,7 +132,18 @@ class Scores(Synchronizer):
 	
 	def status(self):
 		if self.up:
-			return "Online"
+			return (
+				"Online.\n" + 
+				"\tScores completed: %s \n" + 
+				"\tScores dropped: %s \n" + 
+				"\tErrored batches: %s \n"
+				"\tUptime: %s hours."
+			) % (
+				self.scores_completed, 
+				self.scores_dropped, 
+				self.scores_dropped, 
+				(time.time() - self.up_timestamp) / (60*60.0)
+			)
 		else:
 			return "Offline"
 	
@@ -78,23 +166,23 @@ class RecentChanges:
 			max_age: int
 			starting_rcid: int
 		"""
-		#Resources
+		# Resources
 		self.model  = model
 		self.source = source
 		self.mwapi  = mwapi
 		
-		#Behavioral parameters
+		# Behavioral parameters
 		self.sleep = sleep
 		self.changes_per_request = changes_per_request
 		self.max_age = max_age
 		self.starting_rcid = starting_rcid
 		
-		#Status
+		# Status
 		self.up = False
 		self.stop_requested = False
 		
 	def run(self):
-		#Status
+		# Status
 		self.up = True
 		self.processed_revision = 0
 		self.processed_users = 0
@@ -104,25 +192,25 @@ class RecentChanges:
 		last_timestamp = None
 		
 		while not self.stop_requested:
-			#Get the time
+			# Get the time
 			start = time.time()
 			
-			#Get changes
+			# Get changes
 			changes = self.source.changes(
 				last_rcid, 
 				self.changes_per_request
 			)
 			
-			#Apply changes
+			# Apply changes
 			for id, timestamp in self.apply(changes):
 				last_rcid = id
 				last_timestamp = timestamp
 			
-			#Discard old
+			# Discard old
 			if last_timestamp is not None:
 				self.model.cull(last_timestamp - max_age)
 			
-			#Sleep for all of the time that we haven't used
+			# Sleep for all of the time that we haven't used
 			time.sleep(sleep - (time.time() - start))
 			
 		
@@ -141,8 +229,10 @@ class RecentChanges:
 	def status(self):
 		if self.up:
 			return (
-				"Online.  %s new users, %s revisions " + 
-				"processed in %s hours."
+				"Online.\n" + 
+				"\tNew users: %s \n" + 
+				"\tRevisions: %s \n" + 
+				"\tUptime: %s hours."
 			) % (
 				self.processed_users, 
 				self.processed_revisions, 
