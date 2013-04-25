@@ -7,9 +7,8 @@ logger = logging.getLogger("snuggle.server")
 
 def main():
 	def config(fn):
-		cfg = SafeConfigParser()
-		cfg.read(fn)
-		return cfg
+		f = open(fn)
+		return json.load(f)
 	
 	parser = argparse.ArgumentParser(
 		description='Keeps the model up to date by looping through recentchanges.'
@@ -45,33 +44,44 @@ def main():
 		p = pstats.Stats(f.name)
 		p.strip_dirs().sort_stats("time").print_stats(10)
 	else:
-		run(args)
+		run(args.config, args.debug)
 
+def load_synchronizers(config_doc):
+	for sync_section in config_doc['synchronizers']:
+		sync_config = config_doc[sync_section]
+		Synchronizer = import_class(sync_config['module'])
+		yield Synchronizer.from_config(config_doc, sync_section)
+		
 
-def run(args):
+def run(config_doc, debug):
 	LOGGING_STREAM = sys.stderr
 	logging.basicConfig(
-		level=logging.DEBUG if args.debug else logging.INFO,
+		level=logging.DEBUG if debug else logging.INFO,
 		stream=LOGGING_STREAM,
 		format='%(asctime)s %(levelname)-8s %(message)s',
 		datefmt='%b-%d %H:%M:%S'
 	)
-	logger = logging.Logger("server")
+	logger = logging.Logger("snuggle.sync.server")
 	
 	logger.info("Configuring system...")
-	system = System.fromConfig(args.config)
 	
-	delay = args.config.getfloat("server", "loop_delay")
-	limit = args.config.getint("server", "update_limit")
+	synchronizers = list(load_synchronizers)
 	
-	logger.info("Starting main loop.")
+	for synchronizer in synchronizers:
+		synchronizer.start()
+		
 	try:
-		while True:
-			system.update(limit)
-			time.sleep(delay)
+		for synchronizer in synchronizers:
+			sychronizer.join()
 		
 	except KeyboardInterrupt:
 		logger.info("^C received.  Shutting down.")
+		
+		for synchronizer in synchronizers:
+			sychronizer.stop()
+			
+		for synchronizer in synchronizers:
+			sychronizer.join()
 
 
 if __name__ == "__main__":
