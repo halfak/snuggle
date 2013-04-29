@@ -1,12 +1,11 @@
-import argparse, logging, sys, time, tempfile
-from ConfigParser import SafeConfigParser
+import argparse, logging, sys, time, tempfile, json
 
-from system import System
+from snuggle.util import import_class
 
 logger = logging.getLogger("snuggle.server")
 
 def main():
-	def config(fn):
+	def json_doc(fn):
 		f = open(fn)
 		return json.load(f)
 	
@@ -15,7 +14,7 @@ def main():
 	)
 	parser.add_argument(
 		'config',
-		type=config,
+		type=json_doc,
 		help='the path to the configuration file'
 	)
 	parser.add_argument(
@@ -65,23 +64,24 @@ def run(config_doc, debug):
 	
 	logger.info("Configuring system...")
 	
-	synchronizers = list(load_synchronizers)
+	synchronizers = list(load_synchronizers(config_doc))
 	
 	for synchronizer in synchronizers:
 		synchronizer.start()
 		
 	try:
-		for synchronizer in synchronizers:
-			sychronizer.join()
+		while True: # For some reason, this is necessary for catching Ctrl^C
+			for synchronizer in synchronizers:
+				synchronizer.join(5)
 		
 	except KeyboardInterrupt:
 		logger.info("^C received.  Shutting down.")
 		
 		for synchronizer in synchronizers:
-			sychronizer.stop()
+			synchronizer.stop()
 			
 		for synchronizer in synchronizers:
-			sychronizer.join()
+			synchronizer.join()
 
 
 if __name__ == "__main__":

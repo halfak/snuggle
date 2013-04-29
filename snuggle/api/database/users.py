@@ -1,4 +1,6 @@
-import time 
+import time, logging
+
+logger = logging.getLogger("snuggle.api.database.users")
 
 CATEGORIES = ("bad-faith", "good-faith", "ambiguous")
 
@@ -6,11 +8,10 @@ USER_FIELDS = [
 	'_id',
 	'name',
 	'registration',
-	'counts',
-	'reverted',
-	'revisions',
+	'activity',
 	'talk',
 	'category',
+	'desirability',
 	'views'
 ]
 
@@ -21,10 +22,11 @@ class Users:
 		self.db = db
 	
 	def get(self, query):
+		
 		return list(self.db.mongo.users.find(
 			{
-				'category.current': query['category'] if query['category'] != "unsorted" else {'$exists': false},
-				'counts.%s' % query['namespace']: {'$gt': query['min_edits']}
+				'category.current': query['category'] if query['category'] != None else {'$exists': False},
+				'activity.counts.%s' % query['namespace']: {'$gt': query['min_edits']}
 			},
 			sort=[(query['sorted_by'], 1 if query['direction'] == "ascending" else -1)],
 			limit=query['limit'],

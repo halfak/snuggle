@@ -1,6 +1,8 @@
-import logging
+import logging, time, traceback
 
 from snuggle import stiki
+from snuggle.util import import_class
+
 from .synchronizer import Synchronizer
 
 logger = logging.getLogger("snuggle.sync.synchronizers.scores")
@@ -25,11 +27,11 @@ class Scores(Synchronizer):
 		
 		# Resources
 		self.model = model
-		self.source = source
+		self.stiki_api = stiki_api
 		
 		# Behavior
 		self.loop_delay = loop_delay
-		self.scores_per_batch = scores_per_batch
+		self.scores_per_request = scores_per_request
 		self.max_id_distance  = max_id_distance
 		
 		# Status
@@ -57,9 +59,15 @@ class Scores(Synchronizer):
 				# Lookup scores
 				updated_scores = self.__lookup_scores(scores)
 				for score in updated_scores:
+					
+					logger.debug(
+						"Found score for %s by %s: %s" % (
+							score.id, score.user.name, score.score
+						)
+					)
+					
 					# Update user
-					user = self.model.users.get(score.user.id)
-					user.score(score)
+					user = self.model.users.add_score(score)
 					
 					# Clear the score
 					self.model.scores.complete(score)
@@ -69,11 +77,9 @@ class Scores(Synchronizer):
 					self.scores_completed += 1
 					
 				#Cleanup scores.
-				dropped_scores = self.model.scores.clean(
-					id_less_than=last_scored_id - max_id_distance
+				self.scores_dropped += self.model.scores.cull(
+					id_less_than=last_scored_id - self.max_id_distance
 				)
-				for score in dropped_scores:
-					self.scores_dropped += 1
 			except Exception as e:
 				logger.error(
 					"An error occurred while looking up " + 
@@ -83,13 +89,13 @@ class Scores(Synchronizer):
 				self.errored_batches += 1
 			
 			# Sleep for a bit
-			time.sleep(self.loop_delay - (time.time() - start))
+			time.sleep(max(self.loop_delay - (time.time() - start), 0))
 			
 		
 		logger.info(
 			"Stopped processing scores. " +
 			"(last_scored_id=%s, scores_completed=%s, )" % (
-				last_scored_id, last_timestamp
+				last_scored_id, self.scores_completed
 			)
 		)
 		self.up = False
@@ -103,8 +109,10 @@ class Scores(Synchronizer):
 		for score in scores:
 			try:
 				# Get score
-				value = self.source.scores.lookup(score.id)
+				value = self.stiki_api.lookup(score.id)
 				score.set(value)
+				
+				yield score
 				
 			except stiki.NoScore as e:
 				# Note the attempt
@@ -112,13 +120,10 @@ class Scores(Synchronizer):
 				
 				# Resave the score
 				self.model.scores.update(score)
-				
-			finally:
-				yield score
 		
 	
 	def stop(self):
-		logging.info("Stop request recieved.")
+		logger.info("Stop request recieved.")
 		self.stop_requested = True
 	
 	def status(self):
@@ -143,18 +148,15 @@ class Scores(Synchronizer):
 			return "Offline"
 	
 	@staticmethod
-	def fromConfig(doc, section):
+	def from_config(doc, section):
 		model_section = doc[section]['model']
 		model = import_class(doc[model_section]['module'])
 		
-		source_section = doc[section]['source']
-		source = import_class(doc[source_section]['module'])
-		
 		return Scores(
-			model.fromConfig(doc, model_section),
-			stiki.API.fromConfig(doc, "stiki"),
-			config.getint("system", "loop_delay"),
-			config.getint("system", "scores_per_request"),
-			config.getint("system", "max_id_distance")
+			model.from_config(doc, model_section),
+			stiki.API.from_config(doc, "stiki"),
+			doc[section]['loop_delay'],
+			doc[section]['scores_per_request'],
+			doc[section]['max_id_distance']
 		)
 		

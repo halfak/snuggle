@@ -4,6 +4,7 @@ from .changes import Changes
 from .users import Users
 from .reverteds import Reverteds
 from .talks import Talks
+from .scores import Scores
 
 class Mongo:
 	
@@ -14,6 +15,7 @@ class Mongo:
 		self.users     = Users(db)
 		self.reverteds = Reverteds(db)
 		self.talks     = Talks(db)
+		self.scores    = Scores(db)
 	
 	
 	def cull(self, older_than):
@@ -24,13 +26,13 @@ class Mongo:
 		self.db.changes.remove({'timestamp': {"$lt": older_than}})
 	
 	@staticmethod
-	def fromConfig(config, section):
+	def from_config(doc, section):
 		
 		return Mongo(
 			pymongo.Connection(
-				host=config.get(section, "host"),
-				port=config.getint(section, "port")
-			)[config.get(section, "database")]
+				host=doc[section]['host'],
+				port=doc[section]['port']
+			)[doc[section]['database']]
 		)
 	
 

@@ -1,9 +1,11 @@
+from .data_type import DataType
+
 class Activity(DataType):
 	
 	def __init__(self, reverted=0, revisions=None, counts=None):
 		self.reverted = int(reverted)
-		self.revisions = revisions
-		self.counts = counts
+		self.revisions = revisions if revisions != None else {}
+		self.counts = counts if revisions != None else {}
 	
 	def deflate(self):
 		return {
@@ -12,7 +14,7 @@ class Activity(DataType):
 				(id, revision.deflate()) 
 				for id, revision in self.revisions.iteritems()
 			),
-			'counts': counts
+			'counts': self.counts
 		}
 	
 	@staticmethod

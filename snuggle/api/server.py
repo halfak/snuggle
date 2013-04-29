@@ -1,16 +1,14 @@
-import bottle, logging, argparse, json, sys
+import bottle, logging, argparse, json, sys, random
 from beaker.middleware import SessionMiddleware
+
+from snuggle.util import load_json_config
 
 from . import database, processing, routing
 
 logger = logging.getLogger("snuggle.api.server")
 
 def load_config(filename):
-	try:
-		f = open(filename)
-		return json.load(f)
-	except Exception as e:
-		raise Exception("Could not load configuration file: %s" % e)
+	return load_json_config(open(filename))
 
 def application(config):
 	#configure db
@@ -19,13 +17,16 @@ def application(config):
 	#configure processors
 	processing.configure(db, config)
 	
+	# Generates a random 25 character sequence
+	secret = "".join(chr(random.randrange(32,125)) for i in xrange(25))
+	
 	#construct app
 	return SessionMiddleware(
 		bottle.default_app(),
 		{
 			'session.type': "memory",
 			'session.key': "s_id",
-			'session.secret': config['sessions']['secret'],
+			'session.secret': secret,
 			'session.timeout': 60*30, #30 minutes
 			'session.auto': True
 		}
@@ -47,7 +48,6 @@ def main():
 		help='run in profile mode?'
 	)
 	parser.add_argument(
-		
 		'-d', "--debug",
 		action="store_true",
 		default=False,

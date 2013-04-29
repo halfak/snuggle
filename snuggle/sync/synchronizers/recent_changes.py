@@ -1,11 +1,15 @@
-import logging
+import logging, time, traceback
 
 from snuggle import mediawiki
+from snuggle.util import import_class
+from snuggle.data import types
+
+from .synchronizer import Synchronizer
 
 logger = logging.getLogger("snuggle.sync.synchronizers.recent_changes")
 
 
-class RecentChanges:
+class RecentChanges(Synchronizer): 
 	"""
 	Synchronizes from a recent changes feed.
 	
@@ -24,6 +28,7 @@ class RecentChanges:
 			starting_rcid: int
 		"""
 		Synchronizer.__init__(self)
+		self.daemon = True
 		
 		# Resources
 		self.model  = model
@@ -47,7 +52,11 @@ class RecentChanges:
 		self.processed_users = 0
 		self.up_timestamp = time.time()
 		
-		last_rcid = max(self.model.changes.last_rcid(), starting_rcid)
+		last_change = self.model.changes.last()
+		last_rcid = max(
+			last_change.id if last_change != None else 0, 
+			self.starting_rcid
+		)
 		last_timestamp = None
 		
 		while not self.stop_requested:
@@ -61,16 +70,16 @@ class RecentChanges:
 			)
 			
 			# Apply changes
-			for id, timestamp in self.apply(changes):
+			for id, timestamp in self.__apply(changes):
 				last_rcid = id
 				last_timestamp = timestamp
 			
 			# Discard old
 			if last_timestamp is not None:
-				self.model.cull(last_timestamp - max_age)
+				self.model.cull(last_timestamp - self.max_age)
 			
 			# Sleep for all of the time that we haven't used
-			time.sleep(loop_delay - (time.time() - start))
+			time.sleep(max(self.loop_delay - (time.time() - start), 0))
 			
 		
 		logger.info(
@@ -82,7 +91,7 @@ class RecentChanges:
 		self.up = False
 	
 	def stop(self):
-		logging.info("Stop request recieved.")
+		logger.info("Stop request recieved.")
 		self.stop_requested = True
 	
 	def status(self):
@@ -104,14 +113,14 @@ class RecentChanges:
 		else:
 			return "Offline"
 		
-	def apply(self, changes):
+	def __apply(self, changes):
 		successful = 0
 		errored    = 0
 		irrelevant = 0
 		
 		for change in changes:
 			try:
-				if self.__apply(change):
+				if self.__apply_change(change):
 					successful += 1
 					try:
 						self.model.changes.record(change)
@@ -167,22 +176,21 @@ class RecentChanges:
 					revision.id, revision.user.name
 				)
 			)
-			user = self.model.users.get(revision.user.id)
-			user.revision(revision)
+			user = self.model.users.add_revision(revision)
 			
 			reverted = types.Reverted(
 				revision, 
 				self.source.history(
 					revision.page.id, 
 					revision.id, 
-					self.HISTORY_LIMIT
+					types.Reverted.HISTORY_LIMIT
 				)
 			)
 			self.model.reverteds.new(reverted)
 			
 			score = types.Score(
 				revision.id,
-				revision.user.id
+				revision.user
 			)
 			self.model.scores.new(score)
 			
@@ -201,7 +209,7 @@ class RecentChanges:
 		return relevant
 	
 	@staticmethod
-	def fromConfig(doc, section):
+	def from_config(doc, section):
 		model_section = doc[section]['model']
 		model = import_class(doc[model_section]['module'])
 		
@@ -209,12 +217,12 @@ class RecentChanges:
 		source = import_class(doc[source_section]['module'])
 		
 		return RecentChanges(
-			model.fromConfig(doc, model_section),
-			source.fromConfig(doc, source_section),
-			mediawiki.API.fromConfig(doc, 'mwapi'),
-			config.getint("system", "loop_delay"),
-			config.getint("system", "changes_per_request"),
-			config.getint("system", "max_age"),
-			config.getint("system", "starting_rcid")
+			model.from_config(doc, model_section),
+			source.from_config(doc, source_section),
+			mediawiki.API.from_config(doc, 'mwapi'),
+			doc[section]['loop_delay'],
+			doc[section]['changes_per_request'],
+			doc[section]['max_age'],
+			doc[section]['starting_rcid']
 		)
 			

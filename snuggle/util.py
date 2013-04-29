@@ -1,4 +1,9 @@
-import importlib
+import importlib, re, json
+
+COMMENT_RE = re.compile(
+	r'/\*(.|\n|\r)*?\*/',
+	re.DOTALL | re.MULTILINE
+)
 
 def import_class(path):
 	modules = path.split(".")
@@ -12,3 +17,10 @@ def import_class(path):
 	
 	except ImportError as e:
 		raise ImportError(str(e) + "(%s)" % path)
+		
+
+def load_json_config(f):
+	doc_content = f.read()
+	cleaned_content = COMMENT_RE.sub("", doc_content)
+	return json.loads(cleaned_content)
+	

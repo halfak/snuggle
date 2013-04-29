@@ -19,9 +19,18 @@ class API:
 				"style": "score",
 				"rid": rev_id
 			},
-			self.headers
+			headers=self.headers
 		)
 		
 		if response.content.strip() == "":
 			raise NoScore
-		score = float(response.content)
+		
+		return float(response.content)
+	
+	@staticmethod
+	def from_config(doc, section):
+		
+		return API(
+			doc[section]['uri'], 
+			headers=doc[section]['headers']
+		)

@@ -33,6 +33,34 @@ class Revision(DataType):
 		)
 
 
+class ChangeRevision(Revision):
+	
+	def __init__(self, id, user, page, timestamp, comment, diff, sha1):
+		Revision.__init__(self, id, timestamp, comment, diff, sha1)
+		self.user = user
+		self.page = page
+	
+	def deflate(self):
+		doc = Revision.deflate(self)
+		doc['user'] = self.user.deflate()
+		doc['page'] = self.page.deflate()
+		
+		return doc
+	
+	@staticmethod
+	def inflate(doc):
+		return ChangeRevision(
+			doc['_id'],
+			User.inflate(doc['user']),
+			Page.inflate(doc['page']),
+			doc['timestamp'],
+			doc['comment'],
+			ByteDiff.inflate(doc['diff']),
+			doc['sha1']
+		)
+		
+
+
 class UserRevision(Revision):
 	
 	def __init__(self, id, page, timestamp, comment, diff, sha1, revert=None):
@@ -58,6 +86,18 @@ class UserRevision(Revision):
 			doc['sha1'],
 			Revert.inflate(doc['revert']) if doc['revert'] != None else None
 		)
+	
+	@staticmethod
+	def convert(revision):
+		return UserRevision(
+			revision.id,
+			revision.page,
+			revision.timestamp,
+			revision.comment,
+			revision.diff,
+			revision.sha1,
+			revision.revert if hasattr(revision, "revert") else None
+		)
 		
 
 class Revert(Revision):
@@ -81,6 +121,17 @@ class Revert(Revision):
 			doc['comment'],
 			doc['diff'],
 			doc['sha1']
+		)
+	
+	@staticmethod
+	def convert(revision):
+		return Revert(
+			revision.id,
+			revision.user,
+			revision.timestamp,
+			revision.comment,
+			revision.diff,
+			revision.sha1
 		)
 
 

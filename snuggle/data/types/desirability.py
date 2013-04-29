@@ -8,14 +8,14 @@ class Desirability:
 		self.scores = scores
 	
 	def add_score(self, score):
-		self.scores[score.id] = score.score
+		self.scores[str(score.id)] = score.score
 	
 	def likelihood(self):
 		return desirability.likelihood(self.scores.values())
 	
 	@staticmethod
 	def inflate(doc):
-		Desirability(doc['scores'])
+		return Desirability(doc['scores'])
 	
 	def deflate(self):
 		return {

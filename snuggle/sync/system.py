@@ -1,8 +1,7 @@
-import traceback, logging
-from snuggle.util import import_class
+import traceback, logging, json
 
 from snuggle.data import types
-
+from snuggle.util import import_class
 
 logger = logging.getLogger("snuggle.system")
 
