@@ -1,3 +1,4 @@
+from snuggle.data import types
 
 class Users:
 	
@@ -7,41 +8,41 @@ class Users:
 	def __contains__(self, id):
 		return self.db.users.find_one({'_id': id}, {'_id': 1}) != None
 	
-	def get(self, id):
-		doc = self.db.users.find_one({'_id': id}, {'_id': 1})
-		if doc == None:
-			raise KeyError(id)
-		else:
-			return User(self.db, doc['_id'])
-	
 	def new(self, user):
-		
-		#Insert new user
 		self.db.users.insert(user.deflate(), safe=True)
+	
+	def add_score(self, score):
+		doc = self.db.users.find_one({'_id': score.user.id}, {'desirability': 1})
+		if doc != None:
+			#Inflate
+			desirability = types.Desirability.inflate(doc['desirability'])
+			
+			#Update
+			desirability.add_score(score)
+			
+			#Re-save
+			self.db.users.update(
+				{'_id': score.user.id},
+				{'$set': 
+					{'desirability': desirability.deflate()}
+				}
+			)
 		
-
-class User:
 	
-	def __init__(self, db, id):
-		self.id = id
-		self.db = db
-	
-	def score(self, score):
-		raise NotImplementedError()
-	
-	def revision(self, revision):
+	def add_revision(self, revision):
+		user_id = revision.user.id
+		revision = types.UserRevision.convert(revision)
 		self.db.users.update(
-			{'_id': self.id}, 
+			{'_id': user_id}, 
 			{
 				'$set': {
-					'revisions.%s' % revision.id: revision.deflate(),
-					'last_activity': revision.timestamp
+					'activity.revisions.%s' % revision.id: revision.deflate(),
+					'activity.last_activity': revision.timestamp
 				},
 				'$inc': {
-					'counts.all': 1,
-					'counts.%s' % revision.page.namespace: 1
+					'activity.counts.all': 1,
+					'activity.counts.%s' % revision.page.namespace: 1
 				}
 			},
 			safe=True
 		)
-		

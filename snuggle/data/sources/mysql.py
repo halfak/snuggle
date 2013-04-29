@@ -68,12 +68,11 @@ class MySQL:
 		return history
 	
 	@staticmethod
-	def fromConfig(config, section):
-		kwargs = {}
-		for key, value in config.items(section):
-			if key not in ("module"):
-				kwargs[key] = value
-			
+	def from_config(doc, section):
+		kwargs = dict(
+			(key, value) for key, value
+			in doc[section].iteritems() if key != "module"
+		)
 		
 		return MySQL(**kwargs)
 
@@ -86,7 +85,7 @@ class Change(types.Change):
 			change = NewUser.fromRow(row)
 		else:
 			type = "new revision"
-			change = Revision.fromRow(row)
+			change = ChangeRevision.fromRow(row)
 		
 		return Change(
 			row['rc_id'],
@@ -96,12 +95,13 @@ class Change(types.Change):
 		)
 	
 
-class Revision(types.Revision):
+# TODO: Fix all the stuff below for new work in data.types
+class ChangeRevision(types.ChangeRevision):
 	
 	@staticmethod
 	def fromRow(row):
 		
-		return Revision(
+		return ChangeRevision(
 			row['rev_id'],
 			User.fromRow(row),
 			Page.fromRow(row),
@@ -115,7 +115,13 @@ class Revision(types.Revision):
 class NewUser(types.NewUser):
 	
 	@staticmethod
-	def fromRow(row): return NewUser(row['user_id'], unicode(row['user_name'], 'utf-8', 'replace'), int(row['timestamp']))
+	def fromRow(row): return NewUser(
+		row['user_id'], 
+		unicode(row['user_name'], 'utf-8', 'replace'), 
+		int(row['timestamp']),
+		types.Activity(),
+		types.Desirability()
+	)
 
 class User(types.User):
 	

@@ -2,6 +2,8 @@ from .data_type import DataType
 
 class Reverted(DataType):
 	
+	HISTORY_LIMIT = 5
+	
 	def __init__(self, revision, history=None, processed=0):
 		self.revision  = revision
 		self.history   = history if history != None else {}

@@ -1,7 +1,7 @@
 import re
 
-from mediawiki import parsing, templates
-from data import types
+from snuggle.data import types
+from snuggle.mediawiki import parsing, templates
 
 MARKUP_HEADER_RE = re.compile(r"(^|\n)==([^=]+)==")
 
@@ -19,20 +19,21 @@ class Talks:
 	
 	def get(self, title):
 		name = types.User.normalize(title)
-		json = self.db.users.find_one({'name': name})
+		doc = self.db.users.find_one({'name': name})
 		
-		if json == None:
+		if doc == None:
 			raise KeyError(title)
 		else:
-			return Talk(self.db, json['_id'], json.get('talk', {}).get('rev_id', 0))
+			return Talk(self.db, doc['_id'], doc.get('talk', {}).get('rev_id', 0))
+		
 
 
 class Talk:
 	
-	def __init__(self, db, id, lastId):
+	def __init__(self, db, id, last_id):
 		self.db = db
-		self.id = id
-		self.lastId = lastId
+		self.id = int(id)
+		self.last_id = int(last_id)
 	
 	
 	def update(self, revId, markup):

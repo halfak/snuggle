@@ -191,11 +191,11 @@ LocalServer.Users.Cursor = Class.extend({
 			info: {
 				name: doc.name,
 				registration: doc.registration,
-				reverted: doc.reverted || 0,
-				counts: doc.counts,
+				reverted: doc.activity.reverted || 0,
+				counts: doc.activity.counts,
 				views: doc.views
 			},
-			contribs: doc.revisions,
+			contribs: doc.activity.revisions,
 			talk: {
 				threads: (doc.talk || {}).topics || []
 			},

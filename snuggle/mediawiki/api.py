@@ -7,7 +7,7 @@ class API:
 		self.uri = uri
 		self.headers = headers if headers != None else {}
 	
-	def getMarkup(self, revId=None, pageId=None, title=None):
+	def get_markup(self, revId=None, pageId=None, title=None):
 		
 		if revId != None:
 			data = {
@@ -47,12 +47,9 @@ class API:
 		
 	
 	@staticmethod
-	def fromConfig(config, section):
-		headers = {}
-		for key, value in config.items(section):
-			if key not in ("uri", "module"):
-				headers[key] = value
-				
-			
+	def from_config(doc, section):
 		
-		return API(config.get(section, "uri"), headers=headers)
+		return API(
+			doc[section]['uri'], 
+			headers=doc[section]['headers']
+		)

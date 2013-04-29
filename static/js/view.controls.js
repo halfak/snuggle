@@ -135,11 +135,11 @@ View.Filters = Class.extend({
 		this.sorted_by = new UI.Select(
 			"sorted_by",
 			[
-				//{value: "predicted quality"}, Sadly, not ready yet
+				{value: "desirability.likelihood", label: "desirability"},
 				{value: "registration", label: "registration date"},
-				{value: "last_activity", label: "last activity"},
-				{value: "reverted", label: "reverted edits"},
-				{value: "counts.all", label: "total edits"}
+				{value: "activity.last_activity", label: "last activity"},
+				{value: "activity.reverted", label: "reverted edits"},
+				{value: "activity.counts.all", label: "total edits"}
 			]
 		)
 		this.node.append(this.sorted_by.node)
@@ -149,7 +149,7 @@ View.Filters = Class.extend({
 		this.direction = new UI.RadioSet({label: ""})
 		this.direction.append(new UI.Radio("ascending", {title: "Change the sort direction to increasing order."}))
 		this.direction.append(new UI.Radio("descending", {title: "Change the sort direction to descreasing order."}))
-		this.direction.val("ascending")
+		this.direction.val("descending")
 		this.node.append(this.direction.node)
 		
 		this.changed = new Event(this)

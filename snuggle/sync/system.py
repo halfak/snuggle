@@ -1,17 +1,7 @@
-import traceback, logging
-import importlib
+import traceback, logging, json
 
-from data import types
-
-def importClass(path):
-	modules = path.split(".")
-	
-	try:
-		module = importlib.import_module(".".join(modules[:-1]))
-		return getattr(module, modules[-1])
-	except ImportError as e:
-		raise ImportError(str(e) + "(%s)" % path)
-	
+from snuggle.data import types
+from snuggle.util import import_class
 
 logger = logging.getLogger("snuggle.system")
 

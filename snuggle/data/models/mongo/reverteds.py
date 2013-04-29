@@ -1,4 +1,4 @@
-from data import types
+from snuggle.data import types
 
 class Reverteds:
 	
@@ -20,30 +20,28 @@ class Reverteds:
 
 class Reverted:
 	
-	PROCESS_LIMIT = 5
-	
 	def __init__(self, db, json):
 		self.db        = db
 		self.id        = json['_id']
 		self.processed = json['processed']
-		self.revision  = types.Revision.inflate(json['revision'])
+		self.revision  = types.ChangeRevision.inflate(json['revision'])
 		self.history   = json['history']
 		self.revert    = None
 	
 	def complete(self):
-		return self.processed >= self.PROCESS_LIMIT or self.revert != None
+		return self.processed >= types.Reverted.HISTORY_LIMIT or self.revert != None
 	
 	def process(self, revision):
 		if revision.sha1 in self.history and revision.sha1 != self.revision.sha1:
-			self.revert = revision
+			self.revert = types.Revert.convert(revision)
 			self.db.users.update(
 				{'_id': self.revision.user.id},
 				{
 					'$set': {
-						'revisions.%s.revert' % self.id: revision.deflate()
+						'activity.revisions.%s.revert' % self.id: revision.deflate()
 					},
 					'$inc': {
-						'reverted': 1
+						'activity.reverted': 1
 					}
 				}
 			)
@@ -51,7 +49,7 @@ class Reverted:
 		else:
 			self.processed += 1
 			
-			if self.processed < self.PROCESS_LIMIT:
+			if self.processed < types.Reverted.HISTORY_LIMIT:
 				self.db.reverteds.update(
 					{'_id': self.id},
 					{'$set': {'processed': self.processed}},

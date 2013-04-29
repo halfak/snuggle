@@ -1,12 +1,13 @@
 from .data_type import DataType
 
-from user import NewUser, Revision
+from user import NewUser
+from revision import ChangeRevision
 
 class Change(DataType):
 	
 	TYPES = {
 		'new user': NewUser,
-		'new revision': Revision
+		'new revision': ChangeRevision
 	}
 	
 	def __init__(self, id, timestamp, type, change):

@@ -1,4 +1,6 @@
+from .activity import Activity
 from .data_type import DataType
+from .desirability import Desirability
 
 class User(DataType):
 	
@@ -9,14 +11,14 @@ class User(DataType):
 	def deflate(self):
 		return {
 			'_id':   self.id,
-			'name': self.name
+			'name':  self.name
 		}
 	
 	@staticmethod
-	def inflate(js):
+	def inflate(doc):
 		return User(
-			js['_id'],
-			js['name']
+			doc['_id'],
+			doc['name']
 		)
 	
 	@staticmethod
@@ -27,20 +29,28 @@ class User(DataType):
 
 class NewUser(User):
 	
-	def __init__(self, id, name, registration):
+	def __init__(self, id, name, registration, activity, desirability):
 		User.__init__(self, id, name)
 		self.registration = int(registration)
+		self.activity     = activity
+		self.desirability = desirability
 	
 	def deflate(self):
-		json = User.deflate(self)
-		json['registration'] = self.registration
-		return json
+		doc = User.deflate(self)
+		doc['registration'] = self.registration
+		doc['activity']     = self.activity.deflate()
+		doc['desirability'] = self.desirability.deflate()
+		return doc
 	
 	@staticmethod
-	def inflate(json):
+	def inflate(doc):
 		return NewUser(
-			json['_id'],
-			json['name'],
-			json['registration']
+			doc['_id'],
+			doc['name'],
+			doc['registration'],
+			Activity.inflate(doc['activity']),
+			Desirability.inflate(doc['desirability'])
 		)
+	
+	
 

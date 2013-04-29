@@ -3,21 +3,21 @@ from ..util import responses, mediawiki
 def send_message(user, action):
 	return (
 		"\n" + 
-		"==%(header)s==\n" + 
+		"==%(header)s ==\n" + 
 		"%(message)s~~~~\n"
 	) % action
 
 def invite(user, action):
 	return (
 		"\n" + 
-		"==%(header)s==\n" + 
+		"==%(header)s ==\n" + 
 		"{{subst:Wikipedia:Teahouse/%(template)s|message=%(message)s|sign=~~~~}}\n"
 	) % action
 
 def report(user, action):
 	return (
 		"\n" + 
-		"* {{Vandal|%(username)s}} %(reason)s~~~~\n"
+		"* {{Vandal|%(username)s}} %(reason)s~~~~"
 	) % {
 		'username': user['name'],
 		'reason': action['reason']

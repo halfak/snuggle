@@ -1,0 +1,3 @@
+#!/bin/sh
+python -tt -c "from snuggle.sync import server; server.main();" "$@"
+

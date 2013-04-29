@@ -1,129 +1,85 @@
-logger = logging.get("snuggle.sync.recent_changes")
+import logging, time, traceback
 
-class SyncServer:
-	
-	def __init__(self):
-		raise NotImplementedError()
-	
-	def run(self):
-		raise NotImplementedError()
-	
-	def stop(self):
-		raise NotImplementedError()
-	
-	def status(self):
-		raise NotImplementedError()
-		
-	
+from snuggle import mediawiki
+from snuggle.util import import_class
+from snuggle.data import types
 
-class Scores(Synchronizer):
-	"""
-	Synchronizes vandal scores for users' main namespace edits.
-	
-	TODO: threading
-	"""
-	def __init__(self, model, source, 
-		sleep, scores_per_request, max_id_distance):
-		self.model = model
-		self.source = source
-		
-		self.sleep = sleep
-		self.scores_per_request = scores_per_request
-		self.max_id_distance    = max_id_distance
-		
-		self.stop_requested = False
-	
-	def run(self):
-		#Status
-		self.up = True
-		self.requests_made = 0
-		self.requests_fulfilled = 0
-		self.scores_dropped = 0
-		self.up_timestamp = time.time()
-		
-		while not self.stop_requested:
-			#Get scores from model
-			
-			#Retrieve scores from source
-			
-			#Sleep for a bit
-	
-	
-	def stop(self):
-		logging.info("Stop request recieved.")
-		self.stop_requested = True
-	
-	def status(self):
-		if self.up:
-			return "Online"
-		else:
-			return "Offline"
-	
+from .synchronizer import Synchronizer
 
-class RecentChanges:
+logger = logging.getLogger("snuggle.sync.synchronizers.recent_changes")
+
+
+class RecentChanges(Synchronizer): 
 	"""
 	Synchronizes from a recent changes feed.
 	
 	TODO: threading
 	"""
 	def __init__(self, model, source, mwapi, 
-		     sleep, changes_per_request, max_age, starting_rcid):
+		     loop_delay, changes_per_request, max_age, starting_rcid):
 		"""
 		:Parameters:
 			model: `snuggle.data.models.Model`
 			source: `snuggle.data.models.Source`
 			mwapi: `snuggle.mediawiki.API`
-			sleep: int
+			loop_delay: int
 			changes_per_request: int
 			max_age: int
 			starting_rcid: int
 		"""
-		#Resources
+		Synchronizer.__init__(self)
+		self.daemon = True
+		
+		# Resources
 		self.model  = model
 		self.source = source
 		self.mwapi  = mwapi
 		
-		#Behavioral parameters
-		self.sleep = sleep
+		# Behavioral parameters
+		self.loop_delay = loop_delay
 		self.changes_per_request = changes_per_request
 		self.max_age = max_age
 		self.starting_rcid = starting_rcid
 		
-		#Status
+		# Status
 		self.up = False
 		self.stop_requested = False
 		
 	def run(self):
-		#Status
+		# Status
 		self.up = True
 		self.processed_revision = 0
 		self.processed_users = 0
 		self.up_timestamp = time.time()
 		
-		last_rcid = max(self.model.changes.last_rcid(), starting_rcid)
+		last_change = self.model.changes.last()
+		last_rcid = max(
+			last_change.id if last_change != None else 0, 
+			self.starting_rcid
+		)
 		last_timestamp = None
 		
 		while not self.stop_requested:
-			#Get the time
+			# Get the time
 			start = time.time()
 			
-			#Get changes
+			# Get changes
 			changes = self.source.changes(
 				last_rcid, 
 				self.changes_per_request
 			)
 			
-			#Apply changes
-			for id, timestamp in self.apply(changes):
+			# Apply changes
+			for id, timestamp in self.__apply(changes):
 				last_rcid = id
 				last_timestamp = timestamp
 			
-			#Discard old
+			# Discard old
 			if last_timestamp is not None:
-				self.model.cull(last_timestamp - max_age)
+				self.model.cull(last_timestamp - self.max_age)
 			
-			#Sleep for all of the time that we haven't used
-			time.sleep(sleep - (time.time() - start))
+			# Sleep for all of the time that we haven't used
+			time.sleep(max(self.loop_delay - (time.time() - start), 0))
 			
 		
 		logger.info(
@@ -135,30 +91,36 @@ class RecentChanges:
 		self.up = False
 	
 	def stop(self):
-		logging.info("Stop request recieved.")
+		logger.info("Stop request recieved.")
 		self.stop_requested = True
 	
 	def status(self):
 		if self.up:
 			return (
-				"Online.  %s new users, %s revisions " + 
-				"processed in %s hours."
+				"Online.\n" + 
+				"\tNew users: %s \n" + 
+				"\tRevisions: %s \n" + 
+				"\tUptime: %s hours."
 			) % (
 				self.processed_users, 
 				self.processed_revisions, 
-				(time.time() - self.up_timestamp) / (60*60.0)
+				round(
+					(time.time() - self.up_timestamp) / 
+					(60*60.0),
+					2
+				)
 			)
 		else:
 			return "Offline"
 		
-	def apply(self, changes):
+	def __apply(self, changes):
 		successful = 0
 		errored    = 0
 		irrelevant = 0
 		
 		for change in changes:
 			try:
-				if self.__apply(change):
+				if self.__apply_change(change):
 					successful += 1
 					try:
 						self.model.changes.record(change)
@@ -214,22 +176,21 @@ class RecentChanges:
 					revision.id, revision.user.name
 				)
 			)
-			user = self.model.users.get(revision.user.id)
-			user.revision(revision)
+			user = self.model.users.add_revision(revision)
 			
 			reverted = types.Reverted(
 				revision, 
 				self.source.history(
 					revision.page.id, 
 					revision.id, 
-					self.HISTORY_LIMIT
+					types.Reverted.HISTORY_LIMIT
 				)
 			)
 			self.model.reverteds.new(reverted)
 			
 			score = types.Score(
 				revision.id,
-				revision.user.id
+				revision.user
 			)
 			self.model.scores.new(score)
 			
@@ -248,23 +209,20 @@ class RecentChanges:
 		return relevant
 	
 	@staticmethod
-	def fromConfig(config):
-		sourceSection = config.get("system", "source")
-		source = importClass(config.get(sourceSection, "module"))
+	def from_config(doc, section):
+		model_section = doc[section]['model']
+		model = import_class(doc[model_section]['module'])
 		
-		modelSection = config.get("system", "model")
-		model  = importClass(config.get(modelSection, "module"))
+		source_section = doc[section]['source']
+		source = import_class(doc[source_section]['module'])
 		
-		apiSection = config.get("system", "mwapi")
-		mwapi    = importClass(config.get(apiSection, "module"))
-		
-		return System(
-			model.fromConfig(config, modelSection),
-			source.fromConfig(config, sourceSection),
-			mwapi.fromConfig(config, apiSection),
-			config.getint("system", "sleep"),
-			config.getint("system", "changes_per_request"),
-			config.getint("system", "max_age"),
-			config.getint("system", "starting_rcid")
+		return RecentChanges(
+			model.from_config(doc, model_section),
+			source.from_config(doc, source_section),
+			mediawiki.API.from_config(doc, 'mwapi'),
+			doc[section]['loop_delay'],
+			doc[section]['changes_per_request'],
+			doc[section]['max_age'],
+			doc[section]['starting_rcid']
 		)
 			
