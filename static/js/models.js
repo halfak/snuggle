@@ -13,6 +13,13 @@ Model.Snuggler = Class.extend({
 	},
 	
 	/**
+	Check for presence of credentials.
+	*/
+	authenticated: function(){
+		return Boolean(this.creds)
+	},
+	
+	/**
 	Sets the credentials (usually after login).
 		
 	:Parameters:
@@ -303,7 +310,7 @@ Model.User.inflate = function(doc){
 	return new Model.User(
 		doc.id,
 		Model.User.Info.inflate(doc.info),
-		Model.User.Contribs.inflate(doc.contribs, new Date(doc.info.registration*1000)),
+		Model.User.Contribs.inflate(doc.contribs, new Date(doc.info.registration*1000), doc.id),
 		Model.User.Talk.inflate(doc.talk, doc.name),
 		Model.User.Category.inflate(doc.category)
 	)
@@ -324,13 +331,15 @@ Model.User.inflate = function(doc){
 			has_email : true | false
 				did the user include an email address when registering?
 		*/
-		init: function(name, registration, views, has_email, counts, reverted){
+		init: function(name, registration, views, has_email, counts, reverted, has_user, has_talk){
 			this.name         = name
 			this.registration = registration
 			this.views        = views || 0
 			this.has_email    = has_email
 			this.counts       = counts
 			this.reverted     = reverted
+			this.has_user     = has_user
+			this.has_talk     = has_talk
 			
 			this.changed  = new Event(this)
 		},
@@ -362,7 +371,9 @@ Model.User.inflate = function(doc){
 			doc.views,
 			doc.has_email || false,
 			doc.counts,
-			doc.reverted
+			doc.reverted,
+			doc.has_user, 
+			doc.has_talk
 		)
 	}
 	
@@ -373,9 +384,10 @@ Model.User.inflate = function(doc){
 			revisions : [`Model.User.Contribs.Revision`]
 				a id->revision lookup to load
 		*/
-		init: function(revisions, registration){
+		init: function(revisions, registration, user_id){
 			this.revisions    = revisions
 			this.registration = registration
+			this.user_id      = user_id
 			
 			this.revision_added    = new Event(this)
 			this.revision_replaced = new Event(this)
@@ -400,13 +412,13 @@ Model.User.inflate = function(doc){
 			}
 		}
 	})
-	Model.User.Contribs.inflate = function(doc, registration){
+	Model.User.Contribs.inflate = function(doc, registration, user_id){
 		revisions = {}
 		for(var id in doc){
-			var revision = new Model.User.Contribs.Revision.inflate(doc[id])
+			var revision = new Model.User.Contribs.Revision.inflate(doc[id], user_id)
 			revisions[revision.id] = revision
 		}
-		return new Model.User.Contribs(revisions, registration)
+		return new Model.User.Contribs(revisions, registration, user_id)
 	}
 	
 		/** Represents a revision in the contributions of a user */
@@ -425,13 +437,14 @@ Model.User.inflate = function(doc){
 					(Optional) a map of the reverting revision info {id: <int>, user: {id: <int>, name: <string>, ...} ...}
 					
 			*/
-			init: function(id, timestamp, page, comment, diff, revert){
+			init: function(id, timestamp, page, comment, diff, revert, user_id){
 				this.id        = id
 				this.timestamp = timestamp
 				this.page      = page
 				this.comment   = comment
 				this.diff      = diff
 				this.revert    = revert
+				this.user_id   = user_id
 				
 				this.reverted = new Event(this)
 		},
@@ -470,14 +483,15 @@ Model.User.inflate = function(doc){
 				this.reverted.notify(revert)
 			}
 		})
-		Model.User.Contribs.Revision.inflate = function(doc){
+		Model.User.Contribs.Revision.inflate = function(doc, user_id){
 			return new Model.User.Contribs.Revision(
 				doc._id,
 				new Date(doc.timestamp*1000),
 				doc.page,
 				doc.comment,
 				doc.diff,
-				doc.revert
+				doc.revert,
+				user_id
 			)
 		}
 	Model.User.Talk = Class.extend({

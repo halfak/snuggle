@@ -139,7 +139,7 @@ UI.EditCounts = Class.extend({
 	init: function(counts){
 		counts = counts || {}
 		
-		this.node = $("<span>")
+		this.node = $("<div>")
 			.addClass("edit_counts")
 		
 		this.total = {
@@ -192,3 +192,51 @@ UI.EditCounts.Graph = Class.extend({
 		}
 	}
 })
+
+
+UI.UTC = Class.extend({
+	init: function(username, has_user, has_talk){
+		this.node = $("<div>")
+			.addClass("utc")
+		
+		this.user_page = {
+			node: $("<a>")
+				.addClass("user_page")
+				.text("user")
+				.attr("href", SYSTEM.wiki.root + "/wiki/User:" + username)
+				.attr("target", "_blank")
+		}
+		this.node.append(this.user_page.node)
+		if(!has_user){
+			this.user_page.node.addClass("does_not_exist")
+		}
+		
+		this.talk_page = {
+			node: $("<a>")
+				.addClass("talk_page")
+				.text("talk")
+				.attr("href", SYSTEM.wiki.root + "/wiki/User_talk:" + username)
+				.attr("target", "_blank")
+		}
+		this.node.append(this.talk_page.node)
+		if(!has_talk){
+			this.talk_page.node.addClass("does_not_exist")
+		}
+		
+		this.contribs = {
+			node: $("<a>")
+				.addClass("contribs")
+				.text("contribs")
+				.attr("href", SYSTEM.wiki.root + "/wiki/Special:Contributions/" + username)
+				.attr("target", "_blank")
+		}
+		this.node.append(this.contribs.node)
+	},
+	hide: function(){
+		this.node.hide()
+	},
+	show: function(){
+		this.node.show()
+	}
+})
+

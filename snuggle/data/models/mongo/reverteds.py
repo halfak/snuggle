@@ -41,7 +41,7 @@ class Reverted:
 						'activity.revisions.%s.revert' % self.id: revision.deflate()
 					},
 					'$inc': {
-						'activity.reverted': 1
+						'activity.reverted': self.revision.user.id != revision.user.id
 					}
 				}
 			)

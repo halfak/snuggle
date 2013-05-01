@@ -159,54 +159,78 @@ class RecentChanges(Synchronizer):
 		# Update for all revisions to a page that could have reverted 
 		# one of our user's revisions
 		for reverted in self.model.reverteds.get(revision.page.id):
-			logger.debug(
-				"Updating reverted status of %s for %s." % (
-					reverted.id, reverted.revision.user.name
-				)
-			)
-			reverted.process(revision)
-			if reverted.complete(): logging.debug("Completed processing revisions for %s" % reverted.id)
-			
+			self.__update_reverted(reverted, revision)
 			relevant = True
 		
 		# Check if this revision was made by one of our users
 		if revision.user.id in self.model.users:
-			logger.debug(
-				"Adding revision %s for %s." % (
-					revision.id, revision.user.name
-				)
-			)
-			user = self.model.users.add_revision(revision)
-			
-			reverted = types.Reverted(
-				revision, 
-				self.source.history(
-					revision.page.id, 
-					revision.id, 
-					types.Reverted.HISTORY_LIMIT
-				)
-			)
-			self.model.reverteds.new(reverted)
-			
-			score = types.Score(
-				revision.id,
-				revision.user
-			)
-			self.model.scores.new(score)
-			
+			self.__add_revision_for_user(revision)
 			relevant = True
 		
-		#Check if revision to a talk page of one of our users
-		if revision.page.namespace == 3 and revision.page.title in self.model.talks:
-			talk = self.model.talks.get(revision.page.title)
-			if talk.last_id < revision.id:
-				logger.debug("Getting markup for %s." % revision.page.title)
-				id, markup = self.mwapi.get_markup(title="User_talk:" + revision.page.title)
-				talk.update(id, markup)
+		# Check if this revision was an edit to one of our users' talk
+		# pages or user pages.
+		if revision.page.title in self.model.talks:
 			
-			relevant = True
+			if revision.page.namespace == 3:
+				self.__update_talk(revision)
+				relevant = True
+			elif revision.page.namespace == 2:
+				self.__update_user_page(revision)
+				relevant = True
 		
 		return relevant
+	
+	def __update_reverted(self, reverted, revision):
+		logger.debug(
+			"Updating reverted status of %s for %s." % (
+				reverted.revision.id, reverted.revision.user.name
+			)
+		)
+		reverted.process(revision)
+		if reverted.complete(): logging.debug("Completed processing revisions for %s" % reverted.id)
+	
+	def __add_revision_for_user(self, revision):
+		logger.debug(
+			"Adding revision %s for %s." % (
+				revision.id, revision.user.name
+			)
+		)
+		user = self.model.users.add_revision(revision)
+		
+		reverted = types.Reverted(
+			revision, 
+			self.source.history(
+				revision.page.id, 
+				revision.id, 
+				types.Reverted.HISTORY_LIMIT
+			)
+		)
+		self.model.reverteds.new(reverted)
+		
+		score = types.Score(
+			revision.id,
+			revision.user
+		)
+		self.model.scores.new(score)
+	
+	def __update_talk(self, revision):
+		talk = self.model.talks.get(revision.page.title)
+		if talk.last_id < revision.id:
+			logger.debug("Getting markup for %s." % revision.page.title)
+			id, markup = self.mwapi.get_markup(title="User_talk:" + revision.page.title)
+			talk.update(id, markup)
+		
+		
+		logger.debug(
+			"Setting talk page for %s." % revision.page.title
+		)
+		self.model.users.set_talk(revision.page.title)
+		
+	def __update_user_page(self, revision):
+		logger.debug(
+			"Setting user page for %s." % revision.page.title
+		)
+		self.model.users.set_user(revision.page.title)
 	
 	@staticmethod
 	def from_config(doc, section):

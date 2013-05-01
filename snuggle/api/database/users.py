@@ -12,9 +12,12 @@ USER_FIELDS = [
 	'talk',
 	'category',
 	'desirability',
-	'views'
+	'views',
+	'has_user_page',
+	'has_talk_page'
 ]
 
+LAST_ACTIVE_DAYS = 5
 
 class Users:
 	
@@ -26,7 +29,8 @@ class Users:
 		return list(self.db.mongo.users.find(
 			{
 				'category.current': query['category'] if query['category'] != None else {'$exists': False},
-				'activity.counts.%s' % query['namespace']: {'$gt': query['min_edits']}
+				'activity.counts.%s' % query['namespace']: {'$gt': query['min_edits']},
+				'activity.last_activity': {'$gt': time.time() - LAST_ACTIVE_DAYS*60*60*24}
 			},
 			sort=[(query['sorted_by'], 1 if query['direction'] == "ascending" else -1)],
 			limit=query['limit'],

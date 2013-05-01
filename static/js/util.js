@@ -292,6 +292,7 @@ WikiDiff = {
 		}else{
 			LOGGING.debug(["Empty change diff", tr])
 		}
+		
 		return op
 		
 	}

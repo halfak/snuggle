@@ -275,7 +275,7 @@ Controller = Class.extend({
 			action,
 			function(html){
 				user_view.info.menu.menu.flyout.load_preview(action, html)
-			},
+			}.bind(this),
 			function(message, doc){
 				if(doc.code == "permissions"){
 					user_view.info.menu.menu.flyout.load_preview(
@@ -287,7 +287,7 @@ Controller = Class.extend({
 				}else{
 					alert(message)
 				}
-			}
+			}.bind(this)
 		)
 	},
 	_user_action_preview_timeout: function(_, user_view, action){

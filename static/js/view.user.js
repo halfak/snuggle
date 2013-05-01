@@ -128,6 +128,13 @@ View.User = Class.extend({
 			this.menu = new View.UserMenu()
 			this.name.node.append(this.menu.node)
 			
+			this.utc = new UI.UTC(
+				this.model.name, 
+				this.model.has_user,
+				this.model.has_talk
+			)
+			this.node.append(this.utc.node)
+			
 			this.meta = new UI.DefinitionList()
 			this.node.append(this.meta.node)
 			
@@ -144,10 +151,12 @@ View.User = Class.extend({
 			}else{
 				if(expanded){
 					this.node.addClass("expanded")
+					this.utc.show()
 					this.meta.show()
 					/*this.counts.show()*/
 				}else{
 					this.node.removeClass("expanded")
+					this.utc.hide()
 					this.meta.hide()
 					/*this.counts.hide()*/
 				}
@@ -211,29 +220,40 @@ View.User = Class.extend({
 				this.model = model
 				
 				this.node.addClass("ns_" + this.model.page.namespace)
-				this.reverted(Boolean(this.model.revert && !this.model.revert.self))
+				if(this.model.revert){
+					this.reverted(
+						true,
+						this.model.revert.user._id == 
+						this.model.user_id
+					)
+				}
 				
-				this.model.reverted.attach(function(_, rvt){this._reverted(rvt)}.bind(this))
 			},
 			id: function(){return this.model.id},
 			page: function(){return this.model.page},
 			timestamp: function(){return this.model.timestamp},
 			comment: function(){return this.model.comment},
 			revert: function(){return this.model.revert},
-			reverted: function(reverted){
+			self_revert: function(){
+				return (
+					this.model.revert && 
+					this.model.revert.user._id == this.model.user_id
+				)
+			},
+			reverted: function(reverted, self){
 				if(reverted === undefined){
 					return this.node.hasClass("reverted")
 				}else{
 					reverted = Boolean(reverted)
 					if(reverted){
 						this.node.addClass("reverted")
+						if(self){
+							this.node.addClass("self")
+						}
 					}else{
 						this.node.removeClass("reverted")
 					}
 				}
-			},
-			_reverted: function(model){
-				this.reverted(model.revert !== null)
 			}
 		})
 	View.User.Talk = UI.RevisionGraph.extend({
@@ -435,7 +455,7 @@ View.User = Class.extend({
 			},
 			render: function(history){
 				if(!history || history.length == 0){
-					this.pane.node.html("<p>This user had yet to be categorized.</p>")
+					this.pane.node.html("<p>This user has yet to be categorized.</p>")
 				}
 				else{
 					this.pane.node.html("")

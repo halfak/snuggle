@@ -57,7 +57,11 @@ div.user div.info .name:hover{
 		top: .2em;
 		right: .2em;
 	}
-	div.user div.info .name:hover .dropper, div.user div.info .name .dropper.expanded{
+	
+	div.user div.info.expanded .name .dropper {
+		display: block;
+	}
+	div.user div.info .name .dropper.expanded{
 		display: block;
 	}
 	/*div.user div.info .name .dropper .pane{
@@ -92,17 +96,29 @@ div.user div.info.viewed .name{
 	font-weight: normal;
 }
 
+div.user div.info div.utc{
+	margin: .5em 0px;
+}
+div.user div.info div.utc a{
+	padding: 0px .5em;
+	text-decoration: none;
+}
+div.user div.info div.utc a.does_not_exist{
+	color: #F00;
+	
+}
+
 div.user div.info dl{
 	margin: .5em 0px;
 	font-size: .9em;
 }
 
-div.user div.info span.edit_counts div.dropper{
+div.user div.info div.edit_counts div.dropper{
 	margin-left: .25em;
 	vertical-align: top;
 }
 
-	div.user div.info span.edit_counts div.dropper .pane{
+	div.user div.info div.edit_counts div.dropper .pane{
 		background: #fff;
 		border: 1px solid black;
 		padding: .5em;
@@ -110,23 +126,23 @@ div.user div.info span.edit_counts div.dropper{
 		z-index: 8;
 		width: 15em;
 	}
-	div.user div.info span.edit_counts div.dropper .pane table{
+	div.user div.info div.edit_counts div.dropper .pane table{
 		width: 100%;
 		font-size: .9em;
 	}
-		div.user div.info span.edit_counts div.dropper .pane th{
+		div.user div.info div.edit_counts div.dropper .pane th{
 			text-align: right;
 		}
-		div.user div.info span.edit_counts div.dropper .pane td{
+		div.user div.info div.edit_counts div.dropper .pane td{
 			width: 100%;
 			position: relative;
 			padding-left: .5em;
 		}
-		div.user div.info span.edit_counts div.dropper .pane td div.bar{
+		div.user div.info div.edit_counts div.dropper .pane td div.bar{
 			border: 1px solid #666;
 			overflow: visible;
 		}
-		div.user div.info span.edit_counts div.dropper .pane td div.bar span{
+		div.user div.info div.edit_counts div.dropper .pane td div.bar span{
 			padding-left: .5em;
 		}
 	
@@ -149,54 +165,63 @@ div.user div.contribs div.revision{
 	/*background: #eee;*/
 }
 .revision{
-	min-width: 1em;
+	/*min-width: 1em;*/
 }
 .revision.ns_0{
-	background: #dfd;
-}
-.revision.ns_1{
-	background: #afa;
-}
-.revision.ns_2{
-	background: #ddf;
-}
-.revision.ns_3{
-	background: #aaf;
-}
-.revision.ns_4{
-	background: #dff;
-}
-.revision.ns_5{
-	background: #aff;
-}
-.revision.ns_6{
-	background: #ffd;
-}
-.revision.ns_7{
-	background: #ffa;
-}
-.revision.ns_10{
-	background: #fdd;
-}
-.revision.ns_11{
-	background: #faa;
-}
-.revision.ns_12{
 	background: #eee;
 }
+.revision.ns_1{
+	background: rgb(255, 72, 158);
+}
+.revision.ns_2{
+	background: rgb(230, 60, 255);
+}
+.revision.ns_3{
+	background: rgb(0, 117, 255);
+}
+.revision.ns_4{
+	background: rgb(40, 162, 255);
+}
+.revision.ns_5{
+	background: rgb(238, 0, 128);
+}
+.revision.ns_6{
+	background: #fdfa00;
+}
+.revision.ns_7{
+	background: #aeac00;
+}
+.revision.ns_8{
+	background: #ccc;
+}
+.revision.ns_9{
+	background: #ccc;
+}
+.revision.ns_10{
+	background: #3737ff;
+}
+.revision.ns_11{
+	background: #3737ff;
+}
+.revision.ns_12{
+	background: #bbb;
+}
 .revision.ns_13{
-	background: #ddd;
+	background: #aaa;
 }
 .revision.ns_14{
-	background: #afd;
+	background: #aff;
 }
 .revision.ns_15{
-	background: #8fa;
+	background: #8aa;
 }
 .revision.reverted{
 	background-image: url('../img/dot.png');
-	background-position: center center;
+	background-position: center;
 	background-repeat: no-repeat;
+}
+.revision.reverted.self{
+	background-image: url('../img/empty_dot.png');
 }
 
 /********************************Talk******************************************/
@@ -253,6 +278,7 @@ div.user div.category span.header{
 	top: 0px;
 	left: 1em;
 	font-weight: bold;
+	z-index: 1;
 }
 
 div.user div.category div.history{
@@ -268,6 +294,7 @@ div.user div.category div.history{
 		border-radius: 0px 0px 5px 5px;
 		border-top: 0px;
 		padding: 0px 1em;
+		background: #ddd;
 		box-shadow: inset 0px -.25em .5em rgba(0,0,0,.2);
 		text-shadow: 1px 1px rgba(255,255,255,.5);
 	}

@@ -193,7 +193,9 @@ LocalServer.Users.Cursor = Class.extend({
 				registration: doc.registration,
 				reverted: doc.activity.reverted || 0,
 				counts: doc.activity.counts,
-				views: doc.views
+				views: doc.views,
+				has_user: doc.has_user_page,
+				has_talk: doc.has_talk_page
 			},
 			contribs: doc.activity.revisions,
 			talk: {
@@ -237,7 +239,7 @@ MediaWiki.Revisions = Class.extend({
 						}
 					}
 					else if(doc.query.badrevids){
-						error("Diff missing for revision id " + id + ".  It might have been deleted.")
+						error("Could not get diff for revision " + id + ".  It may have been deleted.")
 					}else{
 						error("Unexpected response format.")
 						LOGGING.error(doc)

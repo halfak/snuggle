@@ -203,3 +203,6 @@ div.revision_graph div.revision_details{
 			background-position: center left;
 			background-repeat: no-repeat;
 		}
+		div.revision_details div.revert.self span.preamble{
+			background-image: url(../img/empty_dot.png);
+		}

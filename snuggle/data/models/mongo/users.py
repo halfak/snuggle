@@ -46,3 +46,23 @@ class Users:
 			},
 			safe=True
 		)
+	
+	def set_talk(self, title):
+		name = types.User.normalize(title)
+		self.db.users.update(
+			{'name': name}, 
+			{'$set': {
+				'has_talk_page': True
+			}},
+			safe=True
+		)
+	
+	def set_user(self, title):
+		name = types.User.normalize(title)
+		self.db.users.update(
+			{'name': name}, 
+			{'$set': {
+				'has_user_page': True
+			}},
+			safe=True
+		)

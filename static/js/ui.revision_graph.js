@@ -53,6 +53,7 @@ UI.RevisionDetails = Class.extend({
 			this.revision.render(revision.id(), revision.timestamp(), revision.comment())
 			
 			this.revert.render(revision.revert())
+			this.revert.self(revision.self_revert())
 			
 			//
 			//  This is probably wrong.
@@ -226,6 +227,14 @@ UI.RevisionDetails.Revert = Class.extend({
 		this.node.show()
 	},
 	
+	self: function(self_revert){
+		if(self_revert){
+			this.node.addClass("self")
+		}else{
+			this.node.removeClass("self")
+		}
+	},
+	
 	/**
 	Renders a revert if one is passed.  If undefined or null are passed, the
 	revert widget is hidden.
@@ -293,6 +302,7 @@ UI.RevisionDetails.Diff = Class.extend({
 		ops = WikiDiff.parse($("<table>" + diff + "</table>"))
 		for(var i in ops){var op = ops[i]
 			if(op.op == "change"){
+				console.log(op)
 				var change = $('<div>')
 					.addClass(op.op)
 				
@@ -316,7 +326,6 @@ UI.RevisionDetails.Diff = Class.extend({
 				next = ops[i+1]
 				if(next && next.op == "change" && !next.context){
 					context.html(op.content)
-					console.log("context!")
 				}
 				this.node.append(context)
 			}

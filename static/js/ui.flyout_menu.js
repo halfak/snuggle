@@ -22,6 +22,7 @@ UI.FlyoutMenu = Class.extend({
 		this.submitted     = new Event(this)
 		this.changed       = new Event(this)
 		this.action_loaded = new Event(this)
+		
 	},
 	_submitted: function(_, action){
 		this.submitted.notify(action, this.flyout.controls.watch.checked())

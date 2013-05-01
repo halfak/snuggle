@@ -17,6 +17,8 @@ View.UserMenu = UI.Dropper.extend({
 		this.submitted = new Event(this)
 		this.changed = new Event(this)
 		this.action_loaded = new Event(this)
+		
+		this.dropped.attach(this._dropped.bind(this))
 	},
 	_submitted: function(_, action, watch){
 		this.submitted.notify(action, watch)
