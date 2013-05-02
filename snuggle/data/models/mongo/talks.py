@@ -3,8 +3,6 @@ import re
 from snuggle.data import types
 from snuggle.mediawiki import parsing, templates
 
-MARKUP_HEADER_RE = re.compile(r"(^|\n)==([^=]+)==")
-
 tokenizer = parsing.Tokenizer(parsing.TOKENS)
 templates = templates.Templates(templates.TEMPLATES)
 
@@ -39,7 +37,7 @@ class Talk:
 	def update(self, revId, markup):
 		topics  = []
 		
-		for title, body in self.sections(markup):
+		for title, body in parsing.sections(markup):
 			display = "".join(t.display() for t in tokenizer.tokenize(title))
 			
 			
@@ -56,14 +54,8 @@ class Talk:
 					'rev_id': revId,
 					'topics': topics
 				}
-			}}
+			}},
+			safe=True
 		)
 	
 	@staticmethod
-	def sections(markup):
-		matches = list(MARKUP_HEADER_RE.finditer(markup))
-		for i, match in enumerate(matches):
-			if (i+1) < len(matches): next = matches[i+1].start()
-			else:                    next = len(markup)
-			
-			yield match.group(2).strip(), markup[match.end():next]

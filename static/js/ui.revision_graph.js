@@ -300,9 +300,8 @@ UI.RevisionDetails.Diff = Class.extend({
 	diff: function(diff){
 		this.clear()
 		ops = WikiDiff.parse($("<table>" + diff + "</table>"))
-		for(var i in ops){var op = ops[i]
+		for(var i=0; i<ops.length; i++){var op = ops[i]
 			if(op.op == "change"){
-				console.log(op)
 				var change = $('<div>')
 					.addClass(op.op)
 				
@@ -322,12 +321,21 @@ UI.RevisionDetails.Diff = Class.extend({
 			}else if(op.op == "context"){
 				var context = $('<div>')
 					.addClass("context")
-					
-				next = ops[i+1]
-				if(next && next.op == "change" && !next.context){
-					context.html(op.content)
+				
+				var next = ops[i+1]
+				if(next !== undefined){
+					if(next.op == "change" && !next.context){
+						context.html(op.content)
+					}else if(next.op == "added_line" || next.op == "removed_line"){
+						context.html(op.content)
+					}
 				}
 				this.node.append(context)
+			}else{
+				var operation = $('<div>')
+					.addClass(op.op)
+				
+				this.node.append(operation)
 			}
 		}
 	},

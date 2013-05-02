@@ -183,8 +183,12 @@ WikiDiff = {
 			return this.parseLineNo(tr)
 		}else if(tr.find('td.diff-context').length > 0){
 			return this.parseContext(tr)
-		}else if(tr.find('td.diff-addedline').length > 0 || tr.find('td.diff-deletedline').length > 0){
+		}else if(tr.find('td.diff-addedline > div').length > 0 || 
+			     tr.find('td.diff-deletedline > div').length > 0){
 			return this.parseChange(tr)
+		}else if(tr.find('td.diff-addedline').length > 0 || 
+			     tr.find('td.diff-deletedline').length > 0){
+			return this.parseLine(tr)
 		}else{
 			throw ["Could not parse.", tr]
 		}
@@ -208,7 +212,20 @@ WikiDiff = {
 		return {
 			op: "context", 
 			content: tr.find('td.diff-context').first().text()
-		}	
+		}
+	},
+	parseLine: function(tr){
+		if(tr.find('td.diff-addedline').length > 0){
+			return {
+				op: "added_line",
+				content: ""
+			}
+		}else if(tr.find('td.diff-deletedline').length > 0){
+			return {
+				op: "removed_line",
+				content: ""
+			}
+		}
 	},
 	parseChange: function(tr){
 		op = {

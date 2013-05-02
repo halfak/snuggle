@@ -57,6 +57,7 @@ div.revision_graph div.day_grid{
 	border-left: 1px solid #bbb;
 	height: 100%;
 	width: 100%;
+	box-shadow: inset 0px 10px 10px rgba(0,0,0,.2);
 }
 div.revision_graph.expanded div.day_grid{
 	border-bottom: 1px solid #bbb;
@@ -185,6 +186,19 @@ div.revision_graph div.revision_details{
 			color: #000;
 			background: #FBB;
 			text-decoration: line-through;
+		}
+		div.revision_details div.diff div.removed_line{
+			border: 1px solid #F44;
+			background: #FDD;
+			min-height: 1em;
+			min-height: 1.5em;
+			margin-bottom: 1px;
+		}
+		div.revision_details div.diff div.added_line{
+			border: 1px solid #4F4;
+			background: #DFD;
+			min-height: 1.5em;
+			margin-bottom: 1px;
 		}
 	
 	div.revision_details div.revision{

@@ -82,3 +82,17 @@ class Tokenizer:
 			else:
 				Token, offset = self.tokenMap[match.lastindex]
 				yield Token(match, offset-1)
+			
+		
+	
+
+
+MARKUP_HEADER_RE = re.compile(r"(^|\n)==([^=]+)==[\ \t]*\n")
+
+def sections(markup):
+	matches = list(MARKUP_HEADER_RE.finditer(markup))
+	for i, match in enumerate(matches):
+		if (i+1) < len(matches): next = matches[i+1].start()
+		else:                    next = len(markup)
+		
+		yield match.group(2).strip(), markup[match.end():next]

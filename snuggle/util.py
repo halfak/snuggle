@@ -23,4 +23,3 @@ def load_json_config(f):
 	doc_content = f.read()
 	cleaned_content = COMMENT_RE.sub("", doc_content)
 	return json.loads(cleaned_content)
-	
