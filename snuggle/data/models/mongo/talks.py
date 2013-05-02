@@ -58,4 +58,3 @@ class Talk:
 			safe=True
 		)
 	
-	@staticmethod
