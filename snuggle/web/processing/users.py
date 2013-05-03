@@ -26,14 +26,14 @@ def report(user, action):
 
 
 class Users:
-	def __init__(self, db, config):
-		self.db = db
-		self.mw = mediawiki.MW(config['mediawiki']['api_url'])
+	def __init__(self, model, mwapi):
+		self.model = model
+		self.mwapi = mwapi
 		
 	
 	def view(self, session, user_id):
 		try:
-			self.db.users.view(user_id, session['snuggler']['meta'])
+			self.model.users.add_view(user_id)
 		except Exception:
 			return responses.database_error("storing a view for user %s" % user_id)
 		
@@ -41,39 +41,41 @@ class Users:
 	
 	def get(self, query):
 		try:
-			users = list(self.db.users.get(query))
+			users = list(self.model.users.query(**query))
 		except Exception:
 			return responses.database_error("getting a set of users with query %s" % query)
 		
 		return responses.success(users)
 	
-	def rate(self, session, rating):
+	def categorize(self, session, user_id, category):
 		try:
-			doc = self.db.users.rate(rating['id'], rating['category'], session['snuggler']['meta'])
+			doc = self.db.users.rate(
+				user_id, 
+				types.Categorization(session['snuggler']['user'], category)
 		except Exception:
-			return responses.database_error("storing a rating for user %s" % rating['id'])
+			return responses.database_error("storing a rating for user %s" % user_id)
 		
 		return responses.success(doc)
 	
-	def watch(self, session, user):
+	def watch(self, session, user_name):
 		try:
-			self.mw.pages.watch(
-				"User:" + user['name'],
+			self.mwapi.pages.watch(
+				"User:" + user_name,
 				cookies=session['snuggler']['cookie']
 			)
-			self.mw.pages.watch(
-				"User_talk:" + user['name'],
+			self.mwapi.pages.watch(
+				"User_talk:" + user_name,
 				cookies=session['snuggler']['cookie']
 			)
 			
 			return responses.success(True)
 			
 		except mediawiki.MWAPIError as e:
-			return responses.mediawiki_error("Adding %r to watchlist " % user['name'], e.code, e.info)
+			return responses.mediawiki_error("Adding %r to watchlist " % user_name, e.code, e.info)
 		except mediawiki.ConnectionError as e:
-			return responses.mediawiki_error("Adding %r to watchlist " % user['name'], "Connection Failed", e.info)
+			return responses.mediawiki_error("Adding %r to watchlist " % user_name, "Connection Failed", e.info)
 		except Exception as e:
-			return responses.general_error("Adding %r to watchlist " % user['name'])
+			return responses.general_error("Adding %r to watchlist " % user_name)
 	
 	def action(self, session, doc):
 		try:
@@ -96,7 +98,9 @@ class Users:
 					cookies=session['snuggler']['cookie']
 				)
 			else:
-				return responses.general_error("performing a user action.  The action %s is not recognized." % doc['action']['action'])
+				return responses.general_error(
+					"performing a user action.  The action %s is not recognized." % doc['action']['action']
+				)
 			
 			return responses.success(True)
 			
@@ -128,7 +132,9 @@ class Users:
 					cookies=session['snuggler']['cookie']
 				)
 			else:
-				return responses.general_error("preview some markup.  The action %s is not recognized." % doc['action']['action'])
+				return responses.general_error(
+					"preview some markup.  The action %s is not recognized." % doc['action']['action']
+				)
 			
 			return responses.success(html)
 			

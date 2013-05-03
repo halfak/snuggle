@@ -152,10 +152,11 @@ class Scores(Synchronizer):
 	
 	@staticmethod
 	def from_config(doc, model):
-		score_module = load_class(doc['scores']['module'])
+		ScoresModule = load_class(doc['scores']['module'])
 		
-		return Scores(,
-			score_module.from_config(doc),
+		return Scores(
+			model,
+			ScoresModule.from_config(doc),
 			doc[section]['loop_delay'],
 			doc[section]['scores_per_request'],
 			doc[section]['max_id_distance']

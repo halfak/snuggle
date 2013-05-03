@@ -1,9 +1,11 @@
-from ..util import mediawiki, responses
+
+from snuggle.web.util import responses
 
 class Snugglers:
 	
-	def __init__(self, db, config):
-		self.mw = mediawiki.MW(config['mediawiki']['api_url'])
+	def __init__(self, model, mwapi):
+		self.model = model
+		self.mwapi = mwapi
 	
 	def authenticate(self, session, creds):
 		try:
@@ -23,13 +25,10 @@ class Snugglers:
 			return responses.general_error("checking credentials with mediawiki")
 		
 		session['snuggler'] = {
-			'meta': {
-				'id': id,
-				'name': name
-			},
+			'user': types.User(id, name),
 			'cookie': cookie
 		}
-		return responses.success(session['snuggler']['meta'])
+		return responses.success(session['snuggler']['user'])
 	
 	def log_out(self, session):
 		if 'snuggler' in session:
@@ -40,7 +39,7 @@ class Snugglers:
 		
 	def status(self, session):
 		if 'snuggler' in session:
-			return responses.success({'logged_in': True, 'user': session['snuggler']['meta']})
+			return responses.success({'logged_in': True, 'user': session['snuggler']['user'].deflate()})
 		else:
 			return responses.success({'logged_in': False})
 		

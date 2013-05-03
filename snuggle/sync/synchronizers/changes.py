@@ -231,31 +231,35 @@ class Changes(Synchronizer):
 		self.model.scores.new(score)
 	
 	def __update_talk(self, revision):
-		talk = self.model.talks.get(revision.page.title)
-		if talk.last_id < revision.id:
-			logger.debug("Getting markup for %s." % revision.page.title)
-			id, markup = self.mwapi.get_markup(title="User_talk:" + revision.page.title)
-			talk.update(id, markup)
-		
-		
 		logger.debug(
 			"Setting talk page for %s." % revision.page.title
 		)
-		self.model.users.set_talk(revision.page.title)
+		self.model.users.set_talk_page(revision.page.title)
+		
+		try:
+			talk = self.model.user.get_talk(title=revision.page.title)
+			if talk.last_id < revision.id:
+				logger.debug("Getting markup for %s." % revision.page.title)
+				id, markup = self.mwapi.pages.get_markup(title="User_talk:" + revision.page.title)
+				talk.update(id, markup)
+			
+		except KeyError as e:
+			pass
+		
 		
 	def __update_user_page(self, revision):
 		logger.debug(
 			"Setting user page for %s." % revision.page.title
 		)
-		self.model.users.set_user(revision.page.title)
+		self.model.users.set_user_page(revision.page.title)
 	
 	@staticmethod
 	def from_config(doc, model):
-		changes_module = import_class(doc['changes']['module'])
+		Changes = import_class(doc['changes']['module'])
 		
 		return RecentChanges(
 			model,
-			changes_module.from_config(doc),
+			Changes.from_config(doc),
 			mediawiki.API.from_config(doc),
 			doc[section]['loop_delay'],
 			doc[section]['changes_per_request'],

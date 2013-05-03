@@ -19,6 +19,12 @@ i18n:
   snuggle: Snuggle
   snuggler: Snuggler
   wiki_name: English Wikipedia
+  comments:
+    send_message: "New message."
+    teahouse_invite: "Invitation to the teahouse."
+    report: "Reporting to AIV."
+    suffix: ' ([[WP:Snuggle|Snuggle]])'
+  
 
 # Namespaces are configurable for MediaWiki installations.  This datastructure
 # describes the configuration of the English Wikipedia.  Note that the Main 

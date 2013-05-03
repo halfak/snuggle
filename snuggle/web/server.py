@@ -8,14 +8,12 @@ from . import database, processing, routing
 logger = logging.getLogger("snuggle.api.server")
 
 def load_config(filename):
-	return load_json_config(open(filename))
+	return load_yaml_config(open(filename))
 
-def application(config):
-	#configure db
-	db = database.DB(config)
+def application(doc):
 	
 	#configure processors
-	processing.configure(db, config)
+	processing.configure(doc)
 	
 	# Generates a random 25 character sequence
 	secret = "".join(chr(random.randrange(32,125)) for i in xrange(25))

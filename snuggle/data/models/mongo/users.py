@@ -93,6 +93,26 @@ class Users:
 			safe=True
 		)
 	
+	def get_talk(self, user_id=None, name=None, title=None):
+		if user_id != None:
+			spec = {'_id': user_id}
+		elif name != None:
+			spec = {'name': name}
+		elif title != None:
+			name = types.User.normalize(title)
+			spec = {'name': name}
+		else:
+			raise TypeError('get_talk expects an argument')
+		
+		doc = self.mongo.db.users.find_one(
+			spec,
+			fields={'talk': 1}
+		)
+		if doc != None:
+			return types.Talk.inflate(doc)
+		else:
+			raise KeyError(str(spec))
+	
 	def set_talk(self, user_id, talk):
 		self.mongo.db.users.update(
 			{'_id': user_id},
@@ -122,7 +142,7 @@ class Users:
 			safe=True
 		)
 	
-	def add_view(self, user_id, snuggler=None):
+	def add_view(self, user_id):
 		self.mongo.db.users.update(
 			{'_id': user_id},
 			{
