@@ -45,10 +45,13 @@ def main():
 	else:
 		run(args.config, args.debug)
 
-def load_synchronizers(config_doc):
-	for sync_section in config_doc['synchronizers']:
-		sync_config = config_doc[sync_section]
-		Synchronizer = import_class(sync_config['module'])
+def load_synchronizers(doc):
+	
+	model_module = load_class(doc['model']['module'])
+	model = model_module.from_config(doc)
+	
+	for sync_name in doc['sync']['synchronizers']:
+		Synchronizer = import_class(doc[sync_name]['module'])
 		yield Synchronizer.from_config(config_doc, sync_section)
 		
 

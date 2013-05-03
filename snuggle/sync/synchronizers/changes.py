@@ -1,21 +1,21 @@
 import logging, time, traceback
 
 from snuggle import mediawiki
-from snuggle.util import import_class
 from snuggle.data import types
+from snuggle.util import import_class
 
 from .synchronizer import Synchronizer
 
-logger = logging.getLogger("snuggle.sync.synchronizers.recent_changes")
+logger = logging.getLogger("snuggle.sync.synchronizers.changes")
 
 
-class RecentChanges(Synchronizer): 
+class Changes(Synchronizer): 
 	"""
 	Synchronizes from a recent changes feed.
 	
 	TODO: threading
 	"""
-	def __init__(self, model, source, mwapi, 
+	def __init__(self, model, changes, mwapi, 
 		     loop_delay, changes_per_request, max_age, starting_rcid):
 		"""
 		:Parameters:
@@ -64,7 +64,7 @@ class RecentChanges(Synchronizer):
 			start = time.time()
 			
 			# Get changes
-			changes = self.source.changes(
+			changes = self.changes.read(
 				last_rcid, 
 				self.changes_per_request
 			)
@@ -186,8 +186,25 @@ class RecentChanges(Synchronizer):
 				reverted.revision.id, reverted.revision.user.name
 			)
 		)
-		reverted.process(revision)
-		if reverted.complete(): logging.debug("Completed processing revisions for %s" % reverted.id)
+		if reverted.check(revision): #Reverted!
+			self.model.users.set_reverted(
+				reverted.revision.user_id,
+				reverted.revision.id,
+				revision
+			)
+			self.model.reverteds.remove(reverted.id)
+			logging.debug("Revision %s by %s was reverted by %s" % (
+					reverted.revision.id,
+					reverted.revision.user.id,
+					revision.user.id
+				)
+			)
+			
+		if reverted.done():
+			self.model.reverteds.remove(reverted)
+			logging.debug("Completed processing revisions for %s" % reverted.id)
+		else:
+			self.model.reverted.update(reverted)
 	
 	def __add_revision_for_user(self, revision):
 		logger.debug(
@@ -233,17 +250,13 @@ class RecentChanges(Synchronizer):
 		self.model.users.set_user(revision.page.title)
 	
 	@staticmethod
-	def from_config(doc, section):
-		model_section = doc[section]['model']
-		model = import_class(doc[model_section]['module'])
-		
-		source_section = doc[section]['source']
-		source = import_class(doc[source_section]['module'])
+	def from_config(doc, model):
+		changes_module = import_class(doc['changes']['module'])
 		
 		return RecentChanges(
-			model.from_config(doc, model_section),
-			source.from_config(doc, source_section),
-			mediawiki.API.from_config(doc, 'mwapi'),
+			model,
+			changes_module.from_config(doc),
+			mediawiki.API.from_config(doc),
 			doc[section]['loop_delay'],
 			doc[section]['changes_per_request'],
 			doc[section]['max_age'],

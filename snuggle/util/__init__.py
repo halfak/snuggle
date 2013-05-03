@@ -1,4 +1,4 @@
-import importlib, re, json
+import importlib, re, json, yaml
 
 COMMENT_RE = re.compile(
 	r'/\*(.|\n|\r)*?\*/',
@@ -23,3 +23,6 @@ def load_json_config(f):
 	doc_content = f.read()
 	cleaned_content = COMMENT_RE.sub("", doc_content)
 	return json.loads(cleaned_content)
+
+def load_yaml_config(f):
+	return yaml.load(f)

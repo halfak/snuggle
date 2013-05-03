@@ -1,17 +1,4 @@
-db.users.ensureIndex({'name': 1})
-db.users.ensureIndex({'registration': 1})
-db.changes.ensureIndex({'timestamp': 1})
-db.reverteds.ensureIndex({'revision.user._id': 1})
-db.reverteds.ensureIndex({'revision.page._id': 1})
-
-db.users.remove()
-db.reverteds.remove()
-db.changes.remove()
-db.scores.remove()
-
-
-//For sorting
-
+//For user sorting
 db.users.ensureIndex({'activity.counts.all': 1, 'registration': 1})
 db.users.ensureIndex({'activity.counts.all': 1, 'activity.reverted': 1})
 db.users.ensureIndex({'activity.counts.all': 1, 'activity.last_timestamp': -1})

@@ -166,3 +166,12 @@ class Templates:
 			template, offset = self.templateMap[match.lastindex]
 			yield template(match, offset)
 		
+templates = None
+
+def classes(markup):
+	global templates
+	if templates == None:
+		templates = Templates(TEMPLATES)
+	
+	return templates.classes(markup)
+		

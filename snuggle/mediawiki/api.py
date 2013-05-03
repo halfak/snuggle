@@ -47,9 +47,9 @@ class API:
 		
 	
 	@staticmethod
-	def from_config(doc, section):
+	def from_config(doc):
 		
 		return API(
-			doc[section]['uri'], 
-			headers=doc[section]['headers']
+			doc['mediawiki']['api']['uri'], 
+			doc['mediawiki']['api'].get('headers')
 		)

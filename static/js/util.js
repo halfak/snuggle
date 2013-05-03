@@ -169,7 +169,7 @@ Page = {
 
 WikiDiff = {
 	example_table: $("<table><tr>\n  <td colspan=\"2\" class=\"diff-lineno\">Line 1:<\/td>\n  <td colspan=\"2\" class=\"diff-lineno\">Line 1:<\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>{{user info<\/div><\/td>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>{{user info<\/div><\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| full name = Aaron Halfaker<\/div><\/td>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| full name = Aaron Halfaker<\/div><\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">\u2212<\/td>\n  <td class=\"diff-deletedline\"><div>| <span class=\"diffchange diffchange-inline\">Aaron_Halfaker<\/span>image name = <span class=\"diffchange diffchange-inline\">Aaron_Halfaker_sunburst<\/span>.jpg<\/div><\/td>\n  <td class=\"diff-marker\">+<\/td>\n  <td class=\"diff-addedline\"><div>| image name = <span class=\"diffchange diffchange-inline\">Aaron_Halfaker<\/span>.jpg<\/div><\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| hover text = Aaron Halfaker, Science Man<\/div><\/td>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| hover text = Aaron Halfaker, Science Man<\/div><\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| job title = Research Analyst<\/div><\/td>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| job title = Research Analyst<\/div><\/td>\n<\/tr>\n</table>"),
-	line_re: /Line\ ([0-9]+):/,
+	line_re: /Line\ (([0-9]+,?)+):/,
 	parse: function(table){
 		var trs = table.find("tr")
 		var ops = []
@@ -199,7 +199,7 @@ WikiDiff = {
 		if(match){
 			return {
 				op: "lineno", 
-				line: parseInt(match[1])
+				line: parseInt(match[1].replace(",", ""))
 			}
 		}else{
 			throw (

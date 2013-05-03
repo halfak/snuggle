@@ -7,7 +7,7 @@ class MySQL:
 	def __init__(self, *args, **kwargs):
 		self.conn = oursql.connect(*args, **kwargs)
 	
-	def changes(self, since, limit=None):
+	def read(self, since, limit=None):
 		query = """
 			SELECT
 				rc_id,
@@ -68,10 +68,10 @@ class MySQL:
 		return history
 	
 	@staticmethod
-	def from_config(doc, section):
+	def from_config(doc):
 		kwargs = dict(
 			(key, value) for key, value
-			in doc[section].iteritems() if key != "module"
+			in doc['changes'].iteritems() if key != "module"
 		)
 		
 		return MySQL(**kwargs)
@@ -95,7 +95,6 @@ class Change(types.Change):
 		)
 	
 
-# TODO: Fix all the stuff below for new work in data.types
 class ChangeRevision(types.ChangeRevision):
 	
 	@staticmethod
@@ -118,9 +117,7 @@ class NewUser(types.NewUser):
 	def fromRow(row): return NewUser(
 		row['user_id'], 
 		unicode(row['user_name'], 'utf-8', 'replace'), 
-		int(row['timestamp']),
-		types.Activity(),
-		types.Desirability()
+		int(row['timestamp'])
 	)
 
 class User(types.User):

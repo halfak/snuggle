@@ -2,7 +2,7 @@ import requests
 
 class NoScore(Exception): pass
 
-class API:
+class STiki:
 	
 	NoScore = NoScore
 	
@@ -28,9 +28,9 @@ class API:
 		return float(response.content)
 	
 	@staticmethod
-	def from_config(doc, section):
+	def from_config(doc):
 		
 		return API(
-			doc[section]['uri'], 
-			headers=doc[section]['headers']
+			doc['scores']['api']['uri'], 
+			doc['scores']['api'].get('headers')
 		)

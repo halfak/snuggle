@@ -13,8 +13,8 @@ class Scores(Synchronizer):
 	synchronizer is used to keep the "desirability" score up to date for a 
 	user.
 	"""
-	def __init__(self, model, stiki_api, 
-		loop_delay, scores_per_request, max_id_distance):
+	def __init__(self, model, scores, 
+		loop_delay, scores_per_request, min_attempts, max_id_distance):
 		"""
 		:Parameters:
 			model: `snuggle.data.models.Model`
@@ -26,13 +26,14 @@ class Scores(Synchronizer):
 		Synchronizer.__init__(self)
 		
 		# Resources
-		self.model = model
-		self.stiki_api = stiki_api
+		self.model  = model
+		self.scores = scores
 		
 		# Behavior
-		self.loop_delay = loop_delay
-		self.scores_per_request = scores_per_request
-		self.max_id_distance  = max_id_distance
+		self.loop_delay         = float(loop_delay)
+		self.scores_per_request = int(scores_per_request)
+		self.min_attempts       = int(min_attempts)
+		self.max_id_distance    = int(max_id_distance)
 		
 		# Status
 		self.up = False
@@ -78,7 +79,9 @@ class Scores(Synchronizer):
 					
 				#Cleanup scores.
 				self.scores_dropped += self.model.scores.cull(
-					id_less_than=last_scored_id - self.max_id_distance
+					self.min_attempts,
+					id_less_than=last_scored_id - self.max_id_distance,
+					
 				)
 			except Exception as e:
 				logger.error(
@@ -109,7 +112,7 @@ class Scores(Synchronizer):
 		for score in scores:
 			try:
 				# Get score
-				value = self.stiki_api.lookup(score.id)
+				value = self.scores.lookup(score.id)
 				score.set(value)
 				
 				yield score
@@ -148,13 +151,11 @@ class Scores(Synchronizer):
 			return "Offline"
 	
 	@staticmethod
-	def from_config(doc, section):
-		model_section = doc[section]['model']
-		model = import_class(doc[model_section]['module'])
+	def from_config(doc, model):
+		score_module = load_class(doc['scores']['module'])
 		
-		return Scores(
-			model.from_config(doc, model_section),
-			stiki.API.from_config(doc, "stiki"),
+		return Scores(,
+			score_module.from_config(doc),
 			doc[section]['loop_delay'],
 			doc[section]['scores_per_request'],
 			doc[section]['max_id_distance']

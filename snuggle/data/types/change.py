@@ -10,19 +10,24 @@ class Change(DataType):
 		'new revision': ChangeRevision
 	}
 	
-	def __init__(self, id, timestamp, type, change):
+	def __init__(self, id, timestamp, type, change, error=None):
 		self.id        = int(id)
 		self.timestamp = int(timestamp)
-		self.type      = type
+		self.type      = type; assert type in self.TYPES
 		self.change    = change
+		self.error     = error
 		
+	
+	def set_error(self, error):
+		self.error = unicode(error)
 	
 	def deflate(self):
 		return {
 			'_id':       self.id,
 			'timestamp': self.timestamp,
 			'type':      self.type,
-			'change':    self.change.deflate()
+			'change':    self.change.deflate(),
+			'error':     self.error
 		}
 	
 	@staticmethod
@@ -31,5 +36,6 @@ class Change(DataType):
 			json['_id'],
 			json['timestamp'],
 			json['type'],
-			Change.TYPES[json['type']].inflate(json['change'])
+			Change.TYPES[json['type']].inflate(json['change']),
+			json['error']
 		)
