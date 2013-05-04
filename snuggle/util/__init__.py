@@ -1,5 +1,7 @@
 import importlib, re, json, yaml
 
+from . import desirability
+
 COMMENT_RE = re.compile(
 	r'/\*(.|\n|\r)*?\*/',
 	re.DOTALL | re.MULTILINE

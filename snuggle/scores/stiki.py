@@ -30,7 +30,7 @@ class STiki:
 	@staticmethod
 	def from_config(doc):
 		
-		return API(
+		return STiki(
 			doc['scores']['api']['uri'], 
 			doc['scores']['api'].get('headers')
 		)

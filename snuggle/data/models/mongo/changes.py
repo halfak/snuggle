@@ -5,7 +5,7 @@ class Changes:
 		self.mongo = mongo
 	
 	def insert(self, change):
-		self.db.changes.update(
+		self.mongo.db.changes.update(
 			{'_id': change.id},
 			change.deflate(),
 			upsert=True,
@@ -14,7 +14,7 @@ class Changes:
 	
 	def last_id(self):
 		docs = list(
-			self.db.changes.find(
+			self.mongo.db.changes.find(
 				sort=[('_id', -1)], 
 				limit=1, 
 				fields={'_id': 1}

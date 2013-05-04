@@ -1,2 +1,2 @@
-from .recent_changes import RecentChanges
+from .changes import Changes
 from .scores import Scores

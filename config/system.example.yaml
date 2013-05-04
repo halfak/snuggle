@@ -11,7 +11,7 @@ root_directory: ~/Sandbox/snuggle
 # interface and API for Snuggle.
 web_server:
   host: 0.0.0.0
-  port: 8080
+  port: 8081
 
 # The configuration for the synchronization server.  The synchronization server
 # keeps Snuggle's data up-to-date by listening to a recent_changes feed.
@@ -36,7 +36,7 @@ changes_synchronizer:
   # Main loop delay in seconds.  How often to attempt an update?
   loop_delay: 5
   # Limit the number of changes per request to this number
-  changes_per_request: 100
+  changes_per_request: 1000
   # Ignore recent changes that occurred before this id
   starting_rcid: 572229954
   # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
@@ -63,7 +63,7 @@ model:
   module: snuggle.data.models.Mongo
   host: localhost
   port: 27017
-  database: newbies_test
+  database: snuggle_test
 
 # Specifies how changes will be acquired.  Currently, MySQL is the only option. 
 # Theoretically, an option could be added to read from the API.  For various
@@ -72,7 +72,7 @@ changes:
   module: snuggle.changes.MySQL
   host: db1047.eqiad.wmnet
   user: halfak
-  database: enwiki
+  db: enwiki
   # Specifies where to read the password from
   read_default_file: /home/halfak/.my.cnf
 

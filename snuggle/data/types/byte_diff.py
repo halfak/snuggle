@@ -6,6 +6,15 @@ class ByteDiff(DataType):
 		self.bytes = int(bytes)
 		self.diff  = int(diff)
 	
+	def __eq__(self, other):
+		try:
+			return (
+				self.bytes == other.bytes and
+				self.diff == other.diff
+			)
+		except AttributeError:
+			return False
+	
 	def deflate(self):
 		return {
 			'bytes': self.bytes,

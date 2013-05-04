@@ -9,20 +9,20 @@ from .. import processing
 def default(): return processing.processor.static_file("index.html")
 
 # /user/view/
-@get("/user/view/<id:int>")
+@get("/user/view/<user_id:int>")
 @preprocessors.authenticated
-def user_view(session, id): return processing.processor.users.view(session, id)
+def user_view(session, user_id): return processing.processor.users.view(session, user_id)
 
-# /user/rate/
-@get("/user/rate/<query>")
+# /user/categorize/
+@get("/user/categorize/<query>")
 @preprocessors.query_data(json.loads)
 @preprocessors.authenticated
-def user_rate(session, data): return processing.processor.users.rate(session, data)
+def user_rate(session, data): return processing.processor.users.categorize(session, data)
 
-@post("/user/rate/")
+@post("/user/categorize/")
 @preprocessors.post_data(json.loads)
 @preprocessors.authenticated
-def user_rate(session, data): return processing.processor.users.rate(session, data)
+def user_rate(session, data): return processing.processor.users.categorize(session, data)
 
 # /user/action/
 @get("/user/action/<query>")
@@ -33,49 +33,70 @@ def users_action(session, data): return processing.processor.users.action(sessio
 @post("/user/action/")
 @preprocessors.post_data(json.loads)
 @preprocessors.authenticated
-def users_action(session, data): return processing.processor.users.action(session, data)
+def users_action(session, data): 
+	return processing.processor.users.action(session, data)
 
 # /user/action_preview/
 @get("/user/action_preview/<query>")
 @preprocessors.query_data(json.loads)
 @preprocessors.authenticated
-def users_action_preview(session, data): return processing.processor.users.action_preview(session, data)
+def users_action_preview(session, data):
+	return processing.processor.users.action_preview(session, data)
 
 @post("/user/action_preview/")
 @preprocessors.post_data(json.loads)
 @preprocessors.authenticated
-def users_action_preview(session, data): return processing.processor.users.action_preview(session, data)
+def users_action_preview(session, data):
+	return processing.processor.users.action_preview(session, data)
+
+# /user/reload/talk/
+@get("/user/reload/talk/<user_id:int>")
+@preprocessors.authenticated
+def user_reload_talk(session, user_id):
+	return processing.processor.users.reload_talk(session, user_id)
+
+@post("/user/reload/talk/")
+@preprocessors.post_data(int, "user_id")
+@preprocessors.authenticated
+def user_reload_talk(session, user_id):
+	return processing.processor.users.reload_talk(session, user_id)
 
 # /user/watch/
 @get("/user/watch/<query>")
 @preprocessors.query_data(json.loads)
 @preprocessors.authenticated
-def user_watch(session, data): return processing.processor.users.watch(session, data)
+def user_watch(session, data):
+	return processing.processor.users.watch(session, data)
 
 @post("/user/watch/")
 @preprocessors.post_data(json.loads)
-@preprocessors.authenticated
-def user_watch(session, data): return processing.processor.users.watch(session, data)
+@preprocessors.authenticated 
+def user_watch(session, data):
+	return processing.processor.users.watch(session, data)
 
 # /users/get/
 @get("/users/get/<query>")
 @preprocessors.query_data(json.loads)
-def users_get(data): return processing.processor.users.get(data)
+def users_get(data):
+	return processing.processor.users.get(data)
 
 @post("/users/get/")
 @preprocessors.post_data(json.loads)
-def users_get(data): return processing.processor.users.get(data)
+def users_get(data):
+	return processing.processor.users.get(data)
 
 # /snuggler/authenticate/
 @post("/snuggler/authenticate/")
 @preprocessors.post_data(json.loads)
 @preprocessors.session
-def authenticate(session, data): return processing.processor.snugglers.authenticate(session, data)
+def authenticate(session, data):
+	return processing.processor.snugglers.authenticate(session, data)
 
 @get("/snuggler/authenticate/<query>")
 @preprocessors.query_data(json.loads)
 @preprocessors.session
-def authenticate(session, data): return processing.processor.snugglers.authenticate(session, data)
+def authenticate(session, data):
+	return processing.processor.snugglers.authenticate(session, data)
 
 # /snuggler/log_out/
 @route("/snuggler/log_out/", method=["GET", "POST"])

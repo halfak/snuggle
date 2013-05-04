@@ -20,9 +20,9 @@ i18n:
   snuggler: Snuggler
   wiki_name: English Wikipedia
   comments:
-    send_message: "New message."
-    teahouse_invite: "Invitation to the teahouse."
-    report: "Reporting to AIV."
+    send message: "New message."
+    teahouse invite: "Invitation to the teahouse."
+    report vandalism: "Reporting to AIV."
     suffix: ' ([[WP:Snuggle|Snuggle]])'
   
 

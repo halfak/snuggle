@@ -1,4 +1,21 @@
+import time
+
 from snuggle.data import types
+
+CATEGORIES = ("bad-faith", "good-faith", "ambiguous")
+
+USER_FIELDS = [
+        '_id',
+        'name',
+        'registration',
+        'activity',
+        'talk',
+        'category',
+        'desirability',
+        'views',
+        'has_user_page',
+        'has_talk_page'
+]
 
 class Users:
 	
@@ -6,10 +23,22 @@ class Users:
 		self.mongo    = mongo
 	
 	def __contains__(self, id):
-		return self.db.users.find_one({'_id': id}, {'_id': 1}) != None
-		
+		return self.mongo.db.users.find_one({'_id': id}, {'_id': 1}) != None
+	
+	def with_talk_page(self, title):
+		doc = self.mongo.db.users.find_one(
+			{'name': types.User.normalize(title)},
+			{'_id': 1}
+		)
+		return doc != None
+	
 	def insert(self, user):
-		self.db.users.insert(user.deflate(), safe=True)
+		self.mongo.db.users.update(
+			{'_id': user.id},
+			user.deflate(), 
+			upsert=True,
+			safe=True
+		)
 	
 	def get(self, id, inflate=True):
 		doc = self.mongo.db.users.find_one({'_id': id})
@@ -21,19 +50,20 @@ class Users:
 		else:
 			return KeyError(id)
 		
-	def query(self, 
+	def query(self,
 		      category=None, namespace="all", min_edits=1, 
-		      min_last_active=0, sorted_by="desirability.likelihood",
-		      direction="descending", inflate=True):
-		docs = self.db.mongo.users.find(
+		      min_last_active=60*60*25*5, sorted_by="desirability.likelihood",
+		      direction="descending", skip=0, limit=1000,
+		      inflate=True):
+		docs = self.mongo.db.users.find(
 			{
-				'category.current': query['category'] if query['category'] != None else {'$exists': False},
-				'activity.counts.%s' % query['namespace']: {'$gt': query['min_edits']},
+				'category.category': category,
+				'activity.counts.%s' % namespace: {'$gt': min_edits},
 				'activity.last_activity': {'$gt': time.time() - min_last_active}
 			},
-			sort=[(query['sorted_by'], 1 if query['direction'] == "ascending" else -1)],
-			limit=query['limit'],
-			skip=query['skip'],  #This is dumb, but it will work for now.
+			sort=[(sorted_by, 1 if direction == "ascending" else -1)],
+			limit=limit,
+			skip=skip,  #This is dumb, but it will work for now.
 			fields=USER_FIELDS
 		)
 		if not inflate:
@@ -51,7 +81,7 @@ class Users:
 			desirability.add_score(score)
 			
 			#Re-save
-			self.db.users.update(
+			self.mongo.db.users.update(
 				{'_id': score.user.id},
 				{'$set': 
 					{'desirability': desirability.deflate()}
@@ -109,7 +139,7 @@ class Users:
 			fields={'talk': 1}
 		)
 		if doc != None:
-			return types.Talk.inflate(doc)
+			return doc['_id'], types.Talk.inflate(doc['talk'])
 		else:
 			raise KeyError(str(spec))
 	

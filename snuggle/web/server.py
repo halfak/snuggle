@@ -1,9 +1,9 @@
 import bottle, logging, argparse, json, sys, random
 from beaker.middleware import SessionMiddleware
 
-from snuggle.util import load_json_config
+from snuggle.util import load_yaml_config
 
-from . import database, processing, routing
+from . import processing, routing
 
 logger = logging.getLogger("snuggle.api.server")
 
@@ -82,8 +82,8 @@ def run(config):
 	logger.info("Running server.")
 	bottle.run(
 		app=app, 
-		host=config['server']['host'],
-		port=config['server']['port'],
+		host=config['web_server']['host'],
+		port=config['web_server']['port'],
 		server='cherrypy'
 	)
 

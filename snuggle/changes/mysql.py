@@ -1,6 +1,6 @@
 import oursql, sys, time
 
-from .. import types
+from snuggle.data import types
 
 class MySQL:
 	
@@ -73,7 +73,6 @@ class MySQL:
 			(key, value) for key, value
 			in doc['changes'].iteritems() if key != "module"
 		)
-		
 		return MySQL(**kwargs)
 
 class Change(types.Change):

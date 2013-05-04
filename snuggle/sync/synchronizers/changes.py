@@ -1,4 +1,4 @@
-import logging, time, traceback
+import logging, time, datetime, traceback
 
 from snuggle import mediawiki
 from snuggle.data import types
@@ -31,9 +31,9 @@ class Changes(Synchronizer):
 		self.daemon = True
 		
 		# Resources
-		self.model  = model
-		self.source = source
-		self.mwapi  = mwapi
+		self.model   = model
+		self.changes = changes
+		self.mwapi   = mwapi
 		
 		# Behavioral parameters
 		self.loop_delay = loop_delay
@@ -52,9 +52,8 @@ class Changes(Synchronizer):
 		self.processed_users = 0
 		self.up_timestamp = time.time()
 		
-		last_change = self.model.changes.last()
 		last_rcid = max(
-			last_change.id if last_change != None else 0, 
+			self.model.changes.last_id(),
 			self.starting_rcid
 		)
 		last_timestamp = None
@@ -118,25 +117,42 @@ class Changes(Synchronizer):
 		errored    = 0
 		irrelevant = 0
 		
+		last_change = None
+		
 		for change in changes:
 			try:
 				if self.__apply_change(change):
 					successful += 1
 					try:
-						self.model.changes.record(change)
+						self.model.changes.insert(change)
 					except Exception as e:
-						self.model.changes.record(change, str(e))
+						change.set_error(e)
+						self.model.changes.insert(change)
 					
 				else:
 					irrelevant += 1
 					
-				
+				last_change = change
 				yield change.id, change.timestamp
 			except Exception as e:
+				try:
+					change.set_error(e)
+					self.model.changes.insert(change)
+				except Exception as e2:
+					change.set_error(e2)
+					self.model.changes.insert(change)
+				
 				logger.error(traceback.format_exc())
 				errored += 1
-			
-		logger.info("Applied %s changes successfully (%s errored, %s irrelevant)." % (successful, errored, irrelevant))
+		
+		last_change_date = datetime.datetime.fromtimestamp(last_change.timestamp)
+		logger.info("Synced %s changes.  (%s errored, %s irrelevant) [%s]" % (
+				successful, 
+				errored, 
+				irrelevant,
+				last_change_date.strftime("%Y-%m-%d %H:%M:%S")
+			)
+		)
 	
 	def __apply_change(self, change):
 		if change.type == "new user":
@@ -148,7 +164,7 @@ class Changes(Synchronizer):
 		logger.debug("New user %s." % user.deflate())
 		
 		# Save user
-		self.model.users.new(user)
+		self.model.users.insert(user)
 		
 		# Every new user is a relevant change to capture
 		return True
@@ -158,7 +174,7 @@ class Changes(Synchronizer):
 		
 		# Update for all revisions to a page that could have reverted 
 		# one of our user's revisions
-		for reverted in self.model.reverteds.get(revision.page.id):
+		for reverted in self.model.reverteds.find(revision.page.id):
 			self.__update_reverted(reverted, revision)
 			relevant = True
 		
@@ -169,7 +185,7 @@ class Changes(Synchronizer):
 		
 		# Check if this revision was an edit to one of our users' talk
 		# pages or user pages.
-		if revision.page.title in self.model.talks:
+		if self.model.users.with_talk_page(revision.page.title):
 			
 			if revision.page.namespace == 3:
 				self.__update_talk(revision)
@@ -216,36 +232,33 @@ class Changes(Synchronizer):
 		
 		reverted = types.Reverted(
 			revision, 
-			self.source.history(
+			self.changes.history(
 				revision.page.id, 
 				revision.id, 
 				types.Reverted.HISTORY_LIMIT
 			)
 		)
-		self.model.reverteds.new(reverted)
+		self.model.reverteds.insert(reverted)
 		
 		score = types.Score(
 			revision.id,
 			revision.user
 		)
-		self.model.scores.new(score)
+		self.model.scores.insert(score)
 	
 	def __update_talk(self, revision):
-		logger.debug(
-			"Setting talk page for %s." % revision.page.title
-		)
 		self.model.users.set_talk_page(revision.page.title)
 		
 		try:
-			talk = self.model.user.get_talk(title=revision.page.title)
-			if talk.last_id < revision.id:
-				logger.debug("Getting markup for %s." % revision.page.title)
-				id, markup = self.mwapi.pages.get_markup(title="User_talk:" + revision.page.title)
-				talk.update(id, markup)
-			
-		except KeyError as e:
-			pass
-		
+			user_id, talk = self.model.users.get_talk(title=revision.page.title)
+		except KeyError: 
+			return
+		if talk.last_id < revision.id:
+			logger.debug("Getting markup for %s." % revision.page.title)
+			id, markup = self.mwapi.pages.get_markup(title="User_talk:" + revision.page.title)
+			talk.update(id, markup)
+			self.model.users.set_talk(user_id, talk)
+			logger.debug("New talk for %s: %s" % (user_id, talk.deflate()))
 		
 	def __update_user_page(self, revision):
 		logger.debug(
@@ -255,15 +268,15 @@ class Changes(Synchronizer):
 	
 	@staticmethod
 	def from_config(doc, model):
-		Changes = import_class(doc['changes']['module'])
+		ChangesModule = import_class(doc['changes']['module'])
 		
-		return RecentChanges(
+		return Changes(
 			model,
-			Changes.from_config(doc),
+			ChangesModule.from_config(doc),
 			mediawiki.API.from_config(doc),
-			doc[section]['loop_delay'],
-			doc[section]['changes_per_request'],
-			doc[section]['max_age'],
-			doc[section]['starting_rcid']
+			doc['changes_synchronizer']['loop_delay'],
+			doc['changes_synchronizer']['changes_per_request'],
+			doc['changes_synchronizer']['max_age'],
+			doc['changes_synchronizer']['starting_rcid']
 		)
 			

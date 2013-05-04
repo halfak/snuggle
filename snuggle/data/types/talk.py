@@ -1,9 +1,20 @@
-from mediawiki import templates, parsing
+from snuggle.mediawiki import templates, parsing
+
+from .data_type import DataType
 
 class Topic(DataType):
 	def __init__(self, title, classes=None):
 		self.title = unicode(title)
 		self.classes = list(classes) if classes != None else None
+	
+	def __eq__(self, other):
+		try:
+			return (
+				self.title == other.title and
+				self.classes == other.classes
+			)
+		except AttributeError:
+			raise False
 	
 	def deflate(self):
 		return {
@@ -24,11 +35,31 @@ class Talk(DataType):
 		self.last_id = int(last_id)
 		self.topics = list(topics) if topics != None else []
 	
+	def __eq__(self, other):
+		try:
+			return (
+				self.last_id == other.last_id and
+				self.topics == other.topics
+			)
+		except AttributeError:
+			raise False
+	
 	def deflate(self):
 		return {
 			'last_id': self.last_id,
 			'topics':  [t.deflate() for t in self.topics]
 		}
+		
+	def update(self, rev_id, markup):
+		self.last_id = rev_id
+		self.topics = []
+		for title, section_markup in parsing.sections(markup):
+			self.topics.append(
+				Topic(
+					parsing.clean_header(title), 
+					templates.classes(section_markup)
+				)
+			)
 	
 	@staticmethod
 	def inflate(doc):
@@ -36,17 +67,4 @@ class Talk(DataType):
 			doc['last_id'],
 			[Topic.inflate(t_doc) for t_doc in doc['topics']]
 		)
-	
-	@staticmethod
-	def from_markup(rev_id, markup):
-		topics = []
-		for title, section_markup in parsing.sections(markup):
-			topics.append(
-				Topic(
-					parsing.clean_header(title), 
-					templates.classes(section_markup)
-				)
-			)
-		
-		return Talk(rev_id, topics)
 

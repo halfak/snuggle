@@ -1,7 +1,7 @@
 from .data_type import DataType
 
-from user import NewUser
-from revision import ChangeRevision
+from .new_user import NewUser
+from .revision import ChangeRevision
 
 class Change(DataType):
 	
@@ -15,11 +15,19 @@ class Change(DataType):
 		self.timestamp = int(timestamp)
 		self.type      = type; assert type in self.TYPES
 		self.change    = change
-		self.error     = error
-		
+		self.error     = unicode(error) if error != None else None
 	
-	def set_error(self, error):
-		self.error = unicode(error)
+	def __eq__(self, other):
+		try:
+			return (
+				self.id == other.id and
+				self.timestamp == other.timestamp and
+				self.type == other.type and
+				self.change == other.change and
+				self.error == other.error
+			)
+		except AttributeError:
+			return False
 	
 	def deflate(self):
 		return {
@@ -29,6 +37,9 @@ class Change(DataType):
 			'change':    self.change.deflate(),
 			'error':     self.error
 		}
+	
+	def set_error(self, error):
+		self.error = unicode(error)
 	
 	@staticmethod
 	def inflate(json):

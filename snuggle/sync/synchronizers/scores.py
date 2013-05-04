@@ -1,7 +1,7 @@
 import logging, time, traceback
 
-from snuggle import stiki
 from snuggle.util import import_class
+from snuggle.scores import NoScore
 
 from .synchronizer import Synchronizer
 
@@ -43,7 +43,7 @@ class Scores(Synchronizer):
 		# Status
 		self.up = True
 		self.scores_completed = 0
-		self.scores_dropped = 0
+		self.scores_culled = 0
 		self.errored_batches = 0
 		self.up_timestamp = time.time()
 		
@@ -54,11 +54,11 @@ class Scores(Synchronizer):
 			start = time.time()
 			
 			# Get scores from model
-			scores = self.model.scores.get(self.scores_per_request)
+			scores = list(self.model.scores.get(self.scores_per_request))
 			
 			try:
 				# Lookup scores
-				updated_scores = self.__lookup_scores(scores)
+				updated_scores = list(self.__lookup_scores(scores))
 				for score in updated_scores:
 					
 					logger.debug(
@@ -78,11 +78,12 @@ class Scores(Synchronizer):
 					self.scores_completed += 1
 					
 				#Cleanup scores.
-				self.scores_dropped += self.model.scores.cull(
+				culled = self.model.scores.cull(
 					self.min_attempts,
 					id_less_than=last_scored_id - self.max_id_distance,
 					
 				)
+				self.scores_culled += culled
 			except Exception as e:
 				logger.error(
 					"An error occurred while looking up " + 
@@ -91,13 +92,19 @@ class Scores(Synchronizer):
 				
 				self.errored_batches += 1
 			
+			
+			logger.info("Synced %s scores. %s found, %s culled." % (
+					len(scores), len(updated_scores), culled
+				)
+			)
+			
 			# Sleep for a bit
 			time.sleep(max(self.loop_delay - (time.time() - start), 0))
 			
 		
 		logger.info(
 			"Stopped processing scores. " +
-			"(last_scored_id=%s, scores_completed=%s, )" % (
+			"(last_scored_id=%s, scores_completed=%s)" % (
 				last_scored_id, self.scores_completed
 			)
 		)
@@ -117,7 +124,7 @@ class Scores(Synchronizer):
 				
 				yield score
 				
-			except stiki.NoScore as e:
+			except NoScore as e:
 				# Note the attempt
 				score.add_attempt()
 				
@@ -152,13 +159,14 @@ class Scores(Synchronizer):
 	
 	@staticmethod
 	def from_config(doc, model):
-		ScoresModule = load_class(doc['scores']['module'])
+		ScoresModule = import_class(doc['scores']['module'])
 		
 		return Scores(
 			model,
 			ScoresModule.from_config(doc),
-			doc[section]['loop_delay'],
-			doc[section]['scores_per_request'],
-			doc[section]['max_id_distance']
+			doc['scores_synchronizer']['loop_delay'],
+			doc['scores_synchronizer']['scores_per_request'],
+			doc['scores_synchronizer']['min_attempts'],
+			doc['scores_synchronizer']['max_id_distance']
 		)
 		

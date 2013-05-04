@@ -35,7 +35,7 @@ class API:
 			raise MWAPIError('http', HTTPError)
 		
 		try:
-			doc = r.json()
+			doc = r.json
 		except ValueError as e:
 			raise MWAPIError('value', "Could not decode json.")
 		

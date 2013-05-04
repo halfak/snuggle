@@ -1,30 +1,5 @@
 from ..util import responses, mediawiki
 
-def send_message(user, action):
-	return (
-		"\n" + 
-		"==%(header)s ==\n" + 
-		"%(message)s~~~~\n"
-	) % action
-
-def invite(user, action):
-	return (
-		"\n" + 
-		"==%(header)s ==\n" + 
-		"{{subst:Wikipedia:Teahouse/%(template)s|message=%(message)s|sign=~~~~}}\n"
-	) % action
-
-def report(user, action):
-	return (
-		"\n" + 
-		"* {{Vandal|%(username)s}} %(reason)s~~~~"
-	) % {
-		'username': user['name'],
-		'reason': action['reason']
-	}
-
-
-
 class Users:
 	def __init__(self, model, mwapi):
 		self.model = model
@@ -41,7 +16,8 @@ class Users:
 	
 	def get(self, query):
 		try:
-			users = list(self.model.users.query(**query))
+			print(query)
+			users = list(self.model.users.query(inflate=False, **query))
 		except Exception:
 			return responses.database_error("getting a set of users with query %s" % query)
 		
@@ -49,9 +25,10 @@ class Users:
 	
 	def categorize(self, session, user_id, category):
 		try:
-			doc = self.db.users.rate(
+			self.model.users.categorize(
 				user_id, 
 				types.Categorization(session['snuggler']['user'], category)
+			)
 		except Exception:
 			return responses.database_error("storing a rating for user %s" % user_id)
 		
@@ -79,23 +56,28 @@ class Users:
 	
 	def action(self, session, doc):
 		try:
-			if doc['action']['action'] == "send message":
+			action = Action.inflate(doc)
+			if action.type == "send message":
 				self.mw.pages.append(
-					"User_talk:" + doc['user']['name'],
-					send_message(doc['user'], doc['action']), 
-					cookies=session['snuggler']['cookie']
+					"User_talk:" + action.user.name,
+					action.markup, 
+					cookies=session['snuggler']['cookie'],
+					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
 				)
-			elif doc['action']['action'] == "invite":
+			elif type == "teahouse invite":
 				self.mw.pages.append(
-					"User_talk:" + doc['user']['name'],
-					invite(doc['user'], doc['action']), 
-					cookies=session['snuggler']['cookie']
+					"User_talk:" + action.user.name,
+					action.markup(), 
+					cookies=session['snuggler']['cookie'],
+					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
 				)
 			elif doc['action']['action'] == "report":
 				self.mw.pages.append(
 					"Wikipedia:Administrator intervention against vandalism",
-					report(doc['user'], doc['action']), 
-					cookies=session['snuggler']['cookie']
+					action.markup(), 
+					cookies=session['snuggler']['cookie'],
+					comment="Reporting " + action.user.name + " " + 
+					        action.reason + " ([[WP:Snuggle|Snuggle]])"
 				)
 			else:
 				return responses.general_error(
@@ -105,11 +87,11 @@ class Users:
 			return responses.success(True)
 			
 		except mediawiki.MWAPIError as e:
-			return responses.mediawiki_error("performing an action %r" % doc['action'], e.code, e.info)
+			return responses.mediawiki_error("performing an action %r" % doc, e.code, e.info)
 		except mediawiki.ConnectionError as e:
 			return responses.mediawiki_error("performing an action", "Connection Failed", e.info)
 		except Exception as e:
-			return responses.general_error("performing an action %r" % doc['action'])
+			return responses.general_error("performing an action %r" % doc)
 	
 	def action_preview(self, session, doc):
 		try:

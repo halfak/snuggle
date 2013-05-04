@@ -1,7 +1,10 @@
 ################################################################## processors.py
 import bottle, os.path, time
 
-from ..util import responses
+from snuggle import mediawiki
+from snuggle.util import import_class
+from snuggle.web.util import responses
+
 from .users import Users
 from .snugglers import Snugglers
 
@@ -35,13 +38,13 @@ class Processor:
 	
 	@staticmethod
 	def from_config(doc):
-		Model = load_class(doc['model']['module'])
+		Model = import_class(doc['model']['module'])
 		
 		static_dir = os.path.expanduser(
 			os.path.join(doc['root_directory'], "static")
 		)
 		return Processor(
-			Model.from_config(doc)
+			Model.from_config(doc),
 			mediawiki.API.from_config(doc), 
 			static_dir
 		)
@@ -49,6 +52,6 @@ class Processor:
 
 def configure(doc):
 	global processor
-	processor = Processor(doc)
+	processor = Processor.from_config(doc)
 
 

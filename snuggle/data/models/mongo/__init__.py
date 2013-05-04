@@ -1,7 +1,7 @@
 import pymongo
 
-from .updater import Updater
 from .changes import Changes
+from .events import Events
 from .users import Users
 from .reverteds import Reverteds
 from .scores import Scores
@@ -10,8 +10,6 @@ class Mongo:
 	
 	def __init__(self, db):
 		self.db          = db
-		
-		self.update    = Updater(self)
 		
 		self.changes   = Changes(self)
 		self.events    = Events(self)
@@ -30,7 +28,6 @@ class Mongo:
 	
 	@staticmethod
 	def from_config(doc):
-		
 		return Mongo(
 			pymongo.Connection(
 				host=doc['model']['host'],
