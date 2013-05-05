@@ -1,4 +1,10 @@
-from ..util import responses, mediawiki
+import logging
+
+from snuggle import mediawiki
+from snuggle.data import types
+from snuggle.web.util import responses
+
+logger = logging.getLogger("snuggle.web.processing.users")
 
 class Users:
 	def __init__(self, model, mwapi):
@@ -16,32 +22,31 @@ class Users:
 	
 	def get(self, query):
 		try:
-			print(query)
 			users = list(self.model.users.query(inflate=False, **query))
 		except Exception:
 			return responses.database_error("getting a set of users with query %s" % query)
 		
 		return responses.success(users)
 	
-	def categorize(self, session, user_id, category):
+	def categorize(self, session, data):
 		try:
-			self.model.users.categorize(
-				user_id, 
-				types.Categorization(session['snuggler']['user'], category)
+			doc = self.model.users.categorize(
+				data['id'], 
+				types.Categorization(session['snuggler']['user'], data['category'])
 			)
+			return responses.success(doc)
 		except Exception:
-			return responses.database_error("storing a rating for user %s" % user_id)
+			return responses.database_error("storing a rating for user %s" % data)
 		
-		return responses.success(doc)
 	
-	def watch(self, session, user_name):
+	def watch(self, session, doc):
 		try:
 			self.mwapi.pages.watch(
-				"User:" + user_name,
+				"User:" + doc['name'],
 				cookies=session['snuggler']['cookie']
 			)
 			self.mwapi.pages.watch(
-				"User_talk:" + user_name,
+				"User_talk:" + doc['name'],
 				cookies=session['snuggler']['cookie']
 			)
 			
@@ -56,23 +61,23 @@ class Users:
 	
 	def action(self, session, doc):
 		try:
-			action = Action.inflate(doc)
+			action = types.Action.inflate(doc)
 			if action.type == "send message":
-				self.mw.pages.append(
-					"User_talk:" + action.user.name,
-					action.markup, 
-					cookies=session['snuggler']['cookie'],
-					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
-				)
-			elif type == "teahouse invite":
-				self.mw.pages.append(
+				self.mwapi.pages.append(
 					"User_talk:" + action.user.name,
 					action.markup(), 
 					cookies=session['snuggler']['cookie'],
 					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
 				)
-			elif doc['action']['action'] == "report":
-				self.mw.pages.append(
+			elif action.type == "teahouse invite":
+				self.mwapi.pages.append(
+					"User_talk:" + action.user.name,
+					action.markup(), 
+					cookies=session['snuggler']['cookie'],
+					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
+				)
+			elif action.type == "report vandalism":
+				self.mwapi.pages.append(
 					"Wikipedia:Administrator intervention against vandalism",
 					action.markup(), 
 					cookies=session['snuggler']['cookie'],
@@ -81,7 +86,7 @@ class Users:
 				)
 			else:
 				return responses.general_error(
-					"performing a user action.  The action %s is not recognized." % doc['action']['action']
+					"performing a user action.  The action %s is not recognized." % action.type
 				)
 			
 			return responses.success(True)
@@ -95,27 +100,28 @@ class Users:
 	
 	def action_preview(self, session, doc):
 		try:
-			if doc['action']['action'] == "send message":
-				html = self.mw.pages.preview(
-					send_message(doc['user'], doc['action']), 
+			action = types.Action.inflate(doc)
+			if action.type == "send message":
+				html = self.mwapi.pages.preview(
+					action.markup(), 
 					page_name="User_talk:" + doc['user']['name'],
 					cookies=session['snuggler']['cookie']
 				)
-			elif doc['action']['action'] == "invite":
-				html = self.mw.pages.preview(
-					invite(doc['user'], doc['action']), 
+			elif action.type == "teahouse invite":
+				html = self.mwapi.pages.preview(
+					action.markup(), 
 					page_name="User_talk:" + doc['user']['name'],
 					cookies=session['snuggler']['cookie']
 				)
-			elif doc['action']['action'] == "report":
-				html = self.mw.pages.preview(
-					report(doc['user'], doc['action']), 
+			elif action.type == "report vandalism":
+				html = self.mwapi.pages.preview(
+					action.markup(),
 					page_name="Wikipedia:Administrator intervention against vandalism",
 					cookies=session['snuggler']['cookie']
 				)
 			else:
 				return responses.general_error(
-					"preview some markup.  The action %s is not recognized." % doc['action']['action']
+					"preview some markup.  The action %s is not recognized." % action.type
 				)
 			
 			return responses.success(html)
@@ -127,6 +133,29 @@ class Users:
 		except Exception as e:
 			return responses.general_error("preview some markup")
 		
+	def reload_talk(self, session, user_id=None, user_name=None):
+		logger.debug("Reloading talk for %s:%s" % (user_id, user_name))
+		try:
+			if user_id != None:
+				user = self.model.users.get(id=user_id)
+			else:
+				user = self.model.users.get(name=user_name)
 			
+			rev_id, markup = self.mwapi.pages.get_markup(title="User_talk:" + user.name)
+			talk = types.Talk()
+			talk.update(rev_id, markup)
+			self.model.users.set_talk(user.id, talk)
+			if rev_id != None: self.model.users.set_talk_page(user.name)
+			return responses.success(talk.deflate())
+		except KeyError as e:
+			return responses.general_error(
+				"reloading the talk page for %s:%s" % (user_id, user_name)
+			)
+		except Exception as e:
+			return responses.general_error(
+				"reloading the talk page for %s:%s" % (user_id, user_name)
+			)
+		
+	
 	
 	

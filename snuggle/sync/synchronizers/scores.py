@@ -93,8 +93,11 @@ class Scores(Synchronizer):
 				self.errored_batches += 1
 			
 			
-			logger.info("Synced %s scores. %s found, %s culled." % (
-					len(scores), len(updated_scores), culled
+			logger.info("%s: %s found, %s missed, %s culled" % (
+					len(scores), 
+					len(updated_scores), 
+					len(scores) - len(updated_scores),
+					culled
 				)
 			)
 			

@@ -1,4 +1,6 @@
 
+from snuggle import mediawiki
+from snuggle.data import types
 from snuggle.web.util import responses
 
 class Snugglers:
@@ -9,7 +11,7 @@ class Snugglers:
 	
 	def authenticate(self, session, creds):
 		try:
-			id, name, cookie = self.mw.users.authenticate(
+			id, name, cookie = self.mwapi.users.authenticate(
 				creds['user'],
 				creds['pass']
 			)
@@ -28,7 +30,7 @@ class Snugglers:
 			'user': types.User(id, name),
 			'cookie': cookie
 		}
-		return responses.success(session['snuggler']['user'])
+		return responses.success(session['snuggler']['user'].deflate())
 	
 	def log_out(self, session):
 		if 'snuggler' in session:

@@ -30,6 +30,12 @@ class User(DataType):
 	
 	@staticmethod
 	def normalize(title):
-		return title.replace("_", " ").capitalize()
+		title = title.replace("_", " ")
+		if len(title) > 1:
+			return title[0].capitalize() + title[1:]
+		elif len(title) == 1:
+			return title.capitalize()
+		else:
+			return ""
 	
 

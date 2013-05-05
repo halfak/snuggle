@@ -32,6 +32,7 @@ Controller = Class.extend({
 			}
 		}.bind(this))
 		this.list.user_categorized.attach(this._categorize_user.bind(this))
+		this.list.user_talk_reloaded.attach(this._reload_user_talk.bind(this))
 		this.list.view_changed.attach(this._fill_list.bind(this))
 		
 		this.list.action_submitted.attach(this._user_action.bind(this))
@@ -137,6 +138,26 @@ Controller = Class.extend({
 			)
 		}
 	},
+	_reload_user_talk: function(_, user){
+		user.talk.reloader.disabled(true)
+		this.local.users.reload_talk(
+			user.model,
+			function(doc){
+				user.talk.reloader.disabled(false)
+				user.talk.model.update(doc.topics.map(function(d){return Model.User.Talk.Thread.inflate(d)}))
+			}.bind(this),
+			function(message, doc, meta){
+				user.talk.reloader.disabled(false)
+				doc = doc || {}
+				if(doc.code == "permissions"){
+					alert("You must be logged in to reload data.")
+					this.snuggler.menu.expanded(true)
+				}else{
+					alert(message)
+				}
+			}.bind(this)
+		)
+	},
 	_categorize_user: function(_, user, category){
 		if(!user){return}
 		user.category.disabled(true)
@@ -235,8 +256,8 @@ Controller = Class.extend({
 				user_view.info.menu.disabled(false)
 				action.reset()
 				user_view.info.menu.expanded(false)
-				//TODO confirm to user that action was completed.
-			},
+				this._reload_user_talk(null, user_view)
+			}.bind(this),
 			function(message, doc){
 				doc = doc || {}
 				if(doc.code == "permissions"){

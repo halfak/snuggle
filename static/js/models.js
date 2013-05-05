@@ -506,8 +506,11 @@ Model.User.inflate = function(doc){
 			this.changed.notify(threads)
 		}
 	})
-	Model.User.Talk.inflate = function(doc){
-		return new Model.User.Talk(doc.threads.map(function(d){return new Model.User.Talk.Thread(d.title, d.classes)}))
+	Model.User.Talk.inflate = function(doc, username){
+		return new Model.User.Talk(
+			doc.topics.map(Model.User.Talk.Thread.inflate),
+			username
+		)
 	}
 		Model.User.Talk.Thread = Class.extend({
 			/**
@@ -522,16 +525,19 @@ Model.User.inflate = function(doc){
 				this.classes = classes || []
 			}
 		})
+		Model.User.Talk.Thread.inflate = function(doc){
+			return new Model.User.Talk.Thread(doc.title, doc.classes)
+		}
 	
 	Model.User.Category = Class.extend({
-		init: function(current, history){
-			this.current = current
+		init: function(category, history){
+			this.category = category
 			this.history = history
 			
 			this.changed = new Event(this)
 		},
-		update: function(current, history){
-			this.current = current
+		update: function(category, history){
+			this.category = category
 			this.history = history
 			this.changed.notify()
 		}
@@ -539,7 +545,7 @@ Model.User.inflate = function(doc){
 	Model.User.Category.inflate = function(doc){
 		doc = doc || {}
 		return new Model.User.Category(
-			doc.current || null,
+			doc.category || null,
 			doc.history || []
 		)
 	}

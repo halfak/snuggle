@@ -1,6 +1,6 @@
-import time, traceback
+import time, traceback, logging
 
-import traceback, time, json
+logger = logging.getLogger("snuggle.web.util.responses")
 
 def response(type, doc, meta=None):
 	meta = meta if meta != None else {}
@@ -19,6 +19,7 @@ def error(code, message, meta=None):
 	exc = traceback.format_exc()
 	if exc != "None\n":
 		meta['exception'] = exc
+		logger.debug(exc)
 	
 	return response(
 		"error", 

@@ -5,7 +5,7 @@ author:
   url: http://halfaker.info
 
 # This configuration file specifies the behavior of Snuggle
-root_directory: ~/Sandbox/snuggle
+root_directory: ~/Sandbox/snuggle-refactoring
 
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.
@@ -38,7 +38,7 @@ changes_synchronizer:
   # Limit the number of changes per request to this number
   changes_per_request: 1000
   # Ignore recent changes that occurred before this id
-  starting_rcid: 572229954
+  starting_rcid: 573725548
   # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
   max_age: 2592000
 

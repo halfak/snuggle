@@ -40,15 +40,22 @@ class Users:
 			safe=True
 		)
 	
-	def get(self, id, inflate=True):
-		doc = self.mongo.db.users.find_one({'_id': id})
+	def get(self, id=None, name=None, inflate=True):
+		if id != None:
+			spec = {'_id': id}
+		elif name != None:
+			spec = {'name': name}
+		else:
+			raise TypeError("id or name must be specified")
+		
+		doc = self.mongo.db.users.find_one(spec)
 		if doc != None:
 			if not inflate:
 				return doc
 			else:
 				return types.NewUser.inflate(doc)
 		else:
-			return KeyError(id)
+			raise KeyError(spec)
 		
 	def query(self,
 		      category=None, namespace="all", min_edits=1, 
@@ -109,16 +116,19 @@ class Users:
 	
 	def set_reverted(self, user_id, rev_id, revert):
 		revert = types.Revert.convert(revert)
+		inc = {}
+		if user_id == revert.user.id:
+			inc['activity.self_reverted'] = 1
+		else:
+			inc['activity.reverted'] = 1
+		
 		self.mongo.db.users.update(
 			{'_id': user_id},
 			{
 				'$set': {
 					'activity.revisions.%s.revert' % rev_id: revert.deflate()
 				},
-				'$inc': {
-					'activity.reverted': user_id != revert.user.id,
-					'activity.self_reverted': user_id == revert.user.id
-				}
+				'$inc': inc
 			},
 			safe=True
 		)
@@ -186,7 +196,7 @@ class Users:
 		doc = self.mongo.db.users.find_and_modify(
 			{"_id": user_id},
 			{
-				"$set": {'category.current': categorization.category},
+				"$set": {'category.category': categorization.category},
 				"$push": {'category.history': categorization.deflate()}
 			},
 			safe=True,

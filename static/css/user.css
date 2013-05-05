@@ -229,6 +229,7 @@ div.user div.talk{
 	height: 100%;
 	overflow: hidden;
 	white-space: nowrap;
+	text-align: right;
 }
 
 div.user div.talk.expanded{
@@ -236,36 +237,46 @@ div.user div.talk.expanded{
 	white-space: normal;
 }
 
-div.user div.talk div.thread{
+div.user div.talk div.threads{
+	text-align: left;
+}
+
+div.user div.talk div.threads div.thread{
 	display: inline-block;
 }
-div.user div.talk div.thread dd{
+div.user div.talk div.threads div.thread dd{
 	display: none;
 }
 
-div.user div.talk.expanded div.thread{
+div.user div.talk.expanded div.threads div.thread{
 	display: block;
 	margin-bottom: .5em;
 	white-space: nowrap;
 	width: 100%;
 }
-div.user div.talk.expanded div.thread dt{
+div.user div.talk.expanded div.threads div.thread dt{
 	display: block;
 	float: left;
 }
-div.user div.talk.expanded div.thread dd{
+div.user div.talk.expanded div.threads div.thread dd{
 	display: inline;
 	white-space: normal;
 	word-wrap: break-word;
 	margin-left: 0px;
 }
 
-
-div.user div.talk div.thread dt{
+div.user div.talk div.threads div.thread dt{
 	display: inline-block;
 	vertical-align: top;
 }
-	
+
+div.user div.talk div.reloader {
+	display: none;
+}
+div.user div.talk.expanded div.reloader {
+	display: inline-block;
+}
+
 /**************************Category   *****************************************/
 div.user div.category {
 	background: #ddd;

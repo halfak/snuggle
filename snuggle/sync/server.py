@@ -21,13 +21,13 @@ def main():
 		'-p', "--profile",
 		action="store_true",
 		default=False,
-		help='the path to the configuration file'
+		help='runs the server in profile mode'
 	)
 	parser.add_argument(
 		'-d', "--debug",
 		action="store_true",
 		default=False,
-		help='the path to the configuration file'
+		help='display verbose logging information'
 	)
 	args = parser.parse_args()
 	
@@ -39,7 +39,7 @@ def main():
 			import profile
 			
 		f = tempfile.NamedTemporaryFile()
-		profile.runctx("run(args)", globals(), locals(), f.name)
+		profile.runctx("run(args.config, args.debug)", globals(), locals(), f.name)
 		p = pstats.Stats(f.name)
 		p.strip_dirs().sort_stats("time").print_stats(10)
 	else:
@@ -60,8 +60,8 @@ def run(config_doc, debug):
 	logging.basicConfig(
 		level=logging.DEBUG if debug else logging.INFO,
 		stream=LOGGING_STREAM,
-		format='%(asctime)s %(levelname)-8s %(message)s',
-		datefmt='%b-%d %H:%M:%S'
+		datefmt='%H:%M:%S',
+		format='%(asctime)s %(name)-8s %(message)s'
 	)
 	requests_log = logging.getLogger("requests")
 	requests_log.setLevel(logging.WARNING)

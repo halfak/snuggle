@@ -90,7 +90,7 @@ LocalServer.Users = Class.extend({
 	},
 	categorize: function(user, category, success, error){
 		this.api.post(
-			'user', 'rate', 
+			'user', 'categorize', 
 			{
 				id: user.id,
 				category: category
@@ -114,29 +114,35 @@ LocalServer.Users = Class.extend({
 		)
 	},
 	action: function(user, action, success, error){
+		doc = action.val()
+		doc['user'] = {
+			_id: user.id,
+			name: user.info.name
+		}
 		this.api.post(
 			'user', 'action',
-			{
-				user: {
-					id: user.id,
-					name: user.info.name
-				},
-				action: action.val()
-			},
+			doc,
 			success,
 			error
 		)
 	},
 	preview_action: function(user, action, success, error){
+		doc = action.val()
+		doc['user'] = {
+			_id: user.id,
+			name: user.info.name
+		}
 		this.api.post(
 			'user', 'action_preview',
-			{
-				user: {
-					id: user.id,
-					name: user.info.name
-				},
-				action: action.val()
-			},
+			doc,
+			success,
+			error
+		)
+	},
+	reload_talk: function(user, success, error){
+		this.api.post(
+			'user', 'reload/talk',
+			user.id,
 			success,
 			error
 		)
@@ -162,14 +168,9 @@ LocalServer.Users.Cursor = Class.extend({
 					if(user_docs.length == 0){
 						this.complete = true
 					}
-					//try{
-						user_docs = user_docs.map(this.convert.bind(this))
-						success(this, user_docs.map(Model.User.inflate))
-						this.skip += user_docs.length
-					//}catch(e){
-					//	error("An error occured while constructing a user: " + e)
-					//	window.lastError = e
-					//}
+					user_docs = user_docs.map(this.convert.bind(this))
+					success(this, user_docs.map(Model.User.inflate))
+					this.skip += user_docs.length
 				}.bind(this),
 				error,
 				n,
@@ -199,7 +200,7 @@ LocalServer.Users.Cursor = Class.extend({
 			},
 			contribs: doc.activity.revisions,
 			talk: {
-				threads: (doc.talk || {}).topics || []
+				topics: (doc.talk || {}).topics || []
 			},
 			category: doc.category
 		}

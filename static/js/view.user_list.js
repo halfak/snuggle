@@ -21,12 +21,13 @@ View.UserList = Class.extend({
 		this.model.is_loading.attach(this._is_loading.bind(this))
 		this.model.user_selected.attach(this._show_user.bind(this))
 		
-		this.view_changed      = new Event(this)
-		this.user_clicked      = new Event(this)
-		this.user_categorized  = new Event(this)
-		this.action_changed    = new Event(this) //TODO: Not
-		this.action_loaded     = new Event(this) //TODO: quite
-		this.action_submitted  = new Event(this) //TODO: sure about this
+		this.view_changed       = new Event(this)
+		this.user_clicked       = new Event(this)
+		this.user_categorized   = new Event(this)
+		this.user_talk_reloaded = new Event(this)
+		this.action_changed     = new Event(this) //TODO: Not
+		this.action_loaded      = new Event(this) //TODO: quite
+		this.action_submitted   = new Event(this) //TODO: sure about this
 	},
 	/**
 	Generates the ranges of the current view pane.
@@ -74,6 +75,11 @@ View.UserList = Class.extend({
 			user_view.categorized.attach(
 				function(user_view, category){
 					this.user_categorized.notify(user_view, category)
+				}.bind(this)
+			)
+			user_view.talk_reloaded.attach(
+				function(user_view){
+					this.user_talk_reloaded.notify(user_view)
 				}.bind(this)
 			)
 			user_view.action_submitted.attach(

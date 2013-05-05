@@ -51,7 +51,7 @@ class Talk(DataType):
 		}
 		
 	def update(self, rev_id, markup):
-		self.last_id = rev_id
+		self.last_id = rev_id if rev_id != None else 0
 		self.topics = []
 		for title, section_markup in parsing.sections(markup):
 			self.topics.append(
@@ -64,7 +64,7 @@ class Talk(DataType):
 	@staticmethod
 	def inflate(doc):
 		return Talk(
-			doc['last_id'],
+			doc['last_id'] if doc['last_id'] != None else 0,
 			[Topic.inflate(t_doc) for t_doc in doc['topics']]
 		)
 

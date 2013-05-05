@@ -1,4 +1,4 @@
-import logging, time, datetime, traceback
+import logging, time, datetime, traceback, sys
 
 from snuggle import mediawiki
 from snuggle.data import types
@@ -145,14 +145,16 @@ class Changes(Synchronizer):
 				logger.error(traceback.format_exc())
 				errored += 1
 		
-		last_change_date = datetime.datetime.fromtimestamp(last_change.timestamp)
-		logger.info("Synced %s changes.  (%s errored, %s irrelevant) [%s]" % (
-				successful, 
-				errored, 
-				irrelevant,
-				last_change_date.strftime("%Y-%m-%d %H:%M:%S")
+		if last_change != None:
+			last_change_date = datetime.datetime.fromtimestamp(last_change.timestamp)
+			logger.info("%s: %s successful, %s errored, %s irrelevant [%s]" % (
+					successful + errored + irrelevant, 
+					successful,
+					errored, 
+					irrelevant,
+					last_change_date.strftime("%Y-%m-%d %H:%M:%S")
+				)
 			)
-		)
 	
 	def __apply_change(self, change):
 		if change.type == "new user":
@@ -204,11 +206,11 @@ class Changes(Synchronizer):
 		)
 		if reverted.check(revision): #Reverted!
 			self.model.users.set_reverted(
-				reverted.revision.user_id,
+				reverted.revision.user.id,
 				reverted.revision.id,
 				revision
 			)
-			self.model.reverteds.remove(reverted.id)
+			self.model.reverteds.remove(reverted)
 			logging.debug("Revision %s by %s was reverted by %s" % (
 					reverted.revision.id,
 					reverted.revision.user.id,
@@ -220,7 +222,7 @@ class Changes(Synchronizer):
 			self.model.reverteds.remove(reverted)
 			logging.debug("Completed processing revisions for %s" % reverted.id)
 		else:
-			self.model.reverted.update(reverted)
+			self.model.reverteds.update(reverted)
 	
 	def __add_revision_for_user(self, revision):
 		logger.debug(
@@ -254,7 +256,7 @@ class Changes(Synchronizer):
 		except KeyError: 
 			return
 		if talk.last_id < revision.id:
-			logger.debug("Getting markup for %s." % revision.page.title)
+			logger.info("Getting markup for %s." % revision.page.title)
 			id, markup = self.mwapi.pages.get_markup(title="User_talk:" + revision.page.title)
 			talk.update(id, markup)
 			self.model.users.set_talk(user_id, talk)

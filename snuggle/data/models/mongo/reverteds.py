@@ -9,9 +9,11 @@ class Reverteds:
 		return self.mongo.db.reverteds.find_one({'revision.page._id': page_id}) != None
 	
 	def insert(self, reverted):
-		return self.mongo.db.reverteds.insert(
+		return self.mongo.db.reverteds.update(
 			{'_id': reverted.revision.id}, 
-			reverted.deflate(), upsert=True, safe=True
+			reverted.deflate(), 
+			upsert=True, 
+			safe=True
 		)
 	
 	def update(self, reverted):
@@ -19,7 +21,7 @@ class Reverteds:
 	
 	def remove(self, reverted):
 		doc = self.mongo.db.reverteds.remove(
-			{'_id': reverted.id},
+			{'_id': reverted.revision.id},
 			safe=True
 		)
 		return doc['n'] > 0

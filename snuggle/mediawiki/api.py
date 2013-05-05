@@ -138,6 +138,7 @@ class Pages(APISubset):
 				return revision.get('revid'), revision.get('*', "")
 			else:
 				return None, ""
+			
 	
 	def watch(self, page_name,  cookies=None):
 		doc, cookies = self.api.post(
@@ -181,7 +182,7 @@ class Pages(APISubset):
 				'prop': "info|revisions",
 				'titles': page_name,
 				'intoken': "edit",
-				'summary': summary
+				'summary': comment
 			},
 			cookies = cookies
 		)

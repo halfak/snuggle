@@ -4,6 +4,9 @@ from bottle import route, post, get, static_file
 from . import preprocessors
 from .. import processing
 
+def utf8(bytes):
+	return unicode(bytes, 'utf-8')
+
 # /
 @route("/")
 def default(): return processing.processor.static_file("index.html")
@@ -53,13 +56,18 @@ def users_action_preview(session, data):
 @get("/user/reload/talk/<user_id:int>")
 @preprocessors.authenticated
 def user_reload_talk(session, user_id):
-	return processing.processor.users.reload_talk(session, user_id)
+	return processing.processor.users.reload_talk(session, user_id=user_id)
+
+@get("/user/reload/talk/<user_name>")
+@preprocessors.authenticated
+def user_reload_talk(session, user_name):
+	return processing.processor.users.reload_talk(session, user_name=utf8(user_name))
 
 @post("/user/reload/talk/")
 @preprocessors.post_data(int, "user_id")
 @preprocessors.authenticated
 def user_reload_talk(session, user_id):
-	return processing.processor.users.reload_talk(session, user_id)
+	return processing.processor.users.reload_talk(session, user_id=user_id)
 
 # /user/watch/
 @get("/user/watch/<query>")

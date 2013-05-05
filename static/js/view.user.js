@@ -20,6 +20,7 @@ View.User = Class.extend({
 		
 		this.talk = new View.User.Talk(model.talk)
 		this.node.append(this.talk.node)
+		this.talk.reloader.clicked.attach(this._handle_talk_reload.bind(this))
 		
 		this.category = new View.User.Category(model.category)
 		this.node.append(this.category.node)
@@ -27,6 +28,7 @@ View.User = Class.extend({
 		
 		//The only event we care about.  Is someone clicking on me?
 		this.clicked = new Event(this)
+		this.talk_reloaded = new Event(this)
 		this.categorized = new Event(this)
 		this.action_submitted = new Event(this)
 		this.action_loaded    = new Event(this)
@@ -93,13 +95,16 @@ View.User = Class.extend({
 		this.contribs.clear()
 		this.clicked.notify()
 	},
+	_handle_talk_reload: function(){
+		this.talk_reloaded.notify()
+	},
 	_handle_category_click: function(_, value){
 		this.categorized.notify(value)
 	},
 	_category_changed: function(category){
 		this.node.removeClass("good-faith")
 		this.node.removeClass("bad-faith")
-		this.node.addClass(category.current)
+		this.node.addClass(category.category)
 	},
 	top: function(){
 		return this.node.position().top
@@ -263,6 +268,22 @@ View.User = Class.extend({
 			this.node = $("<div>")
 				.addClass("talk")
 			
+			this.threads = {
+				node: $("<div>")
+					.addClass("threads")
+			}
+			this.node.append(this.threads.node)
+			
+			this.reloader = new UI.Button(
+				'reload',
+				{
+					label: 'reload talk',
+					title: "Reloads this user's talk page",
+					class: "reloader"
+				}
+			)
+			this.node.append(this.reloader.node)
+			
 			this.thread_clicked = new Event(this)
 			
 			this.model.changed.attach(this._render.bind(this))
@@ -289,11 +310,13 @@ View.User = Class.extend({
 						this.thread_clicked.notify(thread)
 					}.bind(this)
 				)
-				this.node.append(thread.node)
+				
+				console.log(["appending", thread])
+				this.threads.node.append(thread.node)
 			}
 		},
 		_clear: function(){
-			this.node.children().remove()
+			this.threads.node.children().remove()
 		}
 	})
 		View.User.Talk.Thread = Class.extend({
@@ -418,8 +441,8 @@ View.User = Class.extend({
 			this.button_clicked.notify(button.value)
 		},
 		_render: function(){
-			this.buttons.good_faith.selected(this.model.current == "good-faith")
-			this.buttons.bad_faith.selected(this.model.current == "bad-faith")
+			this.buttons.good_faith.selected(this.model.category == "good-faith")
+			this.buttons.bad_faith.selected(this.model.category == "bad-faith")
 			
 			this.history.render(this.model.history)
 		}

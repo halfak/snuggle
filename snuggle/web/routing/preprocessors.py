@@ -24,13 +24,14 @@ class query_data:
 class post_data:
 	def __init__(self, decoder=unicode, field_name="data"):
 		self.decoder = decoder
+		self.field_name = field_name
 	
 	def __call__(self, f):
 		
 		def wrapped_f(*args, **kwargs):
 			post_data = request.body.read()
 			try:
-				kwargs[field_name] = self.decoder(post_data)
+				kwargs[self.field_name] = self.decoder(post_data)
 			except ValueError:
 				return responses.decoding_error(post_data, self.decoder)
 			
