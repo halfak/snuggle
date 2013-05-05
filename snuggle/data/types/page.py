@@ -7,6 +7,16 @@ class Page(DataType):
 		self.title     = unicode(title)
 		self.namespace = int(namespace)
 	
+	def __eq__(self, other):
+		try:
+			return (
+				self.id == other.id and
+				self.title == other.title and
+				self.namespace == other.namespace
+			)
+		except AttributeError:
+			return False
+	
 	def deflate(self):
 		return {
 			'_id': self.id,

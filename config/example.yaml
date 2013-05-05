@@ -1,0 +1,92 @@
+last_updated: 2013-05-02
+author: 
+  name: Aaron Halfaker
+  email: aaron.halfaker@gmail.com
+  url: http://halfaker.info
+
+# This configuration file specifies the behavior of Snuggle
+root_directory: ~/Sandbox/snuggle
+
+# The configuration for the web server.  The web server provides the user 
+# interface and API for Snuggle.
+web_server:
+  host: 0.0.0.0
+  port: 8080
+
+# The configuration for the synchronization server.  The synchronization server
+# keeps Snuggle's data up-to-date by listening to a recent_changes feed.
+#
+# You can comment out a synchronizer to turn it off.  You probably don't want
+# to turn off the changes_synchronizer.  It's the base of all new updates
+# in the system.
+sync_server:
+  synchronizers:
+    - changes_synchronizer
+    - scores_synchronizer
+
+# The Recent Changes Synchronizer
+#
+# This synchronizer handles the lion's share of the work of tracking and 
+# populating new user data.
+recent_changes_synchronizer:
+  module: snuggle.sync.synchronizers.Changes
+  # Main loop delay in seconds.  How often to attempt an update?
+  loop_delay: 5
+  # Limit the number of changes per request to this number
+  changes_per_request: 100
+  # Ignore recent changes that occurred before this id
+  starting_rcid: 572229954
+  # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
+  max_age: 2592000
+
+# The Scores Synchronizer
+#
+# This synchronizer gathers vandal scoring data in order to build a
+# "desirability" score for new users.  This is useful for sorting in Snuggle.
+scores_synchronizer:
+  module: snuggle.sync.synchronizers.Scores
+  # Main loop delay in seconds.  How often to make requests for scores?
+  loop_delay: 10
+  # Only request up to this many scores per loop
+  scores_per_request: 100
+  # Stop requesting a score if it has been requested at least 'min_attempts'
+  # times and it's revision ID is at least 'max_id_distance' lower than a score 
+  # that was successfully recorded.
+  min_attempts: 5
+  max_id_distance: 1000
+
+# Specifies how changes will be acquired.  Currently, MySQL is the only option. 
+# Theoretically, an option could be added to read from the API.  For various
+# reasons, that's not an option at the moment.
+changes:
+  module: snuggle.changes.MySQL
+  host: db1047.eqiad.wmnet
+  user: halfak
+  database: enwiki
+  # Specifies where to read the password from
+  read_default_file: /home/halfak/.my.cnf
+
+# Defines how revision scores will be acquired.  Currently, STiki is the only 
+# option since other anti-vandal bots don't provide a set of scores on a 
+# per-request basis.
+scores:
+  module: snuggle.scores.STiki
+  api:
+    uri: http://armstrong.cis.upenn.edu/stiki_api.php
+    headers:
+      User-Agent: Snuggle synchronizer (WP:Snuggle)
+
+# Configuration for MediaWiki API
+mediawiki:
+  api:
+    uri: https://en.wikipedia.org/w/api.php
+    headers:
+      User-Agent: Snuggle synchronizer (WP:Snuggle)
+
+# Configuration for the 
+model:
+  module: snuggle.data.models.Mongo
+  host: localhost
+  port: 27017
+  database: newbies_test
+

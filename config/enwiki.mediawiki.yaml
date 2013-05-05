@@ -1,0 +1,145 @@
+last_updated: 2013-05-02
+author: 
+  name: Aaron Halfaker
+  email: aaron.halfaker@gmail.com
+  url: http://halfaker.info
+
+# The protocol to use when linking to the MediaWiki web interface.  'https' is 
+# preferred if possible
+protocol: https
+
+# The base domain for the MediaWiki installation
+domain: en.wikipedia.org
+
+# The path (prefix) to wiki pages on the server
+article_path: /wiki/
+
+# This section is reserved for i18n.
+i18n:
+  snuggle: Snuggle
+  snuggler: Snuggler
+  wiki_name: English Wikipedia
+  comments:
+    send message: "New message."
+    teahouse invite: "Invitation to the teahouse."
+    report vandalism: "Reporting to AIV."
+    suffix: ' ([[WP:Snuggle|Snuggle]])'
+  
+
+# Namespaces are configurable for MediaWiki installations.  This datastructure
+# describes the configuration of the English Wikipedia.  Note that the Main 
+# namespace does not have any prefixes.
+namespaces:
+  -2:
+    name: Media
+    prefixes:
+      - Media
+  -1:
+    name: Special
+    prefixes:
+      - Special
+  0:
+    name: Main
+    prefixes: []
+  1:
+    name: Talk
+    prefixes:
+      - Talk
+  2:
+    name: User
+    prefixes:
+      - User
+  3:
+    name: User talk
+    prefixes:
+      - User_talk
+  4:
+    name: Wikipedia
+    prefixes:
+      - Wikipedia
+      - Project
+      - WP
+  5:
+    name: Wikipedia_talk
+    prefixes:
+      - Wikipedia_talk
+      - Project_talk
+      - WT
+  6:
+    name: File
+    prefixes:
+      - File
+      - Image
+  7:
+    name: File_talk
+    prefixes:
+      - File_talk
+      - Image_talk
+  8:
+    name: Mediawiki
+    prefixes:
+      - Mediawiki
+  9:
+    name: Mediawiki_talk
+    prefixes:
+      - Mediawiki_talk
+  10:
+    name: Template
+    prefixes:
+      - Template
+  11:
+    name: Template_talk
+    prefixes:
+      - Template_talk
+  12:
+    name: Help
+    prefixes:
+      - Help
+  13:
+    name: Help_talk
+    prefixes:
+      - Help_talk
+  14:
+    name: Category
+    prefixes:
+      - Category
+  15:
+    name: Category_talk
+    prefixes:
+      - Category_talk
+  100:
+    name: Portal
+    prefixes:
+      - Portal
+  101:
+    name: Portal_talk
+    prefixes:
+      Portal_talk
+  108:
+    name: Book
+    prefixes:
+      - Book
+  446:
+    name: Education_program
+    prefixes:
+      - Education_program
+  447:
+    name: Education_program_talk
+    prefixes:
+      - Education_program_talk
+  710:
+    name: Timedtext
+    prefixes:
+      - Timedtext
+  711:
+    name: Timedtext_talk
+    prefixes:
+      - Timedtext_talk
+  828:
+    name: Module
+    prefixes:
+      - Module
+  829:
+    name: Module_talk
+    prefixes:
+      - Module_talk

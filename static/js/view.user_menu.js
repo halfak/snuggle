@@ -82,7 +82,7 @@ View.UserMenu.Message = UI.FlyoutMenu.Action.extend({
 	},
 	val: function(){
 		return {
-			action: "send message",
+			type: "send message",
 			header: this.header.val(),
 			message: this.message.val()
 		}
@@ -131,7 +131,7 @@ View.UserMenu.Invite = UI.FlyoutMenu.Action.extend({
 	},
 	val: function(){
 		return {
-			action: "invite",
+			type: "teahouse invite",
 			header: this.header.val(),
 			template: this.template.val(),
 			message: this.message.val()
@@ -176,7 +176,7 @@ View.UserMenu.Report = UI.FlyoutMenu.Action.extend({
 	},
 	val: function(){
 		return {
-			action: "report",
+			type: "report vandalism",
 			reason: this.reason.val()
 		}
 	}

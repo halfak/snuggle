@@ -2,61 +2,40 @@ from snuggle.data import types
 
 class Reverteds:
 	
-	def __init__(self, db):
-		self.db = db
+	def __init__(self, mongo):
+		self.mongo = mongo
 	
-	def __contains__(self, pageId):
-		return self.db.reverteds.find_one({'revision.page._id': pageId}) != None
+	def __contains__(self, page_id):
+		return self.mongo.db.reverteds.find_one({'revision.page._id': page_id}) != None
 	
-	def new(self, reverted):
-		return self.db.reverteds.insert(reverted.deflate())
+	def insert(self, reverted):
+		return self.mongo.db.reverteds.update(
+			{'_id': reverted.revision.id}, 
+			reverted.deflate(), 
+			upsert=True, 
+			safe=True
+		)
 	
-	def get(self, pageId):
-		for json in self.db.reverteds.find({'revision.page._id': pageId}):
-			yield Reverted(self.db, json)
-		
+	def update(self, reverted):
+		return self.insert(reverted)
 	
+	def remove(self, reverted):
+		doc = self.mongo.db.reverteds.remove(
+			{'_id': reverted.revision.id},
+			safe=True
+		)
+		return doc['n'] > 0
 	
-
-class Reverted:
-	
-	def __init__(self, db, json):
-		self.db        = db
-		self.id        = json['_id']
-		self.processed = json['processed']
-		self.revision  = types.ChangeRevision.inflate(json['revision'])
-		self.history   = json['history']
-		self.revert    = None
-	
-	def complete(self):
-		return self.processed >= types.Reverted.HISTORY_LIMIT or self.revert != None
-	
-	def process(self, revision):
-		if revision.sha1 in self.history and revision.sha1 != self.revision.sha1:
-			self.revert = types.Revert.convert(revision)
-			self.db.users.update(
-				{'_id': self.revision.user.id},
-				{
-					'$set': {
-						'activity.revisions.%s.revert' % self.id: revision.deflate()
-					},
-					'$inc': {
-						'activity.reverted': self.revision.user.id != revision.user.id
-					}
-				}
-			)
-			self.delete()
-		else:
-			self.processed += 1
-			
-			if self.processed < types.Reverted.HISTORY_LIMIT:
-				self.db.reverteds.update(
-					{'_id': self.id},
-					{'$set': {'processed': self.processed}},
-					safe=True
-				)
+	def get(self, id, inflate=True):
+		doc = self.mongo.db.reverteds.find_one({'_id': id})
+		if doc != None:
+			if inflate:
+				return types.Reverted.inflate(doc)
 			else:
-				self.delete()
-		
-	def delete(self):
-		self.db.reverteds.remove({'_id': self.id})	
+				return doc
+		else:
+			raise KeyError(id)
+	
+	def find(self, page_id):
+		for doc in self.mongo.db.reverteds.find({'revision.page._id': page_id}):
+			yield types.Reverted.inflate(doc)

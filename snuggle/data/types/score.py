@@ -10,6 +10,17 @@ class Score(DataType):
 		self.score = float(score) if score != None else None
 		self.attempts = int(attempts)
 	
+	def __eq__(self, other):
+		try:
+			return (
+				self.id == other.id and
+				self.user == other.user and
+				self.score == other.score and
+				self.attempts == other.attempts
+			)
+		except AttributeError:
+			return False
+	
 	def add_attempt(self, inc=1):
 		self.attempts += inc
 	

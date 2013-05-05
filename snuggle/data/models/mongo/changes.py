@@ -1,18 +1,26 @@
 from snuggle.data import types
 class Changes: 
 	
-	def __init__(self, db):
-		self.db = db
+	def __init__(self, mongo):
+		self.mongo = mongo
 	
-	def record(self, change, error=None):
-		json = change.deflate()
-		if error != None: json.update({'error': str(error)})
-		
-		self.db.changes.save(json, safe=True)
+	def insert(self, change):
+		self.mongo.db.changes.update(
+			{'_id': change.id},
+			change.deflate(),
+			upsert=True,
+			safe=True
+		)
 	
-	def last(self):
-		jsons = list(self.db.changes.find(sort=[('_id', -1)], limit=1))
-		if len(jsons) > 0:
-			return types.Change.inflate(jsons[0])
+	def last_id(self):
+		docs = list(
+			self.mongo.db.changes.find(
+				sort=[('_id', -1)], 
+				limit=1, 
+				fields={'_id': 1}
+			)
+		)
+		if len(docs) > 0:
+			return docs[0]['_id']
 		else:
-			return None
+			return 0

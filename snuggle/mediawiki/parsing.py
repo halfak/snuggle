@@ -8,7 +8,7 @@ class Token:
 		return self.__class__.__name__
 
 class InternalLink:
-	expression = r'(\[\[([^\]]+?)(\|([^]]+))?\]\])'
+	expression = r'(\[\[:?([^\]]+?)(\|([^]]+))?\]\])'
 	groups = 4
 	
 	def __init__(self, match, offset):
@@ -85,6 +85,13 @@ class Tokenizer:
 			
 		
 	
+tokenizer = None
+def clean_header(header):
+	global tokenizer
+	if tokenizer == None:
+		tokenizer = Tokenizer(TOKENS)
+	
+	return ''.join(t.display() for t in tokenizer.tokenize(header))
 
 
 MARKUP_HEADER_RE = re.compile(r"(^|\n)==([^=]+)==[\ \t]*\n")

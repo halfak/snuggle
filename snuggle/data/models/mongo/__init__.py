@@ -1,9 +1,9 @@
 import pymongo
 
 from .changes import Changes
+from .events import Events
 from .users import Users
 from .reverteds import Reverteds
-from .talks import Talks
 from .scores import Scores
 
 class Mongo:
@@ -11,11 +11,11 @@ class Mongo:
 	def __init__(self, db):
 		self.db          = db
 		
-		self.changes   = Changes(db)
-		self.users     = Users(db)
-		self.reverteds = Reverteds(db)
-		self.talks     = Talks(db)
-		self.scores    = Scores(db)
+		self.changes   = Changes(self)
+		self.events    = Events(self)
+		self.reverteds = Reverteds(self)
+		self.scores    = Scores(self)
+		self.users     = Users(self)
 	
 	
 	def cull(self, older_than):
@@ -24,15 +24,14 @@ class Mongo:
 		self.db.users.remove({'_id': {"$in": deaths}})
 		self.db.reverteds.remove({'revision.user._id': {'$in': deaths}})
 		self.db.changes.remove({'timestamp': {"$lt": older_than}})
+		self.db.scores.remove({'user_id': {'$in': deaths}}) #TODO check
 	
 	@staticmethod
-	def from_config(doc, section):
-		
+	def from_config(doc):
 		return Mongo(
 			pymongo.Connection(
-				host=doc[section]['host'],
-				port=doc[section]['port']
-			)[doc[section]['database']]
+				host=doc['model']['host'],
+				port=doc['model']['port']
+			)[doc['model']['database']]
 		)
 	
-

@@ -1,8 +1,8 @@
 from .data_type import DataType
 
-from byte_diff import ByteDiff
-from page import Page
-from user import User
+from .byte_diff import ByteDiff
+from .page import Page
+from .user import User
 
 class Revision(DataType):
 	
@@ -13,6 +13,18 @@ class Revision(DataType):
 		self.diff      = diff
 		self.sha1      = str(sha1)
 	
+	def __eq__(self, other):
+		try:
+			return (
+				self.id == other.id and
+				self.timestamp == other.timestamp and
+				self.comment == other.comment and
+				self.diff == other.diff and
+				self.sha1 == other.sha1
+			)
+		except AttributeError:
+			raise False
+	
 	def deflate(self):
 		return {
 			'_id':       self.id,
@@ -21,6 +33,16 @@ class Revision(DataType):
 			'diff':      self.diff.deflate(),
 			'sha1':      self.sha1
 		}
+	
+	@staticmethod
+	def convert(revision):
+		return Revision(
+			revision.id,
+			revision.timestamp,
+			revision.comment,
+			revision.diff,
+			revision.sha1
+		)
 	
 	@staticmethod
 	def inflate(doc):
@@ -39,6 +61,16 @@ class ChangeRevision(Revision):
 		Revision.__init__(self, id, timestamp, comment, diff, sha1)
 		self.user = user
 		self.page = page
+	
+	def __eq__(self, other):
+		try:
+			return (
+				Revision.__eq__(self, other) and 
+				self.user == other.user and
+				self.page == other.page
+			)
+		except AttributeError:
+			raise False
 	
 	def deflate(self):
 		doc = Revision.deflate(self)
@@ -67,6 +99,16 @@ class UserRevision(Revision):
 		Revision.__init__(self, id, timestamp, comment, diff, sha1)
 		self.page = page
 		self.revert = revert
+	
+	def __eq__(self, other):
+		try:
+			return (
+				Revision.__eq__(self, other) and 
+				self.page == other.page and
+				self.revert == other.revert
+			)
+		except AttributeError:
+			raise False
 	
 	def deflate(self):
 		doc = Revision.deflate(self)
@@ -106,6 +148,15 @@ class Revert(Revision):
 		Revision.__init__(self, id, timestamp, comment, diff, sha1)
 		self.user = user
 	
+	def __eq__(self, other):
+		try:
+			return (
+				Revision.__eq__(self, other) and 
+				self.user == other.user
+			)
+		except AttributeError:
+			raise False
+	
 	def deflate(self):
 		doc = Revision.deflate(self)
 		doc['user'] = self.user.deflate()
@@ -119,7 +170,7 @@ class Revert(Revision):
 			User.inflate(doc['user']),
 			doc['timestamp'],
 			doc['comment'],
-			doc['diff'],
+			ByteDiff.inflate(doc['diff']),
 			doc['sha1']
 		)
 	
