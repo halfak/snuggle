@@ -1,19 +1,17 @@
-import bottle, logging, argparse, json, sys, random
+import argparse
 from beaker.middleware import SessionMiddleware
+import bottle, logging, sys, random, yaml
 
-from snuggle.util import load_yaml_config
+from snuggle import language, mediawiki
 
 from . import processing, routing
 
-logger = logging.getLogger("snuggle.api.server")
+logger = logging.getLogger("snuggle.web.server")
 
-def load_config(filename):
-	return load_yaml_config(open(filename))
-
-def application(doc):
+def application(config):
 	
 	#configure processors
-	processing.configure(doc)
+	processing.configure(config)
 	
 	# Generates a random 25 character sequence
 	secret = "".join(chr(random.randrange(32,125)) for i in xrange(25))
@@ -31,13 +29,32 @@ def application(doc):
 	)
 
 def main():
+	def conf_snuggle(fn):
+		return yaml.load(open(fn))
+	
+	def conf_mediawiki(fn):
+		mediawiki.configuration.load_yaml(open(fn))
+	
+	def conf_language(fn):
+		language.load_yaml(open(fn))
+	
 	parser = argparse.ArgumentParser(
 		description='Loads a jsop API for snuggle'
 	)
 	parser.add_argument(
-		'config',
-		type=load_config,
-		help='the path to the configuration file'
+		'snuggle_config',
+		type=conf_snuggle,
+		help='the path to Snuggle\'s configuration file'
+	)
+	parser.add_argument(
+		'mediawiki_config',
+		type=conf_mediawiki,
+		help='the math to MediaWiki\'s configuration file'
+	)
+	parser.add_argument(
+		'language_config',
+		type=conf_language,
+		help='the math to the Language configuration file'
 	)
 	parser.add_argument(
 		'-p', "--profile",
@@ -73,7 +90,7 @@ def main():
 		p = pstats.Stats(f.name)
 		p.strip_dirs().sort_stats("time").print_stats(10)
 	else:
-		run(args.config)
+		run(args.snuggle_config)
 	
 def run(config):
 	logger.info("Configuring system.")

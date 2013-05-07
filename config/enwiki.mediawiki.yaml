@@ -5,20 +5,167 @@ author:
   url: http://halfaker.info
 
 # The protocol to use when linking to the MediaWiki web interface.  'https' is 
-# preferred if possible
+# preferred if possible. 
 protocol: https
 
-# The base domain for the MediaWiki installation
+# The base domain for the MediaWiki installation.
 domain: en.wikipedia.org
 
-# The path (prefix) to wiki pages on the server
+# The path to wiki pages and scripts on the server.  This is used for making API
+# requests and for linking back to the wiki from the the user interface.
 path:
   article: /wiki/
   script: /w/
+file:
+  script: index.php
+  api: api.php
 
-# String to append at the end of comments for all page edit actions performed by
-# Snuggle.
+# Parameters for making requests to the API.  Wikipedia's API requires that a 
+# header be provided with all requests that identifies the originator of the 
+# request.
+requests:
+  headers:
+    User-Agent: "Snuggle UI ([[WP:Snuggle]])"
+
+# String to append at the end of comments for all page edit actions performed.
+# This is useful for tracking the use of Snuggle across the history of edits 
+# in the wiki.
 comment_suffix: " ([[WP:Snuggle|Sn]])"
+
+# TODO: This section is experimental and does not work yet.
+#
+# Threads specifies a set of regular expressions and classes that summarize the
+# activity on a user's talk page.  Each section of a user's talk page (delimited
+# by level 2 headers) will be processed and at most one thread category can be
+# discovered based on the priority.
+#
+# classes: classes to be applied in the CSS that renders the talk threads
+# priority: determines which thread will be chosen first if there are multiple
+#           matches
+# expression: a regular expression to be used to check if the thread matches
+#             the thread type.  In most cases, this is looking for something of
+#             of the form "<!-- Template:... -->"
+# groups: for each group in the regular expression, a set of additional classes
+#         can be included.  The matched portion of the regular expression can
+#         be formatted in with "%s".  If no groups are present, specify "[]", 
+#         the empty list.  For groups that should be ignored, specify "{}", the 
+#         empty dictionary.
+threads:
+  - # vandalism warning ########################################################
+    classes: ["warning", "vandalism"]
+    priority: 2
+    expression: "Template:uw-vandalism([1-4])?"
+    groups:
+      - # level
+        classes: ["level_%s"]
+  - # spam warning #############################################################
+    classes: ["warning", "spam"]
+    priority: 2
+    expression: "Template:uw-spam([1-4])?"
+    groups:
+      - # level
+        classes: ["level_%s"]
+  - # copyright warning ########################################################
+    classes: ["warning", "copyright"]
+    priority: 2
+    expression: "Template:uw-copyright(-([a-z]+))?([1-4])?"
+    groups:
+      - {} # suffix
+      - {} # suffix type
+      - # level
+        classes: ["level_%s"]
+  - # block ####################################################################
+    classes: ["block"]
+    priority: 1
+    expression: "Template:.*?block.*?|uw-[a-z]*block[a-z]*"
+    groups: []
+
+# TODO: This section is experimental and does not work yet.
+#
+# User actions represent actions that can be performed on wiki from Snuggle.  
+# A good example of a common action is to post a message on the user's talk 
+# page.  The order in which they are listed will determine how they appear in
+# the user interface.
+#
+# label: the text to be used in the user actions menu
+# description: the preamble that appears before the form explaining what action
+#              will be taken
+# form: specifies the components of the form.
+#   name: The name to be used for this field.
+#   label: TODO
+#   type: TODO
+#   default: TODO
+#   options: TODO
+# edits: what edits should be performed to complete this action?
+user_actions:
+  - # send message #############################################################
+    label: send message
+    description: "Posts a new message on the user's talk page." 
+    form:
+      - # header
+        name: header
+        label: Header
+        type: text_input
+        default: "Hello %(username)s"
+      - # message
+        name: message
+        label: Message
+        type: textarea
+    edits:
+      - #Appends the message to the user's talk page
+        type: append
+        page_title: "User_talk:%(username)s"
+        markup: "==%(headers)s==\n%(message)s ~~~~"
+        comment: "%(header)s"
+    watchable: True
+  - # teahouse invite ##########################################################
+    label: invite to teahouse
+    description: "Posts an invitation to [[WP:Teahouse]] on the user's talk page."
+    form:
+      - # header
+        name: header
+        label: Header
+        type: text_input
+        default: "You're invited to the [[WP:Teahouse|Teahouse]]."
+      - # message
+        name: message
+        label: Message
+        type: textarea
+      - # template
+        name: template
+        label: Template
+        type: radio
+        options:
+          - # Standard invitation
+            label: Invitation
+            value: Invitation
+            checked: True
+          - # Optional other invitiation style
+            label: Invitation2
+            value: Invitation2
+    edits:
+      - # Appends the template to the user's talk page
+        type: append
+        page_title: "User_talk:%(username)s"
+        markup: "==%(header)s==\n{{%(template)s|%(message)s|~~~~}}"
+        comment: "%(header)s"
+    watchable: True
+  - # report vandalism #########################################################
+    label: report vandalism
+    description: >
+      Reports vandals and spammers to admins. Use only for
+      <b>obvious</b> and <b>persistent</b> cases. Please review
+      [[WP:Spam]], [[WP:Vandaism]] and the [[AIV Guide]].
+    form:
+      header: 
+        label: Reason for listing <small>(keep it brief)</small>
+        type: text_input
+    edits:
+      - # Appends a list item to the bottom of AIV
+        type: append
+        page_title: Wikipedia:Administrator_intervention_against_vandalism
+        markup: "* {{Vandal|%(username)s}} %(reason)s ~~~~"
+    watchable: True
 
 # Namespaces are configurable for MediaWiki installations.  This datastructure
 # describes the configuration of the English Wikipedia.  Note that the Main 

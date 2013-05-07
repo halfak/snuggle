@@ -1,11 +1,7 @@
 import importlib, re, json, yaml
 
 from . import desirability
-
-COMMENT_RE = re.compile(
-	r'/\*(.|\n|\r)*?\*/',
-	re.DOTALL | re.MULTILINE
-)
+from .configuration import Configuration
 
 def import_class(path):
 	modules = path.split(".")
@@ -19,12 +15,4 @@ def import_class(path):
 	
 	except ImportError as e:
 		raise ImportError(str(e) + "(%s)" % path)
-		
 
-def load_json_config(f):
-	doc_content = f.read()
-	cleaned_content = COMMENT_RE.sub("", doc_content)
-	return json.loads(cleaned_content)
-
-def load_yaml_config(f):
-	return yaml.load(f)

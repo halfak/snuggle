@@ -11,9 +11,9 @@ snuggle:
 controls:
   categories:
     uncategorized: uncategorized
-    good-faith: ✔ good-faith
-    ambiguous: ? ambiguous
-    bad-faith: ✗ bad-faith
+    good-faith: "✔ good-faith"
+    ambiguous: "? ambiguous"
+    bad-faith: "✗ bad-faith"
   filters:
     newcomers with more than: newcomers with more than
     edits to: edits to
@@ -36,13 +36,13 @@ user:
     categorize: Categorize
     history: history
     good-faith:
-      label: ✔
+      label: "✔"
       tooltip: "This user is at least trying to do something useful (or press #1)"
     ambiguous:
-      label: ?
+      label: "?"
       tooltip: "Its unclear whether this editor is trying to be productive or not (or press #2)"
     bad-faith:
-      label: ✗
+      label: "✗"
       tooltip: "This editor is trying to cause harm or be disruptive (or press #3)"
   contribs:
     edits: edits

@@ -1,21 +1,29 @@
-import argparse, logging, sys, time, tempfile, json
+import argparse, logging, sys, time, tempfile, yaml
 
-from snuggle.util import import_class, load_yaml_config
+from snuggle.util import import_class
+from snuggle import mediawiki
 
 logger = logging.getLogger("snuggle.server")
 
 def main():
+	def conf_snuggle(fn):
+		return yaml.load(open(fn))
 	
-	def load_config(fn):
-		return load_yaml_config(open(fn))
+	def conf_mediawiki(fn):
+		mediawiki.configuration.load_yaml(open(fn))
 	
 	parser = argparse.ArgumentParser(
-		description='Keeps the model up to date by looping through recentchanges.'
+		description='Starts Snuggle\'s synchronizers.'
 	)
 	parser.add_argument(
-		'config',
-		type=load_config,
-		help='the path to the configuration file'
+		'snuggle_config',
+		type=conf_snuggle,
+		help='the path to Snuggle\'s configuration file'
+	)
+	parser.add_argument(
+		'mediawiki_config',
+		type=conf_mediawiki,
+		help='the math to MediaWiki\'s configuration file'
 	)
 	parser.add_argument(
 		'-p', "--profile",
@@ -43,19 +51,19 @@ def main():
 		p = pstats.Stats(f.name)
 		p.strip_dirs().sort_stats("time").print_stats(10)
 	else:
-		run(args.config, args.debug)
+		run(args.snuggle_config, args.debug)
 
-def load_synchronizers(doc):
+def load_synchronizers(config):
 	
-	Model = import_class(doc['model']['module'])
-	model = Model.from_config(doc)
+	Model = import_class(config['model']['module'])
+	model = Model.from_config(config)
 	
-	for sync_name in doc['sync_server']['synchronizers']:
-		Synchronizer = import_class(doc[sync_name]['module'])
-		yield Synchronizer.from_config(doc, model)
+	for sync_name in config['sync_server']['synchronizers']:
+		Synchronizer = import_class(config[sync_name]['module'])
+		yield Synchronizer.from_config(config, model)
 		
 
-def run(config_doc, debug):
+def run(config, debug):
 	LOGGING_STREAM = sys.stderr
 	logging.basicConfig(
 		level=logging.DEBUG if debug else logging.INFO,
@@ -69,7 +77,7 @@ def run(config_doc, debug):
 	
 	logger.info("Configuring system...")
 	
-	synchronizers = list(load_synchronizers(config_doc))
+	synchronizers = list(load_synchronizers(config))
 	
 	for synchronizer in synchronizers:
 		synchronizer.start()
