@@ -1,0 +1,46 @@
+
+ ad88888ba                                                       88
+d8"     "8b                                                      88
+Y8,                                                              88
+`Y8aaaaa,    8b,dPPYba,   88       88   ,adPPYb,d8   ,adPPYb,d8  88   ,adPPYba,
+  `"""""8b,  88P'   `"8a  88       88  a8"    `Y88  a8"    `Y88  88  a8P_____88
+        `8b  88       88  88       88  8b       88  8b       88  88  8PP"""""""
+Y8a     a8P  88       88  "8a,   ,a88  "8a,   ,d88  "8a,   ,d88  88  "8b,   ,aa
+ "Y88888P"   88       88   `"YbbdP'Y8   `"YbbdP"Y8   `"YbbdP"Y8  88   `"Ybbd8"'
+                                        aa,    ,88   aa,    ,88
+                                         "Y8bbdP"     "Y8bbdP"
+
+################################################################################
+
+Snuggle is a newcomer observation and support system for MediaWiki communities 
+(like Wikipedia) originally developed by Aaron Halfaker 
+(aaron.halfaker@gmail.com) as part of his dissertation research.  Snuggle is 
+designed to allow experience wiki mentors to observe the activities of newly 
+registered editors and separate desirable newcomers (good-faith & productive) 
+from the undesirables (bad-faith & vandals).
+
+The system has two major components:
+ - synchronizer:
+   Keeps Snuggle's data model in sync with a MediaWiki installation
+ - web user interface:
+   Provides a visualization of newcomer activities and supports actions that 
+   affect the wiki.
+
+These components manifest as server processes that can be started independently
+via binaries provided in the base directory.  There's two relecant configuration
+files you'll need to provide the scripts at start-up:
+ - the snuggle configuration (see config/example.snuggle.yaml):
+   This configuration file describes the behavior of Snuggle components
+ - the MediaWiki configuration (see config/example.medaiwiki.yaml):
+   This configuration file describes important characteristics of the MediaWiki
+   installation that Snuggle is running against.
+
+Example synchronizer startup:
+
+	% ./syncd config/snuggle.yaml config/mediawiki.yaml
+
+
+Example web user interface startup
+
+	% ./webd config/snuggle.yaml config/mediawiki.yaml
+
