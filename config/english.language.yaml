@@ -1,0 +1,69 @@
+last_updated: 2013-05-07
+author: 
+  name: Aaron Halfaker
+  email: aaron.halfaker@gmail.com
+  url: http://halfaker.info
+
+snuggle:
+  name: Snuggle
+  user: Snuggler
+
+controls:
+  categories:
+    uncategorized: uncategorized
+    good-faith: ✔ good-faith
+    ambiguous: ? ambiguous
+    bad-faith: ✗ bad-faith
+  filters:
+    newcomers with more than: newcomers with more than
+    edits to: edits to
+    sorted by: sorted by
+    ascending: ascending
+    descending: descending
+
+user: 
+  info: 
+    utc: 
+      user: user
+      talk: talk
+      contribs: contribs
+    registered: registered
+    views: views
+    revisions: revisions
+    reverted: reverted
+    self-reverted: self-reverted
+  categorize:
+    categorize: Categorize
+    history: history
+    good-faith:
+      label: ✔
+      tooltip: "This user is at least trying to do something useful (or press #1)"
+    ambiguous:
+      label: ?
+      tooltip: "Its unclear whether this editor is trying to be productive or not (or press #2)"
+    bad-faith:
+      label: ✗
+      tooltip: "This editor is trying to cause harm or be disruptive (or press #3)"
+  contribs:
+    edits: edits
+    days since registration: days since registration
+    diff: 
+      reverted: reverted
+      by: by
+
+actions:
+  send message: 
+    label: send message
+    comment: "New message. "
+  invite to teahouse: 
+    label: invite to teahouse
+    comment: "You're invited to the teahouse. "
+  report abuse: 
+    label: report abuse
+    comment: "Reporting to AIV "
+
+comments:
+  actions:
+    send message: New message.
+    teahouse invite: Invitation to the teahouse.
+    report vandalism: Reporting to AIV.

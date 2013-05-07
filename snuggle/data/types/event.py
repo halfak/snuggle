@@ -132,4 +132,5 @@ class UserAction(Event):
 			doc['system_time']
 		)
 EVENT_TYPES[UserAction.TYPE] = UserAction
-		
+
+

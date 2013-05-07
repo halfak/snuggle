@@ -1,4 +1,4 @@
-last_updated: 2013-05-02
+last_updated: 2013-05-07
 author: 
   name: Aaron Halfaker
   email: aaron.halfaker@gmail.com
@@ -12,19 +12,13 @@ protocol: https
 domain: en.wikipedia.org
 
 # The path (prefix) to wiki pages on the server
-article_path: /wiki/
+path:
+  article: /wiki/
+  script: /w/
 
-# This section is reserved for i18n.
-i18n:
-  snuggle: Snuggle
-  snuggler: Snuggler
-  wiki_name: English Wikipedia
-  comments:
-    send message: "New message."
-    teahouse invite: "Invitation to the teahouse."
-    report vandalism: "Reporting to AIV."
-    suffix: ' ([[WP:Snuggle|Snuggle]])'
-  
+# String to append at the end of comments for all page edit actions performed by
+# Snuggle.
+comment_suffix: " ([[WP:Snuggle|Sn]])"
 
 # Namespaces are configurable for MediaWiki installations.  This datastructure
 # describes the configuration of the English Wikipedia.  Note that the Main 
