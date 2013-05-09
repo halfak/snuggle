@@ -1,8 +1,11 @@
-last_updated: 2013-05-07
+last_updated: "May 5th, 2013"
 author: 
   name: Aaron Halfaker
   email: aaron.halfaker@gmail.com
   url: http://halfaker.info
+
+# The name of the MediaWiki installation we're running against.
+name: English Wikipedia
 
 # The protocol to use when linking to the MediaWiki web interface.  'https' is 
 # preferred if possible. 
@@ -14,10 +17,10 @@ domain: en.wikipedia.org
 # The path to wiki pages and scripts on the server.  This is used for making API
 # requests and for linking back to the wiki from the the user interface.
 path:
-  article: /wiki/
-  script: /w/
+  pages: /wiki/
+  scripts: /w/
 file:
-  script: index.php
+  index: index.php
   api: api.php
 
 # Parameters for making requests to the API.  Wikipedia's API requires that a 
@@ -169,89 +172,90 @@ user_actions:
 
 # Namespaces are configurable for MediaWiki installations.  This datastructure
 # describes the configuration of the English Wikipedia.  Note that the Main 
-# namespace does not have any prefixes.
+# namespace has an empty prefix
 namespaces:
   -2:
     name: Media
     prefixes:
-      - Media
+      - "Media:"
   -1:
     name: Special
     prefixes:
-      - Special
+      - "Special:"
   0:
     name: Main
-    prefixes: []
+    prefixes:
+      - ""
   1:
     name: Talk
     prefixes:
-      - Talk
+      - "Talk:"
   2:
     name: User
     prefixes:
-      - User
+      - "User:"
   3:
     name: User talk
     prefixes:
-      - User_talk
+      - "User_talk:"
   4:
     name: Wikipedia
     prefixes:
-      - Wikipedia
-      - Project
-      - WP
+      - "Wikipedia:"
+      - "Project:"
+      - "WP:"
   5:
     name: Wikipedia_talk
     prefixes:
-      - Wikipedia_talk
-      - Project_talk
-      - WT
+      - "Wikipedia_talk:"
+      - "Project_talk:"
+      - "WT:"
   6:
     name: File
     prefixes:
-      - File
-      - Image
+      - "File:"
+      - "Image:"
   7:
     name: File_talk
     prefixes:
-      - File_talk
-      - Image_talk
+      - "File_talk:"
+      - "Image_talk:"
   8:
     name: Mediawiki
     prefixes:
-      - Mediawiki
+      - "Mediawiki:"
   9:
     name: Mediawiki_talk
     prefixes:
-      - Mediawiki_talk
+      - "Mediawiki_talk:"
   10:
     name: Template
     prefixes:
-      - Template
+      - "Template:"
   11:
     name: Template_talk
     prefixes:
-      - Template_talk
+      - "Template_talk:"
   12:
     name: Help
     prefixes:
-      - Help
+      - "Help:"
   13:
     name: Help_talk
     prefixes:
-      - Help_talk
+      - "Help_talk:"
   14:
     name: Category
     prefixes:
-      - Category
+      - "Category:"
   15:
     name: Category_talk
     prefixes:
-      - Category_talk
+      - "Category_talk:"
   100:
     name: Portal
     prefixes:
-      - Portal
+      - "Portal:"
   101:
     name: Portal_talk
     prefixes:
@@ -259,28 +263,28 @@ namespaces:
   108:
     name: Book
     prefixes:
-      - Book
+      - "Book:"
   446:
     name: Education_program
     prefixes:
-      - Education_program
+      - "Education_program:"
   447:
     name: Education_program_talk
     prefixes:
-      - Education_program_talk
+      - "Education_program_talk:"
   710:
     name: Timedtext
     prefixes:
-      - Timedtext
+      - "Timedtext:"
   711:
     name: Timedtext_talk
     prefixes:
-      - Timedtext_talk
+      - "Timedtext_talk:"
   828:
     name: Module
     prefixes:
-      - Module
+      - "Module:"
   829:
     name: Module_talk
     prefixes:
-      - Module_talk
+      - "Module_talk:"

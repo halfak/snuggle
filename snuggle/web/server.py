@@ -2,7 +2,8 @@ import argparse
 from beaker.middleware import SessionMiddleware
 import bottle, logging, sys, random, yaml
 
-from snuggle import language, mediawiki
+from snuggle import configuration, mediawiki
+from snuggle.web.util import inspect_routes
 
 from . import processing, routing
 
@@ -30,13 +31,16 @@ def application(config):
 
 def main():
 	def conf_snuggle(fn):
-		return yaml.load(open(fn))
+		configuration.snuggle.load_yaml(open(fn))
+		return configuration.snuggle
 	
 	def conf_mediawiki(fn):
-		mediawiki.configuration.load_yaml(open(fn))
+		configuration.mediawiki.load_yaml(open(fn))
+		return configuration.mediawiki
 	
 	def conf_language(fn):
-		language.load_yaml(open(fn))
+		configuration.language.load_yaml(open(fn))
+		return configuration.language
 	
 	parser = argparse.ArgumentParser(
 		description='Loads a jsop API for snuggle'
@@ -90,18 +94,23 @@ def main():
 		p = pstats.Stats(f.name)
 		p.strip_dirs().sort_stats("time").print_stats(10)
 	else:
-		run(args.snuggle_config)
+		run(args.snuggle_config, args.debug)
 	
-def run(config):
+def run(config, debug):
 	logger.info("Configuring system.")
 	app = application(config)
+	
+	for prefixes, route in inspect_routes(app.app):
+		abs_prefix = '/'.join(part for p in prefixes for part in p.split('/'))
+		logger.debug("\t".join([abs_prefix, route.rule, route.method]))
 	
 	logger.info("Running server.")
 	bottle.run(
 		app=app, 
 		host=config['web_server']['host'],
 		port=config['web_server']['port'],
-		server='cherrypy'
+		server='cherrypy',
+		debug=debug
 	)
 
 if __name__ == "__main__":

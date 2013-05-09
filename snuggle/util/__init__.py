@@ -1,7 +1,6 @@
 import importlib, re, json, yaml
 
 from . import desirability
-from .configuration import Configuration
 
 def import_class(path):
 	modules = path.split(".")

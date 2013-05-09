@@ -53,7 +53,7 @@ View.UserMenu.Message = UI.FlyoutMenu.Action.extend({
 		this.preamble = {
 			node: $("<p>")
 				.append(
-					"Posts a free-form message  on the " + 
+					"Posts a free-form message on the " + 
 					"user's talk page."
 				)
 		}
@@ -96,7 +96,7 @@ View.UserMenu.Invite = UI.FlyoutMenu.Action.extend({
 		this.preamble = {
 			node: $("<p>")
 				.append("Posts an invitation to ")
-				.append(wiki_link("WP:Teahouse"))
+				.append(SYSTEM.wiki_link("WP:Teahouse"))
 				.append(" on the user's talk page.")
 		}
 		this.form.node.append(this.preamble.node)
@@ -151,11 +151,11 @@ View.UserMenu.Report = UI.FlyoutMenu.Action.extend({
 					"<b>persistent</b> cases. " + 
 					"Please review "
 				)
-				.append(wiki_link("WP:Spam"))
+				.append(SYSTEM.wiki_link("WP:Spam"))
 				.append(", ")
-				.append(wiki_link("WP:Vandaism"))
+				.append(SYSTEM.wiki_link("WP:Vandaism"))
 				.append(" and the ")
-				.append(wiki_link("WP:AIV guide", "AIV Guide"))
+				.append(SYSTEM.wiki_link("WP:AIV guide", "AIV Guide"))
 		}
 		this.form.node.append(this.preamble.node)
 		

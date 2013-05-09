@@ -19,4 +19,11 @@ class Configuration(dict):
 		
 	def load(self, doc):
 		dict.update(self, doc)
+		
 	
+
+#Singletons.  These should be referenced from here. 
+snuggle = Configuration()
+mediawiki = Configuration()
+language = Configuration()
+

@@ -1,6 +1,6 @@
 import requests
 
-from .config import configuration as mwconfig
+from snuggle import configuration
 
 class AuthErrorPass(Exception): pass
 class AuthErrorName(Exception): pass
@@ -48,14 +48,14 @@ class API:
 		
 	
 	@staticmethod
-	def from_config(mwconfig):
+	def from_config(config):
 		uri = "%s://%s%s%s" % (
-			mwconfig['protocol'],
-			mwconfig['domain'],
-			mwconfig['path']['script'],
-			mwconfig['file']['api']
+			config['protocol'],
+			config['domain'],
+			config['path']['scripts'],
+			config['file']['api']
 		)
-		headers = mwconfig['requests'].get('headers', {})
+		headers = config['requests'].get('headers', {})
 		return API(uri, headers)
 
 

@@ -311,7 +311,6 @@ View.User = Class.extend({
 					}.bind(this)
 				)
 				
-				console.log(["appending", thread])
 				this.threads.node.append(thread.node)
 			}
 		},
@@ -472,7 +471,7 @@ View.User = Class.extend({
 						$("<a>")
 							.addClass("snuggle")
 							.text(String(snuggler.name))
-							.attr('href', SYSTEM.wiki.root + "/wiki/User:" + snuggler.name)
+							.attr('href', SYSTEM.user_link(snuggler.name))
 							.attr('target', "_blank")
 					)
 			},

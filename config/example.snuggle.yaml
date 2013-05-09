@@ -1,11 +1,11 @@
-last_updated: 2013-05-02
+last_updated: "May 5th, 2013"
 author: 
   name: Aaron Halfaker
   email: aaron.halfaker@gmail.com
   url: http://halfaker.info
 
 # This configuration file specifies the behavior of Snuggle
-root_directory: ~/Sandbox/snuggle-refactoring
+root_directory: ~/Sandbox/snuggle
 
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.
@@ -83,14 +83,6 @@ scores:
   module: snuggle.scores.STiki
   api:
     uri: http://armstrong.cis.upenn.edu/stiki_api.php
-    headers:
-      User-Agent: Snuggle synchronizer (WP:Snuggle)
-
-# Configuration for MediaWiki API.  This is necessary for getting a few things
-# that can't come from the feed of changes.
-mediawiki:
-  api:
-    uri: https://en.wikipedia.org/w/api.php
     headers:
       User-Agent: Snuggle synchronizer (WP:Snuggle)
 

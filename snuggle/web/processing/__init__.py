@@ -1,12 +1,13 @@
-################################################################## processors.py
 import bottle, os.path, time
 
 from snuggle import mediawiki
+from snuggle import configuration
 from snuggle.util import import_class
 from snuggle.web.util import responses
 
-from .users import Users
+from .config import Config
 from .snugglers import Snugglers
+from .users import Users
 
 class NonProcessor:
 	
@@ -24,6 +25,7 @@ class Processor:
 		self.initialized = time.time()
 		self.users = Users(model, mwapi)
 		self.snugglers = Snugglers(model, mwapi)
+		self.config = Config()
 	
 	def status(self):
 		return responses.success(
@@ -45,7 +47,7 @@ class Processor:
 		)
 		return Processor(
 			Model.from_config(config),
-			mediawiki.API.from_config(mediawiki.configuration),
+			mediawiki.API.from_config(configuration.mediawiki),
 			static_dir
 		)
 
