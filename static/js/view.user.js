@@ -442,6 +442,7 @@ View.User = Class.extend({
 		_render: function(){
 			this.buttons.good_faith.selected(this.model.category == "good-faith")
 			this.buttons.bad_faith.selected(this.model.category == "bad-faith")
+			this.buttons.ambiguous.selected(this.model.category == "ambiguous")
 			
 			this.history.render(this.model.history)
 		}

@@ -2,7 +2,7 @@ import yaml, json
 
 class Configuration(dict):
 	
-	def __init__(self, doc=None):
+	def __init__(self, doc=None, path=None):
 		dict.__init__(
 			self, 
 			doc if doc != None else {}

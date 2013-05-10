@@ -7,10 +7,12 @@ logger = logging.getLogger("snuggle.server")
 
 def main():
 	def conf_snuggle(fn):
-		return yaml.load(open(fn))
+		configuration.snuggle.load_yaml(open(fn))
+		return configuration.snuggle
 	
 	def conf_mediawiki(fn):
-		mediawiki.configuration.load_yaml(open(fn))
+		configuration.mediawiki.load_yaml(open(fn))
+		return configuration.mediawiki
 	
 	parser = argparse.ArgumentParser(
 		description='Starts Snuggle\'s synchronizers.'

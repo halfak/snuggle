@@ -177,9 +177,9 @@
 			}
 			SYSTEM.local = new LocalServer(""),
 			SYSTEM.mediawiki = new MediaWiki(
-				MEDIAWIKI.procol + "://" + 
+				MEDIAWIKI.protocol + "://" + 
 				MEDIAWIKI.domain + 
-				MEDIAWIKI.path.script + 
+				MEDIAWIKI.path.scripts + 
 				MEDIAWIKI.file.api
 			)
 			SYSTEM.controller = new Controller(SYSTEM.local, SYSTEM.mediawiki)
