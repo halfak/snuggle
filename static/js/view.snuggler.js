@@ -58,7 +58,7 @@ View.Snuggler = Class.extend({
 		}else if(this.model.creds){
 			this.preamble.node.text("Logged in as ")
 			this.name.node.text(this.model.creds.name)
-			this.name.node.attr('href', SYSTEM.wiki.root + "/wiki/User:" + this.model.creds.name)
+			this.name.node.attr('href', SYSTEM.user_link(this.model.creds.name))
 			this.name.node.attr('target', "_blank")
 			this.menu.ready_logout()
 		}else{
@@ -102,7 +102,7 @@ View.Snuggler.Menu.Login = Class.extend({
 		this.preamble = {
 			node: $("<p>")
 			.addClass("preamble")
-			.text("Log into your " + SYSTEM.wiki.name + " account.")
+			.text("Log into your " + MEDIAWIKI.name + " account.")
 		}
 		this.node.append(this.preamble.node)
 		

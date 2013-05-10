@@ -242,11 +242,12 @@ class Changes(Synchronizer):
 		)
 		self.model.reverteds.insert(reverted)
 		
-		score = types.Score(
-			revision.id,
-			revision.user
-		)
-		self.model.scores.insert(score)
+		if revision.page.namespace == 0:
+			score = types.Score(
+				revision.id,
+				revision.user
+			)
+			self.model.scores.insert(score)
 	
 	def __update_talk(self, revision):
 		self.model.users.set_talk_page(revision.page.title)
@@ -275,7 +276,7 @@ class Changes(Synchronizer):
 		return Changes(
 			model,
 			ChangesModule.from_config(doc),
-			mediawiki.API.from_config(doc),
+			mediawiki.API.from_config(mediawiki.configuration),
 			doc['changes_synchronizer']['loop_delay'],
 			doc['changes_synchronizer']['changes_per_request'],
 			doc['changes_synchronizer']['max_age'],

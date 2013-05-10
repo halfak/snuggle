@@ -203,7 +203,7 @@ UI.UTC = Class.extend({
 			node: $("<a>")
 				.addClass("user_page")
 				.text("user")
-				.attr("href", SYSTEM.wiki.root + "/wiki/User:" + username)
+				.attr("href", SYSTEM.user_link(username))
 				.attr("target", "_blank")
 		}
 		this.node.append(this.user_page.node)
@@ -215,7 +215,7 @@ UI.UTC = Class.extend({
 			node: $("<a>")
 				.addClass("talk_page")
 				.text("talk")
-				.attr("href", SYSTEM.wiki.root + "/wiki/User_talk:" + username)
+				.attr("href", SYSTEM.user_talk_link(username))
 				.attr("target", "_blank")
 		}
 		this.node.append(this.talk_page.node)
@@ -227,7 +227,7 @@ UI.UTC = Class.extend({
 			node: $("<a>")
 				.addClass("contribs")
 				.text("contribs")
-				.attr("href", SYSTEM.wiki.root + "/wiki/Special:Contributions/" + username)
+				.attr("href", SYSTEM.user_contribs_link(username))
 				.attr("target", "_blank")
 		}
 		this.node.append(this.contribs.node)

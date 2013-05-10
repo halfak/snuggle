@@ -1,4 +1,4 @@
-import time, traceback, logging
+import time, traceback, logging, json
 
 logger = logging.getLogger("snuggle.web.util.responses")
 
@@ -12,6 +12,9 @@ def success(doc, meta=None):
 	meta = meta if meta != None else {}
 	
 	return response("success", doc, meta)
+
+def js_variable(var_name, doc):
+	return "%s = %s" % (var_name, json.dumps(doc))
 
 def error(code, message, meta=None):
 	meta = meta if meta != None else {}
@@ -48,8 +51,13 @@ def general_error(action):
 def session_error():
 	return error("session", "The user session does not exist or has been lost.")
 
-def permission_error():
-	return error("permissions", "You do not have permission to perform this action.")
+def permission_error(action):
+	action = action if action != None else "perform this action"
+	return error("permissions", "You do not have permission to %s." % action)
+
+def auth_required_error(action):
+	action = action if action != None else "perform this action"
+	return error("permissions", "You must be logged in to %s." % action)
 
 def auth_error(type):
 	return error("authentication", "Authentication failed.", meta={'type': type})

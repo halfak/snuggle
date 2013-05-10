@@ -311,7 +311,6 @@ View.User = Class.extend({
 					}.bind(this)
 				)
 				
-				console.log(["appending", thread])
 				this.threads.node.append(thread.node)
 			}
 		},
@@ -443,6 +442,7 @@ View.User = Class.extend({
 		_render: function(){
 			this.buttons.good_faith.selected(this.model.category == "good-faith")
 			this.buttons.bad_faith.selected(this.model.category == "bad-faith")
+			this.buttons.ambiguous.selected(this.model.category == "ambiguous")
 			
 			this.history.render(this.model.history)
 		}
@@ -472,7 +472,7 @@ View.User = Class.extend({
 						$("<a>")
 							.addClass("snuggle")
 							.text(String(snuggler.name))
-							.attr('href', SYSTEM.wiki.root + "/wiki/User:" + snuggler.name)
+							.attr('href', SYSTEM.user_link(snuggler.name))
 							.attr('target', "_blank")
 					)
 			},

@@ -1,5 +1,7 @@
 import requests
 
+from snuggle import configuration
+
 class AuthErrorPass(Exception): pass
 class AuthErrorName(Exception): pass
 class ConnectionError(Exception): pass
@@ -14,8 +16,8 @@ class API:
 	
 	def __init__(self, uri, headers=None):
 		self.uri = uri
-		self.headers = headers if headers != None else {}
 		
+		self.headers = headers if headers != None else {}
 		
 		self.users = Users(self)
 		self.pages = Pages(self)
@@ -44,13 +46,17 @@ class API:
 		
 		return doc, r.cookies
 		
-		
+	
 	@staticmethod
-	def from_config(doc):
-		return API(
-			doc['mediawiki']['api']['uri'], 
-			doc['mediawiki']['api'].get('headers')
+	def from_config(config):
+		uri = "%s://%s%s%s" % (
+			config['protocol'],
+			config['domain'],
+			config['path']['scripts'],
+			config['file']['api']
 		)
+		headers = config['requests'].get('headers', {})
+		return API(uri, headers)
 
 
 class APISubset:

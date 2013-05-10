@@ -231,7 +231,7 @@ Controller = Class.extend({
 						}else if(meta.type == "username"){
 							alert("Could not log in.  No user by the name '" + this.snuggler.menu.login.name.val() + "'.")
 						}else if(meta.type == "connection"){
-							alert("Could not log in.  Connection to " + SYSTEM.wiki.root + " failed.")
+							alert("Could not log in.  Connection to " + MEDIAWIKI.domain + " failed.")
 						}else{
 							alert(message)
 						}
@@ -267,7 +267,7 @@ Controller = Class.extend({
 					alert(message)
 				}
 				user_view.info.menu.disabled(false)
-			}
+			}.bind(this)
 		)
 		
 		//TODO: This is just sort of tacked on here.  

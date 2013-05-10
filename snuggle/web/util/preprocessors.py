@@ -1,4 +1,4 @@
-from bottle import request
+from bottle import request, response
 
 from ..util import responses
 
@@ -52,19 +52,32 @@ class session:
 			return responses.session_error()
 		
 		
-
-class authenticated:
-	def __init__(self, f):
-		self.f = f
-	
-	def __call__(self, *args, **kwargs):
-		session = request.environ.get('beaker.session')
 		
-		if session != None:
-			if 'snuggler' in session:
-				kwargs['session'] = session
-				return self.f(*args, **kwargs)
+class authenticated:
+	def __init__(self, action=None):
+		self.action = action
+	
+	def __call__(self, f):
+		
+		def wrapped_f(*args, **kwargs):
+			session = request.environ.get('beaker.session')
+			
+			if session != None:
+				if 'snuggler' in session:
+					kwargs['session'] = session
+					return f(*args, **kwargs)
+				else:
+					return responses.auth_required_error(self.action)
 			else:
-				return responses.permission_error()
-		else:
-			return responses.session_error()
+				return responses.session_error()
+		
+		return wrapped_f
+			
+			
+def content_type(type):
+	def decorator(f):
+		def g(*a, **k):
+			response.content_type = type
+			return f(*a, **k)
+		return g
+	return decorator

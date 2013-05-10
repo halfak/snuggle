@@ -1,21 +1,23 @@
-
- ad88888ba                                                       88
-d8"     "8b                                                      88
-Y8,                                                              88
-`Y8aaaaa,    8b,dPPYba,   88       88   ,adPPYb,d8   ,adPPYb,d8  88   ,adPPYba,
-  `"""""8b,  88P'   `"8a  88       88  a8"    `Y88  a8"    `Y88  88  a8P_____88
-        `8b  88       88  88       88  8b       88  8b       88  88  8PP"""""""
-Y8a     a8P  88       88  "8a,   ,a88  "8a,   ,d88  "8a,   ,d88  88  "8b,   ,aa
- "Y88888P"   88       88   `"YbbdP'Y8   `"YbbdP"Y8   `"YbbdP"Y8  88   `"Ybbd8"'
-                                        aa,    ,88   aa,    ,88
-                                         "Y8bbdP"     "Y8bbdP"
-
+################################################################################
+ _________________________
+|                         |
+| ad88888ba               |                                     88
+|d8"     "8b              |                                     88
+|Y8,                      |                                     88
+|`Y8aaaaa,    8b,dPPYba,  | 88      88   ,adPYb,d8   ,adPYb,d8  88   ,adPPYba,
+|  `"""""8b,  88P'   `"8a | 88      88  a8"   `Y88  a8"   `Y88  88  a8P_____88
+|        `8b  88       88 | 88      88  8b      88  8b      88  88  8PP"""""""
+|Y8a     a8P  88       88 | "8a,  ,a88  "8a,  ,d88  "8a,  ,d88  88  "8b,   ,aa
+| "Y88888P"   88       88 |  `"YbdP'Y8   `"YbdP"Y8   `"YbdP"Y8  88   `"Ybbd8"'
+|                         |              aa,   ,88   aa,   ,88
+|_________________________|               "Y8bdP"     "Y8bdP"
+                         
 ################################################################################
 
 Snuggle is a newcomer observation and support system for MediaWiki communities 
 (like Wikipedia) originally developed by Aaron Halfaker 
 (aaron.halfaker@gmail.com) as part of his dissertation research.  Snuggle is 
-designed to allow experience wiki mentors to observe the activities of newly 
+designed to allow experienced wiki mentors to observe the activities of newly 
 registered editors and separate desirable newcomers (good-faith & productive) 
 from the undesirables (bad-faith & vandals).
 
@@ -42,5 +44,5 @@ Example synchronizer startup:
 
 Example web user interface startup
 
-	% ./webd config/snuggle.yaml config/mediawiki.yaml
+	% ./webd config/snuggle.yaml config/mediawiki.yaml config/language.yaml
 

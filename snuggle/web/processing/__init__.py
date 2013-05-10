@@ -1,12 +1,13 @@
-################################################################## processors.py
 import bottle, os.path, time
 
 from snuggle import mediawiki
+from snuggle import configuration
 from snuggle.util import import_class
 from snuggle.web.util import responses
 
-from .users import Users
+from .config import Config
 from .snugglers import Snugglers
+from .users import Users
 
 class NonProcessor:
 	
@@ -24,6 +25,7 @@ class Processor:
 		self.initialized = time.time()
 		self.users = Users(model, mwapi)
 		self.snugglers = Snugglers(model, mwapi)
+		self.config = Config()
 	
 	def status(self):
 		return responses.success(
@@ -37,15 +39,15 @@ class Processor:
 		return bottle.static_file(path, root=self.static_dir)
 	
 	@staticmethod
-	def from_config(doc):
-		Model = import_class(doc['model']['module'])
+	def from_config(config):
+		Model = import_class(config['model']['module'])
 		
 		static_dir = os.path.expanduser(
-			os.path.join(doc['root_directory'], "static")
+			os.path.join(config['root_directory'], "static")
 		)
 		return Processor(
-			Model.from_config(doc),
-			mediawiki.API.from_config(doc), 
+			Model.from_config(config),
+			mediawiki.API.from_config(configuration.mediawiki),
 			static_dir
 		)
 
