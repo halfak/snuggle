@@ -36,7 +36,7 @@ changes_synchronizer:
   # Main loop delay in seconds.  How often to attempt an update?
   loop_delay: 5
   # Limit the number of changes per request to this number
-  changes_per_request: 1000
+  changes_per_request: 500
   # Ignore recent changes that occurred before this id & timestamp
   starting_rcid: 573725548
   starting_timestamp: 1367366400
