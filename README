@@ -29,13 +29,16 @@ The system has two major components:
    affect the wiki.
 
 These components manifest as server processes that can be started independently
-via binaries provided in the base directory.  There's two relecant configuration
+via binaries provided in the base directory.  There's three relevant configuration
 files you'll need to provide the scripts at start-up:
  - the snuggle configuration (see config/example.snuggle.yaml):
    This configuration file describes the behavior of Snuggle components
- - the MediaWiki configuration (see config/example.medaiwiki.yaml):
+ - the MediaWiki configuration (see config/enwiki.medaiwiki.yaml):
    This configuration file describes important characteristics of the MediaWiki
    installation that Snuggle is running against.
+ - the language configureation file (see config/english.language.yaml):
+   This configuration file describes the language to be used in the user 
+   interface.  
 
 Example synchronizer startup:
 

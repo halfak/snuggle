@@ -1,3 +1,5 @@
+from pymongo.errors import DuplicateKeyError
+
 from snuggle.data import types
 
 class Reverteds:
@@ -9,15 +11,23 @@ class Reverteds:
 		return self.mongo.db.reverteds.find_one({'revision.page._id': page_id}) != None
 	
 	def insert(self, reverted):
-		return self.mongo.db.reverteds.update(
+		try:
+			self.mongo.db.reverteds.insert(
+				reverted.deflate(),
+				safe=True
+			)
+			return 1
+		except DuplicateKeyError:
+			return 0
+	
+	def update(self, reverted):
+		doc = self.mongo.db.reverteds.update(
 			{'_id': reverted.revision.id}, 
 			reverted.deflate(), 
 			upsert=True, 
 			safe=True
 		)
-	
-	def update(self, reverted):
-		return self.insert(reverted)
+		return doc['n']
 	
 	def remove(self, reverted):
 		doc = self.mongo.db.reverteds.remove(

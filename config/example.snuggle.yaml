@@ -1,4 +1,4 @@
-last_updated: "May 5th, 2013"
+last_updated: "May 11th, 2013"
 author: 
   name: Aaron Halfaker
   email: aaron.halfaker@gmail.com
@@ -37,8 +37,9 @@ changes_synchronizer:
   loop_delay: 5
   # Limit the number of changes per request to this number
   changes_per_request: 1000
-  # Ignore recent changes that occurred before this id
+  # Ignore recent changes that occurred before this id & timestamp
   starting_rcid: 573725548
+  starting_timestamp: 1367366400
   # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
   max_age: 2592000
 
@@ -65,16 +66,19 @@ model:
   port: 27017
   database: snuggle_test
 
-# Specifies how changes will be acquired.  Currently, MySQL is the only option. 
-# Theoretically, an option could be added to read from the API.  For various
-# reasons, that's not an option at the moment.
+# Specifies how changes will be acquired.  The two available options are to read
+# directly from the MySQL database behind MediaWiki (snuggle.changes.MySQL) or 
+# to read from it's API (snuggle.changes.MWAPI).
 changes:
-  module: snuggle.changes.MySQL
-  host: db1047.eqiad.wmnet
-  user: halfak
-  db: enwiki
-  # Specifies where to read the password from
-  read_default_file: /home/halfak/.my.cnf
+  module: snuggle.changes.MWAPI
+
+#changes:
+#  module: snuggle.changes.MySQL
+#  host: db1047.eqiad.wmnet
+#  user: halfak
+#  db: enwiki
+#  # Specifies where to read the password from
+#  read_default_file: /home/halfak/.my.cnf
 
 # Defines how revision scores will be acquired.  Currently, STiki is the only 
 # option since other anti-vandal bots don't provide a set of scores on a 

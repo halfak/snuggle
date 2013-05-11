@@ -4,7 +4,7 @@ class ByteDiff(DataType):
 	
 	def __init__(self, bytes, diff):
 		self.bytes = int(bytes)
-		self.diff  = int(diff)
+		self.diff  = int(diff) if diff != None else None
 	
 	def __eq__(self, other):
 		try:

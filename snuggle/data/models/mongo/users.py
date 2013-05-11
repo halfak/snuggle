@@ -1,20 +1,21 @@
 import time
+from pymongo.errors import DuplicateKeyError
 
 from snuggle.data import types
 
 CATEGORIES = ("bad-faith", "good-faith", "ambiguous")
 
 USER_FIELDS = [
-        '_id',
-        'name',
-        'registration',
-        'activity',
-        'talk',
-        'category',
-        'desirability',
-        'views',
-        'has_user_page',
-        'has_talk_page'
+	'_id',
+	'name',
+	'registration',
+	'activity',
+	'talk',
+	'category',
+	'desirability',
+	'views',
+	'has_user_page',
+	'has_talk_page'
 ]
 
 class Users:
@@ -33,12 +34,14 @@ class Users:
 		return doc != None
 	
 	def insert(self, user):
-		self.mongo.db.users.update(
-			{'_id': user.id},
-			user.deflate(), 
-			upsert=True,
-			safe=True
-		)
+		try:
+			self.mongo.db.users.insert(
+				user.deflate(),
+				safe=True
+			)
+			return 1
+		except DuplicateKeyError:
+			return 0
 	
 	def get(self, id=None, name=None, inflate=True):
 		if id != None:
@@ -71,7 +74,6 @@ class Users:
 			sort=[(sorted_by, 1 if direction == "ascending" else -1)],
 			limit=limit,
 			skip=skip,  #This is dumb, but it will work for now.
-			fields=USER_FIELDS
 		)
 		if not inflate:
 			return docs

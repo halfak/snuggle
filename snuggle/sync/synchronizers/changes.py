@@ -1,6 +1,6 @@
 import logging, time, datetime, traceback, sys
 
-from snuggle import mediawiki
+from snuggle import configuration, mediawiki
 from snuggle.data import types
 from snuggle.util import import_class
 
@@ -13,10 +13,11 @@ class Changes(Synchronizer):
 	"""
 	Synchronizes from a recent changes feed.
 	
-	TODO: threading
+	TODO: threading talk requests
 	"""
 	def __init__(self, model, changes, mwapi, 
-		     loop_delay, changes_per_request, max_age, starting_rcid):
+		     loop_delay, changes_per_request, max_age, 
+		     starting_rcid, starting_timestamp):
 		"""
 		:Parameters:
 			model: `snuggle.data.models.Model`
@@ -40,6 +41,7 @@ class Changes(Synchronizer):
 		self.changes_per_request = changes_per_request
 		self.max_age = max_age
 		self.starting_rcid = starting_rcid
+		self.starting_timestamp = starting_timestamp
 		
 		# Status
 		self.up = False
@@ -52,11 +54,21 @@ class Changes(Synchronizer):
 		self.processed_users = 0
 		self.up_timestamp = time.time()
 		
-		last_rcid = max(
-			self.model.changes.last_id(),
-			self.starting_rcid
-		)
-		last_timestamp = None
+		last_change = self.model.changes.last()
+		if last_change != None:
+			last_rcid = max(
+				last_change.id,
+				self.starting_rcid
+			)
+			last_timestamp = max(
+				last_change.timestamp,
+				self.starting_timestamp
+			)
+		else:
+			last_rcid = 0
+			last_timestamp = 0
+		
+		self.changes.set_position(last_rcid, last_timestamp)
 		
 		while not self.stop_requested:
 			# Get the time
@@ -64,7 +76,6 @@ class Changes(Synchronizer):
 			
 			# Get changes
 			changes = self.changes.read(
-				last_rcid, 
 				self.changes_per_request
 			)
 			
@@ -276,10 +287,11 @@ class Changes(Synchronizer):
 		return Changes(
 			model,
 			ChangesModule.from_config(doc),
-			mediawiki.API.from_config(mediawiki.configuration),
+			mediawiki.API.from_config(configuration.mediawiki),
 			doc['changes_synchronizer']['loop_delay'],
 			doc['changes_synchronizer']['changes_per_request'],
 			doc['changes_synchronizer']['max_age'],
-			doc['changes_synchronizer']['starting_rcid']
+			doc['changes_synchronizer']['starting_rcid'],
+			doc['changes_synchronizer']['starting_timestamp']
 		)
 			

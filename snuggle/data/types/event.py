@@ -30,7 +30,14 @@ class Event(DataType):
 	def inflate(doc):
 		EventClass = EVENT_TYPES[doc['type']]
 		return EventClass.inflate(doc)
+
+class SystemStart(Event):
+	TYPE = "system start"
 	
+	SERVERS = set(['sync', 'web'])
+	
+	def __init__(self, server):
+		self.server = server; assert server in self.SERVERS
 
 class ViewUser(Event):
 	TYPE = "view user"

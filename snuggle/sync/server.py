@@ -1,7 +1,7 @@
 import argparse, logging, sys, time, tempfile, yaml
 
+from snuggle import configuration
 from snuggle.util import import_class
-from snuggle import mediawiki
 
 logger = logging.getLogger("snuggle.server")
 

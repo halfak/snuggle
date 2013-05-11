@@ -1,4 +1,4 @@
-last_updated: "May 5th, 2013"
+last_updated: "May 11th, 2013"
 author: 
   name: Aaron Halfaker
   email: aaron.halfaker@gmail.com
@@ -28,7 +28,7 @@ file:
 # request.
 requests:
   headers:
-    User-Agent: "Snuggle UI ([[WP:Snuggle]])"
+    User-Agent: "Snuggle system (see [[WP:Snuggle]])"
 
 # String to append at the end of comments for all page edit actions performed.
 # This is useful for tracking the use of Snuggle across the history of edits 

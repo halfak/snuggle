@@ -20,9 +20,12 @@ processor = NonProcessor()
 class Processor:
 	
 	def __init__(self, model, mwapi, static_dir):
+		self.model = model
+		self.mwapi = mwapi
 		self.static_dir = static_dir
 		
 		self.initialized = time.time()
+		
 		self.users = Users(model, mwapi)
 		self.snugglers = Snugglers(model, mwapi)
 		self.config = Config()

@@ -6,8 +6,12 @@ class MySQL:
 	
 	def __init__(self, *args, **kwargs):
 		self.conn = oursql.connect(*args, **kwargs)
+		self.last_rcid = 0
+		
+	def set_position(self, last_rcid, last_timestamp):
+		self.last_rcid = last_rcid
 	
-	def read(self, since, limit=None):
+	def read(self, limit=None):
 		query = """
 			SELECT
 				rc_id,
@@ -35,13 +39,15 @@ class MySQL:
 			ORDER BY rc_id ASC
 			LIMIT ?
 		"""
-		data = (since, limit if limit != None else sys.maxint)
+		data = (self.last_rcid, limit if limit != None else sys.maxint)
 		
 		cursor = self.conn.cursor(oursql.DictCursor)
 		cursor.execute(query, data)
 		
 		for row in cursor:
-			yield Change.fromRow(row)
+			change = Change.fromRow(row)
+			self.last_rcid = change.id
+			yield change
 		
 		cursor.close()
 	
@@ -135,6 +141,6 @@ class ByteDiff(types.ByteDiff):
 	def fromRow(row):
 		oldLen = row['old_len'] if row['old_len'] != None else 0
 		newLen = row['new_len'] if row['new_len'] != None else 0
-		return ByteDiff(oldLen, newLen - oldLen)
+		return ByteDiff(newLen, newLen - oldLen)
 
 

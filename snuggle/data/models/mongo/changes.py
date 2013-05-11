@@ -12,15 +12,14 @@ class Changes:
 			safe=True
 		)
 	
-	def last_id(self):
+	def last(self):
 		docs = list(
 			self.mongo.db.changes.find(
 				sort=[('_id', -1)], 
-				limit=1, 
-				fields={'_id': 1}
+				limit=1
 			)
 		)
 		if len(docs) > 0:
-			return docs[0]['_id']
+			return types.Change.inflate(docs[0])
 		else:
-			return 0
+			return None
