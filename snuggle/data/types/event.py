@@ -31,6 +31,8 @@ class Event(DataType):
 		EventClass = EVENT_TYPES[doc['type']]
 		return EventClass.inflate(doc)
 
+EVENT_TYPES[ViewUser.TYPE] = ViewUser
+
 class SystemStart(Event):
 	TYPE = "system start"
 	
@@ -38,6 +40,13 @@ class SystemStart(Event):
 	
 	def __init__(self, server):
 		self.server = server; assert server in self.SERVERS
+	
+	def deflate(self):
+		doc = Event.deflate(self)
+		doc['server'] = self.server
+	
+	
+EVENT_TYPES[SystemStart.TYPE] = SystemStart
 
 class ViewUser(Event):
 	TYPE = "view user"
