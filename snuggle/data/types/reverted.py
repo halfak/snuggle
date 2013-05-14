@@ -8,7 +8,7 @@ class Reverted(DataType):
 	
 	def __init__(self, revision, history, processed=0, last_id=0):
 		self.revision  = revision
-		self.history   = history
+		self.history   = history; assert history != None
 		self.processed = processed
 		self.last_id   = last_id
 	
