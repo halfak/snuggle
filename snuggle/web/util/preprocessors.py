@@ -73,32 +73,6 @@ class authenticated:
 				return responses.session_error()
 		
 		return wrapped_f
-	
-class log_event:
-	def __init__(self, doc):
-		self.doc = doc
-	
-	def __call__(self, f):
-		
-		wrapped_f(*args, **kwargs):
-			doc = dict(self.doc)
-			session = request.environ.get('beaker.session')
-			
-			if session != None:
-				if 'snuggler' in session:
-					doc['snuggler'] = session['snuggler'].deflate()
-				else:
-					doc['snuggler'] = None
-			else:
-				doc['snuggler'] = None
-			
-			ret = f(*args, **kwargs)
-			
-			processing.processor.model.events.insert(doc)
-			
-			return ret
-			
-
 
 
 def content_type(type):

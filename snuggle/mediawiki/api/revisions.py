@@ -8,8 +8,8 @@ class Revisions(APISubset):
 	def search(self, ids):
 		
 		while len(ids) > 0:
-			current_ids = ids[:500]
-			ids = ids[500:]
+			current_ids = ids[:50]
+			ids = ids[50:]
 			
 			doc, cookies = self.api.post(
 				{

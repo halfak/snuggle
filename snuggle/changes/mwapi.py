@@ -63,8 +63,10 @@ class MWAPI:
 		
 		history = {}
 		for doc in reversed(rev_docs):
-			history[doc['sha1']] = int(doc['revid'])
+			# For some reason, we sometimes don't get a sha1.  Ignore those.
+			if 'sha1' in doc: history[doc['sha1']] = int(doc['revid'])
 		
+		return history
 	
 	@staticmethod
 	def from_config(doc):

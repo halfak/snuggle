@@ -29,8 +29,8 @@ The system has two major components:
    affect the wiki.
 
 These components manifest as server processes that can be started independently
-via binaries provided in the base directory.  There's three relevant configuration
-files you'll need to provide the scripts at start-up:
+via binaries provided in the base directory.  There are three relevant 
+configuration files you'll need to provide the scripts at start-up:
  - the snuggle configuration (see config/example.snuggle.yaml):
    This configuration file describes the behavior of Snuggle components
  - the MediaWiki configuration (see config/enwiki.medaiwiki.yaml):
