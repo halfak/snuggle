@@ -1,4 +1,4 @@
-import logging
+import logging, traceback
 
 from snuggle import mediawiki
 from snuggle.data import types
@@ -12,11 +12,21 @@ class Users:
 		self.mwapi = mwapi
 		
 	
-	def view(self, session, user_id):
+	def view(self, session, doc):
 		try:
-			self.model.users.add_view(user_id)
+			self.model.users.add_view(doc['id'])
 		except Exception:
 			return responses.database_error("storing a view for user %s" % user_id)
+		
+		try:
+			user = types.User(doc['id'], doc['name'])
+			event = types.ViewUser(
+				user, 
+				session['snuggler']['user']
+			)
+			self.model.events.insert(event)
+		except Exception as e:
+			logger.error(traceback.format_exc())
 		
 		return responses.success(True)
 	
@@ -34,6 +44,18 @@ class Users:
 				data['id'], 
 				types.Categorization(session['snuggler']['user'], data['category'])
 			)
+			
+			try:
+				user = types.User(doc['id'], doc['name'])
+				event = types.CategorizeUser(
+					user, 
+					session['snuggler']['user'], 
+					data['category']
+				)
+				self.model.events.insert(event)
+			except Exception as e:
+				logger.error(traceback.format_exc())
+			
 			return responses.success(doc)
 		except Exception:
 			return responses.database_error("storing a rating for user %s" % data)
@@ -50,6 +72,16 @@ class Users:
 				cookies=session['snuggler']['cookie']
 			)
 			
+			try:
+				user = types.User(doc['id'], doc['name'])
+				event = types.WatchUser(
+					user, 
+					session['snuggler']['user']
+				)
+				self.model.events.insert(event)
+			except Exception as e:
+				logger.error(traceback.format_exc())
+			
 			return responses.success(True)
 			
 		except mediawiki.MWAPIError as e:
@@ -62,32 +94,50 @@ class Users:
 	def action(self, session, doc):
 		try:
 			action = types.Action.inflate(doc)
+			revisions = []
 			if action.type == "send message":
-				self.mwapi.pages.append(
+				title, rev_id = self.mwapi.pages.append(
 					"User_talk:" + action.user.name,
 					action.markup(), 
 					cookies=session['snuggler']['cookie'],
 					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
 				)
+				revisions.append({'title': title, 'rev_id': rev_id})
+				
 			elif action.type == "teahouse invite":
-				self.mwapi.pages.append(
+				title, rev_id = self.mwapi.pages.append(
 					"User_talk:" + action.user.name,
 					action.markup(), 
 					cookies=session['snuggler']['cookie'],
 					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
 				)
+				revisions.append({'title': title, 'rev_id': rev_id})
+				
 			elif action.type == "report vandalism":
-				self.mwapi.pages.append(
+				title, rev_id = self.mwapi.pages.append(
 					"Wikipedia:Administrator intervention against vandalism",
 					action.markup(), 
 					cookies=session['snuggler']['cookie'],
 					comment="Reporting " + action.user.name + " " + 
 					        action.reason + " ([[WP:Snuggle|Snuggle]])"
 				)
+				revisions.append({'title': title, 'rev_id': rev_id})
+				
 			else:
 				return responses.general_error(
 					"performing a user action.  The action %s is not recognized." % action.type
 				)
+			
+			
+			try:
+				event = types.UserAction(
+					action, 
+					session['snuggler']['user'], 
+					revisions
+				)
+				self.model.events.insert(event)
+			except Exception as e:
+				logger.error(traceback.format_exc())
 			
 			return responses.success(True)
 			
@@ -133,13 +183,13 @@ class Users:
 		except Exception as e:
 			return responses.general_error("preview some markup")
 		
-	def reload_talk(self, session, user_id=None, user_name=None):
-		logger.debug("Reloading talk for %s:%s" % (user_id, user_name))
+	def reload_talk(self, session, doc):
+		logger.debug("Reloading talk for %s" % doc)
 		try:
-			if user_id != None:
-				user = self.model.users.get(id=user_id)
+			if 'id' in doc:
+				user = self.model.users.get(id=doc['id'])
 			else:
-				user = self.model.users.get(name=user_name)
+				user = self.model.users.get(name=doc['name'])
 			
 			rev_id, markup = self.mwapi.pages.get_markup(title="User_talk:" + user.name)
 			talk = types.Talk()
@@ -149,11 +199,11 @@ class Users:
 			return responses.success(talk.deflate())
 		except KeyError as e:
 			return responses.general_error(
-				"reloading the talk page for %s:%s" % (user_id, user_name)
+				"reloading the talk page for %s" % doc
 			)
 		except Exception as e:
 			return responses.general_error(
-				"reloading the talk page for %s:%s" % (user_id, user_name)
+				"reloading the talk page for %s" % doc
 			)
 		
 	

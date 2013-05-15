@@ -27,9 +27,13 @@ class RecentChanges(APISubset):
 		doc, cookies = self.api.post(params)
 		
 		try:
+			if 'query-continue' in doc:
+				rccontinue = doc['query-continue']['recentchanges']['rccontinue']
+			else:
+				rccontinue = None
 			
 			return (
-				doc['query-continue']['recentchanges']['rccontinue'],
+				rccontinue,
 				doc['query']['recentchanges']
 			)
 		except KeyError as e:

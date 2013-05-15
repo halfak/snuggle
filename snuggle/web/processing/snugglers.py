@@ -30,11 +30,25 @@ class Snugglers:
 			'user': types.User(id, name),
 			'cookie': cookie
 		}
+		
+		try:
+			event = types.SnugglerLogin(session['snuggler']['user'])
+			self.model.events.insert(event)
+		except Exception as e:
+			logger.error(traceback.format_exc())
+		
 		return responses.success(session['snuggler']['user'].deflate())
 	
 	def log_out(self, session):
 		if 'snuggler' in session:
 			del session['snuggler']
+		
+			try:
+				event = types.SnugglerLogout(session['snuggler']['user'])
+				self.model.events.insert(event)
+			except Exception as e:
+				logger.error(traceback.format_exc())
+			
 			return responses.success(True)
 		else:
 			return responses.success("Not logged in.")

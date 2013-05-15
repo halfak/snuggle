@@ -35,7 +35,7 @@ class Pages(APISubset):
 		
 		try:
 			if doc['edit']['result'] == "Success":
-				return doc['edit']['newrevid']
+				return doc['edit']['title'], doc['edit']['newrevid']
 			else:
 				raise MWAPIError(doc['edit']['result'], str(doc['edit']))
 		except KeyError as e:

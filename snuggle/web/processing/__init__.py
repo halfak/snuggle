@@ -42,21 +42,19 @@ class Processor:
 		return bottle.static_file(path, root=self.static_dir)
 	
 	@staticmethod
-	def from_config(config):
-		Model = import_class(config['model']['module'])
-		
+	def from_config(config, model):
 		static_dir = os.path.expanduser(
 			os.path.join(config['root_directory'], "static")
 		)
 		return Processor(
-			Model.from_config(config),
+			model,
 			mediawiki.API.from_config(configuration.mediawiki),
 			static_dir
 		)
 
 
-def configure(doc):
+def configure(config, model):
 	global processor
-	processor = Processor.from_config(doc)
+	processor = Processor.from_config(config, model)
 
 

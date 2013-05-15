@@ -32,6 +32,7 @@ class MWAPI:
 		)
 		
 		self.rccontinue = rccontinue
+		
 		return self._inflate_changes(change_docs, rev_docs)
 		
 	
@@ -54,6 +55,10 @@ class MWAPI:
 						"new revision",
 						ChangeRevision.from_doc(rev_docs[doc['revid']])
 					)
+			
+			
+			self.last_rcid = doc['rcid']
+			self.last_timestamp = string_to_timestamp(doc['timestamp'])
 				
 			
 		

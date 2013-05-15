@@ -54,7 +54,6 @@ class Revision(DataType):
 			doc['sha1']
 		)
 
-
 class ChangeRevision(Revision):
 	
 	def __init__(self, id, user, page, timestamp, comment, diff, sha1):
@@ -140,7 +139,6 @@ class UserRevision(Revision):
 			revision.sha1,
 			revision.revert if hasattr(revision, "revert") else None
 		)
-		
 
 class Revert(Revision):
 	

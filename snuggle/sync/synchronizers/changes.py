@@ -10,6 +10,8 @@ logger = logging.getLogger("snuggle.sync.synchronizers.changes")
 
 
 class Changes(Synchronizer): 
+	NAME = "changes"
+	
 	"""
 	Synchronizes from a recent changes feed.
 	
@@ -46,47 +48,47 @@ class Changes(Synchronizer):
 		# Status
 		self.up = False
 		self.stop_requested = False
+		self.processed_revisions = 0
+		self.processed_users = 0
+		self.reverts_detected = 0
+		self.last_rcid = None
+		self.last_timestamp = None
 		
 	def run(self):
 		# Status
 		self.up = True
-		self.processed_revision = 0
-		self.processed_users = 0
-		self.up_timestamp = time.time()
 		
 		last_change = self.model.changes.last()
 		if last_change != None:
-			last_rcid = max(
+			self.last_rcid = max(
 				last_change.id,
 				self.starting_rcid
 			)
-			last_timestamp = max(
+			self.last_timestamp = max(
 				last_change.timestamp,
 				self.starting_timestamp
 			)
 		else:
-			last_rcid = 0
-			last_timestamp = 0
+			self.last_rcid = 0
+			self.last_timestamp = 0
 		
-		self.changes.set_position(last_rcid, last_timestamp)
+		self.changes.set_position(self.last_rcid, self.last_timestamp)
 		
 		while not self.stop_requested:
 			# Get the time
 			start = time.time()
 			
 			# Get changes
-			changes = self.changes.read(
-				self.changes_per_request
-			)
+			changes = self.changes.read(self.changes_per_request)
 			
 			# Apply changes
 			for id, timestamp in self.__apply(changes):
-				last_rcid = id
-				last_timestamp = timestamp
+				self.last_rcid = id
+				self.last_timestamp = timestamp
 			
 			# Discard old
-			if last_timestamp is not None:
-				self.model.cull(last_timestamp - self.max_age)
+			if self.last_timestamp is not None:
+				self.model.cull(self.last_timestamp - self.max_age)
 			
 			# Sleep for all of the time that we haven't used
 			time.sleep(max(self.loop_delay - (time.time() - start), 0))
@@ -95,7 +97,7 @@ class Changes(Synchronizer):
 		logger.info(
 			"Stopped processing recent changes. " +
 			"(last_rcid=%s, last_timestamp=%s)" % (
-				last_rcid, last_timestamp
+				self.last_rcid, self.last_timestamp
 			)
 		)
 		self.up = False
@@ -104,24 +106,15 @@ class Changes(Synchronizer):
 		logger.info("Stop request recieved.")
 		self.stop_requested = True
 	
+	
 	def status(self):
-		if self.up:
-			return (
-				"Online.\n" + 
-				"\tNew users: %s \n" + 
-				"\tRevisions: %s \n" + 
-				"\tUptime: %s hours."
-			) % (
-				self.processed_users, 
-				self.processed_revisions, 
-				round(
-					(time.time() - self.up_timestamp) / 
-					(60*60.0),
-					2
-				)
-			)
-		else:
-			return "Offline"
+		return {
+			'processed users': self.processed_users,
+			'processed revisions': self.processed_revisions,
+			'reverts detected': self.reverts_detected,
+			'last rcid': self.last_rcid,
+			'last timestamp': self.last_timestamp
+		}
 		
 	def __apply(self, changes):
 		successful = 0
@@ -169,8 +162,10 @@ class Changes(Synchronizer):
 	
 	def __apply_change(self, change):
 		if change.type == "new user":
+			self.processed_users += 1
 			return self.__new_user(change.change)
 		elif change.type == "new revision":
+			self.processed_revisions += 1
 			return self.__new_revision(change.change)
 	
 	def __new_user(self, user):
@@ -228,6 +223,7 @@ class Changes(Synchronizer):
 					revision.user.id
 				)
 			)
+			self.reverts_detected += 1
 			
 		if reverted.done():
 			self.model.reverteds.remove(reverted)

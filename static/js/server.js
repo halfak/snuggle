@@ -81,9 +81,12 @@ LocalServer.Users = Class.extend({
 		)
 	},
 	view: function(user, success, error){
-		this.api.get(
+		this.api.post(
 			'user', 'view', 
-			user.id,
+			{
+				id: user.id, 
+				name: user.info.name
+			},
 			success,
 			error
 		)
@@ -93,6 +96,7 @@ LocalServer.Users = Class.extend({
 			'user', 'categorize', 
 			{
 				id: user.id,
+				name: user.info.name,
 				category: category
 			},
 			success,
@@ -142,7 +146,10 @@ LocalServer.Users = Class.extend({
 	reload_talk: function(user, success, error){
 		this.api.post(
 			'user', 'reload/talk',
-			user.id,
+			{
+				id: user.id,
+				name: user.info.name
+			},
 			success,
 			error
 		)

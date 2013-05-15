@@ -3,6 +3,8 @@ import threading
 
 class Synchronizer(threading.Thread):
 	
+	NAME = NotImplemented
+	
 	def __init__(self):
 		threading.Thread.__init__(self)
 		

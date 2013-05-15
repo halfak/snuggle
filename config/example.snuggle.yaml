@@ -38,8 +38,8 @@ changes_synchronizer:
   # Limit the number of changes per request to this number
   changes_per_request: 500
   # Ignore recent changes that occurred before this id & timestamp
-  starting_rcid: 573725548
-  starting_timestamp: 1367366400
+  starting_rcid: 577767588
+  starting_timestamp: 1368562710
   # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
   max_age: 2592000
 
@@ -86,7 +86,7 @@ changes:
 scores:
   module: snuggle.scores.STiki
   api:
-    uri: http://armstrong.cis.upenn.edu/stiki_api.php
+    uri: http://158.130.7.3/stiki_api.php
     headers:
       User-Agent: Snuggle synchronizer (WP:Snuggle)
 

@@ -5,9 +5,30 @@ from ..byte_diff import ByteDiff
 from ..user import User
 from ..page import Page
 from ..revision import UserRevision
-from ..event import Event, ViewUser, CategorizeUser, UserAction
+from ..event import Event, ServerStart, ServerStop, ViewUser, CategorizeUser, UserAction
 
+def test_server_start():
+	server = "web"
+	server_start = ServerStart(server)
+	
+	eq_(server_start.server, server)
+	
+	eq_(server_start, Event.inflate(server_start.deflate()))
 
+def test_server_stop():
+	server = "web"
+	start_time = 1234567890
+	stats = {"foo": 5}
+	error = "foobar"
+	server_stop = ServerStop(server, start_time, stats, error)
+	
+	eq_(server_stop.server, server)
+	eq_(server_stop.start_time, start_time)
+	eq_(server_stop.stats, stats)
+	eq_(server_stop.error, error)
+	
+	eq_(server_stop, Event.inflate(server_stop.deflate()))
+	
 def test_view_user():
 	user     = User(10, "Herp")
 	snuggler = User(12, "Derp")

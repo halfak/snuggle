@@ -1,6 +1,7 @@
-import argparse, logging, sys, time, tempfile, yaml
+import argparse, logging, sys, time, tempfile, yaml, traceback
 
 from snuggle import configuration
+from snuggle.data import types
 from snuggle.util import import_class
 
 logger = logging.getLogger("snuggle.server")
@@ -55,10 +56,7 @@ def main():
 	else:
 		run(args.snuggle_config, args.debug)
 
-def load_synchronizers(config):
-	
-	Model = import_class(config['model']['module'])
-	model = Model.from_config(config)
+def load_synchronizers(config, model):
 	
 	for sync_name in config['sync_server']['synchronizers']:
 		Synchronizer = import_class(config[sync_name]['module'])
@@ -77,13 +75,22 @@ def run(config, debug):
 	requests_log.setLevel(logging.WARNING)
 	logger = logging.Logger("snuggle.sync.server")
 	
+	
 	logger.info("Configuring system...")
 	
-	synchronizers = list(load_synchronizers(config))
+	logger.info("Using model %s." % config['model']['module'])
+	Model = import_class(config['model']['module'])
+	model = Model.from_config(config)
+	model.events.insert(types.ServerStart("sync"))
 	
+	synchronizers = list(load_synchronizers(config, model))
+	
+	logging.info("Starting synchronizers...")
+	start_time = time.time()
 	for synchronizer in synchronizers:
 		synchronizer.start()
-		
+	
+	
 	try:
 		while True: # For some reason, this is necessary for catching Ctrl^C
 			for synchronizer in synchronizers:
@@ -97,7 +104,21 @@ def run(config, debug):
 			
 		for synchronizer in synchronizers:
 			synchronizer.join()
-
+		
+		event = types.ServerStop(
+			"sync",
+			start_time,
+			dict((s.NAME, s.status()) for s in synchronizers)
+		)
+		model.events.insert(event)
+	except Exception as e:
+		event = types.ServerStop(
+			"sync",
+			start_time,
+			dict((s.NAME, s.status()) for s in synchronizers),
+			traceback.format_exc()
+		)
+		model.events.insert(event)
 
 if __name__ == "__main__":
 	main()

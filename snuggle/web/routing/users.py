@@ -8,9 +8,15 @@ def utf8(bytes):
 	return unicode(bytes, 'utf-8')
 
 # /user/view/
-@get("/user/view/<user_id:int>")
+@get("/user/view/<query>")
+@preprocessors.query_data(json.loads)
 @preprocessors.authenticated("to record a view for a user")
-def user_view(session, user_id): return processing.processor.users.view(session, user_id)
+def user_view(session, data): return processing.processor.users.view(session, data)
+
+@post("/user/view/")
+@preprocessors.post_data(json.loads)
+@preprocessors.authenticated("to record a view for a user")
+def user_view(session, data): return processing.processor.users.view(session, data)
 
 # /user/categorize/
 @get("/user/categorize/<query>")
@@ -52,18 +58,18 @@ def users_action_preview(session, data):
 @get("/user/reload/talk/<user_id:int>")
 @preprocessors.authenticated("reload a user's talk page")
 def user_reload_talk(session, user_id):
-	return processing.processor.users.reload_talk(session, user_id=user_id)
+	return processing.processor.users.reload_talk(session, {'id': user_id})
 
 @get("/user/reload/talk/<user_name>")
 @preprocessors.authenticated("reload a user's talk page")
 def user_reload_talk(session, user_name):
-	return processing.processor.users.reload_talk(session, user_name=utf8(user_name))
+	return processing.processor.users.reload_talk(session, {'name': user_name})
 
 @post("/user/reload/talk/")
-@preprocessors.post_data(int, "user_id")
+@preprocessors.post_data(json.loads)
 @preprocessors.authenticated("reload a user's talk page")
-def user_reload_talk(session, user_id):
-	return processing.processor.users.reload_talk(session, user_id=user_id)
+def user_reload_talk(session, data):
+	return processing.processor.users.reload_talk(session, data)
 
 # /user/watch/
 @get("/user/watch/<query>")

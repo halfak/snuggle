@@ -8,6 +8,8 @@ from .synchronizer import Synchronizer
 logger = logging.getLogger("snuggle.sync.synchronizers.scores")
 
 class Scores(Synchronizer):
+	NAME = "scores"
+	
 	"""
 	Synchronizes vandal scores for users' main namespace edits.  This 
 	synchronizer is used to keep the "desirability" score up to date for a 
@@ -38,14 +40,14 @@ class Scores(Synchronizer):
 		# Status
 		self.up = False
 		self.stop_requested = False
+		self.up_timestamp = None
+		self.scores_completed = 0
+		self.scores_culled = 0
+		self.errored_batches = 0
 	
 	def run(self):
 		# Status
 		self.up = True
-		self.scores_completed = 0
-		self.scores_culled = 0
-		self.errored_batches = 0
-		self.up_timestamp = time.time()
 		
 		last_scored_id = 0
 		
@@ -84,6 +86,14 @@ class Scores(Synchronizer):
 					
 				)
 				self.scores_culled += culled
+				
+				logger.info("%s: %s found, %s missed, %s culled" % (
+						len(scores), 
+						len(updated_scores), 
+						len(scores) - len(updated_scores),
+						culled
+					)
+				)
 			except Exception as e:
 				logger.error(
 					"An error occurred while looking up " + 
@@ -93,13 +103,6 @@ class Scores(Synchronizer):
 				self.errored_batches += 1
 			
 			
-			logger.info("%s: %s found, %s missed, %s culled" % (
-					len(scores), 
-					len(updated_scores), 
-					len(scores) - len(updated_scores),
-					culled
-				)
-			)
 			
 			# Sleep for a bit
 			time.sleep(max(self.loop_delay - (time.time() - start), 0))
@@ -138,27 +141,13 @@ class Scores(Synchronizer):
 	def stop(self):
 		logger.info("Stop request recieved.")
 		self.stop_requested = True
-	
+		
 	def status(self):
-		if self.up:
-			return (
-				"Online.\n" + 
-				"\tScores completed: %s \n" + 
-				"\tScores dropped: %s \n" + 
-				"\tErrored batches: %s \n"
-				"\tUptime: %s hours."
-			) % (
-				self.scores_completed, 
-				self.scores_dropped, 
-				self.errored_batches, 
-				round(
-					(time.time() - self.up_timestamp) / 
-					(60*60.0),
-					2
-				)
-			)
-		else:
-			return "Offline"
+		return {
+			'scores completed': self.scores_completed,
+			'scores dropped': self.scores_culled,
+			'errored batches': self.errored_batches
+		}
 	
 	@staticmethod
 	def from_config(doc, model):

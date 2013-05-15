@@ -1,18 +1,20 @@
 import argparse
 from beaker.middleware import SessionMiddleware
-import bottle, logging, sys, random, yaml
+import bottle, logging, sys, time, random, yaml, traceback
 
 from snuggle import configuration, mediawiki
+from snuggle.data import types
 from snuggle.web.util import inspect_routes
+from snuggle.util import import_class
 
 from . import processing, routing
 
 logger = logging.getLogger("snuggle.web.server")
 
-def application(config):
+def application(config, model):
 	
 	#configure processors
-	processing.configure(config)
+	processing.configure(config, model)
 	
 	# Generates a random 25 character sequence
 	secret = "".join(chr(random.randrange(32,125)) for i in xrange(25))
@@ -98,20 +100,47 @@ def main():
 	
 def run(config, debug):
 	logger.info("Configuring system.")
-	app = application(config)
+	
+	Model = import_class(config['model']['module'])
+	model = Model.from_config(config)
+	
+	start_time = time.time()
+	event = types.ServerStart("web")
+	model.events.insert(event)
+	
+	app = application(config, model)
 	
 	for prefixes, route in inspect_routes(app.app):
 		abs_prefix = '/'.join(part for p in prefixes for part in p.split('/'))
 		logger.debug("\t".join([abs_prefix, route.rule, route.method]))
 	
 	logger.info("Running server.")
-	bottle.run(
-		app=app, 
-		host=config['web_server']['host'],
-		port=config['web_server']['port'],
-		server='cherrypy',
-		debug=debug
-	)
+	try:
+		bottle.run(
+			app=app, 
+			host=config['web_server']['host'],
+			port=config['web_server']['port'],
+			#server='cherrypy',
+			debug=debug
+		)
+		
+		# Record stop
+		event = types.ServerStop(
+			"web",
+			start_time,
+			{}
+		)
+		model.events.insert(event)
+	except Exception:
+		
+		# Record stop with error
+		event = types.ServerStop(
+			"web",
+			start_time,
+			{},
+			traceback.format_exc()
+		)
+		model.events.insert(event)
 
 if __name__ == "__main__":
 	logging.debug("calling main()")
