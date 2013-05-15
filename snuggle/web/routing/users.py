@@ -84,16 +84,18 @@ def user_watch(session, data):
 def user_watch(session, data):
 	return processing.processor.users.watch(session, data)
 
-# /users/get/
-@get("/users/get/<query>")
+# /users/query/
+@get("/users/query/<query>")
+@preprocessors.session
 @preprocessors.query_data(json.loads)
-def users_get(data):
-	return processing.processor.users.get(data)
+def user_query(session, data):
+	return processing.processor.users.query(session, data)
 
-@post("/users/get/")
+@post("/users/query/")
+@preprocessors.session
 @preprocessors.post_data(json.loads)
-def users_get(data):
-	return processing.processor.users.get(data)
+def user_query(session, data):
+	return processing.processor.users.query(session, data)
 
 
 

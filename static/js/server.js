@@ -68,7 +68,7 @@ LocalServer.Users = Class.extend({
 		if(!filters.direction){throw "direction must be a real value"}
 		
 		this.api.post(
-			'users', 'get', 
+			'users', 'query', 
 			$.extend(
 				filters,
 				{

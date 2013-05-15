@@ -35,7 +35,7 @@ class API:
 		try:
 			doc = r.json()
 		except ValueError as e:
-			raise MWAPIError('value', "Could not decode json.")
+			raise MWAPIError('value', "Could not decode json: %s" % r.content)
 		
 		if 'error' in doc:
 			raise MWAPIError(doc['error'].get('code'), doc['error'].get('info'))

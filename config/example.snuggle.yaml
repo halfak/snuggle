@@ -86,7 +86,7 @@ changes:
 scores:
   module: snuggle.scores.STiki
   api:
-    uri: http://158.130.7.3/stiki_api.php
+    uri: http://armstrong.cis.upenn.edu/stiki_api.php
     headers:
       User-Agent: Snuggle synchronizer (WP:Snuggle)
 

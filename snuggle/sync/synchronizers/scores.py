@@ -44,12 +44,12 @@ class Scores(Synchronizer):
 		self.scores_completed = 0
 		self.scores_culled = 0
 		self.errored_batches = 0
+		self.last_scored_id = 0
 	
 	def run(self):
 		# Status
 		self.up = True
 		
-		last_scored_id = 0
 		
 		while not self.stop_requested:
 			
@@ -76,13 +76,13 @@ class Scores(Synchronizer):
 					self.model.scores.complete(score)
 					
 					# Record this ID
-					last_scored_id = score.id
+					self.last_scored_id = score.id
 					self.scores_completed += 1
 					
 				#Cleanup scores.
 				culled = self.model.scores.cull(
 					self.min_attempts,
-					id_less_than=last_scored_id - self.max_id_distance,
+					id_less_than=self.last_scored_id - self.max_id_distance,
 					
 				)
 				self.scores_culled += culled
@@ -111,7 +111,7 @@ class Scores(Synchronizer):
 		logger.info(
 			"Stopped processing scores. " +
 			"(last_scored_id=%s, scores_completed=%s)" % (
-				last_scored_id, self.scores_completed
+				self.last_scored_id, self.scores_completed
 			)
 		)
 		self.up = False

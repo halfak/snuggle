@@ -28,7 +28,23 @@ def test_server_stop():
 	eq_(server_stop.error, error)
 	
 	eq_(server_stop, Event.inflate(server_stop.deflate()))
+
+def test_user_query():
+	query = {'herp': 10, 'derp': "derpity"}
+	wait_time = 1234567.76
+	response_length = 6538
+	snuggler = User(10, "Derp")
+	data = {'more': "Derp"}
+	user_query = UserQuery(query, wait_time, response_length, snuggler, data)
 	
+	eq_(user_query.query, query)
+	eq_(user_query.wait_time, wait_time)
+	eq_(user_query.response_length, response_length)
+	eq_(user_query.snuggler, snuggler)
+	eq_(user_query.data, data)
+	
+	eq_(user_query, Event.inflate(user_query.deflate()))
+
 def test_view_user():
 	user     = User(10, "Herp")
 	snuggler = User(12, "Derp")

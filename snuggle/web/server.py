@@ -120,7 +120,7 @@ def run(config, debug):
 			app=app, 
 			host=config['web_server']['host'],
 			port=config['web_server']['port'],
-			#server='cherrypy',
+			server='cherrypy',
 			debug=debug
 		)
 		

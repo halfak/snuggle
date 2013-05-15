@@ -1,4 +1,5 @@
-import logging, traceback
+import logging, traceback, time
+from bottle import request
 
 from snuggle import mediawiki
 from snuggle.data import types
@@ -30,11 +31,31 @@ class Users:
 		
 		return responses.success(True)
 	
-	def get(self, query):
+	def query(self, session, query):
 		try:
+			start = time.time()
 			users = list(self.model.users.query(inflate=False, **query))
+			end = time.time()
 		except Exception:
 			return responses.database_error("getting a set of users with query %s" % query)
+		
+		
+		
+		try:
+			event = types.UserQuery(
+				query,
+				end-start,
+				len(users),
+				session['snuggler']['user'] if 'snuggler' in session else None,
+				{
+					'ip': request.remote_addr,
+					'agent': request.headers.get('User-Agent')
+				}
+			)
+			self.model.events.insert(event)
+		except Exception as e:
+			logger.error(traceback.format_exc())
+			
 		
 		return responses.success(users)
 	
@@ -46,7 +67,7 @@ class Users:
 			)
 			
 			try:
-				user = types.User(doc['id'], doc['name'])
+				user = types.User(data['id'], data['name'])
 				event = types.CategorizeUser(
 					user, 
 					session['snuggler']['user'], 
