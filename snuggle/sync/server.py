@@ -4,7 +4,7 @@ from snuggle import configuration
 from snuggle.data import types
 from snuggle.util import import_class
 
-logger = logging.getLogger("snuggle.server")
+logger = logging.getLogger("snuggle.sync.server")
 
 def main():
 	def conf_snuggle(fn):
@@ -85,7 +85,7 @@ def run(config, debug):
 	
 	synchronizers = list(load_synchronizers(config, model))
 	
-	logging.info("Starting synchronizers...")
+	logger.info("Starting synchronizers...")
 	start_time = time.time()
 	for synchronizer in synchronizers:
 		synchronizer.start()

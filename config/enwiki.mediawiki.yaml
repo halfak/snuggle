@@ -104,7 +104,7 @@ user_actions:
   - # send message #############################################################
     label: send message
     description: "Posts a new message on the user's talk page." 
-    form:
+    fields:
       - # header
         name: header
         label: Header
@@ -124,7 +124,7 @@ user_actions:
   - # teahouse invite ##########################################################
     label: invite to teahouse
     description: "Posts an invitation to [[WP:Teahouse]] on the user's talk page."
-    form:
+    fields:
       - # header
         name: header
         label: Header
@@ -159,7 +159,7 @@ user_actions:
       Reports vandals and spammers to admins. Use only for
       <b>obvious</b> and <b>persistent</b> cases. Please review
       [[WP:Spam]], [[WP:Vandaism]] and the [[AIV Guide]].
-    form:
+    fields:
       header: 
         label: Reason for listing <small>(keep it brief)</small>
         type: text_input

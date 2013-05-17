@@ -1,5 +1,7 @@
 from bottle import route
 
+from .user_data import user_data
+
 def inspect_routes(app):
 	for route in app.routes:
 		if 'mountpoint' in route.config:
@@ -10,3 +12,6 @@ def inspect_routes(app):
 				yield [prefix] + prefixes, route
 		else:
 			yield [], route
+		
+	
+

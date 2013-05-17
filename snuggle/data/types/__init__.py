@@ -4,7 +4,7 @@ from .byte_diff import ByteDiff
 from .category import Category, Categorization
 from .change import Change
 from .desirability import Desirability
-from .event import Event, ServerStart, ServerStop, UserQuery, ViewUser
+from .event import Event, ServerStart, ServerStop, UILoaded, UserQuery, ViewUser
 from .event import CategorizeUser, UserAction, SnugglerLogin, SnugglerLogout
 from .new_user import NewUser
 from .page import Page

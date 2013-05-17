@@ -1,10 +1,12 @@
-import pymongo
+import pymongo, logging
 
 from .changes import Changes
 from .events import Events
 from .users import Users
 from .reverteds import Reverteds
 from .scores import Scores
+
+logger = logging.getLogger("snuggle.data.models.mongo")
 
 class Mongo:
 	
@@ -28,6 +30,11 @@ class Mongo:
 	
 	@staticmethod
 	def from_config(doc):
+		
+		logger.info(
+			"Mongo(host=%(host)s, port=%(port)s, db=%(database)s)" % doc['model']
+		)
+		
 		return Mongo(
 			pymongo.Connection(
 				host=doc['model']['host'],

@@ -5,4 +5,4 @@ from snuggle.web.util import preprocessors
 
 # /
 @route("/")
-def default(): return processing.processor.static_file("index.html")
+def default(): return processing.processor.default()

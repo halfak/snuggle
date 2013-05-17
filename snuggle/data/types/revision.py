@@ -23,7 +23,7 @@ class Revision(DataType):
 				self.sha1 == other.sha1
 			)
 		except AttributeError:
-			raise False
+			return False
 	
 	def deflate(self):
 		return {
@@ -69,7 +69,7 @@ class ChangeRevision(Revision):
 				self.page == other.page
 			)
 		except AttributeError:
-			raise False
+			return False
 	
 	def deflate(self):
 		doc = Revision.deflate(self)
@@ -107,7 +107,7 @@ class UserRevision(Revision):
 				self.revert == other.revert
 			)
 		except AttributeError:
-			raise False
+			return False
 	
 	def deflate(self):
 		doc = Revision.deflate(self)
@@ -153,7 +153,7 @@ class Revert(Revision):
 				self.user == other.user
 			)
 		except AttributeError:
-			raise False
+			return False
 	
 	def deflate(self):
 		doc = Revision.deflate(self)

@@ -1,20 +1,21 @@
-import bottle, os.path, time
+import bottle, os.path, time, logging, traceback
 
-from snuggle import mediawiki
-from snuggle import configuration
+from snuggle import mediawiki, configuration
+from snuggle.data import types
 from snuggle.util import import_class
-from snuggle.web.util import responses
+from snuggle.web.util import responses, user_data
 
 from .config import Config
 from .snugglers import Snugglers
 from .users import Users
+
+logger = logging.getLogger("snuggle.web.processing")
 
 class NonProcessor:
 	
 	def __getattribute__(self, attr):
 		return responses.configuration_error()
 		
-
 processor = NonProcessor()
 
 class Processor:
@@ -37,6 +38,19 @@ class Processor:
 				'up_time': time.time()-self.initialized
 			}
 		)
+	
+	def default(self):
+		try:
+			snuggler, data = user_data()
+			event = types.UILoaded(
+				snuggler,
+				data
+			)
+			self.model.events.insert(event)
+		except Exception as e:
+			logger.error("An error occurred while logging UILoaded event: %s" % traceback.format_exc())
+		
+		return self.static_file("index.html")
 	
 	def static_file(self, path):
 		return bottle.static_file(path, root=self.static_dir)

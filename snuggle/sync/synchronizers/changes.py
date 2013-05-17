@@ -75,23 +75,30 @@ class Changes(Synchronizer):
 		self.changes.set_position(self.last_rcid, self.last_timestamp)
 		
 		while not self.stop_requested:
-			# Get the time
-			start = time.time()
 			
-			# Get changes
-			changes = self.changes.read(self.changes_per_request)
-			
-			# Apply changes
-			for id, timestamp in self.__apply(changes):
-				self.last_rcid = id
-				self.last_timestamp = timestamp
-			
-			# Discard old
-			if self.last_timestamp is not None:
-				self.model.cull(self.last_timestamp - self.max_age)
-			
-			# Sleep for all of the time that we haven't used
-			time.sleep(max(self.loop_delay - (time.time() - start), 0))
+			try:
+				# Get the time
+				start = time.time()
+				
+				# Get changes
+				changes = self.changes.read(self.changes_per_request)
+				
+				# Apply changes
+				for id, timestamp in self.__apply(changes):
+					self.last_rcid = id
+					self.last_timestamp = timestamp
+				
+				# Discard old
+				if self.last_timestamp is not None:
+					self.model.cull(self.last_timestamp - self.max_age)
+				
+				# Sleep for all of the time that we haven't used
+				time.sleep(max(self.loop_delay - (time.time() - start), 0))
+				
+			except Exception as e:
+				logger.error(
+					"An error occured while applying changes: %s" % traceback.format_exc()
+				)
 			
 		
 		logger.info(

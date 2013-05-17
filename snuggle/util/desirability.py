@@ -24,7 +24,10 @@ def beta_likelihood(scores, model):
 			model.cdf(max(score - EPSILON, 0.005))
 		)
 	
-	return exp(log_p)
+	try:
+		return exp(log_p)
+	except OverflowError:
+		return 1
 
 
 def likelihood(scores):

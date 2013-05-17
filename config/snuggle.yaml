@@ -5,13 +5,13 @@ author:
   url: http://halfaker.info
 
 # This configuration file specifies the behavior of Snuggle
-root_directory: ~/Sandbox/snuggle
+root_directory: ~/snuggle
 
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.
 web_server:
   host: 0.0.0.0
-  port: 8081
+  port: 80
 
 # The configuration for the synchronization server.  The synchronization server
 # keeps Snuggle's data up-to-date by listening to a recent_changes feed.
@@ -23,6 +23,15 @@ sync_server:
   synchronizers:
     - changes_synchronizer
     - scores_synchronizer
+
+
+# Configuration for the data model
+model:
+  module: snuggle.data.models.Mongo
+  host: localhost
+  port: 27017
+  database: snuggle
+
 
 # The Changes Synchronizer
 #
@@ -58,13 +67,6 @@ scores_synchronizer:
   # that was successfully recorded.
   min_attempts: 5
   max_id_distance: 1000
-
-# Configuration for the data model
-model:
-  module: snuggle.data.models.Mongo
-  host: localhost
-  port: 27017
-  database: snuggle_test
 
 # Specifies how changes will be acquired.  The two available options are to read
 # directly from the MySQL database behind MediaWiki (snuggle.changes.MySQL) or 

@@ -13,7 +13,7 @@ class User(DataType):
 				self.name == other.name
 			)
 		except AttributeError:
-			raise False
+			return False
 	
 	def deflate(self):
 		return {

@@ -3,7 +3,7 @@ from bottle import request
 
 from snuggle import mediawiki
 from snuggle.data import types
-from snuggle.web.util import responses
+from snuggle.web.util import responses, user_data
 
 logger = logging.getLogger("snuggle.web.processing.users")
 
@@ -42,15 +42,13 @@ class Users:
 		
 		
 		try:
+			snuggler, data = user_data()
 			event = types.UserQuery(
 				query,
 				end-start,
 				len(users),
-				session['snuggler']['user'] if 'snuggler' in session else None,
-				{
-					'ip': request.remote_addr,
-					'agent': request.headers.get('User-Agent')
-				}
+				snuggler,
+				data
 			)
 			self.model.events.insert(event)
 		except Exception as e:

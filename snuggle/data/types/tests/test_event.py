@@ -5,7 +5,8 @@ from ..byte_diff import ByteDiff
 from ..user import User
 from ..page import Page
 from ..revision import UserRevision
-from ..event import Event, ServerStart, ServerStop, ViewUser, CategorizeUser, UserAction
+from ..event import Event, UILoaded, ServerStart, ServerStop, UserQuery
+from ..event import ViewUser, CategorizeUser, UserAction
 
 def test_server_start():
 	server = "web"
@@ -28,6 +29,17 @@ def test_server_stop():
 	eq_(server_stop.error, error)
 	
 	eq_(server_stop, Event.inflate(server_stop.deflate()))
+
+
+def test_ui_loaded():
+	snuggler = User(10, "Derp")
+	data = {'more': "Derp"}
+	ui_loaded = UILoaded(snuggler, data)
+	
+	eq_(ui_loaded.snuggler, snuggler)
+	eq_(ui_loaded.data, data)
+	
+	eq_(ui_loaded, Event.inflate(ui_loaded.deflate()))
 
 def test_user_query():
 	query = {'herp': 10, 'derp': "derpity"}

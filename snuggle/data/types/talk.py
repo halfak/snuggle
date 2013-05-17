@@ -14,7 +14,7 @@ class Topic(DataType):
 				self.classes == other.classes
 			)
 		except AttributeError:
-			raise False
+			return False
 	
 	def deflate(self):
 		return {
@@ -42,7 +42,7 @@ class Talk(DataType):
 				self.topics == other.topics
 			)
 		except AttributeError:
-			raise False
+			return False
 	
 	def deflate(self):
 		return {

@@ -100,6 +100,39 @@ class ServerStop(Event):
 		)
 Event.TYPES[ServerStop.TYPE] = ServerStop
 
+class UILoaded(Event):
+	TYPE = "ui loaded"
+	
+	def __init__(self, snuggler=None, data=None, system_time=None):
+		Event.__init__(self, system_time)
+		self.snuggler = snuggler
+		self.data = data
+	
+	def __eq__(self, other):
+		try:
+			return (
+				Event.__eq__(self, other) and
+				self.snuggler == other.snuggler and
+				self.data == other.data
+			)
+		except AttributeError:
+			return False
+	
+	def deflate(self):
+		doc = Event.deflate(self)
+		doc['snuggler'] = self.snuggler.deflate() if self.snuggler != None else None
+		doc['data'] = self.data
+		return doc
+	
+	@staticmethod
+	def inflate(doc):
+		return UILoaded(
+			User.inflate(doc['snuggler']) if doc['snuggler'] != None else None,
+			doc['data'],
+			doc['system_time']
+		)
+UILoaded.TYPES[UILoaded.TYPE] = UILoaded
+
 class UserQuery(Event):
 	TYPE = "user query"
 	
@@ -135,11 +168,11 @@ class UserQuery(Event):
 	
 	@staticmethod
 	def inflate(doc):
-		return Query(
+		return UserQuery(
 			doc['query'],
 			doc['wait_time'],
 			doc['response_length'],
-			doc['snuggler'],
+			User.inflate(doc['snuggler']) if doc['snuggler'] != None else None,
 			doc['data'],
 			doc['system_time']
 		)
