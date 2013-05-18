@@ -10,4 +10,4 @@ def test_constructor():
 	eq_(byte_diff.bytes, bytes)
 	eq_(byte_diff.diff, diff)
 	
-	eq_(byte_diff, ByteDiff.inflate(byte_diff.deflate()))
+	eq_(byte_diff, ByteDiff.deserialize(byte_diff.serialize()))

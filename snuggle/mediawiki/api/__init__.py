@@ -41,7 +41,6 @@ class API:
 			raise MWAPIError(doc['error'].get('code'), doc['error'].get('info'))
 		
 		return doc, r.cookies
-		
 	
 	@staticmethod
 	def from_config(config):

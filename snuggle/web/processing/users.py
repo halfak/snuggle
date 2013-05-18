@@ -23,7 +23,7 @@ class Users:
 			user = types.User(doc['id'], doc['name'])
 			event = types.ViewUser(
 				user, 
-				session['snuggler']['user']
+				session['snuggler']
 			)
 			self.model.events.insert(event)
 		except Exception as e:

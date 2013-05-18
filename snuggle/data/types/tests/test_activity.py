@@ -38,4 +38,4 @@ def test_constructor():
 	eq_(activity.revisions, revisions)
 	eq_(activity.counts, counts)
 	
-	eq_(activity, Activity.inflate(activity.deflate()))
+	eq_(activity, Activity.deserialize(activity.serialize()))

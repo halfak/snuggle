@@ -20,7 +20,7 @@ def test_revision():
 	eq_(revision.diff, diff)
 	eq_(revision.sha1, sha1)
 	
-	eq_(revision, Revision.inflate(revision.deflate()))
+	eq_(revision, Revision.deserialize(revision.serialize()))
 	
 def test_change_revision():
 	id = 13456
@@ -43,7 +43,7 @@ def test_change_revision():
 	eq_(change_revision.diff, diff)
 	eq_(change_revision.sha1, sha1)
 	
-	eq_(change_revision, ChangeRevision.inflate(change_revision.deflate()))
+	eq_(change_revision, ChangeRevision.deserialize(change_revision.serialize()))
 	
 def test_user_revision():
 	id = 13456
@@ -64,7 +64,7 @@ def test_user_revision():
 	eq_(user_revision.diff, diff)
 	eq_(user_revision.sha1, sha1)
 	
-	eq_(user_revision, UserRevision.inflate(user_revision.deflate()))
+	eq_(user_revision, UserRevision.deserialize(user_revision.serialize()))
 	
 def test_revert():
 	id = 13456
@@ -85,7 +85,7 @@ def test_revert():
 	eq_(revert.diff, diff)
 	eq_(revert.sha1, sha1)
 	
-	eq_(revert, Revert.inflate(revert.deflate()))
+	eq_(revert, Revert.deserialize(revert.serialize()))
 	
 def test_conversions():
 	id = 13456

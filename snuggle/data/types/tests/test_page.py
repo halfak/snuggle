@@ -13,5 +13,5 @@ def test_constructor():
 	eq_(page.title, title)
 	eq_(page.namespace, namespace)
 	
-	eq_(page, Page.inflate(page.deflate()))
+	eq_(page, Page.deserialize(page.serialize()))
 

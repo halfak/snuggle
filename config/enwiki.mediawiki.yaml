@@ -90,16 +90,20 @@ threads:
 # page.  The order in which they are listed will determine how they appear in
 # the user interface.
 #
-# label: the text to be used in the user actions menu
+# label: The name to be used for this field.  This will be used as a label in 
+#        the user interface and also as an identifier within the system.
 # description: the preamble that appears before the form explaining what action
 #              will be taken
-# form: specifies the components of the form.
-#   name: The name to be used for this field.
-#   label: TODO
-#   type: TODO
-#   default: TODO
-#   options: TODO
-# edits: what edits should be performed to complete this action?
+# form: specifies the components of the form that will be presented in the UI.
+#   name: the identifier to be used for the form field (important for string 
+#         formatting)
+#   label: the label that will appear next to the field in the user interface.
+#   default: (optional) an optional default value to be set for the field.
+#   options: (only relevant for radio buttons) a set of options for the user to 
+#            select from.
+# wiki_actions: a set of actions to be performed on the wiki.
+# watchable: if set to true, a checkbox will be included that allows the 
+#            snuggler to watch the User and User_talk pages 
 user_actions:
   - # send message #############################################################
     name: send message
@@ -108,13 +112,13 @@ user_actions:
       - # header
         name: header
         label: Header
-        type: text_input
+        type: text input
         default: "Hello %(username)s"
       - # message
         name: message
         label: Message
         type: textarea
-    edits:
+    wiki_ops:
       - #Appends the message to the user's talk page
         type: append
         page_name: "User_talk:%(username)s"
@@ -128,7 +132,7 @@ user_actions:
       - # header
         name: header
         label: Header
-        type: text_input
+        type: text input
         default: "You're invited to the [[WP:Teahouse|Teahouse]]."
       - # message
         name: message
@@ -138,15 +142,15 @@ user_actions:
         name: template
         label: Template
         type: radio
+        default: Invitation
         options:
           - # Standard invitation
             label: Invitation
             value: Invitation
-            checked: True
           - # Optional other invitiation style
             label: Invitation2
             value: Invitation2
-    edits:
+    wiki_ops:
       - # Appends the template to the user's talk page
         type: append
         page_name: "User_talk:%(username)s"
@@ -162,8 +166,8 @@ user_actions:
     fields:
       header: 
         label: Reason for listing <small>(keep it brief)</small>
-        type: text_input
-    edits:
+        type: text input
+    wiki_ops:
       - # Appends a list item to the bottom of AIV
         type: append
         page_name: Wikipedia:Administrator_intervention_against_vandalism

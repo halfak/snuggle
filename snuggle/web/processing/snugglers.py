@@ -11,7 +11,7 @@ class Snugglers:
 	
 	def authenticate(self, session, creds):
 		try:
-			id, name, cookie = self.mwapi.users.authenticate(
+			id, name, cookies = self.mwapi.users.authenticate(
 				creds['user'],
 				creds['pass']
 			)
@@ -26,28 +26,25 @@ class Snugglers:
 		except:
 			return responses.general_error("checking credentials with mediawiki")
 		
-		session['snuggler'] = {
-			'user': types.User(id, name),
-			'cookie': cookie
-		}
+		session['snuggler'] = types.Snuggler(id, name, cookies)
 		
 		try:
-			event = types.SnugglerLogin(session['snuggler']['user'])
+			event = types.SnugglerLogin(session['snuggler'])
 			self.model.events.insert(event)
 		except Exception as e:
 			logger.error(traceback.format_exc())
 		
-		return responses.success(session['snuggler']['user'].deflate())
+		return responses.success(session['snuggler'].deflate())
 	
 	def log_out(self, session):
 		if 'snuggler' in session:
-			del session['snuggler']
-		
 			try:
-				event = types.SnugglerLogout(session['snuggler']['user'])
+				event = types.SnugglerLogout(session['snuggler'])
 				self.model.events.insert(event)
 			except Exception as e:
 				logger.error(traceback.format_exc())
+			
+			del session['snuggler']
 			
 			return responses.success(True)
 		else:
@@ -55,7 +52,7 @@ class Snugglers:
 		
 	def status(self, session):
 		if 'snuggler' in session:
-			return responses.success({'logged_in': True, 'user': session['snuggler']['user'].deflate()})
+			return responses.success({'logged_in': True, 'snuggler': session['snuggler'].deflate()})
 		else:
 			return responses.success({'logged_in': False})
 		

@@ -12,7 +12,7 @@ def test_minimal_constructor():
 	eq_(score.id, id)
 	eq_(score.user, user)
 	
-	eq_(score, Score.inflate(score.deflate()))
+	eq_(score, Score.deserialize(score.serialize()))
 
 def test_complete_constructor():
 	id = 4567
@@ -27,4 +27,4 @@ def test_complete_constructor():
 	eq_(score.score, value)
 	eq_(score.attempts, attempts)
 	
-	eq_(score, Score.inflate(score.deflate()))
+	eq_(score, Score.deserialize(score.serialize()))

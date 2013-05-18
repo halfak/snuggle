@@ -27,7 +27,7 @@ def test_new_user_change():
 	eq_(change.type, type)
 	eq_(change.change, new_user)
 	
-	eq_(change, Change.inflate(change.deflate()))
+	eq_(change, Change.deserialize(change.serialize()))
 
 def test_new_revision_change():
 	id = 503789283
@@ -53,4 +53,4 @@ def test_new_revision_change():
 	eq_(change.type, type)
 	eq_(change.change, new_revision)
 	
-	eq_(change, Change.inflate(change.deflate()))
+	eq_(change, Change.deserialize(change.serialize()))

@@ -49,5 +49,5 @@ def test_constructor():
 	assert reverted.check(revert)
 	eq_(reverted.last_id, revert.id)
 	
-	eq_(reverted, Reverted.inflate(reverted.deflate()))
+	eq_(reverted, Reverted.deserialize(reverted.serialize()))
 	

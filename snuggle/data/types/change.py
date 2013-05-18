@@ -1,9 +1,8 @@
-from .data_type import DataType
-
+from . import serializable
 from .new_user import NewUser
 from .revision import ChangeRevision
 
-class Change(DataType):
+class Change(serializable.Type):
 	
 	TYPES = {
 		'new user': NewUser,
@@ -14,39 +13,10 @@ class Change(DataType):
 		self.id        = int(id)
 		self.timestamp = int(timestamp)
 		self.type      = type; assert type in self.TYPES
-		self.change    = change
 		self.error     = unicode(error) if error != None else None
-	
-	def __eq__(self, other):
-		try:
-			return (
-				self.id == other.id and
-				self.timestamp == other.timestamp and
-				self.type == other.type and
-				self.change == other.change and
-				self.error == other.error
-			)
-		except AttributeError:
-			return False
-	
-	def deflate(self):
-		return {
-			'_id':       self.id,
-			'timestamp': self.timestamp,
-			'type':      self.type,
-			'change':    self.change.deflate(),
-			'error':     self.error
-		}
+		
+		ChangeType = self.TYPES[self.type]
+		self.change    = ChangeType.deserialize(change)
 	
 	def set_error(self, error):
 		self.error = unicode(error)
-	
-	@staticmethod
-	def inflate(json):
-		return Change(
-			json['_id'],
-			json['timestamp'],
-			json['type'],
-			Change.TYPES[json['type']].inflate(json['change']),
-			json['error']
-		)

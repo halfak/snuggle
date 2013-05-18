@@ -1,21 +1,19 @@
-from .data_type import DataType
-
 from snuggle.util import desirability
 
-class Desirability:
+from . import serializable
+
+class Desirability(serializable.Type):
 	
-	def __init__(self, scores=None):
+	def __init__(self, scores=None, likelihood=None):
+		# Note that likelihood is ignored purposefully.
 		scores = scores if scores is not None else {}
 		
 		self.scores = scores
 	
-	def __eq__(self, other):
-		try:
-			return self.scores == other.scores
-		except AttributeError:
-			return False
-	
-	def deflate(self):
+	def serialize(self):
+		"""
+		Overriding so that we can include likelihood in the deflated version
+		"""
 		return {
 			'likelihood': self.likelihood(),
 			'scores': self.scores
@@ -26,8 +24,4 @@ class Desirability:
 	
 	def likelihood(self):
 		return desirability.likelihood(self.scores.values())
-	
-	@staticmethod
-	def inflate(doc):
-		return Desirability(doc['scores'])
 	

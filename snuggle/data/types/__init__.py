@@ -1,4 +1,3 @@
-from .action import Action
 from .activity import Activity
 from .byte_diff import ByteDiff
 from .category import Category, Categorization
@@ -12,4 +11,4 @@ from .reverted import Reverted
 from .revision import Revision, Revert, UserRevision, ChangeRevision
 from .score import Score
 from .talk import Talk
-from .user import User
+from .user import User, Snuggler

@@ -1,32 +1,32 @@
 from nose.tools import eq_
 
-from ..talk import Talk, Topic
+from ..talk import Talk, Thread
 
-def test_topic():
+def test_thread():
 	title = "I am a title"
 	classes = [
 		"vandalism",
 		"level_1"
 	]
 	
-	topic = Topic(title, classes)
+	thread = Thread(title, classes)
 	
-	eq_(topic.title, title)
-	eq_(topic.classes, classes)
+	eq_(thread.title, title)
+	eq_(thread.classes, classes)
 	
-	eq_(topic, Topic.inflate(topic.deflate()))
+	eq_(thread, Thread.deserialize(thread.serialize()))
 	
 
 def test_talk():
 	last_id = 3456789
-	topics = [
-		Topic("I am a title", ["vandalism", "level_1"]),
-		Topic("Welcome to Wikipedia!", ["welcome"])
+	threads = [
+		Thread("I am a title", ["vandalism", "level_1"]),
+		Thread("Welcome to Wikipedia!", ["welcome"])
 	]
 	
-	talk = Talk(last_id, topics)
+	talk = Talk(last_id, threads)
 	
 	eq_(talk.last_id, last_id)
-	eq_(topics, topics)
+	eq_(talk.threads, threads)
 	
-	eq_(talk, Talk.inflate(talk.deflate()))
+	eq_(talk, Talk.deserialize(talk.serialize()))

@@ -30,5 +30,5 @@ def test_constructor():
 		)
 	)
 	
-	eq_(desirability, Desirability.inflate(desirability.deflate()))
+	eq_(desirability, Desirability.deserialize(desirability.serialize()))
 

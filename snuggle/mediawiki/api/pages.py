@@ -133,7 +133,7 @@ class Pages(APISubset):
 		except IndexError as e:
 			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
-		return html, comment
+		return page_name, html, comment
 		
 	
 	def watch(self, page_name, cookies=None):

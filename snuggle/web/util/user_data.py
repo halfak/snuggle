@@ -3,7 +3,7 @@ from bottle import request
 def user_data():
 	session = request.environ.get('beaker.session')
 	if 'snuggler' in session:
-		snuggler = session['snuggler']['user']
+		snuggler = session['snuggler']
 	else: 
 		snuggler = None
 		

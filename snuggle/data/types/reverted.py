@@ -1,36 +1,16 @@
-from .data_type import DataType
+from . import serializable
 
 from .revision import ChangeRevision
 
-class Reverted(DataType):
+class Reverted(serializable.Type):
 	
 	HISTORY_LIMIT = 5
 	
 	def __init__(self, revision, history, processed=0, last_id=0):
-		self.revision  = revision
+		self.revision  = ChangeRevision.deserialize(revision)
 		self.history   = history; assert history != None
 		self.processed = processed
 		self.last_id   = last_id
-	
-	def __eq__(self, other):
-		try:
-			return (
-				self.revision == other.revision and
-				self.history == other.history and
-				self.processed == other.processed and
-				self.last_id == other.last_id
-			)
-		except AttributeError:
-			return False
-	
-	def deflate(self):
-		return {
-			'_id':       self.revision.id,
-			'revision':  self.revision.deflate(),
-			'history':   self.history,
-			'processed': self.processed,
-			'last_id':   self.last_id
-		}
 	
 	def check(self, revision):
 		if revision.id > self.last_id:
@@ -45,12 +25,3 @@ class Reverted(DataType):
 	
 	def done(self):
 		self.processed >= self.HISTORY_LIMIT
-	
-	@staticmethod
-	def inflate(json):
-		return Reverted(
-			ChangeRevision.inflate(json['revision']),
-			json['history'],
-			json['processed'],
-			json['last_id']
-		)

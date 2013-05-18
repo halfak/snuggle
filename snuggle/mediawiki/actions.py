@@ -1,9 +1,102 @@
 
+
+class
+
+
+ - Actions
+   - Action
+     - Request
+       - Action
+       - Snuggler
+     - Actor
+       - WikiAction
+       - WikiAction
+   - Action
+   - Action
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class WikiAction:
+	TYPES = {}
+	
+	def __init__(self, api):
+		self.api = api
+	
+	def _vals(self, fields, user):
+		vals = {
+			'user_id': user.id,
+			'user_name': user.name,
+		}
+		vals.update(fields)
+		return vals
+	
+	def perform(self, action, snuggler=None):
+		raise NotImplementedError()
+	
+	def preview(self, actions, snuggler=None):
+		raise NotImplementedError()
+
+class EditPreview:
+	
+	def __init__(self, page_name, html, comment):
+		self.page_name = unicode(page_name)
+		self.html      = unicode(html)
+		self.comment   = unicode(comment)
+	
+	def deflate(self):
+		return {
+			'page_name': self.page_name,
+			'html': self.html,
+			'comment': self.comment
+		}
+	
+	@staticmethod
+	def inflate(doc):
+		return EditPreview(
+			doc['page_name'],
+			doc['html'],
+			doc['comment']
+		)
+
+class EditResult:
+	
+	def __init__(self, page_name, rev_id):
+		self.page_name = unicode(page_name)
+		self.rev_id    = int(rev_id)
+	
+	def deflate(self):
+		return {
+			'page_name': self.page_name,
+			'html': self.html,
+			'comment': self.comment
+		}
+	
+	@staticmethod
+	def inflate(doc):
+		return EditPreview(
+			doc['page_name'],
+			doc['html'],
+			doc['comment']
+		)
+
 class Edit:
 	TYPES = {}
 	
 	def __init__(self, api, page_name, markup="", comment=""):
-		self.api = api
+		WikiAction.__init__(self, api)
 		
 		self.page_name = unicode(page_name)
 		self.markup    = unicode(markup)
@@ -17,14 +110,6 @@ class Edit:
 	
 	def _comment(self, fields, user):
 		return self.comment % self._vals(user, fields)
-	
-	def _vals(self, fields, user):
-		vals = {
-			'user_id': user.id,
-			'user_name': user.name,
-		}
-		vals.update(fields)
-		return vals
 	
 	def save(self, fields, user, cookies=None):
 		raise NotImplementedError()
@@ -42,6 +127,11 @@ class Edit:
 	
 	def from_config(config, doc):
 		return self.TYPES[doc['type']].from_config(doc)
+
+class EditResult:
+	
+	def __init__(self, page_name, rev_id):
+		self.page_name, 
 
 class Replace(Edit):
 	TYPE = "replace"
@@ -74,7 +164,17 @@ class Append(Edit):
 		return Append(doc['title'], doc['markup'], doc['comment'])
 
 Edit.TYPES[Append.TYPE] = Append
+
+class Actor:
 	
+	def __init__(self, name, edits):
+		self.name = unicode(name)
+		self.edits = list(edits)
+	
+	def save(self, action, snuggler):
+		for edit in self.edits:
+			yield 
+		
 class Actor:
 	
 	def __init__(self, api):

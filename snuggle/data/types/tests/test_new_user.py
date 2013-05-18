@@ -8,8 +8,8 @@ from ..new_user import NewUser
 from ..page import Page
 from ..revision import UserRevision
 from ..score import Score
-from ..talk import Talk, Topic
-from ..user import User
+from ..talk import Talk, Thread
+from ..user import User, Snuggler
 
 
 def test_minimal_constructor():
@@ -23,7 +23,7 @@ def test_minimal_constructor():
 	eq_(new_user.name, name)
 	eq_(new_user.registration, registration)
 	
-	eq_(new_user, NewUser.inflate(new_user.deflate()))
+	eq_(new_user, NewUser.deserialize(new_user.serialize()))
 
 def test_complete_constructor():
 	id = 134567
@@ -57,8 +57,8 @@ def test_complete_constructor():
 	for score in scores:
 		desirability.add_score(score)
 	
-	talk = Talk(123456, [Topic("Quit derping", ["vandal", "level_2"])])
-	category = Category([Categorization(User(12, "Herp"), "ambiguous")])
+	talk = Talk(123456, [Thread("Quit derping", ["vandal", "level_2"])])
+	category = Category([Categorization(Snuggler(12, "Herp"), "ambiguous")])
 	
 	new_user = NewUser(
 		id, name, registration, views,
@@ -75,4 +75,4 @@ def test_complete_constructor():
 	eq_(new_user.talk, talk)
 	eq_(new_user.category, category)
 	
-	eq_(new_user, NewUser.inflate(new_user.deflate()))
+	eq_(new_user, NewUser.deserialize(new_user.serialize()))

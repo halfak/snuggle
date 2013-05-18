@@ -39,3 +39,5 @@ class Users(APISubset):
 				raise Exception("Unexpected login result: %s" % doc['login']['result'])
 		except KeyError as e:
 			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+		
+	

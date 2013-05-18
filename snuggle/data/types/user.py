@@ -1,32 +1,10 @@
-from .data_type import DataType
+from . import serializable
 
-class User(DataType):
+class User(serializable.Type):
 	
 	def __init__(self, id, name):
-		self.id   = int(id)
+		self.id  = int(id)
 		self.name = unicode(name)
-	
-	def __eq__(self, other):
-		try:
-			return (
-				self.id == other.id and
-				self.name == other.name
-			)
-		except AttributeError:
-			return False
-	
-	def deflate(self):
-		return {
-			'_id':   self.id,
-			'name':  self.name
-		}
-	
-	@staticmethod
-	def inflate(doc):
-		return User(
-			doc['_id'],
-			doc['name']
-		)
 	
 	@staticmethod
 	def normalize(title):
@@ -39,3 +17,26 @@ class User(DataType):
 			return ""
 	
 
+class Snuggler(User, serializable.Type):
+	
+	def __init__(self, id, name, cookies=None):
+		User.__init__(self, id, name)
+		self.cookies = cookies
+	
+	def __eq__(self, other):
+		try:
+			return (
+				User.__eq__(self, other) and
+				self.cookies == other.cookies
+			)
+		except AttributeError:
+			return False
+	
+	def serialize(self):
+		"""
+		Overriding so that we forget cookies whenever we store snuggler info
+		"""
+		return {
+			'id': self.id,
+			'name': self.name
+		}
