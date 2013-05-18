@@ -1,0 +1,3 @@
+page_title: The namespaceless page title.  E.g. "Foobar".  Often abbreviated as just "title".
+page_name: The full page title including the namespace.  E.g. "Talk:Foobar"
+namespace: A namespace id.  An integer that is usually between -2 and 500.

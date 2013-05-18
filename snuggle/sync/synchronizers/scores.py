@@ -132,6 +132,8 @@ class Scores(Synchronizer):
 				
 			except NoScore as e:
 				# Note the attempt
+				#
+				# TODO: This is slow and goes crazy when dealing with STiki downtime. 
 				score.add_attempt()
 				
 				# Resave the score

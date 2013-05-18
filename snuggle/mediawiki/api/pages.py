@@ -3,7 +3,7 @@ from .errors import MWAPIError
 
 class Pages(APISubset):
 	
-	def append(self, page_name, markup, cookies=None, comment=""):
+	def _get_edit_token(self, page_name, cookies=None):
 		doc, cookies = self.api.post(
 			{
 				'action': "query",
@@ -21,13 +21,42 @@ class Pages(APISubset):
 			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except IndexError as e:
 			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			
+		return page['edittoken']
+	
+	def append(self, page_name, markup, cookies=None, comment=""):
+		edit_token = self._get_edit_token(page_name, cookies=None)
 		
 		doc, cookies = self.api.post(
 			{
 				'action': "edit",
 				'title': page_name,
 				'appendtext': "\n\n" + markup,
-				'token': page['edittoken'],
+				'token': edit_token,
+				'summary': comment,
+				'format': "json"
+			},
+			cookies = cookies
+		)
+		
+		try:
+			if doc['edit']['result'] == "Success":
+				return doc['edit']['title'], doc['edit']['newrevid']
+			else:
+				raise MWAPIError(doc['edit']['result'], str(doc['edit']))
+		except KeyError as e:
+			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+	
+	def replace(self, page_name, markup, cookies=None, comment=""):
+		edit_token = self._get_edit_token(page_name, cookies=None)
+		
+		doc, cookies = self.api.post(
+			{
+				'action': "edit",
+				'title': page_name,
+				'text': "\n\n" + markup,
+				'token': edit_token,
+				'summary': comment,
 				'format': "json"
 			},
 			cookies = cookies
@@ -98,15 +127,16 @@ class Pages(APISubset):
 		
 		try:
 			html = doc['parse']['text']['*']
+			comment = doc['parse'].get('parsedsummary', {}).get('*', None)
 		except KeyError as e:
 			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except IndexError as e:
 			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
-		return html
-			
+		return html, comment
+		
 	
-	def watch(self, page_name,  cookies=None):
+	def watch(self, page_name, cookies=None):
 		doc, cookies = self.api.post(
 			{
 				'action': "query",

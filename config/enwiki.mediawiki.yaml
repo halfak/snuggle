@@ -102,7 +102,7 @@ threads:
 # edits: what edits should be performed to complete this action?
 user_actions:
   - # send message #############################################################
-    label: send message
+    name: send message
     description: "Posts a new message on the user's talk page." 
     fields:
       - # header
@@ -117,12 +117,12 @@ user_actions:
     edits:
       - #Appends the message to the user's talk page
         type: append
-        page_title: "User_talk:%(username)s"
+        page_name: "User_talk:%(username)s"
         markup: "==%(headers)s==\n%(message)s ~~~~"
         comment: "%(header)s"
     watchable: True
   - # teahouse invite ##########################################################
-    label: invite to teahouse
+    name: invite to teahouse
     description: "Posts an invitation to [[WP:Teahouse]] on the user's talk page."
     fields:
       - # header
@@ -149,12 +149,12 @@ user_actions:
     edits:
       - # Appends the template to the user's talk page
         type: append
-        page_title: "User_talk:%(username)s"
+        page_name: "User_talk:%(username)s"
         markup: "==%(header)s==\n{{%(template)s|%(message)s|~~~~}}"
         comment: "%(header)s"
     watchable: True
   - # report vandalism #########################################################
-    label: report vandalism
+    name: report vandalism
     description: >
       Reports vandals and spammers to admins. Use only for
       <b>obvious</b> and <b>persistent</b> cases. Please review
@@ -166,7 +166,7 @@ user_actions:
     edits:
       - # Appends a list item to the bottom of AIV
         type: append
-        page_title: Wikipedia:Administrator_intervention_against_vandalism
+        page_name: Wikipedia:Administrator_intervention_against_vandalism
         markup: "* {{Vandal|%(username)s}} %(reason)s ~~~~"
     watchable: True
 

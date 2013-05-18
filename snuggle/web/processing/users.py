@@ -115,13 +115,13 @@ class Users:
 			action = types.Action.inflate(doc)
 			revisions = []
 			if action.type == "send message":
-				title, rev_id = self.mwapi.pages.append(
+				page_name, rev_id = self.mwapi.pages.append(
 					"User_talk:" + action.user.name,
 					action.markup(), 
 					cookies=session['snuggler']['cookie'],
 					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
 				)
-				revisions.append({'title': title, 'rev_id': rev_id})
+				revisions.append({'page_name': page_name, 'rev_id': rev_id})
 				
 			elif action.type == "teahouse invite":
 				title, rev_id = self.mwapi.pages.append(
@@ -130,7 +130,7 @@ class Users:
 					cookies=session['snuggler']['cookie'],
 					comment=action.header + " ([[WP:Snuggle|Snuggle]])"
 				)
-				revisions.append({'title': title, 'rev_id': rev_id})
+				revisions.append({'page_name': page_name, 'rev_id': rev_id})
 				
 			elif action.type == "report vandalism":
 				title, rev_id = self.mwapi.pages.append(
@@ -140,7 +140,7 @@ class Users:
 					comment="Reporting " + action.user.name + " " + 
 					        action.reason + " ([[WP:Snuggle|Snuggle]])"
 				)
-				revisions.append({'title': title, 'rev_id': rev_id})
+				revisions.append({'page_name': page_name, 'rev_id': rev_id})
 				
 			else:
 				return responses.general_error(
