@@ -112,7 +112,13 @@ class User(types.User):
 class Page(types.Page):
 	
 	@staticmethod
-	def from_doc(doc): return Page(doc['pageid'], doc['title'], doc['ns'])
+	def from_doc(doc): 
+		if doc['ns'] != 0:
+			title = doc['title'].split(":", 1)[1]
+		else:
+			title = doc['title']
+		
+return Page(doc['pageid'], title, doc['ns'])
 
 class ByteDiff(types.ByteDiff):
 	
