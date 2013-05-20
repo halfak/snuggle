@@ -1,7 +1,7 @@
+from snuggle import errors
 from snuggle.util import timestamp_to_string
 
 from .api_subset import APISubset
-from .errors import MWAPIError
 
 class Revisions(APISubset):
 	
@@ -27,6 +27,6 @@ class Revisions(APISubset):
 						rev_doc['ns'] = page_doc['ns']
 						yield rev_doc
 			except KeyError:
-				raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+				raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 			
 		

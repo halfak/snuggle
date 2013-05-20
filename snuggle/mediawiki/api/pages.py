@@ -1,5 +1,6 @@
+from snuggle import errors
+
 from .api_subset import APISubset
-from .errors import MWAPIError
 
 class Pages(APISubset):
 	
@@ -10,9 +11,8 @@ class Pages(APISubset):
 				'prop': "info|revisions",
 				'titles': page_name,
 				'intoken': "edit",
-				'summary': comment
 			},
-			cookies = cookies
+			cookies=cookies
 		)
 		
 		try:
@@ -21,31 +21,30 @@ class Pages(APISubset):
 			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except IndexError as e:
 			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
-			
+		
 		return page['edittoken']
 	
 	def append(self, page_name, markup, cookies=None, comment=""):
-		edit_token = self._get_edit_token(page_name, cookies=None)
+		edit_token = self._get_edit_token(page_name, cookies)
 		
 		doc, cookies = self.api.post(
-			{
-				'action': "edit",
-				'title': page_name,
-				'appendtext': "\n\n" + markup,
-				'token': edit_token,
-				'summary': comment,
-				'format': "json"
-			},
-			cookies = cookies
+			[
+				('action', "edit"),
+				('title', page_name),
+				('appendtext', markup),
+				('summary', comment + self.api.comment_suffix),
+				('token', edit_token)
+			],
+			cookies=cookies
 		)
 		
 		try:
 			if doc['edit']['result'] == "Success":
 				return doc['edit']['title'], doc['edit']['newrevid']
 			else:
-				raise MWAPIError(doc['edit']['result'], str(doc['edit']))
+				raise errors.MWAPIError(doc['edit']['result'], str(doc['edit']))
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 	
 	def replace(self, page_name, markup, cookies=None, comment=""):
 		edit_token = self._get_edit_token(page_name, cookies=None)
@@ -56,7 +55,7 @@ class Pages(APISubset):
 				'title': page_name,
 				'text': "\n\n" + markup,
 				'token': edit_token,
-				'summary': comment,
+				'summary': comment + self.api.comment_suffix,
 				'format': "json"
 			},
 			cookies = cookies
@@ -66,9 +65,9 @@ class Pages(APISubset):
 			if doc['edit']['result'] == "Success":
 				return doc['edit']['title'], doc['edit']['newrevid']
 			else:
-				raise MWAPIError(doc['edit']['result'], str(doc['edit']))
+				raise errors.MWAPIError(doc['edit']['result'], str(doc['edit']))
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 	
 	def get_markup(self, rev_id=None, page_id=None, title=None):
 		
@@ -99,9 +98,9 @@ class Pages(APISubset):
 		try:
 			page = doc['query']['pages'].values()[0]
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except IndexError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
 		if "missing" in page:
 			return None, ""
@@ -113,13 +112,14 @@ class Pages(APISubset):
 				return None, ""
 		
 		
-	def preview(self, markup, page_name=None, cookies=None):
+	def preview(self, markup, page_name=None, comment="", cookies=None):
 		doc, cookies = self.api.post(
 			{
 				'action': "parse",
 				'title': page_name,
 				'text': markup,
 				'prop': "text",
+				'summary': comment + self.api.comment_suffix,
 				'pst': True
 			},
 			cookies = cookies
@@ -129,9 +129,9 @@ class Pages(APISubset):
 			html = doc['parse']['text']['*']
 			comment = doc['parse'].get('parsedsummary', {}).get('*', None)
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except IndexError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
 		return page_name, html, comment
 		
@@ -150,9 +150,9 @@ class Pages(APISubset):
 		try:
 			page = doc['query']['pages'].values()[0]
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except IndexError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
 		doc, cookies = self.api.post(
 			{
@@ -167,9 +167,9 @@ class Pages(APISubset):
 			if 'watched' in doc['watch']:
 				return True
 			else:
-				raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+				raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 	
 	def history(self, page_id, rev_id, n, cookies=None):
 		doc, cookies = self.api.post(
@@ -186,8 +186,8 @@ class Pages(APISubset):
 		try:
 			page = doc['query']['pages'].values()[0]
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except IndexError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
 		return page.get('revisions', [])

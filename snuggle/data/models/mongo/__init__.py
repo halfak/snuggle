@@ -21,24 +21,24 @@ class Mongo:
 	
 	
 	def cull(self, older_than):
-		deaths = [json['_id'] for json in self.db.users.find({'registration': {"$lt": older_than}})]
+		deaths = [doc['_id'] for doc in self.db.users.find({'registration': {"$lt": older_than}})]
 		
 		self.db.users.remove({'_id': {"$in": deaths}})
 		self.db.reverteds.remove({'revision.user._id': {'$in': deaths}})
 		self.db.changes.remove({'timestamp': {"$lt": older_than}})
-		self.db.scores.remove({'user_id': {'$in': deaths}}) #TODO check
+		self.db.scores.remove({'user_id': {'$in': deaths}})
 	
 	@staticmethod
-	def from_config(doc):
+	def from_config(config):
 		
 		logger.info(
-			"Mongo(host=%(host)s, port=%(port)s, db=%(database)s)" % doc['model']
+			"Mongo(host=%(host)s, port=%(port)s, db=%(database)s)" % config.snuggle['model']
 		)
 		
 		return Mongo(
 			pymongo.Connection(
-				host=doc['model']['host'],
-				port=doc['model']['port']
-			)[doc['model']['database']]
+				host=config.snuggle['model']['host'],
+				port=config.snuggle['model']['port']
+			)[config.snuggle['model']['database']]
 		)
 	

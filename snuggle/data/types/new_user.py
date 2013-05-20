@@ -1,6 +1,5 @@
 from .activity import Activity
 from .category import Category
-from .data_type import DataType
 from .desirability import Desirability
 from .talk import Talk
 from .user import User

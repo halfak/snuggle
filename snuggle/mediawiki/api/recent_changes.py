@@ -1,7 +1,7 @@
+from snuggle import errors
 from snuggle.util import timestamp_to_string
 
 from .api_subset import APISubset
-from .errors import MWAPIError
 
 class RecentChanges(APISubset):
 	
@@ -37,4 +37,4 @@ class RecentChanges(APISubset):
 				doc['query']['recentchanges']
 			)
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)

@@ -1,62 +1,15 @@
 from . import serializable
 from .user import User
 
-class UserActions:
-	
-	def __init__(self, actors):
-		self.actors = actors
-	
-	def get(name):
-		return self.actors[name]
-	
-	@staticmethod
-	def from_config(config, api):
-		
-		actors = {}
-		for doc in config['user_actions']:
-			actor = Actor.from_config(config, doc, api)
-			actions[action.name] = action
-		
-		return UserActions(actions)
-
-
-class Actor(object):
-	
-	ACTIONS = {}
-	
-	def __init__(self, name, wiki_ops):
-		self.name = name
-		self.wiki_ops = wiki_ops
-		
-	def preview(self, request, snuggler):
-		return [op.preview(request, snuggler) for op in self.wiki_ops]
-	
-	def perform(self, request, snuggler):
-		return [op.perform(request, snuggler) for op in self.wiki_ops]
-	
-	@classmethod
-	def register(cls, user_action):
-		cls.ACTIONS[user_action.name] = user_action
-	
-	@classmethod
-	def get(cls, name):
-		return cls.ACTIONS[name]
-	
-	@classmethod
-	def from_config(config, doc, api):
-		return Actor(
-			doc['name'],
-			[api.op(op_doc) for op_doc in doc['wiki_ops']]
-		)
-	
 
 class ActionRequest(serializable.Type):
 	
-	def __init__(self, name, fields, user):
-		self.name     = unicode(name)
-		self.fields   = fields
-		self.user     = User.deserialize(user)
-	
+	def __init__(self, action_name, user, fields):
+		self.action_name = action_name
+		self.user        = User.deserialize(user)
+		self.fields      = fields
+
+
 class OperationResult(serializable.Type):
 	TYPES = {}
 	

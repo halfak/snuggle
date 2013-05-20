@@ -52,7 +52,7 @@ def test_snuggler():
 	
 	# This should not match because the cookies member becomes None when the 
 	# object is serialized.
-	#neq_(snuggler, Snuggler.inflate(snuggler.deflate()))
+	#neq_(snuggler, Snuggler.deserialize(snuggler.serialize()))
 	
 	# Check that we're equal with a Snuggler that has no cookies.
 	eq_(Snuggler(id, name), Snuggler.deserialize(snuggler.serialize()))

@@ -18,7 +18,7 @@ class Talk(serializable.Type):
 		
 	def update(self, rev_id, markup):
 		self.last_id = rev_id if rev_id != None else 0
-		self.topics = []
+		self.threads = serializable.List()
 		for title, section_markup in parsing.sections(markup):
 			self.threads.append(
 				Thread(

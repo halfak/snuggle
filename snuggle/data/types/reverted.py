@@ -6,8 +6,9 @@ class Reverted(serializable.Type):
 	
 	HISTORY_LIMIT = 5
 	
-	def __init__(self, revision, history, processed=0, last_id=0):
+	def __init__(self, revision, history, processed=0, last_id=0, id=None):
 		self.revision  = ChangeRevision.deserialize(revision)
+		self.id        = self.revision.id
 		self.history   = history; assert history != None
 		self.processed = processed
 		self.last_id   = last_id

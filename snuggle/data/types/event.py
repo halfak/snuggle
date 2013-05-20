@@ -1,10 +1,9 @@
 import time
 
 from . import serializable
-from .action import ActionRequest
-from .data_type import DataType
 from .revision import UserRevision
 from .user import User, Snuggler
+from .user_action import ActionRequest, OperationResult
 
 class Event(serializable.Type):
 	TYPE = None
@@ -110,11 +109,11 @@ Event.TYPES[CategorizeUser.TYPE] = CategorizeUser
 class UserAction(Event):
 	TYPE = "user action"
 	
-	def __init__(self, request, snuggler, operations, system_time=None):
+	def __init__(self, request, snuggler, results, system_time=None):
 		Event.__init__(self, system_time)
-		self.request    = ActionRequest.deserialize(request)
-		self.snuggler   = Snuggler.deserialize(snuggler)
-		self.operations = serializable.List.deserialize(WikiOperation, operations)
+		self.request  = ActionRequest.deserialize(request)
+		self.snuggler = Snuggler.deserialize(snuggler)
+		self.results  = serializable.List.deserialize(OperationResult, results)
 	
 Event.TYPES[UserAction.TYPE] = UserAction
 
@@ -136,5 +135,4 @@ class SnugglerLogout(Event):
 		self.snuggler  = Snuggler.deserialize(snuggler)
 	
 Event.TYPES[SnugglerLogout.TYPE] = SnugglerLogout
-
 

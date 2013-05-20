@@ -12,3 +12,5 @@ from .revision import Revision, Revert, UserRevision, ChangeRevision
 from .score import Score
 from .talk import Talk
 from .user import User, Snuggler
+from .user_action import ActionRequest, OperationResult, EditPreview 
+from .user_action import EditResult, WatchPreview, WatchResult

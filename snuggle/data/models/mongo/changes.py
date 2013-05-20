@@ -1,4 +1,7 @@
 from snuggle.data import types
+
+from . import util
+
 class Changes: 
 	
 	def __init__(self, mongo):
@@ -7,7 +10,7 @@ class Changes:
 	def insert(self, change):
 		self.mongo.db.changes.update(
 			{'_id': change.id},
-			change.deflate(),
+			util.mongoify(change.serialize()),
 			upsert=True,
 			safe=True
 		)
@@ -20,6 +23,6 @@ class Changes:
 			)
 		)
 		if len(docs) > 0:
-			return types.Change.inflate(docs[0])
+			return types.Change.deserialize(util.demongoify(docs[0]))
 		else:
 			return None

@@ -152,15 +152,15 @@ class Scores(Synchronizer):
 		}
 	
 	@staticmethod
-	def from_config(doc, model):
-		ScoresModule = import_class(doc['scores']['module'])
+	def from_config(config, model):
+		ScoresModule = import_class(config.snuggle['scores']['module'])
 		
 		return Scores(
 			model,
-			ScoresModule.from_config(doc),
-			doc['scores_synchronizer']['loop_delay'],
-			doc['scores_synchronizer']['scores_per_request'],
-			doc['scores_synchronizer']['min_attempts'],
-			doc['scores_synchronizer']['max_id_distance']
+			ScoresModule.from_config(config),
+			config.snuggle['scores_synchronizer']['loop_delay'],
+			config.snuggle['scores_synchronizer']['scores_per_request'],
+			config.snuggle['scores_synchronizer']['min_attempts'],
+			config.snuggle['scores_synchronizer']['max_id_distance']
 		)
 		

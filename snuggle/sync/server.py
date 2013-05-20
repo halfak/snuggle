@@ -54,12 +54,12 @@ def main():
 		p = pstats.Stats(f.name)
 		p.strip_dirs().sort_stats("time").print_stats(10)
 	else:
-		run(args.snuggle_config, args.debug)
+		run(configuration, args.debug)
 
 def load_synchronizers(config, model):
 	
-	for sync_name in config['sync_server']['synchronizers']:
-		Synchronizer = import_class(config[sync_name]['module'])
+	for sync_name in config.snuggle['sync_server']['synchronizers']:
+		Synchronizer = import_class(config.snuggle[sync_name]['module'])
 		yield Synchronizer.from_config(config, model)
 		
 
@@ -78,8 +78,8 @@ def run(config, debug):
 	
 	logger.info("Configuring system...")
 	
-	logger.info("Using model %s." % config['model']['module'])
-	Model = import_class(config['model']['module'])
+	logger.info("Using model %s." % config.snuggle['model']['module'])
+	Model = import_class(config.snuggle['model']['module'])
 	model = Model.from_config(config)
 	model.events.insert(types.ServerStart("sync"))
 	

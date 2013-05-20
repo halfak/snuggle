@@ -96,12 +96,12 @@ def main():
 		p = pstats.Stats(f.name)
 		p.strip_dirs().sort_stats("time").print_stats(10)
 	else:
-		run(args.snuggle_config, args.debug)
+		run(configuration, args.debug)
 	
 def run(config, debug):
 	logger.info("Configuring system.")
 	
-	Model = import_class(config['model']['module'])
+	Model = import_class(config.snuggle['model']['module'])
 	model = Model.from_config(config)
 	
 	start_time = time.time()
@@ -118,8 +118,8 @@ def run(config, debug):
 	try:
 		bottle.run(
 			app=app, 
-			host=config['web_server']['host'],
-			port=config['web_server']['port'],
+			host=config.snuggle['web_server']['host'],
+			port=config.snuggle['web_server']['port'],
 			server='cherrypy',
 			debug=debug
 		)

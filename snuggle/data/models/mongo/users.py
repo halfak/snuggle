@@ -3,6 +3,8 @@ from pymongo.errors import DuplicateKeyError
 
 from snuggle.data import types
 
+from . import util
+
 CATEGORIES = ("bad-faith", "good-faith", "ambiguous")
 
 USER_FIELDS = [
@@ -21,7 +23,7 @@ USER_FIELDS = [
 class Users:
 	
 	def __init__(self, mongo):
-		self.mongo    = mongo
+		self.mongo = mongo
 	
 	def __contains__(self, id):
 		return self.mongo.db.users.find_one({'_id': id}, {'_id': 1}) != None
@@ -36,14 +38,14 @@ class Users:
 	def insert(self, user):
 		try:
 			self.mongo.db.users.insert(
-				user.deflate(),
+				util.mongoify(user.serialize()),
 				safe=True
 			)
 			return 1
 		except DuplicateKeyError:
 			return 0
 	
-	def get(self, id=None, name=None, inflate=True):
+	def get(self, id=None, name=None, deserialize=True):
 		if id != None:
 			spec = {'_id': id}
 		elif name != None:
@@ -53,10 +55,11 @@ class Users:
 		
 		doc = self.mongo.db.users.find_one(spec)
 		if doc != None:
-			if not inflate:
+			doc = util.demongoify(doc)
+			if not deserialize:
 				return doc
 			else:
-				return types.NewUser.inflate(doc)
+				return types.NewUser.deserialize(doc)
 		else:
 			raise KeyError(spec)
 		
@@ -64,7 +67,7 @@ class Users:
 		      category=None, namespace="all", min_edits=1, 
 		      min_last_active=60*60*25*5, sorted_by="desirability.likelihood",
 		      direction="descending", skip=0, limit=1000,
-		      inflate=True):
+		      deserialize=True):
 		docs = self.mongo.db.users.find(
 			{
 				'category.category': category,
@@ -75,16 +78,16 @@ class Users:
 			limit=limit,
 			skip=skip,  #This is dumb, but it will work for now.
 		)
-		if not inflate:
-			return docs
+		if not deserialize:
+			return (util.demongoify(doc) for doc in docs)
 		else:
-			return (types.NewUser.inflate(doc) for doc in docs)
+			return (types.NewUser.deserialize(util.demongoify(doc)) for doc in docs)
 	
 	def add_score(self, score):
 		doc = self.mongo.db.users.find_one({'_id': score.user.id}, {'desirability': 1})
 		if doc != None:
 			#Inflate
-			desirability = types.Desirability.inflate(doc['desirability'])
+			desirability = types.Desirability.deserialize(doc['desirability'])
 			
 			#Update
 			desirability.add_score(score)
@@ -93,7 +96,7 @@ class Users:
 			self.mongo.db.users.update(
 				{'_id': score.user.id},
 				{'$set': 
-					{'desirability': desirability.deflate()}
+					{'desirability': desirability.serialize()}
 				}
 			)
 		
@@ -101,11 +104,12 @@ class Users:
 	def add_revision(self, revision):
 		user_id = revision.user.id
 		revision = types.UserRevision.convert(revision)
+		doc = revision.serialize()
 		self.mongo.db.users.update(
 			{'_id': user_id}, 
 			{
 				'$set': {
-					'activity.revisions.%s' % revision.id: revision.deflate(),
+					'activity.revisions.%s' % revision.id: doc,
 					'activity.last_activity': revision.timestamp
 				},
 				'$inc': {
@@ -118,6 +122,8 @@ class Users:
 	
 	def set_reverted(self, user_id, rev_id, revert):
 		revert = types.Revert.convert(revert)
+		doc = revert.serialize()
+		
 		inc = {}
 		if user_id == revert.user.id:
 			inc['activity.self_reverted'] = 1
@@ -128,7 +134,7 @@ class Users:
 			{'_id': user_id},
 			{
 				'$set': {
-					'activity.revisions.%s.revert' % rev_id: revert.deflate()
+					'activity.revisions.%s.revert' % rev_id: doc
 				},
 				'$inc': inc
 			},
@@ -151,7 +157,7 @@ class Users:
 			fields={'talk': 1}
 		)
 		if doc != None:
-			return doc['_id'], types.Talk.inflate(doc['talk'])
+			return doc['_id'], types.Talk.deserialize(doc['talk'])
 		else:
 			raise KeyError(str(spec))
 	
@@ -159,7 +165,7 @@ class Users:
 		self.mongo.db.users.update(
 			{'_id': user_id},
 			{'$set': {
-				'talk': talk.deflate()
+				'talk': talk.serialize()
 			}},
 			safe=True
 		)
@@ -167,7 +173,7 @@ class Users:
 	def set_talk_page(self, title):
 		name = types.User.normalize(title)
 		self.mongo.db.users.update(
-			{'name': name}, 
+			{'name': name},
 			{'$set': {
 				'has_talk_page': True
 			}},
@@ -199,7 +205,7 @@ class Users:
 			{"_id": user_id},
 			{
 				"$set": {'category.category': categorization.category},
-				"$push": {'category.history': categorization.deflate()}
+				"$push": {'category.history': categorization.serialize()}
 			},
 			safe=True,
 			fields=['category'],

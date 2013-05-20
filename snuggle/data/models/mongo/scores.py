@@ -1,5 +1,7 @@
 from snuggle.data import types
 
+from . import util
+
 class Scores: 
 	
 	def __init__(self, mongo):
@@ -8,7 +10,7 @@ class Scores:
 	def insert(self, score):
 		return self.mongo.db.scores.update(
 			{'_id': score.id},
-			score.deflate(), 
+			util.mongoify(score.serialize()), 
 			upsert=True,
 			safe=True
 		)
@@ -19,27 +21,29 @@ class Scores:
 			limit=limit
 		)
 		for doc in docs:
-			yield types.Score.inflate(doc)
+			yield types.Score.deserialize(util.demongoify(doc))
 	
 	def complete(self, score):
-		return self.mongo.db.scores.remove(
+		doc = self.mongo.db.scores.remove(
 			score.id,
 			safe=True
 		)
+		return doc['n']
 	
 	def update(self, score):
-		self.mongo.db.scores.update(
+		doc = self.mongo.db.scores.update(
 			{'_id': score.id}, 
-			score.deflate(), 
+			util.mongoify(score.serialize()), 
 			upsert=True, safe=True
 		)
+		doc['n']
 	
 	def cull(self, min_attempts, id_less_than):
-		result = self.mongo.db.scores.remove(
+		doc = self.mongo.db.scores.remove(
 			{
 				"_id": {"$lt": id_less_than},
 				"attempts": {"$gt": min_attempts}
 			},
 			safe=True
 		)
-		return result['n']
+		return doc['n']

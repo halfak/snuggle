@@ -2,6 +2,8 @@ from pymongo.errors import DuplicateKeyError
 
 from snuggle.data import types
 
+from . import util
+
 class Reverteds:
 	
 	def __init__(self, mongo):
@@ -11,9 +13,10 @@ class Reverteds:
 		return self.mongo.db.reverteds.find_one({'revision.page._id': page_id}) != None
 	
 	def insert(self, reverted):
+		
 		try:
 			self.mongo.db.reverteds.insert(
-				reverted.deflate(),
+				util.mongoify(reverted.serialize()),
 				safe=True
 			)
 			return 1
@@ -21,9 +24,10 @@ class Reverteds:
 			return 0
 	
 	def update(self, reverted):
+
 		doc = self.mongo.db.reverteds.update(
 			{'_id': reverted.revision.id}, 
-			reverted.deflate(), 
+			util.mongoify(reverted.serialize()), 
 			upsert=True, 
 			safe=True
 		)
@@ -31,7 +35,7 @@ class Reverteds:
 	
 	def remove(self, reverted):
 		doc = self.mongo.db.reverteds.remove(
-			{'_id': reverted.revision.id},
+			{'_id': reverted.id},
 			safe=True
 		)
 		return doc['n'] > 0
@@ -40,12 +44,12 @@ class Reverteds:
 		doc = self.mongo.db.reverteds.find_one({'_id': id})
 		if doc != None:
 			if inflate:
-				return types.Reverted.inflate(doc)
+				return types.Reverted.deserialize(util.demongoify(doc))
 			else:
-				return doc
+				return util.demongoify(doc)
 		else:
 			raise KeyError(id)
 	
 	def find(self, page_id):
 		for doc in self.mongo.db.reverteds.find({'revision.page._id': page_id}):
-			yield types.Reverted.inflate(doc)
+			yield types.Reverted.deserialize(util.demongoify(doc))

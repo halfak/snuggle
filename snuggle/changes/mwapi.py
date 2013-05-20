@@ -33,10 +33,10 @@ class MWAPI:
 		
 		self.rccontinue = rccontinue
 		
-		return self._inflate_changes(change_docs, rev_docs)
+		return self._deserialize_changes(change_docs, rev_docs)
 		
 	
-	def _inflate_changes(self, change_docs, rev_docs):
+	def _deserialize_changes(self, change_docs, rev_docs):
 		for doc in change_docs:
 			if 'logtype' in doc:
 				if (doc['logtype'], doc['logaction']) == ("newusers", "create"):
@@ -74,9 +74,9 @@ class MWAPI:
 		return history
 	
 	@staticmethod
-	def from_config(doc):
+	def from_config(config):
 		return MWAPI(
-			mediawiki.API.from_config(configuration.mediawiki)
+			mediawiki.API.from_config(config)
 		)
 
 class ChangeRevision(types.ChangeRevision):
@@ -112,7 +112,13 @@ class User(types.User):
 class Page(types.Page):
 	
 	@staticmethod
-	def from_doc(doc): return Page(doc['pageid'], doc['title'], doc['ns'])
+	def from_doc(doc): 
+		if doc['ns'] != 0:
+			title = doc['title'].split(":", 1)[1]
+		else:
+			title = doc['title']
+		
+		return Page(doc['pageid'], title, doc['ns'])
 
 class ByteDiff(types.ByteDiff):
 	

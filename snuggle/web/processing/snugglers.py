@@ -1,5 +1,6 @@
 
 from snuggle import mediawiki
+from snuggle import errors
 from snuggle.data import types
 from snuggle.web.util import responses
 
@@ -16,14 +17,17 @@ class Snugglers:
 				creds['pass']
 			)
 		except KeyError as e:
+			logger.error(traceback.format_exc())
 			return responses.missing_parameter(e)
-		except mediawiki.AuthErrorPass:
+		except errors.AuthErrorPass:
 			return responses.auth_error("password")
-		except mediawiki.AuthErrorName:
+		except errors.AuthErrorName:
 			return responses.auth_error("username")
-		except mediawiki.ConnectionError as e:
+		except errors.ConnectionError as e:
+			logger.error(traceback.format_exc())
 			return responses.mediawiki_error("authenticating a snuggler", "connection", str(e))
-		except:
+		except Exception as e:
+			logger.error(traceback.format_exc())
 			return responses.general_error("checking credentials with mediawiki")
 		
 		session['snuggler'] = types.Snuggler(id, name, cookies)
@@ -34,7 +38,7 @@ class Snugglers:
 		except Exception as e:
 			logger.error(traceback.format_exc())
 		
-		return responses.success(session['snuggler'].deflate())
+		return responses.success(session['snuggler'].serialize())
 	
 	def log_out(self, session):
 		if 'snuggler' in session:
@@ -52,7 +56,7 @@ class Snugglers:
 		
 	def status(self, session):
 		if 'snuggler' in session:
-			return responses.success({'logged_in': True, 'snuggler': session['snuggler'].deflate()})
+			return responses.success({'logged_in': True, 'snuggler': session['snuggler'].serialize()})
 		else:
 			return responses.success({'logged_in': False})
 		

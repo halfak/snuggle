@@ -1,12 +1,14 @@
 import time
 
+from . import util
+
 class Events:
 	
 	def __init__(self, mongo):
 		self.mongo = mongo
 	
 	def insert(self, event):
-		self.mongo.db.events.insert(event.deflate())
+		self.mongo.db.events.insert(util.mongoify(event.serialize()))
 	
 	# TODO: finish this
 	# TODO: Make "type" a set

@@ -147,7 +147,7 @@ class Changes(Synchronizer):
 				yield change.id, change.timestamp
 			except Exception as e:
 				try:
-					change.set_error(e)
+					change.set_error(traceback.format_exc())
 					self.model.changes.insert(change)
 				except Exception as e2:
 					change.set_error(e2)
@@ -176,7 +176,7 @@ class Changes(Synchronizer):
 			return self.__new_revision(change.change)
 	
 	def __new_user(self, user):
-		logger.debug("New user %s." % user.deflate())
+		logger.debug("New user %s." % user.serialize())
 		
 		# Save user
 		self.model.users.insert(user)
@@ -275,7 +275,7 @@ class Changes(Synchronizer):
 			id, markup = self.mwapi.pages.get_markup(title="User_talk:" + revision.page.title)
 			talk.update(id, markup)
 			self.model.users.set_talk(user_id, talk)
-			logger.debug("New talk for %s: %s" % (user_id, talk.deflate()))
+			logger.debug("New talk for %s: %s" % (user_id, talk.serialize()))
 		
 	def __update_user_page(self, revision):
 		logger.debug(
@@ -284,17 +284,17 @@ class Changes(Synchronizer):
 		self.model.users.set_user_page(revision.page.title)
 	
 	@staticmethod
-	def from_config(doc, model):
-		ChangesModule = import_class(doc['changes']['module'])
+	def from_config(config, model):
+		ChangesModule = import_class(config.snuggle['changes']['module'])
 		
 		return Changes(
 			model,
-			ChangesModule.from_config(doc),
-			mediawiki.API.from_config(configuration.mediawiki),
-			doc['changes_synchronizer']['loop_delay'],
-			doc['changes_synchronizer']['changes_per_request'],
-			doc['changes_synchronizer']['max_age'],
-			doc['changes_synchronizer']['starting_rcid'],
-			doc['changes_synchronizer']['starting_timestamp']
+			ChangesModule.from_config(config),
+			mediawiki.API.from_config(config),
+			config.snuggle['changes_synchronizer']['loop_delay'],
+			config.snuggle['changes_synchronizer']['changes_per_request'],
+			config.snuggle['changes_synchronizer']['max_age'],
+			config.snuggle['changes_synchronizer']['starting_rcid'],
+			config.snuggle['changes_synchronizer']['starting_timestamp']
 		)
 			

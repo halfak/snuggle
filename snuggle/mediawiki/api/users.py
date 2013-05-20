@@ -1,6 +1,7 @@
+from snuggle import errors
+
 from .api_subset import APISubset
-from .errors import MWAPIError, AuthErrorPass, AuthErrorName
-		
+
 class Users(APISubset):
 	
 	def authenticate(self, username, password):
@@ -26,9 +27,9 @@ class Users(APISubset):
 		
 		try:
 			if doc['login']['result'] == "WrongPass":
-				raise AuthErrorPass()
+				raise errors.AuthErrorPass()
 			elif doc['login']['result'] == "NotExists":
-				raise AuthErrorName()
+				raise errors.AuthErrorName()
 			elif doc['login']['result'] == "Success":
 				return (
 					doc['login']['lguserid'], #id 
@@ -38,6 +39,6 @@ class Users(APISubset):
 			else:
 				raise Exception("Unexpected login result: %s" % doc['login']['result'])
 		except KeyError as e:
-			raise MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
 	

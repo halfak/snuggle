@@ -56,7 +56,7 @@ class Dict(dict, Type):
 		if isinstance(d, Dict):
 			return d
 		else:
-			return {k: cls.deserialize(v) for k, v in d.iteritems()}
+			return Dict((k, cls.deserialize(v)) for k, v in d.iteritems())
 
 
 class List(list, Type):
@@ -70,4 +70,4 @@ class List(list, Type):
 		if isinstance(l, List):
 			return l
 		else:
-			return [cls.deserialize(v) for v in l]
+			return List(cls.deserialize(v) for v in l)

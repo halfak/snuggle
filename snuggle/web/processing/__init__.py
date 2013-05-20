@@ -20,14 +20,14 @@ processor = NonProcessor()
 
 class Processor:
 	
-	def __init__(self, model, mwapi, static_dir):
+	def __init__(self, model, mwapi, actor, static_dir):
 		self.model = model
 		self.mwapi = mwapi
 		self.static_dir = static_dir
 		
 		self.initialized = time.time()
 		
-		self.users = Users(model, mwapi)
+		self.users = Users(model, mwapi, actor)
 		self.snugglers = Snugglers(model, mwapi)
 		self.config = Config()
 	
@@ -58,11 +58,14 @@ class Processor:
 	@staticmethod
 	def from_config(config, model):
 		static_dir = os.path.expanduser(
-			os.path.join(config['root_directory'], "static")
+			os.path.join(config.snuggle['root_directory'], "static")
 		)
+		mwapi = mediawiki.API.from_config(config)
+		user_actions = mediawiki.UserActions.from_config(config)
 		return Processor(
 			model,
-			mediawiki.API.from_config(configuration.mediawiki),
+			mwapi,
+			user_actions,
 			static_dir
 		)
 

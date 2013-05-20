@@ -74,10 +74,10 @@ class MySQL:
 		return history
 	
 	@staticmethod
-	def from_config(doc):
+	def from_config(config):
 		kwargs = dict(
 			(key, value) for key, value
-			in doc['changes'].iteritems() if key != "module"
+			in config.snuggle['changes'].iteritems() if key != "module"
 		)
 		return MySQL(**kwargs)
 

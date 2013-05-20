@@ -28,9 +28,9 @@ class STiki:
 		return float(response.content)
 	
 	@staticmethod
-	def from_config(doc):
+	def from_config(config):
 		
 		return STiki(
-			doc['scores']['api']['uri'], 
-			doc['scores']['api'].get('headers')
+			config.snuggle['scores']['api']['uri'], 
+			config.snuggle['scores']['api'].get('headers')
 		)
