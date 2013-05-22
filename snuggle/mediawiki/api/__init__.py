@@ -27,7 +27,7 @@ class API:
 		params.append(('format', "json"))
 		
 		try:
-			print(params)
+			#print(params)
 			r = requests.post(
 				self.uri,
 				params,
@@ -40,7 +40,7 @@ class API:
 		
 		try:
 			doc = r.json()
-			print(doc)
+			#print(doc)
 		except ValueError as e:
 			raise MWAPIError('value', "Could not decode json: %s" % r.content)
 		

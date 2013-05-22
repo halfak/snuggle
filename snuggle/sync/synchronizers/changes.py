@@ -269,12 +269,13 @@ class Changes(Synchronizer):
 		try:
 			user_id, talk = self.model.users.get_talk(title=revision.page.title)
 		except KeyError: 
-			return
+			return # If we couldn't find a user by this point, that's cool. 
+			       # Just forget that I asked.
+		
 		if talk.last_id < revision.id:
 			logger.info("Getting markup for %s." % revision.page.title)
 			id, markup = self.mwapi.pages.get_markup(title="User_talk:" + revision.page.title)
-			talk.update(id, markup)
-			self.model.users.set_talk(user_id, talk)
+			self.model.users.update_talk(user_id, id, markup)
 			logger.debug("New talk for %s: %s" % (user_id, talk.serialize()))
 		
 	def __update_user_page(self, revision):

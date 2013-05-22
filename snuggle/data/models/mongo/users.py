@@ -1,6 +1,7 @@
 import time
 from pymongo.errors import DuplicateKeyError
 
+from snuggle import mediawiki
 from snuggle.data import types
 
 from . import util
@@ -122,7 +123,6 @@ class Users:
 	
 	def set_reverted(self, user_id, rev_id, revert):
 		revert = types.Revert.convert(revert)
-		doc = revert.serialize()
 		
 		inc = {}
 		if user_id == revert.user.id:
@@ -134,7 +134,7 @@ class Users:
 			{'_id': user_id},
 			{
 				'$set': {
-					'activity.revisions.%s.revert' % rev_id: doc
+					'activity.revisions.%s.revert' % rev_id: revert.serialize()
 				},
 				'$inc': inc
 			},
@@ -160,6 +160,11 @@ class Users:
 			return doc['_id'], types.Talk.deserialize(doc['talk'])
 		else:
 			raise KeyError(str(spec))
+	
+	def update_talk(self, user_id, rev_id, markup):
+		threads = mediawiki.threads.parse(markup)
+		talk = types.Talk(rev_id, threads)
+		self.set_talk(user_id, talk)
 	
 	def set_talk(self, user_id, talk):
 		self.mongo.db.users.update(

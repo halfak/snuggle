@@ -10,7 +10,7 @@ from .page import Page
 from .reverted import Reverted
 from .revision import Revision, Revert, UserRevision, ChangeRevision
 from .score import Score
-from .talk import Talk
+from .talk import Talk, Thread
 from .user import User, Snuggler
 from .user_action import ActionRequest, OperationResult, EditPreview 
 from .user_action import EditResult, WatchPreview, WatchResult
