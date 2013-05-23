@@ -165,6 +165,11 @@ Page = {
 	}
 }
 
+LINK_RE = /\[\[([^\]|]+)(\|[^\]]+)?\]\]/g
+linkify = function(markup){
+	markup.replace
+}
+
 
 
 WikiDiff = {

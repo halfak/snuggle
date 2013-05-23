@@ -41,12 +41,10 @@ class Action:
 		self.operations = operations
 	
 	def perform(self, request, snuggler):
-		for operation in self.operations:
-			yield operation.save(request, snuggler)
+		return [operation.save(request, snuggler) for operation in self.operations]
 		
 	def preview(self, request, snuggler):
-		for operation in self.operations:
-			yield operation.preview(request, snuggler)
+		return [operation.preview(request, snuggler) for operation in self.operations]
 			
 	@classmethod
 	def from_doc(cls, doc, api):

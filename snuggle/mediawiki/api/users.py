@@ -9,8 +9,7 @@ class Users(APISubset):
 			{
 				'action': "login",
 				'lgname': username,
-				'lgpassword': password,
-				'format': "json"
+				'lgpassword': password
 			}
 		)
 		
@@ -19,8 +18,7 @@ class Users(APISubset):
 				'action': "login",
 				'lgname': username,
 				'lgpassword': password,
-				'lgtoken': doc['login']['token'],
-				'format': "json"
+				'lgtoken': doc['login']['token']
 			},
 			cookies = cookies
 		)
@@ -34,7 +32,7 @@ class Users(APISubset):
 				return (
 					doc['login']['lguserid'], #id 
 					doc['login']['lgusername'], #name
-					cookies #cookie
+					cookies #cookies
 				)
 			else:
 				raise Exception("Unexpected login result: %s" % doc['login']['result'])

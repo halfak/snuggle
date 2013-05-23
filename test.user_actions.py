@@ -1,3 +1,5 @@
+import getpass
+
 from snuggle import configuration
 from snuggle import mediawiki
 from snuggle.data import types
@@ -20,12 +22,12 @@ request = types.ActionRequest(
 )
 print(request)
 
-id, name, cookies = api.users.authenticate('GLTester', "foobar")
+id, name, cookies = api.users.authenticate('GLTester', getpass.getpass("GLTester's password: "))
 snuggler = types.Snuggler(id, name, cookies)
-print(snuggler)
+#print(snuggler)
 
-#results = user_actions.perform(request, snuggler)
+results = user_actions.perform(request, snuggler)
 
-#print(list(results))
+print(list(results))
 
-api.pages.append("User talk:EpochFail", "Test", cookies=cookies, comment="This is a test")
+#api.pages.append("User talk:EpochFail", "Test", cookies=snuggler.cookies, comment="This is a test")

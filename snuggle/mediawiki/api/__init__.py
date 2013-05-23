@@ -21,16 +21,12 @@ class API:
 		self.revisions = Revisions(self)
 		
 	def post(self, params, cookies=None):
-		if hasattr(params, 'keys'):
-			params = [(k,v) for k,v in params.iteritems()]
-		
-		params.append(('format', "json"))
-		
+		params['format'] = "json"
 		try:
 			#print(params)
 			r = requests.post(
 				self.uri,
-				params,
+				params=params,
 				cookies=cookies
 			)
 		except requests.ConnectionError as e:
@@ -39,8 +35,10 @@ class API:
 			raise MWAPIError('http', HTTPError)
 		
 		try:
-			doc = r.json()
-			#print(doc)
+			if callable(r.json):
+				doc = r.json()
+			else:
+				doc = r.json
 		except ValueError as e:
 			raise MWAPIError('value', "Could not decode json: %s" % r.content)
 		

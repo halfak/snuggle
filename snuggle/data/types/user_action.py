@@ -4,10 +4,11 @@ from .user import User
 
 class ActionRequest(serializable.Type):
 	
-	def __init__(self, action_name, user, fields):
+	def __init__(self, action_name, user, fields, watch=False):
 		self.action_name = action_name
 		self.user        = User.deserialize(user)
 		self.fields      = fields
+		self.watch       = bool(watch)
 
 
 class OperationResult(serializable.Type):

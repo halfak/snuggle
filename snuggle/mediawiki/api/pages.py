@@ -28,13 +28,13 @@ class Pages(APISubset):
 		edit_token = self._get_edit_token(page_name, cookies)
 		
 		doc, cookies = self.api.post(
-			[
-				('action', "edit"),
-				('title', page_name),
-				('appendtext', markup),
-				('summary', comment + self.api.comment_suffix),
-				('token', edit_token)
-			],
+			{
+				'action': "edit",
+				'title': page_name,
+				'appendtext': "\n" + markup,
+				'summary': comment + self.api.comment_suffix,
+				'token': edit_token
+			},
 			cookies=cookies
 		)
 		
@@ -53,7 +53,7 @@ class Pages(APISubset):
 			{
 				'action': "edit",
 				'title': page_name,
-				'text': "\n\n" + markup,
+				'text': markup,
 				'token': edit_token,
 				'summary': comment + self.api.comment_suffix,
 				'format': "json"

@@ -111,7 +111,7 @@ user_actions:
       - # header
         name: header
         label: Header
-        type: text input
+        type: text
         default: "Hello %(user_name)s"
       - # message
         name: message
@@ -131,7 +131,7 @@ user_actions:
       - # header
         name: header
         label: Header
-        type: text input
+        type: text
         default: "You're invited to the [[WP:Teahouse|Teahouse]]."
       - # message
         name: message
