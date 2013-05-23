@@ -154,24 +154,6 @@ LOGGING.levels = {
 }
 LOGGING.level = 1 //Default
 
-
-Page = {
-	fullTitle: function(ns, title){
-		if(NAMESPACES[ns]){
-			return NAMESPACES[ns] + ":" + title
-		}else{
-			return title
-		}
-	}
-}
-
-LINK_RE = /\[\[([^\]|]+)(\|[^\]]+)?\]\]/g
-linkify = function(markup){
-	markup.replace
-}
-
-
-
 WikiDiff = {
 	example_table: $("<table><tr>\n  <td colspan=\"2\" class=\"diff-lineno\">Line 1:<\/td>\n  <td colspan=\"2\" class=\"diff-lineno\">Line 1:<\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>{{user info<\/div><\/td>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>{{user info<\/div><\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| full name = Aaron Halfaker<\/div><\/td>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| full name = Aaron Halfaker<\/div><\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">\u2212<\/td>\n  <td class=\"diff-deletedline\"><div>| <span class=\"diffchange diffchange-inline\">Aaron_Halfaker<\/span>image name = <span class=\"diffchange diffchange-inline\">Aaron_Halfaker_sunburst<\/span>.jpg<\/div><\/td>\n  <td class=\"diff-marker\">+<\/td>\n  <td class=\"diff-addedline\"><div>| image name = <span class=\"diffchange diffchange-inline\">Aaron_Halfaker<\/span>.jpg<\/div><\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| hover text = Aaron Halfaker, Science Man<\/div><\/td>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| hover text = Aaron Halfaker, Science Man<\/div><\/td>\n<\/tr>\n<tr>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| job title = Research Analyst<\/div><\/td>\n  <td class=\"diff-marker\">&#160;<\/td>\n  <td class=\"diff-context\"><div>| job title = Research Analyst<\/div><\/td>\n<\/tr>\n</table>"),
 	line_re: /Line\ (([0-9]+,?)+):/,
@@ -320,4 +302,50 @@ WikiDiff = {
 	}
 }
 
+
+util = {
+	LINK_RE: /\[\[([^\]|]+)(\|([^\]]+))?\]\]/g,
+	link_replace: function(match, page_name, _, display){
+		a = util.wiki_link(page_name, display)
+		return $("<div>").append(a).html()
+	},
+	linkify: function(markup){
+		return markup.replace(util.LINK_RE, util.link_replace)
+	},
+	page_name: function(ns, title){
+		return MEDIAWIKI.namespaces[ns].prefixes[0] + title
+	},
+	page_link: function(page_name){
+		return MEDIAWIKI.protocol + "://" + 
+		       MEDIAWIKI.domain + 
+		       MEDIAWIKI.path.pages + 
+		       page_name
+	},
+	rev_diff_link: function(rev_id){
+		return MEDIAWIKI.protocol + "://" + 
+			   MEDIAWIKI.domain + 
+			   MEDIAWIKI.path.scripts + 
+			   MEDIAWIKI.file.index + 
+			   "?diff=prev&oldid=" + rev_id
+	},
+	user_link: function(username){
+		return util.page_link(util.page_name(2, username))
+	},
+	user_talk_link: function(username){
+		return util.page_link(util.page_name(3, username))
+	},
+	user_contribs_link: function(username){
+		return util.page_link(util.page_name(-1, "Contributions/" + username))
+	},
+	wiki_link: function(page_name, display){
+		if(display == undefined){
+			display = page_name
+		}
+		return $("<a>")
+			.text(display)
+			.attr('target', "_blank")
+			.attr('href', util.page_link(page_name))
+			.addClass("wiki-link")
+	}
+}
 

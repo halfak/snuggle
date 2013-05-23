@@ -140,40 +140,6 @@
 			SYSTEM = {
 				help: {
 					help: new UI.Slider($("#help .slider.help"))
-				},
-				page_link: function(title, namespace){
-					namespace = namespace || 0
-					
-					return MEDIAWIKI.protocol + "://" + 
-					       MEDIAWIKI.domain + 
-					       MEDIAWIKI.path.pages + 
-					       MEDIAWIKI.namespaces[namespace].prefixes[0] + 
-					       title
-				},
-				rev_diff_link: function(rev_id){
-					return MEDIAWIKI.protocol + "://" + 
-					       MEDIAWIKI.domain + 
-					       MEDIAWIKI.path.scripts + 
-					       MEDIAWIKI.file.index + 
-					       "?diff=prev&oldid=" + rev_id
-				},
-				user_link: function(username){
-					return SYSTEM.page_link(username, 2)
-				},
-				user_talk_link: function(username){
-					return SYSTEM.page_link(username, 3)
-				},
-				user_contribs_link: function(username){
-					return SYSTEM.page_link("Contributions/" + username, -1)
-				},
-				wiki_link: function(title, display){
-					if(display == undefined){
-						display = title
-					}
-					return $("<a>")
-						.text(display)
-						.attr('target', "_blank")
-						.attr('href', SYSTEM.page_link(title))
 				}
 			}
 			SYSTEM.local = new LocalServer(""),

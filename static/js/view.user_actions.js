@@ -22,9 +22,10 @@ View.UserAction = UI.FlyoutMenu.Action.extend({
 })
 
 View.UserAction.Field = Class.extend({
-	init: function(name, label){
+	init: function(name, label, default_value){
 		
-	}
+	},
+	
 })
 
 
