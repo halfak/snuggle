@@ -1,7 +1,7 @@
-View = window.View || {}
+views = window.views || {}
 
 
-View.UserList = Class.extend({
+views.UserList = Class.extend({
 	init: function(model){
 		this.model = model
 		
@@ -59,27 +59,13 @@ View.UserList = Class.extend({
 			}
 		}
 	},
-	_handle_view_change: function(e){
-		this.view_changed.notify(this.view())
-	},
 	_appended: function(_, users){
 		for(var i=0;i<users.length;i++){
 			var user_view = new views.User(users[i])
-			user_view.clicked.attach(
-				function(user_view){
-					this.user_clicked.notify(user_view)
-				}.bind(this)
-			)
-			user_view.categorized.attach(
-				function(user_view, category){
-					this.user_categorized.notify(user_view, category)
-				}.bind(this)
-			)
-			user_view.talk_reloaded.attach(
-				function(user_view){
-					this.user_talk_reloaded.notify(user_view)
-				}.bind(this)
-			)
+			user_view.clicked.attach(this._handle_user_clicked.bind(this))
+			
+			user_view.categorized.attach(this._handle_user_categorized.bind(this))
+			
 			user_view.action_submitted.attach(
 				function(user_view, action, watch){
 					this.action_submitted.notify(user_view, action, watch)
@@ -108,5 +94,14 @@ View.UserList = Class.extend({
 		}else{
 			this.node.removeClass("loading")
 		}
+	},
+	_handle_view_change: function(e){
+		this.view_changed.notify(this.view())
+	},
+	_handle_user_clicked: function(user){
+		this.user_clicked.notify(user)
+	},
+	_handle_user_categorized: function(user, category){
+		this.user_categorized.notify(user, category)
 	}
 })

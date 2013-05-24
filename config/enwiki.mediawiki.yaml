@@ -101,8 +101,6 @@ threads:
 #   options: (only relevant for radio buttons) a set of options for the user to 
 #            select from.
 # operations: a set of actions to be performed on the wiki.
-# watchable: if set to true, a checkbox will be included that allows the 
-#            snuggler to watch the User and User_talk pages 
 user_actions:
   - # send message #############################################################
     name: send message
@@ -123,7 +121,6 @@ user_actions:
         page_name: "User_talk:%(user_name)s"
         markup: "==%(header)s==\n%(message)s ~~~~"
         comment: "%(header)s"
-    watchable: True
   - # teahouse invite ##########################################################
     name: invite to teahouse
     description: "Posts an invitation to [[WP:Teahouse]] on the user's talk page."
@@ -155,7 +152,6 @@ user_actions:
         page_name: "User_talk:%(user_name)s"
         markup: "==%(header)s==\n{{%(template)s|%(message)s|~~~~}}"
         comment: "%(header)s"
-    watchable: True
   - # report vandalism #########################################################
     name: report vandalism
     description: >
@@ -172,7 +168,6 @@ user_actions:
         page_name: Wikipedia:Administrator_intervention_against_vandalism
         markup: "* {{Vandal|%(user_name)s}} %(reason)s ~~~~"
         comment: "Reporting [[User:%(user_name)s]] for %(reason)s"
-    watchable: True
 
 # Namespaces are configurable for MediaWiki installations.  This datastructure
 # describes the configuration of the English Wikipedia.  Note that the Main 

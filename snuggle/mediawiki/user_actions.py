@@ -11,7 +11,7 @@ class UserActions:
 	
 	def perform(self, request, snuggler=None):
 		if request.action_name not in self.actions:
-			raise InvalidAction(request.action_name)
+			raise InvalidAction(request.type)
 		else:
 			return self.actions[request.action_name].perform(request, snuggler)
 		

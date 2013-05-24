@@ -1,37 +1,65 @@
-if(window.console && window.console.log){
-	LOGGING = {
-		debug: function(loggable){
-			var msg = ["DEBUG", loggable]
-			if(!LOGGING.level || LOGGING.level <= LOGGING.levels.DEBUG){
-				if(console.debug){console.debug(msg)}
-				else{console.log(msg)}
+logging = {}
+
+logging.Logger = Class.extend({
+	init: function(console_level){
+		this.console_level = console_level
+		
+		this.history = []
+	},
+	debug: function(loggable){
+		var msg = ["DEBUG", loggable]
+		if(!this.level || this.console_level <= logging.levels.DEBUG){
+			if(console.debug){console.debug(msg)}
+			else{console.log(msg)}
+		}
+		this.history.push(msg)
+	},
+	info: function(loggable){
+		var msg = ["INFO", loggable]
+		if(!this.level || this.console_level <= logging.levels.INFO){
+			if(console.info){console.info(msg)}
+			else{console.log(msg)}
+		}
+		this.history.push(msg)
+	},
+	warning: function(loggable){
+		var msg = ["WARNING", loggable]
+		if(!this.level || this.console_level <= logging.levels.WARNING){
+			if(console.warn){console.warn(msg)}
+			else{console.log(msg)}
+		}
+		this.history.push(msg)
+	},
+	error: function(loggable){
+		var msg = ["ERROR", loggable]
+		if(!this.level || this.console_level <= logging.levels.ERROR){
+			if(console.error){console.error(msg)}
+			else{console.log(msg)}
+		}
+		this.history.push(msg)
+	},
+	recent_messages: function(min_level, max){
+		min_level = min_level || Logger.INFO
+		messages = []
+		for(var i=this.history.length-1;i>=0;i--){
+			var message = this.history[i]
+			if(logging.levels[message[0]] >= min_level){
+				messages.push(message)
 			}
-		},
-		info: function(loggable){
-			var msg = ["INFO", loggable]
-			if(!LOGGING.level || LOGGING.level <= LOGGING.levels.INFO){
-				if(console.info){console.info(msg)}
-				else{console.log(msg)}
-			}
-		},
-		error: function(loggable){
-			var msg = ["ERROR", loggable]
-			if(!LOGGING.level || LOGGING.level <= LOGGING.levels.ERROR){
-				if(console.error){console.error(msg)}
-				else{console.log(msg)}
+			if(max && messages.length >= max){
+				break
 			}
 		}
+		return messages
 	}
-}else{
-	LOGGING = {
-		debug: function(loggable){},
-		info: function(loggable){},
-		error: function(loggable){}
-	}
-}
-LOGGING.levels = {
+})
+logging.levels = {
 	DEBUG: 0,
-	INFO:  1,
-	ERROR: 2
+	INFO: 1,
+	WARNING: 2,
+	ERROR: 3
 }
-LOGGING.level = 1 //Default
+
+
+//Set a default
+logger = new logging.Logger(logging.levels.INFO)

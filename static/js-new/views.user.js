@@ -99,20 +99,20 @@ views.User.Info = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.menu = ui.UserMenu.from_config(MEDIAWIKI)
-		this.name.node.append(this.menu.node)
+		this.user_actions = views.User.Info.UserActions.from_config(MEDIAWIKI)
+		this.name.node.append(this.actions.node)
 		
-		this.utc = new UI.UTC(
+		this.utc = new ui.UTC(
 			this.model.name, 
 			this.model.has_user_page,
 			this.model.has_talk_page
 		)
 		this.node.append(this.utc.node)
 		
-		this.meta = new UI.DefinitionList()
+		this.meta = new ui.DefinitionList()
 		this.node.append(this.meta.node)
 		
-		this.counts = new UI.EditCounts()
+		this.counts = new ui.EditCounts()
 		
 		this.model.viewed.attach(this._render.bind(this))
 		this.model.activity.changed(this._render.bind(this))
@@ -159,6 +159,42 @@ views.User.Info = Class.extend({
 		}
 	}
 })
+views.User.Info.UserActions = ui.Dropper.extend({
+	init: function(actions){
+		this.menu = new ui.ActionMenu(actions)
+		this._super("", this.menu.node)
+		
+		this.node.addClass("user_actions")
+		this.node.addClass("simple")
+		
+		this.dropped.attach(this._dropped.bind(this))
+	},
+	_dropped: function(_, expanded){
+		if(!expanded){this.menu.collapse()}
+	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+			}else{
+				this.node.removeClass("disabled")
+			}
+			this.menu.disabled(disabled)
+		}
+	}
+})
+ui.UserActions.from_config = function(config){
+	var actions = []
+	for(var i=0;i<config.user_actions.length;i++){
+		doc = config.user_actions[i]
+		actions.push(new ui.UserAction.from_doc(doc))
+	}
+	return new views.User.Info.UserActions(actions)
+}
+
+
 views.User.Activity = UI.RevisionGraph.extend({
 	init: function(model){
 		this._super(model.registration, 30)

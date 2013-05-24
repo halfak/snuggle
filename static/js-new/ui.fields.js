@@ -46,7 +46,7 @@ ui.Field.from_doc = function(doc){
 	}else{
 		throw "Configuration Error: Field type " + doc.type + " not available."
 	}
-}.bind(ui.Field)
+}
 
 ui.SelectField = ui.Field.extend({
 	init: function(name, options, opts){
@@ -62,7 +62,8 @@ ui.SelectField = ui.Field.extend({
 			node: $("<select>")
 				.attr('name', this.name)
 				.attr('id', this.id)
-				.change(this._changed.bind(this)),
+				.change(this._changed.bind(this))
+				.attr('tabindex', opts.tabindex || 1),
 			labels: {},
 			values: {}
 		}
@@ -159,7 +160,7 @@ ui.RadioField = ui.Field.extend({
 	_radio_changed: function(radio, checked){
 		if(checked){
 			this.selection = radio
-			this.changed.notify(radio.value)
+			this.changed.notify(radio)
 		}
 	},
 	val: function(value){
@@ -210,7 +211,8 @@ ui.RadioField.from_doc = function(doc){
 			radio_doc.value, 
 			{
 				class: radio_doc.class,
-				tooltip: radio_doc.tooltip
+				tooltip: radio_doc.tooltip,
+				tabindex: doc.tabindex
 			}
 		)
 		radios.push(radio)
@@ -245,12 +247,13 @@ ui.RadioField.Radio = Class.extend({
 			this.node.addClass(opts.class)
 		}
 		
-		this._radio = {
+		this._input = {
 			node: $("<input>")
 				.attr('type', "radio")
 				.change(this._changed.bind(this))
+				.attr('tabindex', opts.tabindex || 1)
 		}
-		this.node.append(this._radio.node)
+		this.node.append(this._input.node)
 		
 		this._label = {
 			node: $("<label>")
@@ -263,8 +266,8 @@ ui.RadioField.Radio = Class.extend({
 	set_name: function(name){
 		this.id = name + "_" + this.value
 		
-		this._radio.node.attr('name', name)
-		this._radio.node.attr('id', this.id)
+		this._input.node.attr('name', name)
+		this._input.node.attr('id', this.id)
 		this._label.node.attr('for', this.id)
 	},
 	disabled: function(disabled){
@@ -273,21 +276,21 @@ ui.RadioField.Radio = Class.extend({
 		}else{
 			if(disabled){
 				this.node.addClass("disabled")
-				this._radio.node.attr('disabled', true)
+				this._input.node.attr('disabled', true)
 			}else{
 				this.node.removeClass("disabled")
-				this._radio.node.removeAttr('disabled')
+				this._input.node.removeAttr('disabled')
 			}
 		}
 	},
 	checked: function(checked){
 		if(checked === undefined){
-			return this._radio.node.is(":checked")
+			return this._input.node.is(":checked")
 		}else{
 			if(checked){
-				this._radio.node.attr('checked', "checked")
+				this._input.node.attr('checked', "checked")
 			}else{
-				this._radio.node.removeAttr('checked')
+				this._input.node.removeAttr('checked')
 			}
 		}
 	},
@@ -318,6 +321,7 @@ ui.TextField = ui.Field.extend({
 				.attr('id', this.id)
 				.attr('type', opts.password ? "password" : "text")
 				.keydown(this._key_pressed.bind(this))
+				.attr('tabindex', opts.tabindex || 1)
 		}
 		this.node.append(this._input.node)
 		
@@ -361,10 +365,11 @@ ui.TextField.from_doc = function(doc){
 	return new ui.TextField(
 		doc.name,
 		{
-			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
-			default: doc.default
+			class:    doc.class,
+			label:    doc.label,
+			tooltip:  doc.tooltip,
+			default:  doc.default,
+			tabindex: doc.tabindex
 		}
 	)
 }
@@ -383,6 +388,7 @@ ui.TextareaField = ui.Field.extend({
 			node: $("<textarea>")
 				.attr('id', this.id)
 				.keydown(this._key_pressed.bind(this))
+				.attr('tabindex', opts.tabindex || 1)
 		}
 		this.node.append(this._textarea.node)
 		
@@ -426,10 +432,11 @@ ui.TextareaField.from_doc = function(doc){
 	return new ui.TextareaField(
 		doc.name,
 		{
-			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
-			default: doc.default
+			class:    doc.class,
+			label:    doc.label,
+			tooltip:  doc.tooltip,
+			default:  doc.default,
+			tabindex: doc.tabindex
 		}
 	)
 }
@@ -455,6 +462,7 @@ ui.CheckField = ui.Field.extend({
 				.attr('id', this.id)
 				.attr('type', "checkbox")
 				.change(this._changed.bind(this))
+				.attr('tabindex', opts.tabindex || 1)
 				
 		}
 		this.node.prepend(this._input.node) //Prepended to get in front of the label.
@@ -503,10 +511,11 @@ ui.CheckField.from_doc = function(doc){
 	return new ui.CheckField(
 		doc.name,
 		{
-			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
-			default: doc.default
+			class:    doc.class,
+			label:    doc.label,
+			tooltip:  doc.tooltip,
+			default:  doc.default,
+			tabindex: doc.tabindex
 		}
 	)
 }

@@ -1,8 +1,7 @@
 util = {
 	LINK_RE: /\[\[([^\]|]+)(\|([^\]]+))?\]\]/g,
 	link_replace: function(match, page_name, _, display){
-		a = util.wiki_link(page_name, display)
-		return $("<div>").append(a).html()
+		return util.htmlify(util.wiki_link(page_name, display))
 	},
 	linkify: function(markup){
 		return markup.replace(util.LINK_RE, util.link_replace)
@@ -41,71 +40,13 @@ util = {
 			.attr('target', "_blank")
 			.attr('href', util.page_link(page_name))
 			.addClass("wiki-link")
-	}
-}
-
-Array.prototype.max = function(){
-	if(this.length == 0){
-		throw new Error("Cannot find maximum of an empty list")
-	}
-	maximum = 0
-	for(var i in this){
-		maximum = Math.max(maximum, this[i])
-	}
-	return maximum
-}
-
-Array.prototype.group = function(by){
-	by = by || function(item){return item}
-		
-	var groups = new Object()
-	
-	for(var i in this){
-		var item = this[i]
-		var id   = by(item)
-		if(groups[id]){
-			groups[id].push(item)
-		}else{
-			groups[id] = [item]
-		}
-	}
-	
-	return groups
-}
-
-Object.defineProperty(Object.prototype, 'keys',{
-	value: function(){
-		  var keys = []
-		
-		for(var key in this){
-			if(this.hasOwnProperty(key)){
-				keys.push(key)
-			}
-		}
-		
-		return keys;
 	},
-	writable: true,
-	configurable: true,
-	enumerable: false
-})
+	htmlify: function(element){
+		return $("<div>").append(element).html()
+	}
+}
 
-Object.defineProperty(Object.prototype, 'values',{
-	value: function(){
-		var values = []
-		
-		for(var key in this){
-			if(this.hasOwnProperty(key)){
-				values.push(this[key])
-			}
-		}
-		
-		return values;
-	},
-	writable: true,
-	configurable: true,
-	enumerable: false
-})
+
 
 
 

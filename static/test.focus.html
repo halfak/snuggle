@@ -1,47 +1,61 @@
 <html>
 	<head>
 		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="css/ui.button.css" />
 		<script language="javascript" src="js/lib/jquery-1.8.1.min.js"></script>
 		<script language="javascript" src="js/lib/class.js"></script>
 		<script language="javascript" src="js/lib/date.format.js"></script>
+		<script language="javascript" src="js/lib/javascript.js"></script>
+		<script language="javascript" src="js-new/env.js"></script>
 		<script language="javascript" src="js-new/event.js"></script>
+		<script language="javascript" src="js-new/logging.js"></script>
 		<script language="javascript" src="js-new/util.js"></script>
+		<script language="javascript" src="js-new/ui.button.js"></script>
 		<script language="javascript" src="js-new/ui.fields.js"></script>
 	</head>
 	<body>
 		<script type="text/javascript">
-			input1 = $("<input>")
-				.attr('type', "text")
-				.keypress(function(e){e.stopPropagation()})
-				
-			div1 = $("<div>")
-				.attr('tabindex', 1)
-				.focus(function(e){console.log(["focus 1", e])})
-				.blur(function(e){console.log(["blur 1", e])})
-				.text("div 1")
-				.keypress(function(e){console.log(["key1 " + e.which])})
-				.append(input1)
-			
-			input2 = $("<input>")
-				.attr('type', "text")
-				.keypress(function(e){e.stopPropagation()})
-				
-			div2 = $("<div>")
-				.attr('tabindex', 2)
-				.focus(function(e){console.log(["focus 2", e])})
-				.blur(function(e){console.log(["blur 2", e])})
-				.text("div 2")
-				.keypress(function(e){console.log(["key2 " + e.which])})
-				.append(input2)
-			
-			$('body').append(div1)
-			$('body').append(div2)
-			
+					
 			select = new ui.SelectField(
 				"foobar", 
-				[{value:"Bar"}, {value:"Foo"}]
+				[{value:"Bar"}, {value:"Foo"}],
+				{
+					label: "Foo Field: "
+				}
 			)
 			$('body').append(select.node)
+					
+			radio = new ui.RadioField(
+				"foobar", 
+				[
+					new ui.RadioField.Radio("foo1", 1),
+					new ui.RadioField.Radio("foo2", 2),
+					new ui.RadioField.Radio("foo3", 3),
+					new ui.RadioField.Radio("foo4", 4)
+				],
+				{
+					default: 2
+				}
+			)
+			radio.changed.attach(function(_, radio){
+				console.log("radio value changed to " + radio.value)
+			})
+			$('body').append(radio.node)
+			
+			button = new ui.Button({label: "Foobar"})
+			button.activated.attach(function(_){console.log("button activated")})
+			button.focus_changed.attach(function(_, focused){console.log("button focus changed " + focused)})
+			$('body').append(button.node)
+			
+			text = ui.Field.from_doc(
+				{
+					type: "text",
+					name: "A text field",
+					label: "A text field"
+				}
+			)
+			text.changed.attach(function(text){console.log("text changed to '" + text.val() + "'")})
+			$('body').append(text.node)
+			
 		</script>
 	<body>
-</html>

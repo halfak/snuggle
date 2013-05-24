@@ -13,7 +13,7 @@ models.User = Selectable.extend({
 		
 		this.id           = doc.id
 		this.name         = doc.name
-		this.registration = doc.registration
+		this.registration = new Date(doc.registration*miliseconds.SECOND)
 		this.views        = doc.views
 		this.desirability = new models.User.Desirability(doc.desirability)
 		this.category     = new models.User.Category(category)
@@ -101,7 +101,7 @@ models.User.Activity = Class.extend({
 			throw "Cannot load empty doc into model.User.Activity."
 		}
 		
-		this.last_activity = doc.last_activity
+		this.last_activity = new Date(doc.last_activity*miliseconds.SECOND)
 		this.reverted = doc.reverted
 		this.self_reverted = doc.self_reverted
 		this.revisions = doc.revisions
