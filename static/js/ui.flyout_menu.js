@@ -207,10 +207,12 @@ UI.WikiPreview = Class.extend({
 })
 
 UI.FlyoutMenu.Action = Class.extend({
-	init: function(display, opts){
+	init: function(name, opts){
+		this.name = name
+		
 		this.node = $("<div>")
 			.addClass("action")
-			.append($("<span>").append(display))
+			.append($("<span>").append(name))
 			.click(this._clicked.bind(this))
 		
 		this.form = { //Defined by subclass
@@ -221,8 +223,8 @@ UI.FlyoutMenu.Action = Class.extend({
 		this.clicked = new Event(this)
 		this.changed = new Event(this)
 		
-		if(opts.title){
-			this.node.attr("title", opts.title)
+		if(opts.tooltip){
+			this.node.attr("title", opts.tooltip)
 		}
 	},
 	_clicked: function(e){

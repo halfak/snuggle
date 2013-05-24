@@ -99,7 +99,7 @@ views.User.Info = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.menu = new views.UserMenu()
+		this.menu = ui.UserMenu.from_config(MEDIAWIKI)
 		this.name.node.append(this.menu.node)
 		
 		this.utc = new UI.UTC(

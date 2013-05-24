@@ -7,8 +7,6 @@ View.UserList = Class.extend({
 		
 		this.users = {}
 		
-		this.last_view_change = null
-		
 		this.node = $("<div>")
 			.addClass("user_list")
 			.scroll(this._handle_view_change.bind(this))
@@ -66,7 +64,7 @@ View.UserList = Class.extend({
 	},
 	_appended: function(_, users){
 		for(var i=0;i<users.length;i++){
-			var user_view = new View.User(users[i])
+			var user_view = new views.User(users[i])
 			user_view.clicked.attach(
 				function(user_view){
 					this.user_clicked.notify(user_view)

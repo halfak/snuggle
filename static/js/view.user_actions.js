@@ -1,29 +1,46 @@
-View = window.View || {}
+ui = window.ui || {}
 
-View.UserMenu = UI.Dropper.extend({
+ui.UserMenu = ui.Dropper.extend({
 	init: function(actions){
 		
-		this.menu = new UI.FlyoutMenu()
+		this.menu = new ui.FlyoutMenu()
 		for(var i=0;i<actions.length;i++){
 			
 		}
 	}
 })
 
-View.UserAction = UI.FlyoutMenu.Action.extend({
+ui.UserAction = ui.FlyoutMenu.Action.extend({
 	init: function(name, description, fields, watchable, opts){
-		this._super("send message", {title: opts.title})
+		this._super(name, {tooltip: opts.tooltip})
+		
+		this.changed = new Event(this)
 		
 		this.description = {
 			node: $("<p>")
 				.append(description)
 		}
-	}
-})
-
-View.UserAction.Field = Class.extend({
-	init: function(name, label, default_value){
 		
+		this.form = {
+			'node': $("<form>")
+				.submit(function(e){e.preventDefault();e.stopPropagation()})
+		}
+		
+		this._fields = {}
+		for(var i=0;i<fields.length;i++){
+			var field = fields[i]
+			this._fields[field.name] = field
+			this.form.node.append(field.node)
+			field.changed.attach(function(){this.changed.notify()}.bind(this))
+		}
+	},
+	fields: function(){
+		field_map = {}
+		for(var name in this._fields){
+			var field = this._fields[name]
+			field_map[name] = field.val()
+		}
+		return field_map
 	},
 	
 })

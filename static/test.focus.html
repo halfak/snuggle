@@ -4,6 +4,9 @@
 		<script language="javascript" src="js/lib/jquery-1.8.1.min.js"></script>
 		<script language="javascript" src="js/lib/class.js"></script>
 		<script language="javascript" src="js/lib/date.format.js"></script>
+		<script language="javascript" src="js-new/event.js"></script>
+		<script language="javascript" src="js-new/util.js"></script>
+		<script language="javascript" src="js-new/ui.fields.js"></script>
 	</head>
 	<body>
 		<script type="text/javascript">
@@ -33,6 +36,12 @@
 			
 			$('body').append(div1)
 			$('body').append(div2)
+			
+			select = new ui.SelectField(
+				"foobar", 
+				[{value:"Bar"}, {value:"Foo"}]
+			)
+			$('body').append(select.node)
 		</script>
 	<body>
 </html>
