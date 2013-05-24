@@ -18,8 +18,21 @@ class Categorization(serializable.Type):
 
 class Category(serializable.Type):
 	
-	def __init__(self, history=None):
+	def __init__(self, history=None, category=None):
+		# Note that category is ignored purposefully.
 		if history == None:
 			self.history = serializable.List()
 		else:
 			self.history = serializable.List.deserialize(Categorization, history)
+		
+		self.category = self.history[-1].category if len(self.history) > 0 else None
+	
+	
+	def serialize(self):
+		"""
+		Overriding so that we can include category in the deflated version
+		"""
+		return {
+			'category': self.history[-1].category if len(self.history) > 0 else None,
+			'history': self.history.serialize()
+		}

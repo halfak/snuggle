@@ -8,7 +8,7 @@ UI.Field = Class.extend({
 		this.name = name
 		
 		this.node = $("<div>")
-			.addClass("input_field")
+			.addClass("field")
 		
 		if(opts.class){
 			this.node.addClass(opts.class)
@@ -22,8 +22,8 @@ UI.Field = Class.extend({
 			}
 			this.node.append(this._label.node)
 			
-			if(opts.title){
-				this._label.node.attr("title", opts.title)
+			if(opts.tooltip){
+				this._label.node.attr("title", opts.tooltip)
 			}
 		}
 		
@@ -31,8 +31,17 @@ UI.Field = Class.extend({
 	},
 	_changed: function(e){
 		this.changed.notify()
-	},
+	}
 })
+UI.Field.TYPES = {}
+UI.Field.from_doc = function(doc){
+	Class = this.TYPES[doc.type] 
+	if(Class){
+		return Class.from_doc(doc)
+	}else{
+		throw "Configuration Error: Field type " + doc.type + " not available."
+	}
+}.bind(UI.Field)
 
 UI.SelectField = UI.Field.extend({
 	init: function(name, options, opts){
@@ -89,16 +98,32 @@ UI.SelectField = UI.Field.extend({
 			this._select.values[label] = option.value
 			this._select.labels[option.value] = label
 			
-			this._select.node.append(
-				$("<option>")
-					.attr('value', label)
-					.text(label)
-			)
+			var option_node = $("<option>")
+				.attr('value', label)
+				.text(label)
+			
+			if(option.selected){
+				option_node.attr('selected', "selected")
+			}
+			
+			this._select.node.append(option_node)
 		}
 	}
 })
 UI.SelectField.TYPE = "select"
 UI.Field.TYPES[UI.SelectField.TYPE] = UI.SelectField
+UI.SelectField.from_doc = function(doc){
+	return new UI.SelectField(
+		doc.name,
+		doc.options,
+		{
+			class:   doc.class,
+			label:   doc.label,
+			tooltip: doc.tooltip,
+			default: doc.default
+		}
+	)
+}
 
 UI.RadioField = UI.Field.extend({
 	init: function(name, radios, opts){
@@ -108,7 +133,7 @@ UI.RadioField = UI.Field.extend({
 		
 		this._super(id, name, opts)
 		
-		this.node.addClass("radio")
+		this.node.addClass("radios")
 			
 		this._radios = {
 			node: $("<div>")
@@ -170,6 +195,32 @@ UI.RadioField = UI.Field.extend({
 })
 UI.RadioField.TYPE = "radio"
 UI.Field.TYPES[UI.RadioField.TYPE] = UI.RadioField
+UI.RadioField.from_doc = function(doc){
+	var radios = []
+	var radio_docs = doc.options || []
+	for(var i=0;radio_docs.length;i++){
+		var radio_doc = radio_docs[i]
+		var radio = new UI.RadioField.Radio(
+			radio_doc.label,
+			radio_doc.value, 
+			{
+				radio_doc.class,
+				radio_doc.tooltip
+			}
+		)
+		radios.push(radio)
+	}
+	return new UI.RadioField(
+		doc.name,
+		radios,
+		{
+			class:   doc.class,
+			label:   doc.label,
+			tooltip: doc.tooltip,
+			default: doc.default
+		}
+	)
+}
 
 
 UI.RadioField.Radio = Class.extend({
@@ -182,8 +233,8 @@ UI.RadioField.Radio = Class.extend({
 		this.node = $("<div>")
 			.addClass("radio_option")
 		
-		if(opts.title){
-			this.node.attr('title', opts.title)
+		if(opts.tooltip){
+			this.node.attr('title', opts.tooltip)
 		}
 		if(opts.class){
 			this.node.addClass(opts.class)
@@ -301,6 +352,17 @@ UI.TextField = UI.Field.extend({
 })
 UI.TextField.TYPE = "text"
 UI.Field.TYPES[UI.TextField.TYPE] = UI.TextField
+UI.TextField.from_doc = function(doc){
+	return new UI.TextField(
+		doc.name,
+		{
+			class:   doc.class,
+			label:   doc.label,
+			tooltip: doc.tooltip,
+			default: doc.default
+		}
+	)
+}
 
 UI.TextareaField = UI.Field.extend({
 	init: function(name, opts){
@@ -320,6 +382,10 @@ UI.TextareaField = UI.Field.extend({
 		this.node.append(this._textarea.node)
 		
 		this.key_pressed = new Event(this)
+		
+		if(opts.default){
+			this.val(opts.default)
+		}
 	},
 	_key_pressed: function(e){
 		this.key_pressed.notify(e.keyCode)
@@ -351,20 +417,19 @@ UI.TextareaField = UI.Field.extend({
 })
 UI.TextareaField.TYPE = "textarea"
 UI.Field.TYPES[UI.TextareaField.TYPE] = UI.TextareaField
+UI.TextareaField.from_doc = function(doc){
+	return new UI.TextareaField(
+		doc.name,
+		{
+			class:   doc.class,
+			label:   doc.label,
+			tooltip: doc.tooltip,
+			default: doc.default
+		}
+	)
+}
 
-UI.CheckField = Class.extend({
-	/**
-	:Parameters:
-		opts : object
-			checked : boolean
-				checked by default?
-			label : string
-				the label to be used for the field
-			title : string
-				tooltip text for this field
-			class : string
-				a classname to add to the node
-	*/
+UI.CheckField = UI.Field.extend({
 	init: function(name, opts){
 		opts = opts || {}
 		
@@ -374,16 +439,22 @@ UI.CheckField = Class.extend({
 		
 		this.node.addClass("check")
 		
+		// Normally, this is set in the parent class, but in this case, we want
+		// the whole field to have a tooltip.
+		if(opts.tooltip){
+			this.node.attr('title', opts.tooltip)
+		}
+		
 		this._input = {
 			node: $("<input>")
-				.attr('id', id)
+				.attr('id', this.id)
 				.attr('type', "checkbox")
 				.change(this._changed.bind(this))
 				
 		}
 		this.node.prepend(this._input.node) //Prepended to get in front of the label.
 		
-		this.checked(opts.checked)
+		this.checked(opts.default)
 	},
 	_changed: function(e){
 		if(this.checked()){
@@ -423,3 +494,14 @@ UI.CheckField = Class.extend({
 })
 UI.CheckField.TYPE = "textarea"
 UI.Field.TYPES[UI.CheckField.TYPE] = UI.CheckField
+UI.CheckField.from_doc = function(doc){
+	return new UI.CheckField(
+		doc.name,
+		{
+			class:   doc.class,
+			label:   doc.label,
+			tooltip: doc.tooltip,
+			default: doc.default
+		}
+	)
+}

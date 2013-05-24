@@ -112,10 +112,6 @@ Object.defineProperty(Object.prototype, 'values',{
 	enumerable: false
 })
 
-Date.prototype.wikiFormat = function(){
-	return this.toUTCString()
-}
-
 if(window.console && window.console.log){
 	LOGGING = {
 		debug: function(loggable){

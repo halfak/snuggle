@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<link rel="shortcut icon" href="favicon.ico" />
+		<script language="javascript" src="js/lib/jquery-1.8.1.min.js"></script>
+		<script language="javascript" src="js/lib/class.js"></script>
+		<script language="javascript" src="js/lib/date.format.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			input1 = $("<input>")
+				.attr('type', "text")
+				.keypress(function(e){e.stopPropagation()})
+				
+			div1 = $("<div>")
+				.attr('tabindex', 1)
+				.focus(function(e){console.log(["focus 1", e])})
+				.blur(function(e){console.log(["blur 1", e])})
+				.text("div 1")
+				.keypress(function(e){console.log(["key1 " + e.which])})
+				.append(input1)
+			
+			input2 = $("<input>")
+				.attr('type', "text")
+				.keypress(function(e){e.stopPropagation()})
+				
+			div2 = $("<div>")
+				.attr('tabindex', 2)
+				.focus(function(e){console.log(["focus 2", e])})
+				.blur(function(e){console.log(["blur 2", e])})
+				.text("div 2")
+				.keypress(function(e){console.log(["key2 " + e.which])})
+				.append(input2)
+			
+			$('body').append(div1)
+			$('body').append(div2)
+		</script>
+	<body>
+</html>

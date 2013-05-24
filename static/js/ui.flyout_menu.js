@@ -196,7 +196,7 @@ UI.FlyoutMenu.PostFlyout.Controls = Class.extend({
 UI.WikiPreview = Class.extend({
 	init: function(){
 		this.node = $("<div>")
-			.addClass("wiki_preview")	
+			.addClass("wiki_format")
 	},
 	load: function(html){
 		this.node.html(html)

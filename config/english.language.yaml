@@ -32,7 +32,7 @@ user:
     revisions: revisions
     reverted: reverted
     self-reverted: self-reverted
-  categorize:
+  category:
     categorize: Categorize
     history: history
     good-faith:
@@ -44,26 +44,10 @@ user:
     bad-faith:
       label: "✗"
       tooltip: "This editor is trying to cause harm or be disruptive (or press #3)"
-  contribs:
+    This user has not been categorized yet.: "This user has yet to be categorized yet."
+  activity:
     edits: edits
     days since registration: days since registration
     diff: 
       reverted: reverted
       by: by
-
-actions:
-  send message: 
-    label: send message
-    comment: "New message. "
-  invite to teahouse: 
-    label: invite to teahouse
-    comment: "You're invited to the teahouse. "
-  report abuse: 
-    label: report abuse
-    comment: "Reporting to AIV "
-
-comments:
-  actions:
-    send message: New message.
-    teahouse invite: Invitation to the teahouse.
-    report vandalism: Reporting to AIV.
