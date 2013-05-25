@@ -12,6 +12,7 @@
 		<script language="javascript" src="js-new/util.js"></script>
 		<script language="javascript" src="js-new/ui.button.js"></script>
 		<script language="javascript" src="js-new/ui.fields.js"></script>
+		<script language="javascript" src="js-new/ui.action_menu.js"></script>
 	</head>
 	<body>
 		<script type="text/javascript">
@@ -47,6 +48,7 @@
 			button.focus_changed.attach(function(_, focused){console.log("button focus changed " + focused)})
 			$('body').append(button.node)
 			
+			form = $("<form>")
 			text = ui.Field.from_doc(
 				{
 					type: "text",
@@ -55,7 +57,36 @@
 				}
 			)
 			text.changed.attach(function(text){console.log("text changed to '" + text.val() + "'")})
-			$('body').append(text.node)
+			form.append(text.node)
+			$('body').append(form)
+			form.submit(function(e){return text.val() == "submit"})
+			
+			config = {
+				user_actions: [
+					{
+						name: "send message",
+						description: "Posts a new message on the user's talk page." ,
+						fields: [
+							{
+								name: "header",
+								label: "Header",
+								type: "text",
+								default: "Hello %(user_name)s"
+							},
+							{
+								name: "message",
+								label: "Message",
+								type: "textarea"
+							}
+						]
+					}
+				]
+			}
+			
+			actions = config.user_actions.map(ui.UserAction.from_doc)
+			action_menu = new ui.ActionMenu(actions)
+			$('body').append(action_menu.node)
+			
 			
 		</script>
 	<body>

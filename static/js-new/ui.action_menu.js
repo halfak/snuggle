@@ -15,14 +15,13 @@ ui.ActionMenu = Class.extend({
 		this.flyout = new ui.ActionMenu.Flyout()
 		this.flyout.controls.submitted.attach(this._handle_submit.bind(this))
 		this.flyout.controls.cancelled.attach(this._handle_cancel.bind(this))
-		this.flyout.fields_changed.attach(this._handle_fields_change.bind(this))
 		this.node.append(this.flyout.node)
 		
 		// Events
-		this.submitted      = new Event(this)
-		this.cancelled      = new Event(this)
-		this.fields_changed = new Event(this)
-		this.action_loaded  = new Event(this)
+		this.cancelled        = new Event(this)
+		this.action_submitted = new Event(this)
+		this.action_changed   = new Event(this)
+		this.action_loaded    = new Event(this)
 		
 		for(var i=0;i<actions.length;i++){
 			this._add_action(actions[i])
@@ -32,10 +31,14 @@ ui.ActionMenu = Class.extend({
 		this.action_submitted.notify(action, watch)
 	},
 	_handle_cancel: function(_){
-		this.action_cancelled.notify(action, watch)
+		this.flyout.expanded(false)
+		this.cancelled.notify()
 	},
-	_handle_fields_change: function(_, action, watch){
-		this.fields_changed.notify(action, watch)
+	_handle_action_changed: function(action, watch){
+		this.action_changed.notify(action, watch)
+	},
+	_handle_action_clicked: function(action){
+		this.flyout.load(action)
 	},
 	_handle_handle_clicked: function(action){
 		if(!this.disabled()){
@@ -45,10 +48,10 @@ ui.ActionMenu = Class.extend({
 		}
 	},
 	_add_action: function(action){
-		this.actions.node.append(action.handle.node)
-		this.actions.list.push(action)
-		action.handle.clicked.attach(this._action_clicked.bind(this))
-		action.changed.attach(this._action_changed.bind(this))
+		this.handles.node.append(action.handle.node)
+		this.handles.list.push(action)
+		action.clicked.attach(this._handle_action_clicked.bind(this))
+		action.changed.attach(this._handle_action_changed.bind(this))
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -87,18 +90,17 @@ ui.ActionMenu.Flyout = Class.extend({
 		this.node.append(this.form.node)
 		
 		this.previewer = new ui.ActionMenu.Flyout.Previewer()
-		this.node.append(this.preview.node)
+		this.node.append(this.previewer.node)
 		
-		this.controls = new UI.ActionMenu.Flyout.Controls()
+		this.controls = new ui.ActionMenu.Flyout.Controls()
 		this.node.append(this.controls.node)
+		
+		this.controls.cancelled.attach(this._handle_cancel.bind(this))
 	},
-	_cancelled: function(){
+	_handle_cancel: function(){
 		this.action.reset()
 		this.controls.reset()
 		this.unload()
-	},
-	_submitted: function(){
-		this.submitted.notify(this.action, this.controls.watch.val())
 	},
 	expanded: function(expanded){
 		if(expanded === undefined){
@@ -131,7 +133,7 @@ ui.ActionMenu.Flyout = Class.extend({
 			if(action){
 				this._clear()
 				this.action = action
-				this.node.prepend(action.form.node)
+				this.form.node.append(this.action.form.node)
 				this.action.selected(true)
 				this.expanded(true) //make sure we expanded
 				return true
@@ -151,11 +153,11 @@ ui.ActionMenu.Flyout = Class.extend({
 	},
 	_clear: function(){
 		if(this.action){
-			this.action.form.node.detach()
+			this.action.form.node.children().detach()
 			this.action.selected(false)
 			this.action = null
 		}
-		this.preview.clear()
+		this.previewer.clear()
 	}
 })
 
@@ -164,13 +166,13 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 		this.node = $("<div>")
 			.addClass("controls")
 		
-		this.watch = new UI.CheckField("watch", {label: "add user to watchlist"})
+		this.watch = new ui.CheckField("watch", {label: "add user to watchlist"})
 		this.node.append(this.watch.node)
 		
-		this.cancel = new UI.Button("cancel", {title: "Click here to cancel the action."})
+		this.cancel = new ui.Button({label: "cancel", title: "Click here to cancel the action."})
 		this.node.append(this.cancel.node)
 		
-		this.post = new UI.Button("post", {title: "Click here to to complete the action."})
+		this.post = new ui.Button({label: "submit", title: "Click here to to complete the action."})
 		this.node.append(this.post.node)
 		
 		this.submitted = new Event(this)
@@ -188,11 +190,11 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 		}
 	},
 	reset: function(){
-		this.watch.checked(false)
+		this.watch.val(false)
 	}
 })
 
-ui.AcionMenu.Flyout.Previewer = Class.extend({
+ui.ActionMenu.Flyout.Previewer = Class.extend({
 	init: function(){
 		this.node = $("<div>")
 			.addClass("previewer")
@@ -253,7 +255,7 @@ ui.ActionMenu.Append = ui.ActionMenu.Operation.extend({
 	}
 })
 ui.ActionMenu.Append.TYPE = "append"
-ui.ActionMenu.Append.TYPES[ui.ActionMenu.Append.TYPE] = ui.ActionMenu.Append
+ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Append.TYPE] = ui.ActionMenu.Append
 ui.ActionMenu.Append.from_doc = function(doc){
 	return new ui.ActionMenu.Append(doc.page_name, doc.html)
 }
@@ -266,7 +268,7 @@ ui.ActionMenu.Replace = ui.ActionMenu.Operation.extend({
 	}
 })
 ui.ActionMenu.Replace.TYPE = "replace"
-ui.ActionMenu.Replace.TYPES[ui.ActionMenu.Replace.TYPE] = ui.ActionMenu.Replace
+ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Replace.TYPE] = ui.ActionMenu.Replace
 ui.ActionMenu.Replace.from_doc = function(doc){
 	return new ui.ActionMenu.Replace(doc.page_name, doc.html)
 }
@@ -277,7 +279,7 @@ ui.ActionMenu.Watch = ui.ActionMenu.Operation.extend({
 	}
 })
 ui.ActionMenu.Watch.TYPE = "watch"
-ui.ActionMenu.Watch.TYPES[ui.ActionMenu.Watch.TYPE] = ui.ActionMenu.Watch
+ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Watch.TYPE] = ui.ActionMenu.Watch
 ui.ActionMenu.Watch.from_doc = function(doc){
 	return new ui.ActionMenu.Watch(doc.page_name)
 }
@@ -290,8 +292,10 @@ ui.HTMLPreview = Class.extend({
 	}
 })
 
-ui.ActionMenu.Action = Class.extend({
+ui.UserAction = Class.extend({
 	init: function(name, description, fields, opts){
+		opts = opts || {}
+		
 		this.name = name
 		
 		this.handle = {
@@ -313,7 +317,7 @@ ui.ActionMenu.Action = Class.extend({
 			node: $("<p>")
 				.append(util.linkify(description))
 		}
-		this.form.append(this.description.node)
+		this.form.node.append(description.node)
 		
 		this._fields = {}
 		for(var i=0;i<fields.length;i++){
@@ -332,27 +336,27 @@ ui.ActionMenu.Action = Class.extend({
 		}
 	},
 	_handle_change: function(field){
-		this.changed.notify(this)
+		this.changed.notify()
 	},
 	selected: function(selected){
 		if(selected === undefined){
-			return this.node.hasClass("selected")
+			return this.handle.node.hasClass("selected")
 		}else{
 			if(selected){
-				this.node.addClass("selected")
+				this.handle.node.addClass("selected")
 			}else{
-				this.node.removeClass("selected")
+				this.handle.node.removeClass("selected")
 			}
 		}
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
-			return this.node.hasClass("disabled")
+			return this.handle.node.hasClass("disabled")
 		}else{
 			if(disabled){
-				this.node.addClass("disabled")
+				this.handle.node.addClass("disabled")
 			}else{
-				this.node.removeClass("disabled")
+				this.handle.node.removeClass("disabled")
 			}
 			for(var name in this._fields){
 				var field = this._fields[name]

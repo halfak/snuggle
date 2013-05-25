@@ -195,7 +195,7 @@ ui.UserActions.from_config = function(config){
 }
 
 
-views.User.Activity = UI.RevisionGraph.extend({
+views.User.Activity = ui.RevisionGraph.extend({
 	init: function(model){
 		this._super(model.registration, 30)
 		this.model = model

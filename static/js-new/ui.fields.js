@@ -467,7 +467,7 @@ ui.CheckField = ui.Field.extend({
 		}
 		this.node.prepend(this._input.node) //Prepended to get in front of the label.
 		
-		this.checked(opts.default)
+		this.val(opts.default)
 	},
 	_changed: function(e){
 		if(this.checked()){
@@ -479,12 +479,12 @@ ui.CheckField = ui.Field.extend({
 	},
 	val: function(value){
 		if(value === undefined){
-			return this.checkbox.node.is(":checked")
+			return this._input.node.is(":checked")
 		}else{
 			if(value){
-				this.checkbox.node.attr("checked", "checked")
+				this._input.node.attr("checked", "checked")
 			}else{
-				this.checkbox.node.removeAttr("checked")
+				this._input.node.removeAttr("checked")
 			}
 		}
 	},
@@ -494,10 +494,10 @@ ui.CheckField = ui.Field.extend({
 		}else{
 			if(disabled){
 				this.node.addClass("disabled")
-				this.checkbox.node.attr('disabled', true)
+				this._input.node.attr('disabled', true)
 			}else{
 				this.node.removeClass("disabled")
-				this.checkbox.node.removeAttr('disabled')
+				this._input.node.removeAttr('disabled')
 			}
 		}
 	},
@@ -505,7 +505,7 @@ ui.CheckField = ui.Field.extend({
 		this._input.node.focus()
 	}
 })
-ui.CheckField.TYPE = "textarea"
+ui.CheckField.TYPE = "check"
 ui.Field.TYPES[ui.CheckField.TYPE] = ui.CheckField
 ui.CheckField.from_doc = function(doc){
 	return new ui.CheckField(
