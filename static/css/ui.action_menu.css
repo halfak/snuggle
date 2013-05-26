@@ -1,0 +1,180 @@
+div.action_menu {
+	position: relative;
+	white-space: nowrap;
+	z-index: 2;
+}
+
+div.action_menu .handles {
+	display: inline-block;
+	border: 1px solid #333;
+	vertical-align: top;
+	box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+}
+	div.action_menu .handles .handle:last-child{
+		border-bottom: none;
+	}
+	div.action_menu .handles .handle{
+		padding: 0em .5em;
+		border-bottom: 1px solid #333;
+		white-space: nowrap;
+		background: #e0e0e0;
+		cursor: pointer;
+		padding-top: .2em;
+		padding-bottom: .2em;
+	}
+	div.action_menu .handles .handle.selected,
+	div.action_menu .handles .handle:hover{
+		background: #f6f6f6;
+	}
+	div.action_menu .handles .handle.selected{
+		position: relative;
+		z-index: 3;
+		margin-right: -.2em;
+		padding-right: .2em;
+		font-weight: bold;
+	}
+	
+div.action_menu .flyout {
+	display:none;
+	vertical-align: top;
+	white-space: nowrap;
+	min-height: 15em;
+	background: #f6f6f6;
+	border: 1px solid #333;
+	padding: .2em .5em;
+	margin: 0px;
+	box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+}
+div.action_menu .flyout.expanded {
+	display: inline-block;
+	/* Width controlled in javascript */
+}
+
+	div.action_menu .flyout .form {
+		display: inline-block;
+		vertical-align: top;
+		width: 20em;
+		margin-right: .5em;
+	}
+	div.action_menu .flyout .panel {
+		display: inline-block;
+		position: relative;
+		/* Width and height controlled in javascript */
+	}
+		div.action_menu .flyout .panel .previewer {
+			position: absolute;
+			overflow-y: scroll;
+			overflow-x: auto;
+			top: 0px;
+			right: 0px;
+			left: 0px;
+			bottom: 2.50em;
+			background: #f9f9f9;
+		}
+		div.action_menu .flyout .panel .previewer:before: {
+			text-align: center;
+			color: rgba(0,0,0,.05)
+			font-size: 5em;
+			content: "previewing..."
+		}
+		div.action_menu .flyout .panel .controls {
+			position: absolute;
+			right: 0px;
+			bottom: 0px;
+			text-align: right;
+			height: 1.75em; 
+		}
+		div.action_menu .flyout .panel .controls .watch,
+		div.action_menu .flyout .panel .controls .cancel,
+		div.action_menu .flyout .panel .controls .submit{
+			display: inline-block;
+			margin-left: .5em;
+		}
+		div.action_menu .flyout .panel .controls .submit{
+			padding-left: 1em;
+			padding-right: 1em;
+			font-weight: bold;
+		}
+
+
+div.action_menu div.form{
+	width: 25em;
+	position: relative;
+}
+div.action_menu form{
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	
+}
+div.action_menu form p,
+div.action_menu form .field{
+	background: #e0e0e0;
+	margin-bottom: .5em;
+	padding: .2em .5em;
+	white-space: normal;
+}
+	div.action_menu form .field{
+		background: #e0e0e0;
+		margin-bottom: .5em;
+		padding: .2em .5em;
+		width: 100%;
+	}
+	div.action_menu form .field label{
+		display: block;
+		font-weight: bold;
+	}
+	div.action_menu form .field.text input,
+	div.action_menu form .field.textarea textarea{
+		width: 100%;
+	}
+	div.action_menu form .field.textarea textarea{
+		height: 4.5em;
+	}
+	div.user_menu div.form div.field.text label,
+	div.user_menu div.form div.field.radios label,
+	div.user_menu div.form div.field.textarea label{
+		display: block;
+	}
+	div.user_menu div.form div.field.text input,
+	div.user_menu div.form div.field.textarea textarea{
+		font-weight: normal;
+		font-family: monospace;
+		width: 100%;
+	}
+	div.user_menu div.form div.field.textarea textarea{
+		height: 7em;
+	}
+	div.user_menu div.form div.field.radio div.radio_option{
+		display: inline-block;
+	}
+	
+	div.user_menu div.wiki_preview{
+		display: inline-block;
+		white-space: normal;
+		width: 50em;
+		margin-bottom: 2em;
+		background: #fff;
+		min-height: 1em;
+		vertical-align: top;
+		padding: .2em .5em;
+		overflow: auto;
+	}
+	
+	div.user_menu div.controls{
+		position: absolute;
+		right: .5em;
+		bottom: .5em;
+		white-space: nowrap;
+	}
+		div.user_menu div.controls div.input_field.check{
+			display: inline;
+		}
+		div.user_menu div.controls div{
+			margin-left: .5em;
+		}
+	
+	div.user_menu p{
+		white-space: normal;
+		margin: .5em 0em;
+	}

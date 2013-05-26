@@ -1,6 +1,17 @@
 ui = ui || {}
 
 ui.Dropper = Class.extend({
+	/*
+	Parameters:
+		tab
+		content
+		opts
+			class
+			tooltip
+			expanded
+		}
+	
+	*/
 	init: function(tab, content, opts){
 		opts = opts || {}
 		
@@ -16,6 +27,9 @@ ui.Dropper = Class.extend({
 				.click(this._handle_tab_click.bind(this))
 		}
 		this.node.append(this.tab.node)
+		if(opts.tooltip){
+			this.tab.node.attr('title', opts.tooltip)
+		}
 		
 		this.pane = {
 			node: $("<div>")
@@ -30,13 +44,21 @@ ui.Dropper = Class.extend({
 		//Hopefully, if you click on something that doesn't capture the 
 		//click event, it will bubble up to the body and then we can 
 		//know to close the dropper. 
-		$("body").click(function(e){this.expanded(false)}.bind(this))
-		$("body").keydown(function(e){if(e.which == KEYS.ESCAPE){this.expanded(false)}}.bind(this))
+		$("body").click(this._handle_body_click.bind(this))
+		$("body").keydown(this._handle_body_keydown.bind(this))
 		
-		this.dropped = new Event(this)
+		this.changed = new Event(this)
 		
+		this.expanded(opts.expanded)
+		
+	},
+	_handle_body_click: function(e){
 		this.expanded(false)
-		
+	},
+	_handle_body_keydown: function(e){
+		if(e.which == keys.ESCAPE){
+			this.expanded(false)
+		}
 	},
 	_handle_tab_click: function(e){
 		this.expanded(!this.expanded())
@@ -49,11 +71,11 @@ ui.Dropper = Class.extend({
 			if(expanded){
 				this.node.addClass("expanded")
 				this.pane.node.show()
-				this.dropped.notify(true)
+				this.changed.notify(true)
 			}else{
 				this.pane.node.hide()
 				this.node.removeClass("expanded")
-				this.dropped.notify(false)
+				this.changed.notify(false)
 			}
 		}
 	},

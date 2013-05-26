@@ -159,9 +159,10 @@ user_actions:
       <b>obvious</b> and <b>persistent</b> cases. Please review
       [[WP:Spam]], [[WP:Vandaism]] and the [[AIV Guide]].
     fields:
-      header: 
-        label: Reason for listing <small>(keep it brief)</small>
-        type: text input
+      - # header
+        name: header
+        type: "text"
+        label: Reason for listing <small>(optional, keep it brief)</small>
     operations:
       - # Appends a list item to the bottom of AIV
         type: append

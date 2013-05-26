@@ -1,5 +1,5 @@
+.button-like,
 div.button{
-	display: inline-block;
 	cursor: pointer;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -7,14 +7,20 @@ div.button{
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	background: #ddd;
-	box-shadow: inset 0px -5px 10px rgba(0,0,0,.3);
+}
+
+div.button{
+	display: inline-block;
+	background: #eee;
+	box-shadow: inset 0px -7px 10px rgba(0,0,0,.2);
 	text-shadow: 2px 2px rgba(255,255,255,.5);
 	border-radius: 2px;
 	border: 1px solid #666;
 }
 	div.button span.label{
-		padding: .2em .5em;
+		text-align: middle;
+		border-radius: 2px;
+		padding: .4em .5em;
 	}
 	
 	div.button.disabled{

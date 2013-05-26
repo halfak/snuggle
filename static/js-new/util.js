@@ -43,6 +43,9 @@ util = {
 	},
 	htmlify: function(element){
 		return $("<div>").append(element).html()
+	},
+	stop_propagation: function(e){
+		e.stopPropagation()
 	}
 }
 

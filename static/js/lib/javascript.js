@@ -1,3 +1,15 @@
+String.prototype.format = function(doc) {
+	var str = this;
+	var i = 0;
+	var len = arguments.length;
+	return str.replace(
+		/%\(([^\)]+)\)s/g,
+		function(match, name){
+			return doc[name] || "[" + name + " undefined]"
+		}
+	)
+}
+
 
 Object.defineProperty(Array.prototype, 'max',{
 	value: function(){

@@ -1,0 +1,42 @@
+
+div.dropper {
+	position: relative;
+}
+
+	div.dropper div.tab{
+		cursor: pointer;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	div.dropper div.pane{
+		position: absolute;
+		top: 100%;
+		left: 0px;
+	}
+
+div.dropper.simple{
+	display: inline-block;
+}
+div.dropper.simple div.tab {
+	border: 1px solid black;
+	width: 1em;
+	height: 1em;
+	border-radius: 3px;
+	text-align: center;
+}
+	div.dropper.simple div.tab span {
+		display: inline-block;
+		border: .4em solid #000;
+		border-color: #000 transparent transparent transparent;
+		border-width: .4em .3em 0px .3em;
+		vertical-align: center;
+		margin-top: .3em;
+	}
+	div.dropper.simple.expanded div.tab span {
+		border-color: transparent transparent #000 transparent;
+		border-width: 0px .3em .4em .3em;
+	}

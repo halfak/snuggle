@@ -68,6 +68,7 @@ ui.ActionMenu = Class.extend({
 	},
 	expanded: function(expanded){
 		return this.flyout.expanded(expanded)
+		
 	}
 })
 
@@ -89,18 +90,39 @@ ui.ActionMenu.Flyout = Class.extend({
 		}
 		this.node.append(this.form.node)
 		
+		this.panel = {
+			node: $("<div>")
+				.addClass("panel")
+		}
+		this.node.append(this.panel.node)
+		
 		this.previewer = new ui.ActionMenu.Flyout.Previewer()
-		this.node.append(this.previewer.node)
+		this.panel.node.append(this.previewer.node)
 		
 		this.controls = new ui.ActionMenu.Flyout.Controls()
-		this.node.append(this.controls.node)
+		this.panel.node.append(this.controls.node)
 		
 		this.controls.cancelled.attach(this._handle_cancel.bind(this))
+		
+		//Handle width and height when the window resizes
+		$(window).resize(this._set_max_width.bind(this))
 	},
 	_handle_cancel: function(){
 		this.action.reset()
 		this.controls.reset()
 		this.unload()
+	},
+	_set_max_width: function(){
+		var left = $(this.node).offset().left
+		var right = $(window).innerWidth()
+		
+		this.panel.node.css("width", 2)
+		var left = $(this.panel.node).offset().left
+		var right = $(window).innerWidth()
+		this.panel.node.css("width", (right-left)-20)
+		
+		this.panel.node.css("height", 2)
+		this.panel.node.css("height", this.node.innerHeight())
 	},
 	expanded: function(expanded){
 		if(expanded === undefined){
@@ -108,8 +130,10 @@ ui.ActionMenu.Flyout = Class.extend({
 		}else{
 			if(expanded){
 				this.node.addClass("expanded")
+				this._set_max_width()
 			}else{
 				this.node.removeClass("expanded")
+				this._clear()
 			}
 		}
 	},
@@ -129,17 +153,16 @@ ui.ActionMenu.Flyout = Class.extend({
 		}
 	},
 	load: function(action){
-		if(action != this.action){
-			if(action){
+		if(action){
+			if(action != this.action){
 				this._clear()
 				this.action = action
 				this.form.node.append(this.action.form.node)
 				this.action.selected(true)
-				this.expanded(true) //make sure we expanded
-				return true
-			}else{
-				this.unload()
 			}
+			this.expanded(true) //make sure we expanded
+		}else{
+			this.unload()
 		}
 	},
 	load_preview: function(action, operations){
@@ -153,7 +176,7 @@ ui.ActionMenu.Flyout = Class.extend({
 	},
 	_clear: function(){
 		if(this.action){
-			this.action.form.node.children().detach()
+			this.form.node.children().detach()
 			this.action.selected(false)
 			this.action = null
 		}
@@ -166,19 +189,42 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 		this.node = $("<div>")
 			.addClass("controls")
 		
-		this.watch = new ui.CheckField("watch", {label: "add user to watchlist"})
+		this.watch = new ui.CheckField(
+			"watch", 
+			{
+				class: "watch", 
+				label: "watch user",
+				tooltip: "Adds the this user's page and talk page to your watchlist"
+			}
+		)
 		this.node.append(this.watch.node)
 		
-		this.cancel = new ui.Button({label: "cancel", title: "Click here to cancel the action."})
+		this.cancel = new ui.Button({
+			label: "cancel",
+			tooltip: "Cancel this action.",
+			class: "cancel"
+		})
+		this.cancel.activated.attach(this._cancel_activated.bind(this))
 		this.node.append(this.cancel.node)
 		
-		this.post = new ui.Button({label: "submit", title: "Click here to to complete the action."})
-		this.node.append(this.post.node)
+		this.submit = new ui.Button({
+			label: "submit", 
+			tooltip: "Complete this action.",
+			class: "submit"
+		})
+		this.submit.activated.attach(this._submit_activated.bind(this))
+		this.node.append(this.submit.node)
 		
 		this.submitted = new Event(this)
 		this.cancelled = new Event(this)
 		
 		this.reset()
+	},
+	_cancel_activated: function(_){
+		this.cancelled.notify()
+	},
+	_submit_activated: function(_){
+		this.submitted.notify()
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -186,7 +232,7 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 		}else{
 			this.watch.disabled(disabled)
 			this.cancel.disabled(disabled)
-			this.post.disabled(disabled)
+			this.submit.disabled(disabled)
 		}
 	},
 	reset: function(){
@@ -198,6 +244,7 @@ ui.ActionMenu.Flyout.Previewer = Class.extend({
 	init: function(){
 		this.node = $("<div>")
 			.addClass("previewer")
+			.addClass("field-like")
 	},
 	load: function(operations){
 		this.clear()
@@ -301,11 +348,10 @@ ui.UserAction = Class.extend({
 		this.handle = {
 			node: $("<div>")
 				.addClass("handle")
+				.addClass("button-like")
 				.append($("<span>").append(name))
 				.click(this._handle_click.bind(this))
-		}
-		if(opts.tooltip){
-			this.handle.node.attr("title", opts.tooltip)
+				.attr("title", opts.tooltip || "")
 		}
 		
 		this.form = {
@@ -379,16 +425,15 @@ ui.UserAction = Class.extend({
 		}
 	}
 })
-ui.UserAction.from_doc = function(doc){
+ui.UserAction.from_doc = function(doc, formatting){
 	var fields = []
 	for(var i=0;i<doc.fields.length;i++){
-		fields.push(ui.Field.from_doc(doc.fields[i]))
+		fields.push(ui.Field.from_doc(doc.fields[i], formatting))
 	}
 	return new ui.UserAction(
 		doc.name,
-		doc.description,
+		util.linkify((doc.description || "").format(formatting)),
 		fields,
-		doc.watchable,
 		{
 			tooltip: doc.tooltip
 		}

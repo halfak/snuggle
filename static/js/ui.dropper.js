@@ -12,6 +12,7 @@ UI.Dropper = Class.extend({
 		this.tab = {
 			node: $("<div>")
 				.addClass("tab")
+				.addClass("button-like")
 				.append($("<span>").append(tab || ""))
 				.click(this._handle_tab_click.bind(this))
 		}

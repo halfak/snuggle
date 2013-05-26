@@ -1,7 +1,12 @@
 <html>
 	<head>
 		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="css/border_box.css" />
+		<link rel="stylesheet" href="css/layout.css" />
 		<link rel="stylesheet" href="css/ui.button.css" />
+		<link rel="stylesheet" href="css/ui.fields.css" />
+		<link rel="stylesheet" href="css/ui.dropper.css" />
+		<link rel="stylesheet" href="css/ui.action_menu.css" />
 		<script language="javascript" src="js/lib/jquery-1.8.1.min.js"></script>
 		<script language="javascript" src="js/lib/class.js"></script>
 		<script language="javascript" src="js/lib/date.format.js"></script>
@@ -11,8 +16,14 @@
 		<script language="javascript" src="js-new/logging.js"></script>
 		<script language="javascript" src="js-new/util.js"></script>
 		<script language="javascript" src="js-new/ui.button.js"></script>
+		<script language="javascript" src="js-new/ui.revision_graph.js"></script>
+		<script language="javascript" src="js-new/ui.dropper.js"></script>
 		<script language="javascript" src="js-new/ui.fields.js"></script>
 		<script language="javascript" src="js-new/ui.action_menu.js"></script>
+		<script language="javascript" src="js-new/views.user.js"></script>
+		<style>
+			/*div{border: 1px dashed black;margin: 1px;}*/
+		</style>
 	</head>
 	<body>
 		<script type="text/javascript">
@@ -61,31 +72,103 @@
 			$('body').append(form)
 			form.submit(function(e){return text.val() == "submit"})
 			
+			MEDIAWIKI = {"domain": "en.wikipedia.org", "protocol": "https", "name": "English Wikipedia", "author": {"url": "http://halfaker.info", "name": "Aaron Halfaker", "email": "aaron.halfaker@gmail.com"}, "threads": [{"priority": 2, "classes": ["warning", "vandalism"], "expression": "Template:uw-vandalism([1-4])?", "groups": [{"classes": ["level_%s"]}]}, {"priority": 2, "classes": ["warning", "spam"], "expression": "Template:uw-spam([1-4])?", "groups": [{"classes": ["level_%s"]}]}, {"priority": 2, "classes": ["warning", "copyright"], "expression": "Template:uw-copyright(-([a-z]+))?([1-4])?", "groups": [{}, {}, {"classes": ["level_%s"]}]}, {"priority": 1, "classes": ["block"], "expression": "Template:.*?block.*?|uw-[a-z]*block[a-z]*", "groups": []}], "file": {"index": "index.php", "api": "api.php"}, "comment_suffix": " ([[WP:Snuggle|Sn]])", "path": {"pages": "/wiki/", "scripts": "/w/"}, "requests": {"headers": {"User-Agent": "Snuggle system (see [[WP:Snuggle]])"}}, "namespaces": {"0": {"prefixes": [""], "name": "Main"}, "1": {"prefixes": ["Talk:"], "name": "Talk"}, "2": {"prefixes": ["User:"], "name": "User"}, "3": {"prefixes": ["User_talk:"], "name": "User talk"}, "4": {"prefixes": ["Wikipedia:", "Project:", "WP:"], "name": "Wikipedia"}, "5": {"prefixes": ["Wikipedia_talk:", "Project_talk:", "WT:"], "name": "Wikipedia_talk"}, "6": {"prefixes": ["File:", "Image:"], "name": "File"}, "7": {"prefixes": ["File_talk:", "Image_talk:"], "name": "File_talk"}, "8": {"prefixes": ["Mediawiki:"], "name": "Mediawiki"}, "9": {"prefixes": ["Mediawiki_talk:"], "name": "Mediawiki_talk"}, "10": {"prefixes": ["Template:"], "name": "Template"}, "11": {"prefixes": ["Template_talk:"], "name": "Template_talk"}, "12": {"prefixes": ["Help:"], "name": "Help"}, "13": {"prefixes": ["Help_talk:"], "name": "Help_talk"}, "14": {"prefixes": ["Category:"], "name": "Category"}, "15": {"prefixes": ["Category_talk:"], "name": "Category_talk"}, "101": {"prefixes": "Portal_talk", "name": "Portal_talk"}, "100": {"prefixes": ["Portal:"], "name": "Portal"}, "710": {"prefixes": ["Timedtext:"], "name": "Timedtext"}, "711": {"prefixes": ["Timedtext_talk:"], "name": "Timedtext_talk"}, "108": {"prefixes": ["Book:"], "name": "Book"}, "-2": {"prefixes": ["Media:"], "name": "Media"}, "-1": {"prefixes": ["Special:"], "name": "Special"}, "828": {"prefixes": ["Module:"], "name": "Module"}, "829": {"prefixes": ["Module_talk:"], "name": "Module_talk"}, "446": {"prefixes": ["Education_program:"], "name": "Education_program"}, "447": {"prefixes": ["Education_program_talk:"], "name": "Education_program_talk"}}, "last_updated": "May 11th, 2013", "user_actions": [{"operations": [{"comment": "%(header)s", "type": "append", "markup": "==%(header)s==\n%(message)s ~~~~", "page_name": "User_talk:%(user_name)s"}], "fields": [{"default": "Hello %(user_name)s", "type": "text", "name": "header", "label": "Header"}, {"type": "textarea", "name": "message", "label": "Message"}], "name": "send message", "description": "Posts a new message on the user's talk page."}, {"operations": [{"comment": "%(header)s", "type": "append", "markup": "==%(header)s==\n{{%(template)s|%(message)s|~~~~}}", "page_name": "User_talk:%(user_name)s"}], "fields": [{"default": "You're invited to the [[WP:Teahouse|Teahouse]].", "type": "text", "name": "header", "label": "Header"}, {"type": "textarea", "name": "message", "label": "Message"}, {"default": "Invitation", "label": "Template", "type": "radio", "options": [{"value": "Invitation", "label": "Invitation"}, {"value": "Invitation2", "label": "Invitation2"}], "name": "template"}], "name": "invite to teahouse", "description": "Posts an invitation to [[WP:Teahouse]] on the user's talk page."}, {"operations": [{"comment": "Reporting [[User:%(user_name)s]] for %(reason)s", "type": "append", "markup": "* {{Vandal|%(user_name)s}} %(reason)s ~~~~", "page_name": "Wikipedia:Administrator_intervention_against_vandalism"}], "fields": [{"type": "text", "name": "header", "label": "Reason for listing <small>(optional, keep it brief)</small>"}], "name": "report vandalism", "description": "Reports vandals and spammers to admins. Use only for <b>obvious</b> and <b>persistent</b> cases. Please review [[WP:Spam]], [[WP:Vandaism]] and the [[AIV Guide]].\n"}]}
+			
 			config = {
 				user_actions: [
 					{
 						name: "send message",
-						description: "Posts a new message on the user's talk page." ,
+						description: "Posts a new message on the [[%(user_name)s|%(user_name)s]]'s talk page.",
+						tooltip: "Posts a new thread on a the user's talk page.",
 						fields: [
 							{
 								name: "header",
 								label: "Header",
 								type: "text",
-								default: "Hello %(user_name)s"
+								default: "Hello %(user_name)s",
+								tooltip: "I am a header"
 							},
 							{
-								name: "message",
+								name: "message1",
 								label: "Message",
-								type: "textarea"
+								type: "textarea",
+								tooltip: "I am a message"
+							},
+							{
+								name: "message2",
+								label: "Message",
+								type: "textarea",
+								tooltip: "I another am a message"
+							},
+							{
+								name: "message3",
+								label: "Message",
+								type: "textarea",
+								tooltip: "I am a yuip"
+							}
+						]
+					},
+					{
+						name: "send message2",
+						description: "Posts a new message on the [[%(user_name)s|%(user_name)s]]'s talk page.",
+						tooltip: "Posts a new thread on a the user's talk page.",
+						fields: [
+							{
+								name: "header",
+								label: "Header",
+								type: "text",
+								default: "Hello %(user_name)s",
+								tooltip: "I am a header"
+							},
+							{
+								name: "message1",
+								label: "Message",
+								type: "textarea",
+								tooltip: "I am a message"
+							},
+							{
+								name: "message2",
+								label: "Message",
+								type: "textarea",
+								tooltip: "I another am a message"
+							},
+							{
+								name: "message3",
+								label: "Message",
+								type: "textarea",
+								tooltip: "I am a yuip"
 							}
 						]
 					}
 				]
 			}
 			
-			actions = config.user_actions.map(ui.UserAction.from_doc)
-			action_menu = new ui.ActionMenu(actions)
-			$('body').append(action_menu.node)
+			formatting = {
+				user_name: "EpochFail",
+				user_id: 66836
+			}
+			
+			actions = []
+			actions = MEDIAWIKI.user_actions.map(
+				function(doc){
+					return ui.UserAction.from_doc(doc, formatting)
+				}
+			)
+			
+			user_actions = new views.User.Info.UserActions(
+				new ui.ActionMenu(actions)
+			)
+			$('body').append(
+				$("<div>")
+					.css("margin-left", "15em")
+					.append(user_actions.node)
+			)
+			
+			textarea = ui.Field.from_doc(
+				config.user_actions[0].fields[1]
+			)
+			textarea.changed.attach(function(text){console.log("textarea changed to '" + textarea.val() + "'")})
+			$('body').append(textarea.node)
 			
 			
 		</script>

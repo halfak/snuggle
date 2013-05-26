@@ -99,7 +99,7 @@ views.User.Info = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.user_actions = views.User.Info.UserActions.from_config(MEDIAWIKI)
+		this.user_actions = views.User.Info.UserActions//TODO
 		this.name.node.append(this.actions.node)
 		
 		this.utc = new ui.UTC(
@@ -160,17 +160,26 @@ views.User.Info = Class.extend({
 	}
 })
 views.User.Info.UserActions = ui.Dropper.extend({
-	init: function(actions){
-		this.menu = new ui.ActionMenu(actions)
-		this._super("", this.menu.node)
+	init: function(menu){
+		this.menu = menu
+		this._super("", this.menu.node, {tooltip: "User actions menu -- click to expand"})
+		this.changed.attach(this._handle_changed.bind(this))
 		
 		this.node.addClass("user_actions")
 		this.node.addClass("simple")
 		
-		this.dropped.attach(this._dropped.bind(this))
+		this.menu.cancelled.attach(this._handle_cancel.bind(this))
+		
 	},
-	_dropped: function(_, expanded){
-		if(!expanded){this.menu.collapse()}
+	_handle_changed: function(_, expanded){
+		if(expanded){
+			//this._set_max_width()
+		}else{
+			this.menu.expanded(false)
+		}
+	},
+	_handle_cancel: function(_){
+		this.expanded(false)
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -185,14 +194,6 @@ views.User.Info.UserActions = ui.Dropper.extend({
 		}
 	}
 })
-ui.UserActions.from_config = function(config){
-	var actions = []
-	for(var i=0;i<config.user_actions.length;i++){
-		doc = config.user_actions[i]
-		actions.push(new ui.UserAction.from_doc(doc))
-	}
-	return new views.User.Info.UserActions(actions)
-}
 
 
 views.User.Activity = ui.RevisionGraph.extend({
@@ -214,7 +215,7 @@ views.User.Activity = ui.RevisionGraph.extend({
 		this.grid.clear_cursor()
 	}
 })
-views.User.Activity.Revision = UI.DayGrid.Revision.extend({
+views.User.Activity.Revision = ui.DayGrid.Revision.extend({
 	init: function(user, revision){
 		this._super(this)
 		this.user = user
@@ -256,7 +257,7 @@ views.User.Activity.Revision = UI.DayGrid.Revision.extend({
 		}
 	}
 })
-views.User.Talk = UI.RevisionGraph.extend({
+views.User.Talk = ui.RevisionGraph.extend({
 	init: function(model){
 		this.model = model
 		
@@ -269,7 +270,7 @@ views.User.Talk = UI.RevisionGraph.extend({
 		}
 		this.node.append(this.threads.node)
 		
-		this.reloader = new UI.Button(
+		this.reloader = new ui.Button(
 			'reload',
 			{
 				label: 'reload talk',
@@ -352,7 +353,7 @@ views.User.Category = Class.extend({
 		this.buttons = {
 			node: $("<div>")
 				.addClass("buttons"),
-			good_faith: new UI.Button(
+			good_faith: new ui.Button(
 				'good-faith', 
 				{
 					class: "good-faith",
@@ -362,7 +363,7 @@ views.User.Category = Class.extend({
 					}
 				}
 			),
-			ambiguous: new UI.Button(
+			ambiguous: new ui.Button(
 				'ambiguous', 
 				{
 					class: "ambiguous",
@@ -372,7 +373,7 @@ views.User.Category = Class.extend({
 					}
 				}
 			),
-			bad_faith: new UI.Button(
+			bad_faith: new ui.Button(
 				'bad-faith', 
 				{
 					class: "bad-faith",
@@ -436,7 +437,7 @@ views.User.Category = Class.extend({
 		this.history.render(this.model.category.history)
 	}
 })
-views.User.Category.History = UI.Dropper.extend({
+views.User.Category.History = ui.Dropper.extend({
 	init: function(){
 		this._super("history")
 		
@@ -470,7 +471,7 @@ views.User.Category.History = UI.Dropper.extend({
 			this.pane.node.html("")
 			this.pane.node.append(
 				$("<p>").append(
-					LANGUAGE.category.["This user has yet to be categorized."]
+					LANGUAGE.category["This user has yet to be categorized."]
 				)
 			)
 		}

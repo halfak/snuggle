@@ -462,7 +462,7 @@ UI.CheckField = UI.Field.extend({
 		}else{
 			this.node.removeClass("checked")
 		}
-		this.changed.notify(this.checked())
+		this.changed.notify(this.val())
 	},
 	val: function(value){
 		if(value === undefined){
