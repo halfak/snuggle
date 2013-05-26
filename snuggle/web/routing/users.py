@@ -29,30 +29,31 @@ def user_rate(session, data): return processing.processor.users.categorize(sessi
 @preprocessors.authenticated("categorize a user")
 def user_rate(session, data): return processing.processor.users.categorize(session, data)
 
-# /user/action/
-@get("/user/action/<query>")
+# /user/perform_action/
+@get("/user/perform_action/<query>")
 @preprocessors.query_data(json.loads)
 @preprocessors.authenticated("perform a user action")
-def users_action(session, data): return processing.processor.users.action(session, data)
+def perform_action(session, data): 
+	return processing.processor.users.perform_action(session, data)
 
-@post("/user/action/")
+@post("/user/perform_action/")
 @preprocessors.post_data(json.loads)
 @preprocessors.authenticated("perform a user action")
-def users_action(session, data): 
-	return processing.processor.users.action(session, data)
+def perform_action(session, data): 
+	return processing.processor.users.perform_action(session, data)
 
-# /user/action_preview/
-@get("/user/action_preview/<query>")
+# /user/preview_action/
+@get("/user/preview_action/<query>")
 @preprocessors.query_data(json.loads)
 @preprocessors.authenticated("preview a user action")
-def users_action_preview(session, data):
-	return processing.processor.users.action_preview(session, data)
+def preview_action(session, data):
+	return processing.processor.users.preview_action(session, data)
 
-@post("/user/action_preview/")
+@post("/user/preview_action/")
 @preprocessors.post_data(json.loads)
 @preprocessors.authenticated("preview a user action")
-def users_action_preview(session, data):
-	return processing.processor.users.action_preview(session, data)
+def preview_action(session, data):
+	return processing.processor.users.preview_action(session, data)
 
 # /user/reload/talk/
 @get("/user/reload/talk/<user_id:int>")

@@ -118,7 +118,7 @@ class Users:
 			logger.error(traceback.format_exc())
 			return responses.general_error("Adding %r to watchlist " % user_name)
 	
-	def action(self, session, doc):
+	def perform_action(self, session, doc):
 		try:
 			request = types.ActionRequest.deserialize(doc)
 			results = self.user_actions.perform(request, session['snuggler'])
@@ -145,19 +145,21 @@ class Users:
 			
 		return responses.success(True)
 	
-	def action_preview(self, session, doc):
+	def preview_action(self, session, doc):
 		try:
 			request = types.ActionRequest.deserialize(doc)
 			results = self.user_actions.preview(request, session['snuggler'])
 		except errors.MWAPIError as e:
-			return responses.mediawiki_error("performing an action %r" % doc, e.code, e.info)
+			logger.error(traceback.format_exc())
+			return responses.mediawiki_error("previewing an action %r" % doc, e.code, e.info)
 		except errors.ConnectionError as e:
-			return responses.mediawiki_error("performing an action", "Connection Failed", e.info)
+			logger.error(traceback.format_exc())
+			return responses.mediawiki_error("previewing an action", "Connection Failed", e.info)
 		except Exception as e:
 			logger.error(traceback.format_exc())
-			return responses.general_error("performing an action %r" % doc)
+			return responses.general_error("previewing an action %r" % doc)
 			
-		return responses.success([result.deserialize() for result in results])
+		return responses.success([result.serialize() for result in results])
 		
 	def reload_talk(self, session, doc):
 		logger.debug("Reloading talk for %s" % doc)

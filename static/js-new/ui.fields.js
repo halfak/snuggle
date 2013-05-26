@@ -9,6 +9,10 @@ ui.Field = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("field")
+			
+		if(opts.tooltip){
+			this.node.attr("title", opts.tooltip)
+		}
 		
 		if(opts.class){
 			this.node.addClass(opts.class)
@@ -21,10 +25,6 @@ ui.Field = Class.extend({
 					.append(opts.label || '')
 			}
 			this.node.append(this._label.node)
-			
-			if(opts.tooltip){
-				this._label.node.attr("title", opts.tooltip)
-			}
 		}
 		
 		this.default = opts.default || ""
@@ -126,15 +126,16 @@ ui.SelectField.from_doc = function(doc, formatting){
 		doc.options.map(
 			function(op){
 				return {
-					label: op.label.format(formatting),
-					value: op.value
+					label: (op.label || "").format(formatting),
+					value: op.value,
+					tooltip: (op.tooltip || "").format(formatting)
 				}
 			}
 		),
 		{
 			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
+			label:   (doc.label || "").format(formatting),
+			tooltip: (doc.tooltip || "").format(formatting),
 			default: doc.default
 		}
 	)
@@ -163,14 +164,13 @@ ui.RadioField = ui.Field.extend({
 			this.append(radios[i])
 		}
 		if(opts.default){
+			logger.debug("radio_field." + name + " set default as " + opts.default)
 			this.val(opts.default)
 		}
 	},
-	_radio_changed: function(radio, checked){
-		if(checked){
-			this.selection = radio
-			this.changed.notify(radio)
-		}
+	_handle_radio_checked: function(radio){
+		this._select_radio(radio)
+		this.changed.notify(radio)
 	},
 	val: function(value){
 		if(value === undefined){
@@ -180,13 +180,24 @@ ui.RadioField = ui.Field.extend({
 				return null
 			}
 		}else{
-			this.selection = this._radios.values[value] || null
-			if(this.selection){
-				this.selection.checked(true)
+			var radio = this._radios.values[value]
+			if(radio){
+				this._select_radio(radio)
 			}else{
-				throw val + " not available in radio set (" + 
+				throw value + " not available in radio set (" + 
 				      this._radios.values.keys().join(", ") + ")"
 			}
+		}
+	},
+	_select_radio: function(radio){
+		if(this.selection != radio){
+			if(this.selection){
+				logger.debug("radio_field." + this.name + " deselecting radio." + this.selection.label)
+				this.selection.selected(false)
+			}
+			logger.debug("radio_field." + this.name + " selecting radio." + radio.label)
+			this.selection = radio
+			this.selection.selected(true)
 		}
 	},
 	disabled: function(disabled){
@@ -205,7 +216,7 @@ ui.RadioField = ui.Field.extend({
 		radio.set_name(this.name)
 		this._radios.node.append(radio.node)
 		this._radios.values[radio.value] = radio
-		radio.changed.attach(this._radio_changed.bind(this))
+		radio.checked.attach(this._handle_radio_checked.bind(this))
 	}
 })
 ui.RadioField.TYPE = "radio"
@@ -250,6 +261,8 @@ ui.RadioField.Radio = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("radio_option")
+			.addClass("button-like")
+			.click(this._handle_click.bind(this))
 		
 		if(opts.tooltip){
 			this.node.attr('title', opts.tooltip)
@@ -261,9 +274,9 @@ ui.RadioField.Radio = Class.extend({
 		this._input = {
 			node: $("<input>")
 				.attr('type', "radio")
-				.change(this._changed.bind(this))
 				.attr('tabindex', opts.tabindex || 1)
 				.keydown(util.stop_propagation)
+				.change(this._handle_check.bind(this)) // Douchebag event says "change", means "check"
 		}
 		this.node.append(this._input.node)
 		
@@ -273,14 +286,30 @@ ui.RadioField.Radio = Class.extend({
 		}
 		this.node.append(this._label.node)
 		
-		this.changed = new Event(this)
+		this.checked = new Event(this)
+	},
+	_handle_click: function(e){
+		logger.debug("radio." + this.label + " handling click")
+		if(!this.disabled()){
+			this.selected(true)
+		}
+	},
+	_handle_check: function(e){
+		// Note that this function will only be called when the user clicks
+		// on the radio button.  
+		
+		logger.debug("radio." + this.label + " handling user check")
+		
+		//By calling this function, we make the behavior uniform. 
+		this.selected(true)
+		
 	},
 	set_name: function(name){
 		this.id = name + "_" + this.value
 		
 		this._input.node.attr('name', name)
 		this._input.node.attr('id', this.id)
-		this._label.node.attr('for', this.id)
+		//this._label.node.attr('for', this.id)
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -295,7 +324,21 @@ ui.RadioField.Radio = Class.extend({
 			}
 		}
 	},
-	checked: function(checked){
+	selected: function(selected){
+		if(selected === undefined){
+			return this.node.hasClass("selected")
+		}else{
+			logger.debug("radio." + this.label + " is set to " + Boolean(selected))
+			if(selected){
+				this.node.addClass("selected")
+				this.checked.notify()
+			}else{
+				this.node.removeClass("selected")
+			}
+			this._checked(selected)
+		}
+	},
+	_checked: function(checked){
 		if(checked === undefined){
 			return this._input.node.is(":checked")
 		}else{
@@ -305,16 +348,6 @@ ui.RadioField.Radio = Class.extend({
 				this._input.node.removeAttr('checked')
 			}
 		}
-	},
-	_changed: function(e){
-		if(this.checked()){
-			this.node.addClass("checked")
-		}else{
-			this.node.removeClass("checked")
-		}
-		
-		//notify of change
-		this.changed.notify(this.checked())
 	}
 })
 

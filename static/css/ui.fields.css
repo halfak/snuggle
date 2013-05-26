@@ -7,3 +7,6 @@ div.field.textarea textarea{
 	font-weight: normal;
 	font-family: monospace;
 }
+div.field.text input{
+	padding-right: 0em;
+}

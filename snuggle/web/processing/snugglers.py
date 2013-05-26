@@ -1,8 +1,11 @@
+import logging, traceback
 
 from snuggle import mediawiki
 from snuggle import errors
 from snuggle.data import types
 from snuggle.web.util import responses
+
+logger = logging.getLogger("snuggle.web.processing.snugglers")
 
 class Snugglers:
 	

@@ -16,6 +16,9 @@ ui.Button = Class.extend({
 			.keypress(this._handle_keypress.bind(this))
 			.bind("focus blur", this._handle_focus_change.bind(this))
 		
+		if(opts.tooltip){
+			this.node.attr('title', opts.tooltip)
+		}
 		if(opts.class){
 			this.node.addClass(opts.class)
 		}

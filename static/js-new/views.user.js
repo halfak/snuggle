@@ -99,7 +99,7 @@ views.User.Info = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.user_actions = views.User.Info.UserActions//TODO
+		this.user_actions = views.User.Info.UserActions
 		this.name.node.append(this.actions.node)
 		
 		this.utc = new ui.UTC(
@@ -160,8 +160,19 @@ views.User.Info = Class.extend({
 	}
 })
 views.User.Info.UserActions = ui.Dropper.extend({
-	init: function(menu){
-		this.menu = menu
+	init: function(model){
+		this.model = model
+		
+		var user = {id: this.model.id, name: this.model.id}
+		var formatting = {user_name: this.model.name, user_id: this.model.id}
+		
+		actions = MEDIAWIKI.user_actions.map(
+			function(doc){
+				return new ui.UserAction.from_doc(doc, formatting)
+			}.bind(this)
+		)
+		var user = {id: this.model.id, name: this.model.id}
+		this.menu = new ui.ActionMenu(this.model, actions)
 		this._super("", this.menu.node, {tooltip: "User actions menu -- click to expand"})
 		this.changed.attach(this._handle_changed.bind(this))
 		
@@ -169,7 +180,6 @@ views.User.Info.UserActions = ui.Dropper.extend({
 		this.node.addClass("simple")
 		
 		this.menu.cancelled.attach(this._handle_cancel.bind(this))
-		
 	},
 	_handle_changed: function(_, expanded){
 		if(expanded){

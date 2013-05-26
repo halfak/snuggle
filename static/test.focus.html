@@ -3,6 +3,7 @@
 		<link rel="shortcut icon" href="favicon.ico" />
 		<link rel="stylesheet" href="css/border_box.css" />
 		<link rel="stylesheet" href="css/layout.css" />
+		<link rel="stylesheet" href="css/wiki_format.css" />
 		<link rel="stylesheet" href="css/ui.button.css" />
 		<link rel="stylesheet" href="css/ui.fields.css" />
 		<link rel="stylesheet" href="css/ui.dropper.css" />
@@ -11,7 +12,11 @@
 		<script language="javascript" src="js/lib/class.js"></script>
 		<script language="javascript" src="js/lib/date.format.js"></script>
 		<script language="javascript" src="js/lib/javascript.js"></script>
+		<script language="javascript" src="config/language.js"></script>
+		<script language="javascript" src="config/mediawiki.js"></script>
 		<script language="javascript" src="js-new/env.js"></script>
+		<script language="javascript" src="js-new/api.js"></script>
+		<script language="javascript" src="js-new/server.js"></script>
 		<script language="javascript" src="js-new/event.js"></script>
 		<script language="javascript" src="js-new/logging.js"></script>
 		<script language="javascript" src="js-new/util.js"></script>
@@ -28,7 +33,7 @@
 	<body>
 		<script type="text/javascript">
 					
-			select = new ui.SelectField(
+			/* select = new ui.SelectField(
 				"foobar", 
 				[{value:"Bar"}, {value:"Foo"}],
 				{
@@ -70,78 +75,26 @@
 			text.changed.attach(function(text){console.log("text changed to '" + text.val() + "'")})
 			form.append(text.node)
 			$('body').append(form)
-			form.submit(function(e){return text.val() == "submit"})
+			form.submit(function(e){return text.val() == "submit"})*/
 			
-			MEDIAWIKI = {"domain": "en.wikipedia.org", "protocol": "https", "name": "English Wikipedia", "author": {"url": "http://halfaker.info", "name": "Aaron Halfaker", "email": "aaron.halfaker@gmail.com"}, "threads": [{"priority": 2, "classes": ["warning", "vandalism"], "expression": "Template:uw-vandalism([1-4])?", "groups": [{"classes": ["level_%s"]}]}, {"priority": 2, "classes": ["warning", "spam"], "expression": "Template:uw-spam([1-4])?", "groups": [{"classes": ["level_%s"]}]}, {"priority": 2, "classes": ["warning", "copyright"], "expression": "Template:uw-copyright(-([a-z]+))?([1-4])?", "groups": [{}, {}, {"classes": ["level_%s"]}]}, {"priority": 1, "classes": ["block"], "expression": "Template:.*?block.*?|uw-[a-z]*block[a-z]*", "groups": []}], "file": {"index": "index.php", "api": "api.php"}, "comment_suffix": " ([[WP:Snuggle|Sn]])", "path": {"pages": "/wiki/", "scripts": "/w/"}, "requests": {"headers": {"User-Agent": "Snuggle system (see [[WP:Snuggle]])"}}, "namespaces": {"0": {"prefixes": [""], "name": "Main"}, "1": {"prefixes": ["Talk:"], "name": "Talk"}, "2": {"prefixes": ["User:"], "name": "User"}, "3": {"prefixes": ["User_talk:"], "name": "User talk"}, "4": {"prefixes": ["Wikipedia:", "Project:", "WP:"], "name": "Wikipedia"}, "5": {"prefixes": ["Wikipedia_talk:", "Project_talk:", "WT:"], "name": "Wikipedia_talk"}, "6": {"prefixes": ["File:", "Image:"], "name": "File"}, "7": {"prefixes": ["File_talk:", "Image_talk:"], "name": "File_talk"}, "8": {"prefixes": ["Mediawiki:"], "name": "Mediawiki"}, "9": {"prefixes": ["Mediawiki_talk:"], "name": "Mediawiki_talk"}, "10": {"prefixes": ["Template:"], "name": "Template"}, "11": {"prefixes": ["Template_talk:"], "name": "Template_talk"}, "12": {"prefixes": ["Help:"], "name": "Help"}, "13": {"prefixes": ["Help_talk:"], "name": "Help_talk"}, "14": {"prefixes": ["Category:"], "name": "Category"}, "15": {"prefixes": ["Category_talk:"], "name": "Category_talk"}, "101": {"prefixes": "Portal_talk", "name": "Portal_talk"}, "100": {"prefixes": ["Portal:"], "name": "Portal"}, "710": {"prefixes": ["Timedtext:"], "name": "Timedtext"}, "711": {"prefixes": ["Timedtext_talk:"], "name": "Timedtext_talk"}, "108": {"prefixes": ["Book:"], "name": "Book"}, "-2": {"prefixes": ["Media:"], "name": "Media"}, "-1": {"prefixes": ["Special:"], "name": "Special"}, "828": {"prefixes": ["Module:"], "name": "Module"}, "829": {"prefixes": ["Module_talk:"], "name": "Module_talk"}, "446": {"prefixes": ["Education_program:"], "name": "Education_program"}, "447": {"prefixes": ["Education_program_talk:"], "name": "Education_program_talk"}}, "last_updated": "May 11th, 2013", "user_actions": [{"operations": [{"comment": "%(header)s", "type": "append", "markup": "==%(header)s==\n%(message)s ~~~~", "page_name": "User_talk:%(user_name)s"}], "fields": [{"default": "Hello %(user_name)s", "type": "text", "name": "header", "label": "Header"}, {"type": "textarea", "name": "message", "label": "Message"}], "name": "send message", "description": "Posts a new message on the user's talk page."}, {"operations": [{"comment": "%(header)s", "type": "append", "markup": "==%(header)s==\n{{%(template)s|%(message)s|~~~~}}", "page_name": "User_talk:%(user_name)s"}], "fields": [{"default": "You're invited to the [[WP:Teahouse|Teahouse]].", "type": "text", "name": "header", "label": "Header"}, {"type": "textarea", "name": "message", "label": "Message"}, {"default": "Invitation", "label": "Template", "type": "radio", "options": [{"value": "Invitation", "label": "Invitation"}, {"value": "Invitation2", "label": "Invitation2"}], "name": "template"}], "name": "invite to teahouse", "description": "Posts an invitation to [[WP:Teahouse]] on the user's talk page."}, {"operations": [{"comment": "Reporting [[User:%(user_name)s]] for %(reason)s", "type": "append", "markup": "* {{Vandal|%(user_name)s}} %(reason)s ~~~~", "page_name": "Wikipedia:Administrator_intervention_against_vandalism"}], "fields": [{"type": "text", "name": "header", "label": "Reason for listing <small>(optional, keep it brief)</small>"}], "name": "report vandalism", "description": "Reports vandals and spammers to admins. Use only for <b>obvious</b> and <b>persistent</b> cases. Please review [[WP:Spam]], [[WP:Vandaism]] and the [[AIV Guide]].\n"}]}
+			teahouse_html = '<div lang="en" dir="ltr" class="mw-content-ltr"><h2><span class="mw-headline" id="You.27re_invited_to_the_TeaHouse">You\'re invited to the TeaHouse</span> </h2>\n' +
+				'<table style="margin: 2em 0;">\n' +
+				'<tr valign="top">\n' +
+				'<td><a href="/wiki/File:WP_teahouse_logo_2.png" class="image"><img alt="Teahouse logo" src="https://upload.wikimedia.org/wikipedia/commons/6/61/WP_teahouse_logo_2.png" width="101" height="101" /></a></td>\n' +
+				'<td>\n' +
+				'<div style="background-color:#f4f3f0; color: #393D38; padding: 1em; font-size: 1.1em; width:420px; border-radius:10px;box-shadow:-2px -2px 1px #8e8a78;">Hello! <b>EpochFail</b>, you are invited to the <a href="/wiki/Wikipedia:Teahouse" title="Wikipedia:Teahouse">Teahouse</a>, a forum on Wikipedia for new editors to ask questions about editing Wikipedia, and get support from peers and experienced editors. Please join us! <a href="/wiki/User:EpochFail" title="User:EpochFail"><span title="ohai" style="font-variant:small-caps">EpochFail</span></a><small><sup>(<strong class="selflink">talk</strong> &middot <a href="/wiki/Special:Contributions/EpochFail" title="Special:Contributions/EpochFail">work</a>)</sup></small> 18:17, 26 May 2013 (UTC)</div>\n' +
+				'</td>\n' +
+				'</tr>\n' +
+				'</table>'
 			
-			config = {
-				user_actions: [
-					{
-						name: "send message",
-						description: "Posts a new message on the [[%(user_name)s|%(user_name)s]]'s talk page.",
-						tooltip: "Posts a new thread on a the user's talk page.",
-						fields: [
-							{
-								name: "header",
-								label: "Header",
-								type: "text",
-								default: "Hello %(user_name)s",
-								tooltip: "I am a header"
-							},
-							{
-								name: "message1",
-								label: "Message",
-								type: "textarea",
-								tooltip: "I am a message"
-							},
-							{
-								name: "message2",
-								label: "Message",
-								type: "textarea",
-								tooltip: "I another am a message"
-							},
-							{
-								name: "message3",
-								label: "Message",
-								type: "textarea",
-								tooltip: "I am a yuip"
-							}
-						]
-					},
-					{
-						name: "send message2",
-						description: "Posts a new message on the [[%(user_name)s|%(user_name)s]]'s talk page.",
-						tooltip: "Posts a new thread on a the user's talk page.",
-						fields: [
-							{
-								name: "header",
-								label: "Header",
-								type: "text",
-								default: "Hello %(user_name)s",
-								tooltip: "I am a header"
-							},
-							{
-								name: "message1",
-								label: "Message",
-								type: "textarea",
-								tooltip: "I am a message"
-							},
-							{
-								name: "message2",
-								label: "Message",
-								type: "textarea",
-								tooltip: "I another am a message"
-							},
-							{
-								name: "message3",
-								label: "Message",
-								type: "textarea",
-								tooltip: "I am a yuip"
-							}
-						]
-					}
-				]
-			}
+			SYSTEM = {}
+			SYSTEM.local = new LocalServer(""),
+			SYSTEM.mediawiki = new MediaWiki(
+				MEDIAWIKI.protocol + "://" + 
+				MEDIAWIKI.domain + 
+				MEDIAWIKI.path.scripts + 
+				MEDIAWIKI.file.api
+			)
 			
 			formatting = {
 				user_name: "EpochFail",
@@ -155,21 +108,14 @@
 				}
 			)
 			
-			user_actions = new views.User.Info.UserActions(
-				new ui.ActionMenu(actions)
-			)
+			user_actions = new views.User.Info.UserActions({id: 32546, name: "EpochFail"})
 			$('body').append(
 				$("<div>")
 					.css("margin-left", "15em")
 					.append(user_actions.node)
 			)
 			
-			textarea = ui.Field.from_doc(
-				config.user_actions[0].fields[1]
-			)
-			textarea.changed.attach(function(text){console.log("textarea changed to '" + textarea.val() + "'")})
-			$('body').append(textarea.node)
-			
+			user_actions.menu.flyout.previewer.load([new ui.ActionMenu.Append("User_talk:EpochFail", teahouse_html)])
 			
 		</script>
 	<body>

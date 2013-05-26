@@ -30,14 +30,21 @@ class OperationResult(serializable.Type):
 		
 	
 class EditPreview(OperationResult):
-	TYPE = "edit preview"
+	TYPE = "edit"
 	
 	def __init__(self, page_name, html, comment):
 		self.page_name = unicode(page_name)
 		self.html      = unicode(html)
 		self.comment   = unicode(comment)
 	
-OperationResult.TYPES[EditPreview.TYPE] = EditPreview
+
+class ReplacePreview(EditPreview):
+	TYPE = "replace"
+OperationResult.TYPES[ReplacePreview.TYPE] = ReplacePreview
+
+class AppendPreview(EditPreview):
+	TYPE = "append"
+OperationResult.TYPES[AppendPreview.TYPE] = AppendPreview
 
 class EditResult(OperationResult):
 	TYPE = "edit result"
@@ -49,7 +56,7 @@ class EditResult(OperationResult):
 OperationResult.TYPES[EditResult.TYPE] = EditResult
 	
 class WatchPreview(OperationResult):
-	TYPE = "watch preview"
+	TYPE = "watch"
 	
 	def __init__(self, page_name):
 		self.page_name = unicode(page_name)

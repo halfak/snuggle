@@ -1,7 +1,9 @@
 ui = window.ui || {}
 
 ui.ActionMenu = Class.extend({
-	init: function(actions){
+	init: function(user, actions){
+		this.user = user
+		
 		this.node = $("<div>")
 			.addClass("action_menu")
 		
@@ -36,9 +38,12 @@ ui.ActionMenu = Class.extend({
 	},
 	_handle_action_changed: function(action, watch){
 		this.action_changed.notify(action, watch)
+		this._delay_preview_load()
 	},
 	_handle_action_clicked: function(action){
-		this.flyout.load(action)
+		if(this.flyout.load(action)){
+			this._delay_preview_load()
+		}
 	},
 	_handle_handle_clicked: function(action){
 		if(!this.disabled()){
@@ -46,6 +51,35 @@ ui.ActionMenu = Class.extend({
 				this.action_loaded.notify(action)
 			}
 		}
+	},
+	_delay_preview_load: function(){
+		logger.debug("action_menu: delaying preview")
+		if(this.preview_delay){
+			clearTimeout(this.preview_delay)
+		}
+		this.preview_delay = setTimeout(this._load_preview.bind(this), ui.ActionMenu.PREVIEW_DELAY = 250)
+	},
+	_load_preview: function(){
+		logger.debug("action_menu: loading preview")
+		this.flyout.previewer.loading(true)
+		var action = this.flyout.action
+		SYSTEM.local.users.preview_action(
+			this.user,
+			action,
+			this.flyout.controls.watch.val(),
+			function(op_docs){
+				operations = op_docs.map(ui.ActionMenu.Operation.from_doc)
+				
+				this.flyout.load_preview(action, operations)
+				this.flyout.previewer.loading(false)
+			}.bind(this),
+			function(message, doc, meta){
+				operations = [new ui.ActionMenu.Error(doc)]
+				
+				this.flyout.load_preview(action, operations)
+				this.flyout.previewer.loading(false)
+			}.bind(this)
+		)
 	},
 	_add_action: function(action){
 		this.handles.node.append(action.handle.node)
@@ -71,6 +105,8 @@ ui.ActionMenu = Class.extend({
 		
 	}
 })
+ui.ActionMenu.PREVIEW_DELAY = 250
+
 
 /*
 Responsibilities
@@ -159,8 +195,13 @@ ui.ActionMenu.Flyout = Class.extend({
 				this.action = action
 				this.form.node.append(this.action.form.node)
 				this.action.selected(true)
+				this.expanded(true)
+				return true
+			}else{
+				this.expanded(true)
+				return false
 			}
-			this.expanded(true) //make sure we expanded
+			
 		}else{
 			this.unload()
 		}
@@ -245,12 +286,25 @@ ui.ActionMenu.Flyout.Previewer = Class.extend({
 		this.node = $("<div>")
 			.addClass("previewer")
 			.addClass("field-like")
+		
+		this.status = {
+			node: $("<div>")
+				.addClass("status")
+				.text("preview")
+		}
+		this.node.append(this.status.node)
+		
+		this.operations = {
+			node: $("<div>")
+				.addClass("operations")
+		}
+		this.node.append(this.operations.node)
 	},
 	load: function(operations){
 		this.clear()
 		for(var i=0;i<operations.length;i++){
 			var operation = operations[i]
-			this.node.append(operation.node)
+			this.operations.node.append(operation.node)
 		}
 	},
 	loading: function(loading){
@@ -259,13 +313,15 @@ ui.ActionMenu.Flyout.Previewer = Class.extend({
 		}else{
 			if(loading){
 				this.node.addClass("loading")
+				this.status.node.text("loading...")
 			}else{
 				this.node.removeClass("loading")
+				this.status.node.text("preview")
 			}
 		}
 	},
 	clear: function(){
-		this.node.html("")
+		this.operations.node.html("")
 	}
 })
 
@@ -277,8 +333,9 @@ ui.ActionMenu.Operation = Class.extend({
 		this.description = {
 			node: $("<div>")
 				.addClass("description")
+				.append(description)
 		}
-		this.node.append(description)
+		this.node.append(this.description.node)
 	},
 	load_doc: function(doc){
 		throw "Not implemented... Must be subclasses"
@@ -286,7 +343,8 @@ ui.ActionMenu.Operation = Class.extend({
 })
 ui.ActionMenu.Operation.TYPES = {}
 ui.ActionMenu.Operation.from_doc = function(doc){
-	Class = this.TYPES[doc.type] 
+	logger.debug("Constructing operation type=" + doc.type)
+	Class = ui.ActionMenu.Operation.TYPES[doc.type] 
 	if(Class){
 		return Class.from_doc(doc)
 	}else{
@@ -294,9 +352,27 @@ ui.ActionMenu.Operation.from_doc = function(doc){
 	}
 }
 
+ui.ActionMenu.Error = ui.ActionMenu.Operation.extend({
+	init: function(doc){
+		if(doc.code){
+			var message = doc.code + ": " + doc.message
+		}else{
+			var message = doc.message
+		}
+		this._super("[ERROR] " + message)
+		this.node.addClass("error")
+	}
+})
+ui.ActionMenu.Error.TYPE = "error"
+ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Error.TYPE] = ui.ActionMenu.Append
+ui.ActionMenu.Error.from_doc = function(doc){
+	return new ui.ActionMenu.Error(doc.code, doc.message)
+}
+
 ui.ActionMenu.Append = ui.ActionMenu.Operation.extend({
 	init: function(page_name, html){
-		this._super("Append to " + util.htmlify(util.wiki_link(page_name)))
+		this._super("Append to: " + util.htmlify(util.wiki_link(page_name)))
+		this.node.addClass("append")
 		this.html = new ui.HTMLPreview(html)
 		this.node.append(this.html.node)
 	}
@@ -310,6 +386,7 @@ ui.ActionMenu.Append.from_doc = function(doc){
 ui.ActionMenu.Replace = ui.ActionMenu.Operation.extend({
 	init: function(page_name, html){
 		this._super("Replace " + util.htmlify(util.wiki_link(page_name)) + " with:")
+		this.node.addClass("replace")
 		this.html = new ui.HTMLPreview(html)
 		this.node.append(this.html.node)
 	}
@@ -323,6 +400,7 @@ ui.ActionMenu.Replace.from_doc = function(doc){
 ui.ActionMenu.Watch = ui.ActionMenu.Operation.extend({
 	init: function(page_name){
 		this._super("Add " + util.htmlify(util.wiki_link(page_name)) + " to my watchlist.")
+		this.node.addClass("watch021")
 	}
 })
 ui.ActionMenu.Watch.TYPE = "watch"

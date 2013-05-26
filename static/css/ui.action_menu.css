@@ -41,7 +41,6 @@ div.action_menu .flyout {
 	min-height: 15em;
 	background: #f6f6f6;
 	border: 1px solid #333;
-	padding: .2em .5em;
 	margin: 0px;
 	box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
 }
@@ -53,8 +52,7 @@ div.action_menu .flyout.expanded {
 	div.action_menu .flyout .form {
 		display: inline-block;
 		vertical-align: top;
-		width: 20em;
-		margin-right: .5em;
+		width: 25em;
 	}
 	div.action_menu .flyout .panel {
 		display: inline-block;
@@ -69,20 +67,35 @@ div.action_menu .flyout.expanded {
 			right: 0px;
 			left: 0px;
 			bottom: 2.50em;
-			background: #f9f9f9;
+			background: #bbb;
+			border-top: 0px;
+			border-right: 0px;
 		}
-		div.action_menu .flyout .panel .previewer:before: {
+		div.action_menu .flyout .panel .previewer .status{
+			position: absolute;
+			z-index: 0;
+			top: 0px;
+			left: 0px;
+			right: 0px;
+			display: block;
 			text-align: center;
-			color: rgba(0,0,0,.05)
+			color: rgba(255,255,255,.2);
 			font-size: 5em;
-			content: "previewing..."
+		}
+		div.action_menu .flyout .panel .previewer .operations{
+			position: absolute;
+			z-index: 1;
+			top: 0px;
+			left: 0px;
+			right: 0px;
 		}
 		div.action_menu .flyout .panel .controls {
 			position: absolute;
 			right: 0px;
 			bottom: 0px;
 			text-align: right;
-			height: 1.75em; 
+			height: 1.75em;
+			padding-right: .5em;
 		}
 		div.action_menu .flyout .panel .controls .watch,
 		div.action_menu .flyout .panel .controls .cancel,
@@ -99,82 +112,75 @@ div.action_menu .flyout.expanded {
 
 div.action_menu div.form{
 	width: 25em;
+	padding: .5em;
 	position: relative;
 }
 div.action_menu form{
 	display: block;
 	margin: 0px;
 	padding: 0px;
-	
 }
 div.action_menu form p,
 div.action_menu form .field{
-	background: #e0e0e0;
+	margin: 0px;
 	margin-bottom: .5em;
-	padding: .2em .5em;
+	padding: .2em .5em .5em .5em;
 	white-space: normal;
+	width: 100%;
 }
-	div.action_menu form .field{
-		background: #e0e0e0;
-		margin-bottom: .5em;
-		padding: .2em .5em;
-		width: 100%;
-	}
-	div.action_menu form .field label{
+div.action_menu form .field{
+	background: #e0e0e0;
+}
+	div.action_menu form .field > label{
 		display: block;
 		font-weight: bold;
+		margin-bottom: .3em;
 	}
 	div.action_menu form .field.text input,
 	div.action_menu form .field.textarea textarea{
 		width: 100%;
 	}
 	div.action_menu form .field.textarea textarea{
-		height: 4.5em;
+		height: 5.5em;
 	}
-	div.user_menu div.form div.field.text label,
-	div.user_menu div.form div.field.radios label,
-	div.user_menu div.form div.field.textarea label{
-		display: block;
+	div.action_menu form .field.radios .radio_option{
+		display: inline-block;
+		margin-left: .5em;
+		padding: .1em .2em;
+		border: 1px solid #aaa;
+		border-radius: .5em;
 	}
-	div.user_menu div.form div.field.text input,
-	div.user_menu div.form div.field.textarea textarea{
-		font-weight: normal;
-		font-family: monospace;
-		width: 100%;
+	div.action_menu form .field.radios .radio_option.selected{
+		background: #f6f6f6;
 	}
-	div.user_menu div.form div.field.textarea textarea{
-		height: 7em;
-	}
-	div.user_menu div.form div.field.radio div.radio_option{
+	div.action_menu form .field.radios .radio_option label{
+		margin-left: .25em;
+		padding-right: .2em;
 		display: inline-block;
 	}
-	
-	div.user_menu div.wiki_preview{
-		display: inline-block;
-		white-space: normal;
-		width: 50em;
-		margin-bottom: 2em;
-		background: #fff;
-		min-height: 1em;
-		vertical-align: top;
-		padding: .2em .5em;
-		overflow: auto;
-	}
-	
-	div.user_menu div.controls{
-		position: absolute;
-		right: .5em;
-		bottom: .5em;
-		white-space: nowrap;
-	}
-		div.user_menu div.controls div.input_field.check{
-			display: inline;
-		}
-		div.user_menu div.controls div{
-			margin-left: .5em;
-		}
-	
-	div.user_menu p{
-		white-space: normal;
-		margin: .5em 0em;
-	}
+
+div.action_menu .previewer .operations{
+	margin: .5em;
+}
+div.action_menu .previewer .operation{
+	margin-bottom: .5em;
+	white-space: normal;
+}
+div.action_menu .previewer .operation .description{
+	background: #eee;
+	border: 1px solid black;
+	padding: .2em .5em;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.2);
+}
+div.action_menu .previewer .operation .wiki_format{
+	margin-left: .5em;
+	font-family: sans-serif;
+	border: 1px solid black;
+	border-top: none;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.2);
+	overflow: hidden;
+}
+div.action_menu .previewer .operation.error .description{
+	background: #f99;
+	border: 2px solid black;
+}

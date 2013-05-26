@@ -1,3 +1,8 @@
+.wiki_format {
+	background: #fff;
+	padding: 0em 1em;
+}
+
 .wiki_format .mw-hierotable{border:0 !important;border-spacing:0 !important}
 .wiki_format .mw-hiero-outer{display:inline}
 .wiki_format .mw-hierotable td{border:0 !important;padding:0 !important;text-align:center !important;vertical-align:middle !important}

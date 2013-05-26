@@ -96,15 +96,7 @@ class Edit(Operation):
 		raise NotImplementedError()
 	
 	def preview(self, request, snuggler=None):
-		page_name, markup, comment = self._eval_params(request, snuggler)
-		
-		page_name, html, comment = self.api.pages.preview(
-			markup=markup,
-			page_name=page_name,
-			comment=comment,
-			cookies=snuggler.cookies if snuggler != None else None
-		)
-		return types.EditPreview(html, page_name, comment)
+		raise NotImplementedError()
 	
 	@classmethod
 	def from_doc(cls, doc, api):
@@ -118,6 +110,17 @@ class Edit(Operation):
 class Replace(Edit):
 	TYPE = "replace"
 	
+	def preview(self, request, snuggler=None):
+		page_name, markup, comment = self._eval_params(request, snuggler)
+		
+		page_name, html, comment = self.api.pages.preview(
+			markup=markup,
+			page_name=page_name,
+			comment=comment,
+			cookies=snuggler.cookies if snuggler != None else None
+		)
+		return types.ReplacePreview(page_name, html, comment)
+	
 	def save(self, request, snuggler=None):
 		page_name, markup, comment = self._eval_params(request, snuggler)
 		
@@ -127,12 +130,23 @@ class Replace(Edit):
 			comment=comment,
 			cookies=snuggler.cookies if snuggler != None else None
 		)
-		return types.EditResult(page_name, rev_id)
+		return types.EditResult(rev_id, page_name)
 
 Operation.TYPES[Replace.TYPE] = Replace
 
 class Append(Edit):
 	TYPE = "append"
+	
+	def preview(self, request, snuggler=None):
+		page_name, markup, comment = self._eval_params(request, snuggler)
+		
+		page_name, html, comment = self.api.pages.preview(
+			markup=markup,
+			page_name=page_name,
+			comment=comment,
+			cookies=snuggler.cookies if snuggler != None else None
+		)
+		return types.AppendPreview(page_name, html, comment)
 	
 	def save(self, request, snuggler=None):
 		page_name, markup, comment = self._eval_params(request, snuggler)
