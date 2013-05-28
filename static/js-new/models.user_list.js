@@ -4,24 +4,24 @@ models = window.models || {}
 Represents a list of `models.User`.  Users can be appended to the end.  This 
 model keeps track of a single selection.  The selection can be shifted (see 
 `shift_selection(<delta>)`) or a user can be selected directly (see 
-`select(<models.User>)`).  Also a user can be found for using (get_user(<id>))
+`select(<controllers.User>)`).  Also a user can be found for using (get_user(<id>))
 */
 models.UserList = Class.extend({
 	/**
 	:Parameters:
-		users : [models.User]
+		users : [controllers.User]
 			(Optional) a list of `models.User`s to load
 	 */
-	init: function(users){
-		users = users || []
+	init: function(){
 		this.list = []
 		this.map = {}
 		
-		this.appended      = new Event(this)
-		this.cleared       = new Event(this)
-		this.user_selected = new Event(this)
-		this.is_loading    = new Event(this)
-		this.is_loading.status = false
+		this.appended          = new Event(this)
+		this.cleared           = new Event(this)
+		this.user_selected     = new Event(this)
+		this.status_changed    = new Event(this)
+		
+		this.loading = false
 		
 		this.clear_selection()
 		
@@ -46,24 +46,22 @@ models.UserList = Class.extend({
 	},
 	
 	/**
-	Appends a list of `models.User`s on the end. 
+	Appends a list of `controllers.User`s on the end. 
 	
 	:Paramaters:
-		users : [models.User]
-			a list of `models.User`s to load
+		user : controllers.User
+			a list of `controllers.User`s to load
 	
 	*/
-	append: function(users){
-		var relevant_users = []
+	append: function(user){
 		for(var i=0;i<users.length;i++){
 			var user = users[i]
 			if(!this.map[user.id]){
 				this.map[user.id] = user
-				relevant_users.push(user)
+				this.list.append(user)
+				this.appended_user.notify(user)
 			}
 		}
-		this.list = this.list.concat(relevant_users)
-		this.appended.notify(relevant_users)
 	},
 	
 	/**
@@ -142,7 +140,7 @@ models.UserList = Class.extend({
 	the list.
 	
 	:Parameters:
-		user : `Model.User`
+		user : `controllers.User`
 			the user to select
 	*/
 	select: function(user){

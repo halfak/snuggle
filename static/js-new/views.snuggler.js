@@ -23,7 +23,7 @@ views.Snuggler = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.menu = new View.Snuggler.Menu()
+		this.menu = new views.Snuggler.Menu()
 		this.node.append(this.menu.node)
 		
 		this.model.changed.attach(this._render.bind(this))
@@ -51,18 +51,18 @@ views.Snuggler = Class.extend({
 	},
 	_render: function(){
 		if(this.model.loading){
-			this.preamble.node.text("Checking for previous session...")
+			this.preamble.node.text(LANGUAGE.snuggler["Checking for previous session..."] + " ")
 			this.name.node.text("")
 			this.name.node.attr("")
 			this.menu.ready_login()
 		}else if(this.model.creds){
-			this.preamble.node.text("Logged in as ")
-			this.name.node.text(this.model.creds.name)
-			this.name.node.attr('href', SYSTEM.user_link(this.model.creds.name))
+			this.preamble.node.text(LANGUAGE.snuggler["Logged in as"] + " ")
+			this.name.node.text(this.model.user.name)
+			this.name.node.attr('href', util.user_link(this.model.user.name))
 			this.name.node.attr('target', "_blank")
 			this.menu.ready_logout()
 		}else{
-			this.preamble.node.text("Not logged in... ")
+			this.preamble.node.text(LANGUAGE.snuggler["Not logged in..."] + " ")
 			this.name.node.text("")
 			this.name.node.attr('href', "")
 			this.menu.ready_login()
@@ -85,6 +85,19 @@ views.Snuggler.Menu = UI.Dropper.extend({
 	ready_logout: function(){
 		this.set_content(this.logout.node)
 	},
+	disabled: function(disabled){
+		if(disabled === undefined){
+			return this.node.hasClass("disabled")
+		}else{
+			if(disabled){
+				this.node.addClass("disabled")
+			}else{
+				this.node.removeClass("disabled")
+			}
+			this.login.disabled(disabled)
+			this.logout.disabled(disabled)
+		}
+	},
 	expanded: function(expanded){
 		ret = this._super(expanded)
 		if(expanded){
@@ -103,17 +116,40 @@ views.Snuggler.Menu.Login = Class.extend({
 		this.preamble = {
 			node: $("<p>")
 			.addClass("preamble")
-			.text("Log into your " + MEDIAWIKI.name + " account.")
+			.append(LANGUAGE.snuggler.login.description)
 		}
 		this.node.append(this.preamble.node)
 		
-		this.name = new ui.TextField("username", {label: "User name", tabindex: 1}})
+		this.name = new ui.TextField(
+			"name", 
+			{
+				label: LANGUAGE.snuggler.login.name.label, 
+				tooltip: LANGUAGE.snuggler.login.name.tooltip, 
+				tabindex: 1
+			}
+		)
 		this.node.append(this.name.node)
 		
-		this.pass = new ui.TextField("password", {label: "Password", password: true, tabindex: 2}})
+		
+		this.pass = new ui.TextField(
+			"password", 
+			{
+				label: LANGUAGE.snuggler.login.pass.label, 
+				tooltip: LANGUAGE.snuggler.login.name.tooltip,
+				password: true,
+				tabindex: 2
+			}
+		)
 		this.node.append(this.pass.node)
 		
-		this.login = new ui.Button({label: "log in", tabindex: 3})
+		this.login = new ui.Button(
+			'login',
+			{
+				label: LANGUAGE.snuggler.login.label, 
+				label: LANGUAGE.snuggler.login.tooltip, 
+				tabindex: 3
+			}
+		)
 		this.login.activated.attach(this._handle_login_activated.bind(this))
 		this.node.append(this.login.node)
 		
@@ -123,7 +159,7 @@ views.Snuggler.Menu.Login = Class.extend({
 		if(!this.disabled()){
 			this.submitted.notify()
 		}
-		return false;
+		e.preventDefault()
 	},
 	_handle_login_activated: function(){
 		if(!this.disabled()){
@@ -149,17 +185,36 @@ views.Snuggler.Menu.Logout = Class.extend({
 	init: function(){
 		this.node = $("<form>")
 			.addClass("logout")
-			.submit(function(e){e.preventDefault();e.stopPropagation()})
+			.submit(self._handle_submit.bind(this))
 		
 		this.preamble = {
 			node: $("<p>")
 			.addClass("preamble")
-			.text("Log out of Snuggle?")
+			.append(LANGUAGE.snuggler.logout.description)
 		}
 		this.node.append(this.preamble.node)
 		
-		this.logout = new UI.Button("log out")
+		this.logout = new ui.Button(
+			"logout",
+			{
+				label: LANGUAGE.snuggler.logout.label,
+				tooltip: LANGUAGE.snuggle.logout.tooltip
+			}
+		this.logout.activated.attach(this._handle_logout_activated)
 		this.node.append(this.logout.node)
+		
+		this.submitted = new Event()
+	},
+	_handle_submit: function(){
+		if(!this.disabled()){
+			this.submitted.notify()
+		}
+		e.preventDefault()
+	},
+	_handle_logout_activated: function(){
+		if(!this.disabled()){
+			this.submitted.notify()
+		}
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){

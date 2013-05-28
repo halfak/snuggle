@@ -5,8 +5,6 @@ views.UserList = Class.extend({
 	init: function(model){
 		this.model = model
 		
-		this.users = {}
-		
 		this.node = $("<div>")
 			.addClass("user_list")
 			.scroll(this._handle_view_change.bind(this))
@@ -14,18 +12,35 @@ views.UserList = Class.extend({
 		
 		this._appended(null, model.list)
 		
-		this.model.appended.attach(this._appended.bind(this))
-		this.model.cleared.attach(this._cleared.bind(this))
-		this.model.is_loading.attach(this._is_loading.bind(this))
-		this.model.user_selected.attach(this._show_user.bind(this))
+		this.model.appended_user.attach(this._hanlde_append_user.bind(this))
+		this.model.cleared.attach(this._hanlde_clear.bind(this))
+		this.model.status_changed.attach(this._handle_status_change.bind(this))
+		this.model.user_selected.attach(this._handle_user_select.bind(this))
 		
-		this.view_changed       = new Event(this)
-		this.user_clicked       = new Event(this)
-		this.user_categorized   = new Event(this)
-		this.user_talk_reloaded = new Event(this)
-		this.action_changed     = new Event(this) //TODO: Not
-		this.action_loaded      = new Event(this) //TODO: quite
-		this.action_submitted   = new Event(this) //TODO: sure about this
+		this.view_changed = new Event(this)
+		this.keypressed   = new Event(this)
+	},
+	_handle_append_user: function(_, user){
+		this.node.append(user.node)
+	},
+	_handle_cleare: function(){
+		this.node.html("")
+	},
+	_handle_status_change: function(){
+		if(this.model.loading){
+			this.node.addClass("loading")
+		}else{
+			this.node.removeClass("loading")
+		}
+	},
+	_handle_user_select: function(user){
+		this._show_user(user)
+	},
+	_handle_view_change: function(){
+		this.view_changed.notify()
+	},
+	_handle_keypress: function(e){
+		this.keypressed.notify(e.which)
 	},
 	/**
 	Generates the ranges of the current view pane.
@@ -37,20 +52,7 @@ views.UserList = Class.extend({
 			end: this.node[0].scrollHeight
 		}
 	},
-	/**
-	Gets the selected user if there is one.
-	*/
-	selected: function(){
-		if(this.model.select()){
-			return this.users[this.model.select().id]
-		}else{
-			return null
-		}
-	},
 	_show_user: function(_, user){
-		var user = this.users[user.id]
-		var view = this.view()
-		
 		if(user){
 			if(user.top() < 25){
 				this.node.scrollTop(this.node.scrollTop() + user.top() - 25)
@@ -58,50 +60,5 @@ views.UserList = Class.extend({
 				this.node.scrollTop(this.node.scrollTop() + (user.bottom() - this.node.height()) + 25)
 			}
 		}
-	},
-	_appended: function(_, users){
-		for(var i=0;i<users.length;i++){
-			var user_view = new views.User(users[i])
-			user_view.clicked.attach(this._handle_user_clicked.bind(this))
-			
-			user_view.categorized.attach(this._handle_user_categorized.bind(this))
-			
-			user_view.action_submitted.attach(
-				function(user_view, action, watch){
-					this.action_submitted.notify(user_view, action, watch)
-				}.bind(this)
-			)
-			user_view.action_loaded.attach(
-				function(user_view, action){
-					this.action_loaded.notify(user_view, action)
-				}.bind(this)
-			)
-			user_view.action_changed.attach(
-				function(user_view, action){
-					this.action_changed.notify(user_view, action)
-				}.bind(this)
-			)
-			this.node.append(user_view.node)
-			this.users[user_view.model.id] = user_view
-		}
-	},
-	_cleared: function(){
-		this.node.children().remove()
-	},
-	_is_loading: function(_, loading){
-		if(loading){
-			this.node.addClass("loading")
-		}else{
-			this.node.removeClass("loading")
-		}
-	},
-	_handle_view_change: function(e){
-		this.view_changed.notify(this.view())
-	},
-	_handle_user_clicked: function(user){
-		this.user_clicked.notify(user)
-	},
-	_handle_user_categorized: function(user, category){
-		this.user_categorized.notify(user, category)
 	}
 })

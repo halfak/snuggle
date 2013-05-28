@@ -13,6 +13,17 @@ web_server:
   host: 0.0.0.0
   port: 8081
 
+ui:
+  # The time in seconds to wait after a user has stopped changing the filter 
+  # to send a new request.
+  filter_delay: 1.0
+  view_change_delay: 0.5
+  user_view_delay: 1.5
+  auth_check_delay: 120
+  user_menu:
+    # The time in seconds to wait before updating the preview in the user menu
+    preview_delay: 0.25
+
 # The configuration for the synchronization server.  The synchronization server
 # keeps Snuggle's data up-to-date by listening to a recent_changes feed.
 #

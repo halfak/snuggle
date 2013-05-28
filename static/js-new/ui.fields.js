@@ -169,8 +169,10 @@ ui.RadioField = ui.Field.extend({
 		}
 	},
 	_handle_radio_checked: function(radio){
-		this._select_radio(radio)
-		this.changed.notify(radio)
+		logger.debug("radio_field." + this.name + " changed to " + radio.value)
+		if(this._select_radio(radio)){
+			this.changed.notify(radio)
+		}
 	},
 	val: function(value){
 		if(value === undefined){
@@ -184,20 +186,33 @@ ui.RadioField = ui.Field.extend({
 			if(radio){
 				this._select_radio(radio)
 			}else{
-				throw value + " not available in radio set (" + 
-				      this._radios.values.keys().join(", ") + ")"
+				this._deselect()
 			}
+		}
+	},
+	label: function(){
+		if(this.selection){
+			return this.selection.label
+		}else{
+			return null
+		}
+	},
+	_deselect: function(){
+		if(this.selection){
+			logger.debug("radio_field." + this.name + " deselecting radio." + this.selection.label)
+			this.selection.selected(false)
 		}
 	},
 	_select_radio: function(radio){
 		if(this.selection != radio){
-			if(this.selection){
-				logger.debug("radio_field." + this.name + " deselecting radio." + this.selection.label)
-				this.selection.selected(false)
-			}
+			this._deselect()
+			
 			logger.debug("radio_field." + this.name + " selecting radio." + radio.label)
 			this.selection = radio
 			this.selection.selected(true)
+			return true
+		}else{
+			return false
 		}
 	},
 	disabled: function(disabled){
@@ -298,10 +313,10 @@ ui.RadioField.Radio = Class.extend({
 		// Note that this function will only be called when the user clicks
 		// on the radio button.  
 		
-		logger.debug("radio." + this.label + " handling user check")
+		//logger.debug("radio." + this.label + " handling user check")
 		
 		//By calling this function, we make the behavior uniform. 
-		this.selected(true)
+		//this.selected(true)
 		
 	},
 	set_name: function(name){
@@ -330,8 +345,10 @@ ui.RadioField.Radio = Class.extend({
 		}else{
 			logger.debug("radio." + this.label + " is set to " + Boolean(selected))
 			if(selected){
-				this.node.addClass("selected")
-				this.checked.notify()
+				if(!this.selected()){
+					this.node.addClass("selected")
+					this.checked.notify()
+				}
 			}else{
 				this.node.removeClass("selected")
 			}

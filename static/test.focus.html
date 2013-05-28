@@ -12,8 +12,9 @@
 		<script language="javascript" src="js/lib/class.js"></script>
 		<script language="javascript" src="js/lib/date.format.js"></script>
 		<script language="javascript" src="js/lib/javascript.js"></script>
-		<script language="javascript" src="config/language.js"></script>
+		<script language="javascript" src="config/snuggle.js"></script>
 		<script language="javascript" src="config/mediawiki.js"></script>
+		<script language="javascript" src="config/language.js"></script>
 		<script language="javascript" src="js-new/env.js"></script>
 		<script language="javascript" src="js-new/api.js"></script>
 		<script language="javascript" src="js-new/server.js"></script>
@@ -117,5 +118,13 @@
 			
 			user_actions.menu.flyout.previewer.load([new ui.ActionMenu.Append("User_talk:EpochFail", teahouse_html)])
 			
+			radio = new ui.RadioField(
+				"foo",
+				[
+					new ui.RadioField.Radio("label1", "value1"),
+					new ui.RadioField.Radio("label2", "value2")
+				]
+			)
+			$('body').append(radio.node)
 		</script>
 	<body>

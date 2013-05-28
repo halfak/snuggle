@@ -6,20 +6,46 @@ author:
 
 snuggle:
   name: Snuggle
-  user: Snuggler
 
-controls:
+snuggler:
+  user: Snuggler
+  Checking for previous session...: Checking for previous session...
+  Logged in as: Logged in as
+  Not logged in...: Not logged in...
+  login:
+    description: Log into your wiki account.
+    label: log in
+    tooltip: Click here to log in.
+  logout:
+    description: Log out of Snuggle?
+    label: log out
+    tooltip: Click here to log out.
+
+filter_menu:
   categories:
-    uncategorized: uncategorized
-    good-faith: "✔ good-faith"
-    ambiguous: "? ambiguous"
-    bad-faith: "✗ bad-faith"
+    uncategorized:
+      label: uncategorized
+      tooltip: "New users that haven't been categorized yet"
+    good-faith: 
+      label: "✔ good-faith"
+      tooltip: "New users that have been categorized as good-faith"
+    ambiguous: 
+      label: "? ambiguous"
+      tooltip: "New users that have been categorized as ambiguous"
+    bad-faith:
+      label: "✗ bad-faith"
+      tooltop: "New users that have been categorized as bad-faith"
   filters:
     newcomers with more than: newcomers with more than
     edits to: edits to
+    any page: any page
     sorted by: sorted by
-    ascending: ascending
-    descending: descending
+    ascending: 
+      label: ascending
+      tooltip: sort in increasing order
+    descending:
+      label: descending
+      tooltip: sort in descreasing order
 
 user: 
   info: 
@@ -33,7 +59,8 @@ user:
     reverted: reverted
     self-reverted: self-reverted
   category:
-    categorize: Categorize
+    label: Categorize
+    tooltip: "categorizes this user based on their activity"
     history: history
     good-faith:
       label: "✔"

@@ -4,34 +4,43 @@ views = window.views || {}
 A visual representation of a user.
 */
 views.User = Class.extend({
-	init: function(model){
+	init: function(model, index){
 		this.model = model
+		this.index = index
 		
 		this.node = $("<div>")
 			.addClass("user")
+			.attr("tabindex", index)
 			.click(this._handle_click.bind(this))
+			.keypress(this._handle_keypress.bind(this))
 		
 		//Three major subcomponents: Info, Contribs and Talk
 		this.info = new views.User.Info(model)
 		this.node.append(this.info.node)
 		
-		this.contribs = new views.User.Contribs(model)
-		this.node.append(this.contribs.node)
+		this.activity = new views.User.Activity(model)
+		this.node.append(this.activity.node)
 		
 		this.talk = new views.User.Talk(model)
 		this.node.append(this.talk.node)
 		
+		this.model.selection.attach(this._handle_selected.bind(this))
+		
 		//The only event we care about.  Is someone clicking on me?
-		this.clicked = new Event(this)
+		this.clicked     = new Event(this)
+		this.key_pressed = new Event(this)
 		
-		//When the model is selected, we need to be selected too.
-		this.model.selection.attach(
-			function(model){
-				this.selected(selected)
-				this.expanded(selected)
-			}.bind(this)
-		)
-		
+	},
+	_handle_click: function(e){
+		this.contribs.clear()
+		this.clicked.notify()
+	},
+	_handle_keypress: function(e){
+		this.key_press.notify(e.which)
+	},
+	_handle_selected: function(){
+		this.selected(this.model.selected())
+		this.expanded(this.model.selected())
 	},
 	selected: function(selected){
 		if(selected === undefined){
@@ -48,8 +57,6 @@ views.User = Class.extend({
 		if(expanded == undefined){
 			return this.node.hasClass("expanded")
 		}else{
-			expanded = Boolean(expanded) //Force to be either true or false.
-			
 			if(expanded){
 				this.node.addClass("expanded")
 			}else{
@@ -59,21 +66,6 @@ views.User = Class.extend({
 			this.contribs.expanded(expanded)
 			this.talk.expanded(expanded)
 		}
-	},
-	_handle_click: function(e){
-		this.contribs.clear()
-		this.clicked.notify()
-	},
-	_handle_talk_reload: function(){
-		this.talk_reloaded.notify()
-	},
-	_handle_category_click: function(_, value){
-		this.categorized.notify(value)
-	},
-	_category_changed: function(category){
-		this.node.removeClass("good-faith")
-		this.node.removeClass("bad-faith")
-		this.node.addClass(category.category)
 	},
 	top: function(){
 		return this.node.position().top
@@ -99,7 +91,7 @@ views.User.Info = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.user_actions = views.User.Info.UserActions
+		this.actions = views.User.Info.UserActions()
 		this.name.node.append(this.actions.node)
 		
 		this.utc = new ui.UTC(
@@ -114,8 +106,7 @@ views.User.Info = Class.extend({
 		
 		this.counts = new ui.EditCounts()
 		
-		this.model.viewed.attach(this._render.bind(this))
-		this.model.activity.changed(this._render.bind(this))
+		this.model.views_changed.attach(this._render.bind(this))
 		
 		this.expanded(false)
 		this._render()
@@ -159,7 +150,7 @@ views.User.Info = Class.extend({
 		}
 	}
 })
-views.User.Info.UserActions = ui.Dropper.extend({
+views.User.Info.Actions = ui.Dropper.extend({
 	init: function(model){
 		this.model = model
 		
@@ -360,54 +351,51 @@ views.User.Category = Class.extend({
 		this.history = new views.User.Category.History()
 		this.node.append(this.history.node)
 		
-		this.buttons = {
-			node: $("<div>")
-				.addClass("buttons"),
-			good_faith: new ui.Button(
-				'good-faith', 
-				{
-					class: "good-faith",
-					label: "&#x2714;",
-					attrs: {
-						title: "This editor is at least trying to do something useful. (or press #1)"
+		this.category = ui.RadioField(
+			"category",
+			[
+				ui.RadioField.Radio(
+					LANGUAGE.user.category["good-faith"].label,
+					"good-faith",
+					{
+						tooltip: LANGUAGE.user.category["good-faith"].tooltip
 					}
-				}
-			),
-			ambiguous: new ui.Button(
-				'ambiguous', 
-				{
-					class: "ambiguous",
-					label: "?",
-					attrs: {
-						title: "It's unclear whether this editor is trying to be productive or not. (or press #2)"
+				),
+				ui.RadioField.Radio(
+					LANGUAGE.user.category["ambiguous"].label,
+					"ambiguous",
+					{
+						tooltip: LANGUAGE.user.category["ambiguous"].tooltip
 					}
-				}
-			),
-			bad_faith: new ui.Button(
-				'bad-faith', 
-				{
-					class: "bad-faith",
-					label: "&#x2718;",
-					attrs: {
-						title: "This editor is trying to cause harm or be disruptive. (or press #3)"
+				),
+				ui.RadioField.Radio(
+					LANGUAGE.user.category["bad-faith"].label,
+					"bad-faith",
+					{
+						tooltip: LANGUAGE.user.category["bad-faith"].tooltip
 					}
-				}
-			)
-		}
-		this.buttons.node.append(this.buttons.good_faith.node)
-		this.buttons.node.append(this.buttons.ambiguous.node)
-		this.buttons.node.append(this.buttons.bad_faith.node)
-		this.node.append(this.buttons.node)
+				),
+			],
+			{
+				label: LANGUAGE.user.category.label,
+				tooltip: LANGUAGE.user.category.tooltip
+			}
+		)
+		this.category.changed.attach(this._handle_change.bind(this)
+		this.node.append(this.category.node)
 		
-		this.buttons.good_faith.clicked.attach(this._button_clicked.bind(this))
-		this.buttons.bad_faith.clicked.attach(this._button_clicked.bind(this))
-		this.buttons.ambiguous.clicked.attach(this._button_clicked.bind(this))
+		this.changed = new Event(this)
 		
-		this.button_clicked = new Event(this)
+		this.model.category.changed.attach(this._render.bind(this))
 		
-		this.model.changed.attach(this._render.bind(this))
 		this.expanded(false)
 		this._render()
+	},
+	_handle_change: function(_){
+		this.changed.notify()
+	},
+	val: function(value){
+		return this.category.val(value)
 	},
 	expanded: function(expanded){
 		if(expanded == undefined){
@@ -432,17 +420,14 @@ views.User.Category = Class.extend({
 				this.node.removeClass("disabled")
 			}
 			
-			this.buttons.good_faith.disabled(disabled)
-			this.buttons.bad_faith.disabled(disabled)
+			this.category.disabled(disabled)
 		}
 	},
-	_button_clicked: function(button){
-		this.button_clicked.notify(button.value)
+	reset: function(){
+		this.category.val(this.model.category)
 	},
 	_render: function(){
-		this.buttons.good_faith.selected(this.model.category.category == "good-faith")
-		this.buttons.bad_faith.selected(this.model.category.category == "bad-faith")
-		this.buttons.ambiguous.selected(this.model.category.category == "ambiguous")
+		this.category.val(this.model.category)
 		
 		this.history.render(this.model.category.history)
 	}

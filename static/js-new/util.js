@@ -46,6 +46,9 @@ util = {
 	},
 	stop_propagation: function(e){
 		e.stopPropagation()
+	},
+	now_ms: function(){
+		return new Date() * 1
 	}
 }
 

@@ -1,10 +1,36 @@
 models = window.models || {}
 
-models.User = Selectable.extend({
+models.User = Class.extend({
 	init: function(doc){
 		this._super(this)
-		this.changed = new Event(this)
-		this.viewed  = new Event(this)
+		this.changed  = new Event(this)
+		this.viewed   = new Event(this)
+		
+		this.expanded_changed = new Event(this)
+		this.expanded_changed.status = false
+		
+		this.selected_changed = new Event(this)
+		this.selected_changed.status = false
+		
+		if(doc){
+			this.load_doc(doc)
+		}
+	},
+	expanded: function(expanded){
+		if(expanded === undefined){
+			return this.expanded_changed.status
+		}else{
+			this.expanded_changed.status = Boolean(expanded)
+			this.expanded_changed.notify()
+		}
+	},
+	selected: function(selected){
+		if(expanded === undefined){
+			return this.selected_changed.status
+		}else{
+			this.selected_changed.status = Boolean(selected)
+			this.selected_changed.notify()
+		}
 	},
 	load_doc: function(doc){
 		if(!doc){
@@ -16,12 +42,12 @@ models.User = Selectable.extend({
 		this.registration = new Date(doc.registration*miliseconds.SECOND)
 		this.views        = doc.views
 		this.desirability = new models.User.Desirability(doc.desirability)
-		this.category     = new models.User.Category(category)
-		this.activity     = new models.User.Activity(activity)
-		this.talk         = new models.User.Talk(talk)
+		this.category     = new models.User.Category(doc.category)
+		this.activity     = new models.User.Activity(doc.activity)
+		this.talk         = new models.User.Talk(doc.talk)
 		
 		this.changed.notify()
-	}
+	},
 	add_view: function(){
 		this.views += 1
 		this.viewed.notify()
@@ -49,7 +75,6 @@ models.User.Desirability = Class.extend({
 		
 		this.changed.notify()
 	}
-		
 })
 models.User.Desirability.deserialize = function(doc){
 	return new models.User.Desirability(doc.likelihood, doc.scores)

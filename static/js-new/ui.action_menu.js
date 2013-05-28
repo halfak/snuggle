@@ -57,7 +57,10 @@ ui.ActionMenu = Class.extend({
 		if(this.preview_delay){
 			clearTimeout(this.preview_delay)
 		}
-		this.preview_delay = setTimeout(this._load_preview.bind(this), ui.ActionMenu.PREVIEW_DELAY = 250)
+		this.preview_delay = setTimeout(
+			this._load_preview.bind(this),  
+			SNUGGLE.ui.action_menu.preview_delay * 1000
+		)
 	},
 	_load_preview: function(){
 		logger.debug("action_menu: loading preview")
