@@ -9,7 +9,7 @@ models.Snuggler = Class.extend({
 	init: function(){
 		this.user = null
 		this.changed = new Event(this)
-	}
+	},
 	
 	/**
 	Sets the credentials (usually after login).
@@ -20,10 +20,10 @@ models.Snuggler = Class.extend({
 		name : string
 			Wikipedia username
 	*/
-	set: function(id, name){
+	load_doc: function(doc){
 		this.user = {
-			id: id,
-			name: name
+			id: doc.id,
+			name: doc.name
 		}
 		this.changed.notify(this.creds)
 	},

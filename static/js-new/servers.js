@@ -1,8 +1,10 @@
-LocalServer = Class.extend({
+servers = window.servers || {}
+
+servers.Local = Class.extend({
 	init: function(url){
 		this.api      = new LocalAPI(url)
-		this.snuggler = new LocalServer.Snuggler(this.api)
-		this.users    = new LocalServer.Users(this.api)
+		this.snuggler = new servers.Local.Snuggler(this.api)
+		this.users    = new servers.Local.Users(this.api)
 	},
 	/**
 	Gets the local server's status.
@@ -12,7 +14,7 @@ LocalServer = Class.extend({
 	}
 })
 
-LocalServer.Snuggler = Class.extend({
+servers.Local.Snuggler = Class.extend({
 	init: function(api){
 		this.api = api
 	},
@@ -48,7 +50,7 @@ LocalServer.Snuggler = Class.extend({
 /**
 Represents the server's list of users.
 */
-LocalServer.Users = Class.extend({
+servers.Local.Users = Class.extend({
 	/**
 	:Parameters:
 		api : LocalAPI
@@ -104,7 +106,7 @@ LocalServer.Users = Class.extend({
 		)
 	},
 	query: function(filters){
-		return new LocalServer.Users.Cursor(this, filters)
+		return new servers.Local.Users.Cursor(this, filters)
 	},
 	watch: function(user, success, error){
 		this.api.post(
@@ -165,7 +167,7 @@ LocalServer.Users = Class.extend({
 /**
 Represents a database query cursor that can be read by calling next().
 */
-LocalServer.Users.Cursor = Class.extend({
+servers.Local.Users.Cursor = Class.extend({
 	init: function(users, filters){
 		this.users = users
 		this.filters = filters
@@ -177,13 +179,12 @@ LocalServer.Users.Cursor = Class.extend({
 		if(!this.complete){
 			this.users.get(
 				this.filters,
-				function(user_docs){
-					if(user_docs.length == 0){
+				function(docs){
+					if(docs.length == 0){
 						this.complete = true
 					}
-					user_docs = user_docs.map(this.convert.bind(this))
-					success(this, user_docs.map(Model.User.inflate))
-					this.skip += user_docs.length
+					this.skip += docs.length
+					success(this, docs)
 				}.bind(this),
 				error,
 				n,
@@ -220,14 +221,22 @@ LocalServer.Users.Cursor = Class.extend({
 	}
 })
 
-MediaWiki = Class.extend({
+servers.MediaWiki = Class.extend({
 	init: function(url){
 		this.api       = new MWAPI(url)
-		this.revisions = new MediaWiki.Revisions(this.api)
+		this.revisions = new servers.MediaWiki.Revisions(this.api)
 	}
 })
+servers.MediaWiki.from_config = function(){
+	return servers.MediaWiki(
+		configuration.mediawiki.protocol + "://" + 
+		configuration.mediawiki.domain + 
+		configuration.mediawiki.path.scripts + 
+		configuration.mediawiki.file.api
+	)
+}
 
-MediaWiki.Revisions = Class.extend({
+servers.MediaWiki.Revisions = Class.extend({
 	init: function(api){
 		this.api = api
 	},
@@ -301,3 +310,7 @@ MediaWiki.Revisions = Class.extend({
 		)
 	}
 })
+
+
+servers.local = new servers.Local(""),
+servers.mediawiki = servers.MediaWiki.from_config()

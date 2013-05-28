@@ -40,9 +40,9 @@ def main():
 		configuration.mediawiki.load_yaml(open(fn))
 		return configuration.mediawiki
 	
-	def conf_language(fn):
-		configuration.language.load_yaml(open(fn))
-		return configuration.language
+	def conf_i18n(fn):
+		configuration.i18n.load_yaml(open(fn))
+		return configuration.i18n
 	
 	parser = argparse.ArgumentParser(
 		description='Loads a jsop API for snuggle'
@@ -58,8 +58,8 @@ def main():
 		help='the math to MediaWiki\'s configuration file'
 	)
 	parser.add_argument(
-		'language_config',
-		type=conf_language,
+		'i18n_config',
+		type=conf_i18n,
 		help='the math to the Language configuration file'
 	)
 	parser.add_argument(

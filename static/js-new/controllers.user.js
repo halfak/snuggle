@@ -1,14 +1,16 @@
-contoller.User = Class.extend({
+controllers = window.controllers || {}
+
+controllers.User = Class.extend({
 		
 	init: function(doc, index){
-		this.model = models.User(doc)
-		this.view  = views.User(this.model, index)
+		this.model = new models.User(doc)
+		this.view  = new views.User(this.model, index)
 		this.id    = this.model.id
 		this.node  = this.view.node
 		
 		this.view.clicked.attach(this._handle_click.bind(this))
 		this.view.keypressed.attach(this._handle_keypress.bind(this))
-		this.view.category.changed.attach(this.handle_category_changed.bind(this))
+		this.view.info.category.changed.attach(this._handle_category_changed.bind(this))
 		this.view.info.actions.submitted.attach(this._handle_action_submitted.bind(this))
 		this.view.info.actions.loaded.attach(this._handle_action_loaded.bind(this))
 		
@@ -53,7 +55,7 @@ contoller.User = Class.extend({
 	_handle_click: function(){
 		this.clicked.notify(true)
 	},
-	_handle_selected_changed: function(){
+	_handle_selected_change: function(){
 		if(this.selected()){
 			if(this._view_delay){
 				clearTimeout(this._view_delay)
@@ -75,9 +77,8 @@ contoller.User = Class.extend({
 		}
 	},
 	_handle_category_changed: function(){
-		if(!SYSTEM.snuggler.authenticated()){
-			this.permissions_error.notify()
-			this.view.category.reset()
+		if(!SNUGGLE.snuggler.authenticated()){
+			SNUGGLE.snuggler.ping()
 		}else{
 			this.view.category.disabled(true)
 			SYSTEM.local.users.categorize(
@@ -101,8 +102,8 @@ contoller.User = Class.extend({
 		}
 	},
 	_handle_action_submitted: function(_, action, watch){
-		if(!SYSTEM.snuggler.authenticated()){
-			SYSTEM.snuggler.ping()
+		if(!SNUGGLE.snuggler.authenticated()){
+			SNUGGLE.snuggler.ping()
 		}else{
 			// Disable user_actions.  No clicky clicky.
 			this.view.info.user_actions.disabled(true)
@@ -130,26 +131,30 @@ contoller.User = Class.extend({
 		}
 	},
 	_handle_action_loaded: function(){
-		if(!SYSTEM.snuggler.authenticated()){
-			SYSTEM.snuggler.ping()
+		if(!SNUGGLE.snuggler.authenticated()){
+			SNUGGLE.snuggler.ping()
 		}
 	},
 	_reload_user_talk: function(){
-		SYSTEM.local.users.reload_talk(
-				this.model,
-				function(doc){
-					var talk = this.model.talk.load_doc(doc)
-				}.bind(this),
-				function(message, doc, meta){
-					doc = doc || {}
-					if(doc.code == "permissions"){
-							logger.error("Permissions error while trying to reload talk.")
-							this.permissions_error.notify()
-					}else{
-							alert(message)
-					}
-				}.bind(this)
-		)
+		if(!SNUGGLE.snuggler.authenticated()){
+			SNUGGLE.snuggler.ping()
+		}else{
+			servers.local.users.reload_talk(
+					this.model,
+					function(doc){
+						var talk = this.model.talk.load_doc(doc)
+					}.bind(this),
+					function(message, doc, meta){
+						doc = doc || {}
+						if(doc.code == "permissions"){
+								logger.error("Permissions error while trying to reload talk.")
+								this.permissions_error.notify()
+						}else{
+								alert(message)
+						}
+					}.bind(this)
+			)
+		}
 	},
 	selected: function(selected){
 		return this.model.selected(selected)

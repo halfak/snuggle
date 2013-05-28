@@ -18,32 +18,32 @@ ui.FilterMenu = Class.extend({
 		this.categories = new ui.RadioField(
 			"categories",
 			[
-				ui.RadioField.Radio(
-					LANGUAGE.filter_menu["uncategorized"].label, null, 
+				new ui.RadioField.Radio(
+					i18n.get("uncategorized"), null, 
 					{
 						class: "uncategorized",
-						tooltip: LANGUAGE.filter_menu["uncategorized"].tooltip
+						tooltip: i18n.get("new users that haven't been categorized yet")
 					}
 				),
-				ui.RadioField.Radio(
-					LANGUAGE.filter_menu["good-faith"].label, "good-faith", 
+				new ui.RadioField.Radio(
+					i18n.get("good-faith"), "good-faith", 
 					{
 						class: "good-faith",
-						tooltip: LANGUAGE.filter_menu["good-faith"].tooltip
+						tooltip: i18n.get("new users that have been categorized as good-faith")
 					}
 				),
-				ui.RadioField.Radio(
-					LANGUAGE.filter_menu["ambiguous"].label, "ambiguous", 
+				new ui.RadioField.Radio(
+					i18n.get("ambiguous"), "ambiguous", 
 					{
 						class: "ambiguous",
-						tooltip: LANGUAGE.filter_menu["ambiguous"].tooltip
+						tooltip: i18n.get("new users that have been categorized as ambiguous")
 					}
 				),
-				ui.RadioField.Radio(
-					LANGUAGE.filter_menu["bad-faith"].label, "bad-faith", 
+				new ui.RadioField.Radio(
+					i18n.get("bad-faith"), "bad-faith", 
 					{
 						class: "bad-faith",
-						tooltip: LANGUAGE.filter_menu["bad-faith"].tooltip
+						tooltip: i18n.get("new users that have been categorized as bad-faith")
 					}
 				)
 			],
@@ -65,15 +65,15 @@ ui.FilterMenu = Class.extend({
 	_handle_filters_change: function(_){
 		this.changed.notify()
 	},
-	filters: function(filters){
-		if(!filters){
+	val: function(val){
+		if(!val){
 			return $.extend(
 				this.filters.val(),
 				{category: this.categories.val()}
 			)
 		}else{
-			this.filters.val(filters)
-			this.categories.val(filters.category)
+			this.filters.val(val)
+			this.categories.val(val.category)
 			
 			//this.changed.notify(this.val()) not sure this is necessary
 		}
@@ -86,7 +86,7 @@ Represents a set of filters for paring down and sorting a list of users.
 ui.FilterMenu.Filters = Class.extend({
 	init: function(category){
 		// Track changes to category
-		category.changed.attach(this._handle_category_changed.bind(this))
+		category.changed.attach(this._handle_category_change.bind(this))
 		
 		this.node = $("<div>")
 			.addClass("filters")
@@ -98,7 +98,7 @@ ui.FilterMenu.Filters = Class.extend({
 		this.node.append(this.category.node)
 		
 		this.node.append(
-			" " + LANGUAGE.filter_menu.filter["newcomers with more than"] + " "
+			" " + i18n.get("newcomers with more than") + " "
 		)
 		
 		this.min_edits = new ui.SelectField(
@@ -124,59 +124,59 @@ ui.FilterMenu.Filters = Class.extend({
 		)
 		this.node.append(this.min_edits.node)
 		
-		this.node.append(" " + LANGUAGE.filter_menu.filter["edits to"] + " ")
+		this.node.append(" " + i18n.get("edits to") + " ")
 		
 		this.namespace = new ui.SelectField(
 			"namespace",
 			[
-				{value: null, label: LANGUAGE.filter_menu.filter["any page"]},
-				{value: 0,    label: MEDIAWIKI.namespaces[0].name},
-				{value: 1,    label: MEDIAWIKI.namespaces[1].name},
-				{value: 2,    label: MEDIAWIKI.namespaces[2].name},
-				{value: 3,    label: MEDIAWIKI.namespaces[3].name},
-				{value: 4,    label: MEDIAWIKI.namespaces[4].name},
-				{value: 5,    label: MEDIAWIKI.namespaces[5].name},
-				{value: 6,    label: MEDIAWIKI.namespaces[6].name},
-				{value: 7,    label: MEDIAWIKI.namespaces[7].name},
-				{value: 8,    label: MEDIAWIKI.namespaces[8].name},
-				{value: 9,    label: MEDIAWIKI.namespaces[9].name},
-				{value: 10,   label: MEDIAWIKI.namespaces[10].name},
-				{value: 11,   label: MEDIAWIKI.namespaces[11].name},
-				{value: 12,   label: MEDIAWIKI.namespaces[12].name},
-				{value: 13,   label: MEDIAWIKI.namespaces[13].name},
-				{value: 14,   label: MEDIAWIKI.namespaces[14].name},
-				{value: 15,   label: MEDIAWIKI.namespaces[15].name}
+				{value: "all", label: i18n.get("any page")},
+				{value: 0,    label: configuration.mediawiki.namespaces[0].name},
+				{value: 1,    label: configuration.mediawiki.namespaces[1].name},
+				{value: 2,    label: configuration.mediawiki.namespaces[2].name},
+				{value: 3,    label: configuration.mediawiki.namespaces[3].name},
+				{value: 4,    label: configuration.mediawiki.namespaces[4].name},
+				{value: 5,    label: configuration.mediawiki.namespaces[5].name},
+				{value: 6,    label: configuration.mediawiki.namespaces[6].name},
+				{value: 7,    label: configuration.mediawiki.namespaces[7].name},
+				{value: 8,    label: configuration.mediawiki.namespaces[8].name},
+				{value: 9,    label: configuration.mediawiki.namespaces[9].name},
+				{value: 10,   label: configuration.mediawiki.namespaces[10].name},
+				{value: 11,   label: configuration.mediawiki.namespaces[11].name},
+				{value: 12,   label: configuration.mediawiki.namespaces[12].name},
+				{value: 13,   label: configuration.mediawiki.namespaces[13].name},
+				{value: 14,   label: configuration.mediawiki.namespaces[14].name},
+				{value: 15,   label: configuration.mediawiki.namespaces[15].name}
 			]
 			
 		)
 		this.node.append(this.namespace.node)
 		
-		this.node.append(" " + LANGUAGE.filter_menu.filter["sorted by"] + " ")
+		this.node.append(" " + i18n.get("sorted by") + " ")
 		
 		this.sorted_by = new ui.SelectField(
 			"sorted_by",
 			[
-				{value: "desirability.likelihood", label: "desirability"},
-				{value: "registration", label: "registration date"},
-				{value: "activity.last_activity", label: "last activity"},
-				{value: "activity.reverted", label: "reverted edits"},
-				{value: "activity.counts.all", label: "total edits"}
+				{value: "desirability.likelihood", label: i18n.get("desirability")},
+				{value: "registration", label: i18n.get("registration date")},
+				{value: "activity.last_activity", label: i18n.get("last activity")},
+				{value: "activity.reverted", label: i18n.get("reverted edits")},
+				{value: "activity.counts.all", label: i18n.get("total edits")}
 			]
 		)
 		this.node.append(this.sorted_by.node)
 		
 		this.node.append(":")
 		
-		this.direction = new UI.RadioField(
+		this.direction = new ui.RadioField(
 			"direction",
 			[
-				ui.RadioField.Radio(
-					LANGUAGE.filter_menu.filters.ascending.label, "ascending",
-					{tooltip: LANGUAGE.filter_menu.filters.ascending.tooltip}
+				new ui.RadioField.Radio(
+					i18n.get("ascending"), "ascending",
+					{tooltip: i18n.get("sort in increasing order")}
 				),
-				ui.RadioField.Radio(
-					LANGUAGE.filter_menu.filters.descending.label, "descending",
-					{tooltip: LANGUAGE.filter_menu.filters.descending.tooltip}
+				new ui.RadioField.Radio(
+					i18n.get("descending"), "descending",
+					{tooltip: i18n.get("sort in descreasing order")}
 				)
 			]
 		)
@@ -195,7 +195,7 @@ ui.FilterMenu.Filters = Class.extend({
 	},
 	_handle_category_change: function(){
 		this.changed.notify()
-	}
+	},
 	
 	/**
 	Gets or sets the current value of all menu settings.
@@ -206,18 +206,13 @@ ui.FilterMenu.Filters = Class.extend({
 	*/
 	val: function(val){
 		if(!val){
-			var namespace = parseInt(this.namespace.val())
-			if(!namespace && namespace !== 0){
-				namespace = "all"
-			}
 			return {
 				min_edits: parseInt(this.min_edits.val()),
-				namespace: namespace,
+				namespace: this.namespace.val(),
 				sorted_by: this.sorted_by.val(),
 				direction: this.direction.val()
 			}
 		}else{
-			this.category(val.category)
 			this.min_edits.val(val.min_edits)
 			this.namespace.val(val.namespace)
 			this.sorted_by.val(val.sorted_by)

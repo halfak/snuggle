@@ -10,24 +10,27 @@ views.UserList = Class.extend({
 			.scroll(this._handle_view_change.bind(this))
 			.resize(this._handle_view_change.bind(this))
 		
-		this._appended(null, model.list)
-		
-		this.model.appended_user.attach(this._hanlde_append_user.bind(this))
-		this.model.cleared.attach(this._hanlde_clear.bind(this))
-		this.model.status_changed.attach(this._handle_status_change.bind(this))
+		this.model.appended.attach(this._handle_append.bind(this))
+		this.model.cleared.attach(this._handle_clear.bind(this))
+		this.model.loading_changed.attach(this._handle_loading_change.bind(this))
 		this.model.user_selected.attach(this._handle_user_select.bind(this))
 		
 		this.view_changed = new Event(this)
 		this.keypressed   = new Event(this)
+		
+		for(var i=0;i<this.model.list;i++){
+			var user = this.model.list[i]
+			this._append_user(user)
+		}
 	},
-	_handle_append_user: function(_, user){
-		this.node.append(user.node)
+	_handle_append: function(_, user){
+		this._append(user)
 	},
-	_handle_cleare: function(){
+	_handle_clear: function(){
 		this.node.html("")
 	},
-	_handle_status_change: function(){
-		if(this.model.loading){
+	_handle_loading_change: function(){
+		if(this.model.loading()){
 			this.node.addClass("loading")
 		}else{
 			this.node.removeClass("loading")
@@ -51,6 +54,9 @@ views.UserList = Class.extend({
 			bottom: this.node.scrollTop()+this.node.height(),
 			end: this.node[0].scrollHeight
 		}
+	},
+	_append: function(user){
+		this.node.append(user.node)
 	},
 	_show_user: function(_, user){
 		if(user){

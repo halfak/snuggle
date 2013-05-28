@@ -1,49 +1,39 @@
-logging = {}
+logging = {
+	DEBUG: {val: 0, name: "DEBUG"},
+	INFO: {val: 1, name: "INFO"},
+	WARNING: {val: 2, name: "WARNING"},
+	ERROR: {val: 3, name: "ERROR"}
+}
 
 logging.Logger = Class.extend({
 	init: function(console_level){
-		this.console_level = console_level
+		this.console = new logging.Console(console_level)
 		
 		this.history = []
 	},
+	log: function(message){
+		this.console.log(message)
+		
+		this.history.push(message)
+	},
 	debug: function(loggable){
-		var msg = ["DEBUG", loggable]
-		if(!this.level || this.console_level <= logging.levels.DEBUG){
-			if(console.debug){console.debug(msg)}
-			else{console.log(msg)}
-		}
-		this.history.push(msg)
+		this.log(new logging.Message(logging.DEBUG, loggable))
 	},
 	info: function(loggable){
-		var msg = ["INFO", loggable]
-		if(!this.level || this.console_level <= logging.levels.INFO){
-			if(console.info){console.info(msg)}
-			else{console.log(msg)}
-		}
-		this.history.push(msg)
+		this.log(new logging.Message(logging.INFO, loggable))
 	},
 	warning: function(loggable){
-		var msg = ["WARNING", loggable]
-		if(!this.level || this.console_level <= logging.levels.WARNING){
-			if(console.warn){console.warn(msg)}
-			else{console.log(msg)}
-		}
-		this.history.push(msg)
+		this.log(new logging.Message(logging.WARNING, loggable))
 	},
 	error: function(loggable){
-		var msg = ["ERROR", loggable]
-		if(!this.level || this.console_level <= logging.levels.ERROR){
-			if(console.error){console.error(msg)}
-			else{console.log(msg)}
-		}
-		this.history.push(msg)
+		this.log(new logging.Message(logging.ERROR, loggable))
 	},
 	recent_messages: function(min_level, max){
 		min_level = min_level || Logger.INFO
 		messages = []
 		for(var i=this.history.length-1;i>=0;i--){
 			var message = this.history[i]
-			if(logging.levels[message[0]] >= min_level){
+			if(message.level.val >= min_level.val){
 				messages.push(message)
 			}
 			if(max && messages.length >= max){
@@ -53,13 +43,71 @@ logging.Logger = Class.extend({
 		return messages
 	}
 })
-logging.levels = {
-	DEBUG: 0,
-	INFO: 1,
-	WARNING: 2,
-	ERROR: 3
-}
+logging.Message = Class.extend({
+	init: function(level, loggable, timestamp){
+		this.level = level
+		this.loggable = loggable
+		this.timestamp = timestamp || new Date()
+	},
+	pp: function(){
+		return this.timestamp.format("isoTime") + " [" + this.level.name + "] " + this.loggable
+	}
+})
+logging.Console = Class.extend({
+	init: function(min_level){
+		this.min_level = min_level
+	},
+	log: function(message){
+		
+		if(message.level.val >= this.min_level.val){
+			switch(message.level){
+				case logging.DEBUG:
+					this.debug(message.pp())
+					break
+				case logging.INFO:
+					this.info(message.pp())
+					break
+				case logging.WARNING:
+					this.warning(message.pp())
+					break
+				case logging.ERROR:
+					this.error(message.pp())
+					break
+				default:
+					throw "Unknown logging level " + message.level
+			}
+		}
+	},
+	debug: function(content){
+		if(console.debug){
+			console.debug(content)
+		}else if(console.log){
+			console.log(content)
+		}
+	},
+	info: function(content){
+		if(console.info){
+			console.info(content)
+		}else if(console.log){
+			console.log(content)
+		}
+	},
+	warn: function(content){
+		if(console.warn){
+			console.warn(content)
+		}else if(console.log){
+			console.log(content)
+		}
+	},
+	error: function(content){recent
+		if(console.error){
+			console.error(content)
+		}else if(console.log){
+			console.log(content)
+		}
+	}
+})
 
 
 //Set a default
-logger = new logging.Logger(logging.levels.INFO)
+logger = new logging.Logger(logging.INFO)

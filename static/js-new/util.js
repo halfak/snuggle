@@ -7,19 +7,19 @@ util = {
 		return markup.replace(util.LINK_RE, util.link_replace)
 	},
 	page_name: function(ns, title){
-		return MEDIAWIKI.namespaces[ns].prefixes[0] + title
+		return configuration.mediawiki.namespaces[ns].prefixes[0] + title
 	},
 	page_link: function(page_name){
-		return MEDIAWIKI.protocol + "://" + 
-		       MEDIAWIKI.domain + 
-		       MEDIAWIKI.path.pages + 
+		return configuration.mediawiki.protocol + "://" + 
+		       configuration.mediawiki.domain + 
+		       configuration.mediawiki.path.pages + 
 		       page_name
 	},
 	rev_diff_link: function(rev_id){
-		return MEDIAWIKI.protocol + "://" + 
-			   MEDIAWIKI.domain + 
-			   MEDIAWIKI.path.scripts + 
-			   MEDIAWIKI.file.index + 
+		return configuration.mediawiki.protocol + "://" + 
+			   configuration.mediawiki.domain + 
+			   configuration.mediawiki.path.scripts + 
+			   configuration.mediawiki.file.index + 
 			   "?diff=prev&oldid=" + rev_id
 	},
 	user_link: function(username){

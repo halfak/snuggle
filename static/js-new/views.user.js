@@ -14,7 +14,7 @@ views.User = Class.extend({
 			.click(this._handle_click.bind(this))
 			.keypress(this._handle_keypress.bind(this))
 		
-		//Three major subcomponents: Info, Contribs and Talk
+		//Three major subcomponents: Info, Activity and Talk
 		this.info = new views.User.Info(model)
 		this.node.append(this.info.node)
 		
@@ -24,21 +24,21 @@ views.User = Class.extend({
 		this.talk = new views.User.Talk(model)
 		this.node.append(this.talk.node)
 		
-		this.model.selection.attach(this._handle_selected.bind(this))
+		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		
 		//The only event we care about.  Is someone clicking on me?
 		this.clicked     = new Event(this)
-		this.key_pressed = new Event(this)
+		this.keypressed = new Event(this)
 		
 	},
 	_handle_click: function(e){
-		this.contribs.clear()
+		this.activity.clear()
 		this.clicked.notify()
 	},
 	_handle_keypress: function(e){
-		this.key_press.notify(e.which)
+		this.keypressed.notify(e.which)
 	},
-	_handle_selected: function(){
+	_handle_selected_change: function(){
 		this.selected(this.model.selected())
 		this.expanded(this.model.selected())
 	},
@@ -63,7 +63,7 @@ views.User = Class.extend({
 				this.node.removeClass("expanded")
 			}
 			this.info.expanded(expanded)
-			this.contribs.expanded(expanded)
+			this.activity.expanded(expanded)
 			this.talk.expanded(expanded)
 		}
 	},
@@ -91,7 +91,7 @@ views.User.Info = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.actions = views.User.Info.UserActions()
+		this.actions = new views.User.Info.Actions(this.model)
 		this.name.node.append(this.actions.node)
 		
 		this.utc = new ui.UTC(
@@ -106,9 +106,15 @@ views.User.Info = Class.extend({
 		
 		this.counts = new ui.EditCounts()
 		
-		this.model.views_changed.attach(this._render.bind(this))
+		this.category = new views.User.Category(model)
+		this.node.append(this.category.node)
+		
+		this.model.viewed.attach(this._handle_view.bind(this))
 		
 		this.expanded(false)
+		this._render()
+	},
+	_handle_view: function(){
 		this._render()
 	},
 	expanded: function(expanded){
@@ -157,7 +163,7 @@ views.User.Info.Actions = ui.Dropper.extend({
 		var user = {id: this.model.id, name: this.model.id}
 		var formatting = {user_name: this.model.name, user_id: this.model.id}
 		
-		actions = MEDIAWIKI.user_actions.map(
+		actions = configuration.mediawiki.user_actions.map(
 			function(doc){
 				return new ui.UserAction.from_doc(doc, formatting)
 			}.bind(this)
@@ -170,7 +176,12 @@ views.User.Info.Actions = ui.Dropper.extend({
 		this.node.addClass("user_actions")
 		this.node.addClass("simple")
 		
+		this.menu.loaded.attach(this._handle_load.bind(this))
+		this.menu.submitted.attach(this._handle_submit.bind(this))
 		this.menu.cancelled.attach(this._handle_cancel.bind(this))
+		
+		this.submitted = new Event(this)
+		this.loaded    = new Event(this)
 	},
 	_handle_changed: function(_, expanded){
 		if(expanded){
@@ -181,6 +192,12 @@ views.User.Info.Actions = ui.Dropper.extend({
 	},
 	_handle_cancel: function(_){
 		this.expanded(false)
+	},
+	_handle_submit: function(_, action, watch){
+		this.submitted.notify(action, watch)
+	},
+	_handle_load: function(_, action, watch){
+		this.loaded.notify(action, watch)
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -217,9 +234,9 @@ views.User.Activity = ui.RevisionGraph.extend({
 	}
 })
 views.User.Activity.Revision = ui.DayGrid.Revision.extend({
-	init: function(user, revision){
+	init: function(model, revision){
 		this._super(this)
-		this.user = user
+		this.model = model
 		this.revision = revision
 		
 		this.node.addClass("ns_" + this.revision.page.namespace)
@@ -351,37 +368,34 @@ views.User.Category = Class.extend({
 		this.history = new views.User.Category.History()
 		this.node.append(this.history.node)
 		
-		this.category = ui.RadioField(
+		this.category = new ui.RadioField(
 			"category",
 			[
-				ui.RadioField.Radio(
-					LANGUAGE.user.category["good-faith"].label,
-					"good-faith",
+				new ui.RadioField.Radio(
+					i18n.get("good-faith"), "good-faith",
 					{
-						tooltip: LANGUAGE.user.category["good-faith"].tooltip
+						tooltip: i18n.get("This user is at least trying to do something useful (or press #1)")
 					}
 				),
-				ui.RadioField.Radio(
-					LANGUAGE.user.category["ambiguous"].label,
-					"ambiguous",
+				new ui.RadioField.Radio(
+					i18n.get("ambiguous"), "ambiguous",
 					{
-						tooltip: LANGUAGE.user.category["ambiguous"].tooltip
+						tooltip: i18n.get("Its unclear whether this editor is trying to be productive or not (or press #2)")
 					}
 				),
-				ui.RadioField.Radio(
-					LANGUAGE.user.category["bad-faith"].label,
-					"bad-faith",
+				new ui.RadioField.Radio(
+					i18n.get("bad-faith"), "bad-faith",
 					{
-						tooltip: LANGUAGE.user.category["bad-faith"].tooltip
+						tooltip: i18n.get("This editor is trying to cause harm or be disruptive (or press #3)")
 					}
 				),
 			],
 			{
-				label: LANGUAGE.user.category.label,
-				tooltip: LANGUAGE.user.category.tooltip
+				label: i18n.get("Categorize"),
+				tooltip: i18n.get("categorize this user based on their activity")
 			}
 		)
-		this.category.changed.attach(this._handle_change.bind(this)
+		this.category.changed.attach(this._handle_change.bind(this))
 		this.node.append(this.category.node)
 		
 		this.changed = new Event(this)
@@ -466,7 +480,7 @@ views.User.Category.History = ui.Dropper.extend({
 			this.pane.node.html("")
 			this.pane.node.append(
 				$("<p>").append(
-					LANGUAGE.category["This user has yet to be categorized."]
+					i18n.get("This user has yet to be categorized.")
 				)
 			)
 		}

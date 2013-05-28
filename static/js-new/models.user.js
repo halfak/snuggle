@@ -2,33 +2,21 @@ models = window.models || {}
 
 models.User = Class.extend({
 	init: function(doc){
-		this._super(this)
 		this.changed  = new Event(this)
 		this.viewed   = new Event(this)
 		
-		this.expanded_changed = new Event(this)
-		this.expanded_changed.status = false
-		
 		this.selected_changed = new Event(this)
-		this.selected_changed.status = false
+		this.selected.status = false
 		
 		if(doc){
 			this.load_doc(doc)
 		}
 	},
-	expanded: function(expanded){
-		if(expanded === undefined){
-			return this.expanded_changed.status
-		}else{
-			this.expanded_changed.status = Boolean(expanded)
-			this.expanded_changed.notify()
-		}
-	},
 	selected: function(selected){
-		if(expanded === undefined){
-			return this.selected_changed.status
+		if(selected === undefined){
+			return this.selected.status
 		}else{
-			this.selected_changed.status = Boolean(selected)
+			this.selected.status = Boolean(selected)
 			this.selected_changed.notify()
 		}
 	},
@@ -129,14 +117,17 @@ models.User.Activity = Class.extend({
 		this.last_activity = new Date(doc.last_activity*miliseconds.SECOND)
 		this.reverted = doc.reverted
 		this.self_reverted = doc.self_reverted
-		this.revisions = doc.revisions
 		this.counts = doc.counts
+		this.revisions = {}
+		for(var id in doc.revisions){
+			this.revisions[id] = new models.User.Activity.Revision(doc.revisions[id])
+		}
 		
 		this.changed.notify()
 	}
 })
 
-model.User.Activity.Revision = Selectable.extend({
+models.User.Activity.Revision = Selectable.extend({
 	init: function(doc){
 		this._super(this)
 		this.changed = new Event(this)
@@ -160,7 +151,7 @@ model.User.Activity.Revision = Selectable.extend({
 		
 		this.id = doc.id
 		this.page = doc.page
-		this.timestamp = doc.timestamp
+		this.timestamp = new Date(doc.timestamp*miliseconds.SECOND)
 		this.comment = doc.comment
 		this.diff = doc.diff
 		this.sha1 = doc.sha1

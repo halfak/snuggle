@@ -20,28 +20,27 @@ ui.ActionMenu = Class.extend({
 		this.node.append(this.flyout.node)
 		
 		// Events
-		this.cancelled        = new Event(this)
-		this.action_submitted = new Event(this)
-		this.action_changed   = new Event(this)
-		this.action_loaded    = new Event(this)
+		this.cancelled = new Event(this)
+		this.submitted = new Event(this)
+		this.loaded    = new Event(this)
 		
 		for(var i=0;i<actions.length;i++){
 			this._add_action(actions[i])
 		}
 	},
 	_handle_submit: function(_, action, watch){
-		this.action_submitted.notify(action, watch)
+		this.submitted.notify(action, watch)
 	},
 	_handle_cancel: function(_){
 		this.flyout.expanded(false)
 		this.cancelled.notify()
 	},
 	_handle_action_changed: function(action, watch){
-		this.action_changed.notify(action, watch)
 		this._delay_preview_load()
 	},
 	_handle_action_clicked: function(action){
 		if(this.flyout.load(action)){
+			this.loaded.notify(action, this.flyout.controls.watch.val())
 			this._delay_preview_load()
 		}
 	},
@@ -59,7 +58,7 @@ ui.ActionMenu = Class.extend({
 		}
 		this.preview_delay = setTimeout(
 			this._load_preview.bind(this),  
-			SNUGGLE.ui.action_menu.preview_delay * 1000
+			SNUGGLE.ui.user_menu.preview_delay * 1000
 		)
 	},
 	_load_preview: function(){

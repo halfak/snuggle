@@ -8,123 +8,46 @@
 		<link rel="stylesheet" href="css/ui.fields.css" />
 		<link rel="stylesheet" href="css/ui.dropper.css" />
 		<link rel="stylesheet" href="css/ui.action_menu.css" />
+		<script language="javascript" src="config/configuration.js"></script>
 		<script language="javascript" src="js/lib/jquery-1.8.1.min.js"></script>
 		<script language="javascript" src="js/lib/class.js"></script>
 		<script language="javascript" src="js/lib/date.format.js"></script>
 		<script language="javascript" src="js/lib/javascript.js"></script>
-		<script language="javascript" src="config/snuggle.js"></script>
-		<script language="javascript" src="config/mediawiki.js"></script>
-		<script language="javascript" src="config/language.js"></script>
+		<script language="javascript" src="js-new/i18n.js"></script>
 		<script language="javascript" src="js-new/env.js"></script>
 		<script language="javascript" src="js-new/api.js"></script>
-		<script language="javascript" src="js-new/server.js"></script>
+		<script language="javascript" src="js-new/servers.js"></script>
 		<script language="javascript" src="js-new/event.js"></script>
 		<script language="javascript" src="js-new/logging.js"></script>
 		<script language="javascript" src="js-new/util.js"></script>
 		<script language="javascript" src="js-new/ui.button.js"></script>
+		<script language="javascript" src="js-new/ui.definition_list.js"></script>
+		<script language="javascript" src="js-new/ui.edit_counts.js"></script>
+		<script language="javascript" src="js-new/ui.utc.js"></script>
 		<script language="javascript" src="js-new/ui.revision_graph.js"></script>
 		<script language="javascript" src="js-new/ui.dropper.js"></script>
 		<script language="javascript" src="js-new/ui.fields.js"></script>
 		<script language="javascript" src="js-new/ui.action_menu.js"></script>
+		<script language="javascript" src="js-new/ui.filter_menu.js"></script>
 		<script language="javascript" src="js-new/views.user.js"></script>
+		<script language="javascript" src="js-new/models.user.js"></script>
+		<script language="javascript" src="js-new/controllers.user.js"></script>
+		<script language="javascript" src="js-new/views.user_list.js"></script>
+		<script language="javascript" src="js-new/models.user_list.js"></script>
+		<script language="javascript" src="js-new/controllers.user_list.js"></script>
+		<script language="javascript" src="js-new/views.snuggler.js"></script>
+		<script language="javascript" src="js-new/models.snuggler.js"></script>
+		<script language="javascript" src="js-new/controllers.snuggler.js"></script>
+		<script language="javascript" src="js-new/ui.snuggle.js"></script>
 		<style>
 			/*div{border: 1px dashed black;margin: 1px;}*/
 		</style>
 	</head>
 	<body>
 		<script type="text/javascript">
-					
-			/* select = new ui.SelectField(
-				"foobar", 
-				[{value:"Bar"}, {value:"Foo"}],
-				{
-					label: "Foo Field: "
-				}
-			)
-			$('body').append(select.node)
-					
-			radio = new ui.RadioField(
-				"foobar", 
-				[
-					new ui.RadioField.Radio("foo1", 1),
-					new ui.RadioField.Radio("foo2", 2),
-					new ui.RadioField.Radio("foo3", 3),
-					new ui.RadioField.Radio("foo4", 4)
-				],
-				{
-					default: 2
-				}
-			)
-			radio.changed.attach(function(_, radio){
-				console.log("radio value changed to " + radio.value)
-			})
-			$('body').append(radio.node)
 			
-			button = new ui.Button({label: "Foobar"})
-			button.activated.attach(function(_){console.log("button activated")})
-			button.focus_changed.attach(function(_, focused){console.log("button focus changed " + focused)})
-			$('body').append(button.node)
 			
-			form = $("<form>")
-			text = ui.Field.from_doc(
-				{
-					type: "text",
-					name: "A text field",
-					label: "A text field"
-				}
-			)
-			text.changed.attach(function(text){console.log("text changed to '" + text.val() + "'")})
-			form.append(text.node)
-			$('body').append(form)
-			form.submit(function(e){return text.val() == "submit"})*/
+			SNUGGLE = new ui.Snuggle()
 			
-			teahouse_html = '<div lang="en" dir="ltr" class="mw-content-ltr"><h2><span class="mw-headline" id="You.27re_invited_to_the_TeaHouse">You\'re invited to the TeaHouse</span> </h2>\n' +
-				'<table style="margin: 2em 0;">\n' +
-				'<tr valign="top">\n' +
-				'<td><a href="/wiki/File:WP_teahouse_logo_2.png" class="image"><img alt="Teahouse logo" src="https://upload.wikimedia.org/wikipedia/commons/6/61/WP_teahouse_logo_2.png" width="101" height="101" /></a></td>\n' +
-				'<td>\n' +
-				'<div style="background-color:#f4f3f0; color: #393D38; padding: 1em; font-size: 1.1em; width:420px; border-radius:10px;box-shadow:-2px -2px 1px #8e8a78;">Hello! <b>EpochFail</b>, you are invited to the <a href="/wiki/Wikipedia:Teahouse" title="Wikipedia:Teahouse">Teahouse</a>, a forum on Wikipedia for new editors to ask questions about editing Wikipedia, and get support from peers and experienced editors. Please join us! <a href="/wiki/User:EpochFail" title="User:EpochFail"><span title="ohai" style="font-variant:small-caps">EpochFail</span></a><small><sup>(<strong class="selflink">talk</strong> &middot <a href="/wiki/Special:Contributions/EpochFail" title="Special:Contributions/EpochFail">work</a>)</sup></small> 18:17, 26 May 2013 (UTC)</div>\n' +
-				'</td>\n' +
-				'</tr>\n' +
-				'</table>'
-			
-			SYSTEM = {}
-			SYSTEM.local = new LocalServer(""),
-			SYSTEM.mediawiki = new MediaWiki(
-				MEDIAWIKI.protocol + "://" + 
-				MEDIAWIKI.domain + 
-				MEDIAWIKI.path.scripts + 
-				MEDIAWIKI.file.api
-			)
-			
-			formatting = {
-				user_name: "EpochFail",
-				user_id: 66836
-			}
-			
-			actions = []
-			actions = MEDIAWIKI.user_actions.map(
-				function(doc){
-					return ui.UserAction.from_doc(doc, formatting)
-				}
-			)
-			
-			user_actions = new views.User.Info.UserActions({id: 32546, name: "EpochFail"})
-			$('body').append(
-				$("<div>")
-					.css("margin-left", "15em")
-					.append(user_actions.node)
-			)
-			
-			user_actions.menu.flyout.previewer.load([new ui.ActionMenu.Append("User_talk:EpochFail", teahouse_html)])
-			
-			radio = new ui.RadioField(
-				"foo",
-				[
-					new ui.RadioField.Radio("label1", "value1"),
-					new ui.RadioField.Radio("label2", "value2")
-				]
-			)
-			$('body').append(radio.node)
 		</script>
 	<body>

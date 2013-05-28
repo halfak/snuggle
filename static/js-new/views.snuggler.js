@@ -24,11 +24,24 @@ views.Snuggler = Class.extend({
 		this.node.append(this.name.node)
 		
 		this.menu = new views.Snuggler.Menu()
+		this.menu.login.submitted.attach(this._handle_login_submit.bind(this))
+		this.menu.logout.submitted.attach(this._handle_logout_submit.bind(this))
 		this.node.append(this.menu.node)
+		
+		this.login_submitted = new Event()
+		this.logout_submitted = new Event()
 		
 		this.model.changed.attach(this._render.bind(this))
 	},
-	
+	_handle_login_submit: function(_){
+		this.login_submitted.notify({
+			name: this.menu.login.name.val(),
+			pass: this.menu.login.pass.val()
+		})
+	},
+	_handle_logout_submit: function(_){
+		this.logout_submitted.notify()
+	},
 	/**
 	Produces a visual ping to draw the users attention to the element.
 	*/
@@ -51,18 +64,18 @@ views.Snuggler = Class.extend({
 	},
 	_render: function(){
 		if(this.model.loading){
-			this.preamble.node.text(LANGUAGE.snuggler["Checking for previous session..."] + " ")
+			this.preamble.node.text(i18n.get("Checking for previous session...") + " ")
 			this.name.node.text("")
 			this.name.node.attr("")
 			this.menu.ready_login()
 		}else if(this.model.creds){
-			this.preamble.node.text(LANGUAGE.snuggler["Logged in as"] + " ")
+			this.preamble.node.text(i18n.get("Logged in as") + " ")
 			this.name.node.text(this.model.user.name)
 			this.name.node.attr('href', util.user_link(this.model.user.name))
 			this.name.node.attr('target', "_blank")
 			this.menu.ready_logout()
 		}else{
-			this.preamble.node.text(LANGUAGE.snuggler["Not logged in..."] + " ")
+			this.preamble.node.text(i18n.get("Not logged in...") + " ")
 			this.name.node.text("")
 			this.name.node.attr('href', "")
 			this.menu.ready_login()
@@ -70,7 +83,7 @@ views.Snuggler = Class.extend({
 	}
 })
 
-views.Snuggler.Menu = UI.Dropper.extend({
+views.Snuggler.Menu = ui.Dropper.extend({
 	init: function(){
 		this._super("", "", {class: "simple"})
 		this.node.addClass("menu")
@@ -116,15 +129,15 @@ views.Snuggler.Menu.Login = Class.extend({
 		this.preamble = {
 			node: $("<p>")
 			.addClass("preamble")
-			.append(LANGUAGE.snuggler.login.description)
+			.append(i18n.get("Log into your wiki account."))
 		}
 		this.node.append(this.preamble.node)
 		
 		this.name = new ui.TextField(
 			"name", 
 			{
-				label: LANGUAGE.snuggler.login.name.label, 
-				tooltip: LANGUAGE.snuggler.login.name.tooltip, 
+				label: i18n.get("Username"), 
+				tooltip: i18n.get("your wiki username"), 
 				tabindex: 1
 			}
 		)
@@ -134,8 +147,8 @@ views.Snuggler.Menu.Login = Class.extend({
 		this.pass = new ui.TextField(
 			"password", 
 			{
-				label: LANGUAGE.snuggler.login.pass.label, 
-				tooltip: LANGUAGE.snuggler.login.name.tooltip,
+				label: i18n.get("Password"), 
+				tooltip: i18n.get("your wiki password"),
 				password: true,
 				tabindex: 2
 			}
@@ -145,8 +158,8 @@ views.Snuggler.Menu.Login = Class.extend({
 		this.login = new ui.Button(
 			'login',
 			{
-				label: LANGUAGE.snuggler.login.label, 
-				label: LANGUAGE.snuggler.login.tooltip, 
+				label: i18n.get("log in"), 
+				tooltip: i18n.get("click here to log in."), 
 				tabindex: 3
 			}
 		)
@@ -185,21 +198,22 @@ views.Snuggler.Menu.Logout = Class.extend({
 	init: function(){
 		this.node = $("<form>")
 			.addClass("logout")
-			.submit(self._handle_submit.bind(this))
+			.submit(this._handle_submit.bind(this))
 		
 		this.preamble = {
 			node: $("<p>")
 			.addClass("preamble")
-			.append(LANGUAGE.snuggler.logout.description)
+			.append(i18n.get("Log out of Snuggle?"))
 		}
 		this.node.append(this.preamble.node)
 		
 		this.logout = new ui.Button(
 			"logout",
 			{
-				label: LANGUAGE.snuggler.logout.label,
-				tooltip: LANGUAGE.snuggle.logout.tooltip
+				label: i18n.get("log out"),
+				tooltip: i18n.get("click here to log out")
 			}
+		)
 		this.logout.activated.attach(this._handle_logout_activated)
 		this.node.append(this.logout.node)
 		

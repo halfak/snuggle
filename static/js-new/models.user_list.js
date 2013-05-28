@@ -19,13 +19,11 @@ models.UserList = Class.extend({
 		this.appended          = new Event(this)
 		this.cleared           = new Event(this)
 		this.user_selected     = new Event(this)
-		this.status_changed    = new Event(this)
+		this.loading_changed   = new Event(this)
 		
-		this.loading = false
+		this.loading.status = false
 		
 		this.clear_selection()
-		
-		this.append(users)
 	},
 	
 	/**
@@ -37,11 +35,14 @@ models.UserList = Class.extend({
 	*/
 	loading: function(loading){
 		if(loading === undefined){
-			return this.is_loading.status
+			return this.loading.status
 		}else{
-			this.is_loading.status = Boolean(loading)
+			var old_val = this.loading.status
+			this.loading.status = Boolean(loading)
 			
-			this.is_loading.notify(this.is_loading.status)
+			if(this.loading.status != old_val){
+				this.loading_changed.notify(this.loading.status)
+			}
 		}
 	},
 	
@@ -54,13 +55,10 @@ models.UserList = Class.extend({
 	
 	*/
 	append: function(user){
-		for(var i=0;i<users.length;i++){
-			var user = users[i]
-			if(!this.map[user.id]){
-				this.map[user.id] = user
-				this.list.append(user)
-				this.appended_user.notify(user)
-			}
+		if(!this.map[user.id]){
+			this.map[user.id] = user
+			this.list.push(user)
+			this.appended.notify(user)
 		}
 	},
 	

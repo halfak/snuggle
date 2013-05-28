@@ -403,7 +403,7 @@ ui.DayGrid = Class.extend({
 		this.selection = null
 		
 		this.days = []
-		this._ensure_days(Math.min(this.max_days, Math.floor((new Date() - this.origin)/MS_DAY)))
+		this._ensure_days(Math.min(this.max_days, Math.floor((new Date() - this.origin)/miliseconds.DAY)))
 		
 		this.revision_selected = new Event(this)
 		
@@ -576,7 +576,7 @@ ui.DayGrid = Class.extend({
 		}
 	},
 	_insert: function(revision){
-		var rev_day = Math.floor((revision.timestamp() - this.origin)/MS_DAY)
+		var rev_day = Math.floor((revision.timestamp() - this.origin)/miliseconds.DAY)
 		if(rev_day < this.max_days){
 			this._ensure_days(rev_day+1)
 			revision.set_grid(this) //This is a bit of a hack. :\
@@ -586,7 +586,7 @@ ui.DayGrid = Class.extend({
 		}
 	},
 	_normalize: function(){
-		var current_max = Set.max(this.days.map(function(d){return d.length()})) //Check if we are newly too tall
+		var current_max = this.days.map(function(d){return d.length()}).max() //Check if we are newly too tall
 		if(current_max != this.max_revisions){ //We are!
 			for(var i=0;i<this.days.length;i++){
 				var day = this.days[i]

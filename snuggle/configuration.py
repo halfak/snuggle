@@ -25,5 +25,5 @@ class Configuration(dict):
 #Singletons.  These should be referenced from here. 
 snuggle = Configuration()
 mediawiki = Configuration()
-language = Configuration()
+i18n = Configuration()
 
