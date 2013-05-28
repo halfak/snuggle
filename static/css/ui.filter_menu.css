@@ -1,3 +1,5 @@
+/* TODO: Still using the old "controls" naming.  Also, WTF is "container" for? */
+
 div#controls div.container{
 	position: absolute;
 	left: 0px;

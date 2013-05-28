@@ -39,6 +39,11 @@ class Processor:
 			}
 		)
 	
+	def help(self, data):
+		path = os.join(self.static_dir, "help", data['lang'])
+		
+		return bottle.static_file(path, root=self.static_dir)
+	
 	def default(self):
 		try:
 			snuggler, data = user_data()

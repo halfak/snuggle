@@ -1,26 +1,25 @@
-UI = UI || {}
+ui = window.ui || {}
 
-UI.Button = Class.extend({
-	init: function(value, opts){
-		//Clean inpout
+ui.Button = Class.extend({
+	init: function(opts){
 		opts = opts || {}
-		if(value === undefined){value = ''}
-		this.value = value
 		
-		//Figure out what the label will be
-		if(opts.label === undefined){opts.label = value}
+		if(opts.value){
+			this.value = value
+		}
 		
 		//Create the nodes
 		this.node = $("<div>")
 			.addClass("button")
-			.click(this._clicked.bind(this))
-			.focus(this._focused.bind(this))
-			.blur(this._focused.bind(this))
+			.addClass("clickable")
+			.attr('tabindex', opts.tabindex || 1)
+			.click(this._handle_click.bind(this))
+			.keypress(this._handle_keypress.bind(this))
+			.bind("focus blur", this._handle_focus_change.bind(this))
 		
-		this.label = $("<span>")
-			.append(opts.label)
-		this.node.append(this.label)
-		
+		if(opts.tooltip){
+			this.node.attr('title', opts.tooltip)
+		}
 		if(opts.class){
 			this.node.addClass(opts.class)
 		}
@@ -30,7 +29,15 @@ UI.Button = Class.extend({
 			}
 		}
 		
-		this.clicked = new Event(this)
+		this._label = {
+			node: $("<span>")
+				.addClass("label")
+				.append(opts.label || "&nbsp;")
+		}
+		this.node.append(this._label.node)
+		
+		//Events
+		this.activated = new Event(this)
 		this.focus_changed = new Event(this)
 	},
 	disabled: function(disabled){
@@ -55,12 +62,20 @@ UI.Button = Class.extend({
 			}
 		}
 	},
-	_clicked: function(e){
+	_handle_click: function(e){
 		if(!this.disabled()){
-			this.clicked.notify()
+			this.activated.notify()
 		}
 	},
-	_focused: function(e){
+	_handle_keypress: function(e){
+		console.log(e)
+		if(e.which == keys.ENTER || e.which == keys.SPACE){
+			if(!this.disabled()){
+				this.activated.notify()
+			}
+		}
+	},
+	_handle_focus_change: function(e){
 		this.focus_changed.notify(e.type == "focus")
 	}
 })

@@ -3,6 +3,13 @@ ui.Snuggle = Class.extend({
 		
 		this.node = $("body")
 		
+		// Set up help
+		this.help = new ui.HelpSlider()
+		this.node.append(this.help)
+		
+		// Perform initial query automatically
+		this._load_help()
+		
 		// Set up snuggler
 		this.snuggler = new controllers.Snuggler()
 		$("#status").after(this.snuggler.node)
@@ -30,6 +37,17 @@ ui.Snuggle = Class.extend({
 		this.filters_change_delay = setTimeout(
 			this._update_query.bind(this), 
 			SNUGGLE.ui.filter_delay * 1000
+		)
+	},
+	_load_help: function(){
+		servers.local.help(
+			configuration.snuggle.ui.help,
+			function(content){
+				this.help.load_content($(content).find("help_content").html())
+			}.bind(this),
+			function(message, doc, meta){
+				alert(message)
+			}.bind(this)
 		)
 	},
 	_update_query: function(){

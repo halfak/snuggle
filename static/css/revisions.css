@@ -1,0 +1,56 @@
+.revision.ns_0{
+	background: #eee;
+}
+.revision.ns_1{
+	background: rgb(255, 72, 158);
+}
+.revision.ns_2{
+	background: rgb(230, 60, 255);
+}
+.revision.ns_3{
+	background: rgb(0, 117, 255);
+}
+.revision.ns_4{
+	background: rgb(40, 162, 255);
+}
+.revision.ns_5{
+	background: rgb(238, 0, 128);
+}
+.revision.ns_6{
+	background: #fdfa00;
+}
+.revision.ns_7{
+	background: #aeac00;
+}
+.revision.ns_8{
+	background: #ccc;
+}
+.revision.ns_9{
+	background: #ccc;
+}
+.revision.ns_10{
+	background: #3737ff;
+}
+.revision.ns_11{
+	background: #3737ff;
+}
+.revision.ns_12{
+	background: #bbb;
+}
+.revision.ns_13{
+	background: #aaa;
+}
+.revision.ns_14{
+	background: #aff;
+}
+.revision.ns_15{
+	background: #8aa;
+}
+.revision.reverted{
+	background-image: url('../img/dot.png');
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.revision.reverted.self{
+	background-image: url('../img/empty_dot.png');
+}

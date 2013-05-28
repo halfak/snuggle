@@ -1,45 +1,45 @@
-div.user_list div.user {
+div.user {
 	position: relative;
 	box-shadow: 0px 0px 2em rgba(0,0,0,.8);
 	height: 2em;
 	background: #eee;
 	margin: 1em;
 }
-div.user_list div.user.selected {
-	outline: 3px solid rgba(0,0,200,.5);
+div.user.selected {
+	/*outline: 3px solid rgba(0,0,200,.5);*/
 }
-div.user_list div.user.expanded {
+div.user.expanded {
 	height: 20em;
 	overflow: visible;
 }
-	div.user_list div.user div.info{
+	div.user div.info{
 		display: inline-block;
 		width: 25%;
 		vertical-align: top;
 		padding: .4em .5em;
 	}
-	div.user_list div.user div.contribs{
+		div.user div.category{
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+		}
+	div.user div.activities{
 		display: inline-block;
 		width: 40%;
 		vertical-align: top;
 		height: 100%;
 	}
-	div.user_list div.user div.talk{
+	div.user div.talk{
 		display: inline-block;
 		width: 35%;
 		vertical-align: top;
 		padding: .5em 1em;
 	}
-	div.user_list div.user div.category{
-		position: absolute;
-		bottom: 0px;
-		left: 0px;
-		width: 25%;
-	}
 
 
 /**********************************Info     ***********************************/
-div.user div.info .name{
+div.user div.info div.name{
 	display: block;
 	width: 100%;
 	padding: .10em;
@@ -48,15 +48,13 @@ div.user div.info .name{
 	white-space: nowrap;
 	position: relative;
 }
-div.user div.info .name:hover{
-	background: #fff;
+
+div.user div.info div.actions{
+	display: none;
+	position: absolute;
+	top: .2em;
+	right: .2em;
 }
-	div.user div.info .name .dropper{
-		display: none;
-		position: absolute;
-		top: .2em;
-		right: .2em;
-	}
 	
 	div.user div.info.expanded .name .dropper {
 		display: block;
@@ -164,65 +162,7 @@ div.user.expanded div.contribs {
 div.user div.contribs div.revision{
 	/*background: #eee;*/
 }
-.revision{
-	/*min-width: 1em;*/
-}
-.revision.ns_0{
-	background: #eee;
-}
-.revision.ns_1{
-	background: rgb(255, 72, 158);
-}
-.revision.ns_2{
-	background: rgb(230, 60, 255);
-}
-.revision.ns_3{
-	background: rgb(0, 117, 255);
-}
-.revision.ns_4{
-	background: rgb(40, 162, 255);
-}
-.revision.ns_5{
-	background: rgb(238, 0, 128);
-}
-.revision.ns_6{
-	background: #fdfa00;
-}
-.revision.ns_7{
-	background: #aeac00;
-}
-.revision.ns_8{
-	background: #ccc;
-}
-.revision.ns_9{
-	background: #ccc;
-}
-.revision.ns_10{
-	background: #3737ff;
-}
-.revision.ns_11{
-	background: #3737ff;
-}
-.revision.ns_12{
-	background: #bbb;
-}
-.revision.ns_13{
-	background: #aaa;
-}
-.revision.ns_14{
-	background: #aff;
-}
-.revision.ns_15{
-	background: #8aa;
-}
-.revision.reverted{
-	background-image: url('../img/dot.png');
-	background-position: center;
-	background-repeat: no-repeat;
-}
-.revision.reverted.self{
-	background-image: url('../img/empty_dot.png');
-}
+
 
 /********************************Talk******************************************/
 div.user div.talk{

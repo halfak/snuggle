@@ -1,15 +1,5 @@
-.button-like,
 div.button{
 	cursor: pointer;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
-div.button{
 	display: inline-block;
 	background: #eee;
 	box-shadow: inset 0px -7px 10px rgba(0,0,0,.2);

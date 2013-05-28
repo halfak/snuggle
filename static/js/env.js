@@ -1,10 +1,5 @@
-MS_SECOND = 1000
-MS_MINUTE = 60*MS_SECOND
-MS_HOUR   = 60*MS_MINUTE
-MS_DAY    = 24*MS_HOUR
 
-
-KEYS = {
+keys = {
 	ESCAPE: 27,
 	PAGE_UP: 33,
 	PAGE_DOWN: 34,
@@ -20,4 +15,10 @@ KEYS = {
 	NUM_PAD_3: 99,
 	ENTER: 13,
 	SPACE: 32
+},
+miliseconds = {
+	SECOND: 1000,
+	MINUTE: 1000*60,
+	HOUR: 1000*60*60,
+	DAY: 1000*60*60*24
 }

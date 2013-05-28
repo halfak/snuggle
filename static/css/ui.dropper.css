@@ -1,17 +1,6 @@
-
 div.dropper {
 	position: relative;
 }
-
-	div.dropper div.tab{
-		cursor: pointer;
-		-webkit-touch-callout: none;
-		-webkit-user-select: none;
-		-khtml-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-	}
 	div.dropper div.pane{
 		position: absolute;
 		top: 100%;

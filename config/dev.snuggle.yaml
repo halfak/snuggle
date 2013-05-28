@@ -1,4 +1,4 @@
-last_updated: "May 11th, 2013"
+last_updated: "May 28th, 2013"
 author: 
   name: Aaron Halfaker
   email: aaron.halfaker@gmail.com
@@ -14,6 +14,7 @@ web_server:
   port: 8081
 
 ui:
+  help: english.html
   # The time in seconds to wait after a user has stopped changing the filter 
   # to send a new request.
   filter_delay: 1.0

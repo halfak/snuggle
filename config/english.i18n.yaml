@@ -19,7 +19,7 @@ bad-faith: bad-faith
 by: by
 
 Categorize: Categorize
-categorizes this user based on their activity: categorizes this user based on their activity
+categorize this user based on their activity: categorize this user based on their activity
 Checking for previous session...: Checking for previous session...
 click here to log in.: click here to log in.
 click here to log out.: click here to log out.
@@ -34,6 +34,7 @@ edits to: edits to
 
 good-faith: good-faith
 
+help: help
 history: history
 
 "Its unclear whether this editor is trying to be productive or not (or press #2)": "Its unclear whether this editor is trying to be productive or not (or press #2)"

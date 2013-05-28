@@ -1,14 +1,14 @@
-UI = window.UI || {}
+ui = window.ui || {}
 
 
-UI.RevisionDetails = Class.extend({
+ui.RevisionDetails = Class.extend({
 	init: function(){
 		this.node = $('<div>')
 			.addClass("revision_details")
 			.hide()
 			.click(function(e){e.stopPropagation()})
 		
-		this.pointer = new UI.RevisionDetails.Pointer()
+		this.pointer = new ui.RevisionDetails.Pointer()
 		this.node.append(this.pointer.node)
 		
 		this.body = {
@@ -24,13 +24,13 @@ UI.RevisionDetails = Class.extend({
 		}
 		this.body.node.append(this.title.node)
 		
-		this.revision = new UI.RevisionDetails.Revision()
+		this.revision = new ui.RevisionDetails.Revision()
 		this.body.node.append(this.revision.node)
 		
-		this.revert = new UI.RevisionDetails.Revert()
+		this.revert = new ui.RevisionDetails.Revert()
 		this.body.node.append(this.revert.node)
 		
-		this.diff = new UI.RevisionDetails.Diff()
+		this.diff = new ui.RevisionDetails.Diff()
 		this.body.node.append(this.diff.node)
 		
 		this.loadingId = null
@@ -118,7 +118,7 @@ UI.RevisionDetails = Class.extend({
 /**
 Displays and adjusts the direction and location of the pointer.
 */
-UI.RevisionDetails.Pointer = Class.extend({
+ui.RevisionDetails.Pointer = Class.extend({
 	init: function(){
 		this.node = $("<div>")
 			.addClass("pointer")
@@ -136,7 +136,7 @@ UI.RevisionDetails.Pointer = Class.extend({
 /**
 Displays the metadata about a revision.
 */
-UI.RevisionDetails.Revision = Class.extend({
+ui.RevisionDetails.Revision = Class.extend({
 	init: function(){
 		this.node = $("<div>")
 			.addClass("revision")
@@ -177,7 +177,7 @@ UI.RevisionDetails.Revision = Class.extend({
 /**
 Displays the details of a reverting revision.
 */
-UI.RevisionDetails.Revert = Class.extend({
+ui.RevisionDetails.Revert = Class.extend({
 	
 	init: function(){
 		this.node = $("<div>")
@@ -261,7 +261,7 @@ UI.RevisionDetails.Revert = Class.extend({
 Displays a revision diff or error message decribing why a diff could not be 
 displayed
 */
-UI.RevisionDetails.Diff = Class.extend({
+ui.RevisionDetails.Diff = Class.extend({
 	init: function(){
 		this.node = $('<div>')
 			.addClass("diff")
@@ -378,7 +378,7 @@ Represents a grid of revisions broken up into days.  This class provides
 a mechanism for displaying the revisions in a bar chart format.  A user cursor
 and current selection is also maintained and can be shifted through the chart. 
 */
-UI.DayGrid = Class.extend({
+ui.DayGrid = Class.extend({
 	/**
 	:Parameters:
 		origin : `Date`
@@ -403,7 +403,7 @@ UI.DayGrid = Class.extend({
 		this.selection = null
 		
 		this.days = []
-		this._ensure_days(Math.min(this.max_days, Math.floor((new Date() - this.origin)/MS_DAY)))
+		this._ensure_days(Math.min(this.max_days, Math.floor((new Date() - this.origin)/miliseconds.DAY)))
 		
 		this.revision_selected = new Event(this)
 		
@@ -459,7 +459,7 @@ UI.DayGrid = Class.extend({
 	re-normalized after the insertion.
 	
 	:Parameter:
-		revision : `UI.DayGrid.Revision`
+		revision : `ui.DayGrid.Revision`
 			the revision to insert
 	*/
 	insert: function(revision){
@@ -473,7 +473,7 @@ UI.DayGrid = Class.extend({
 	efficiently.
 	
 	:Parameters:
-		revisions : [UI.DayGrid.Revision]
+		revisions : [ui.DayGrid.Revision]
 			a list of revisions to insert
 	*/
 	load: function(revisions){
@@ -569,14 +569,14 @@ UI.DayGrid = Class.extend({
 	_ensure_days: function(days){
 		days = Math.min(this.max_days, days)
 		for(var i=this.days.length;i<days;i++){
-			var day = new UI.DayGrid.Day(this.days.length)
+			var day = new ui.DayGrid.Day(this.days.length)
 			day.revision_clicked.attach(this._revision_clicked.bind(this))
 			this.days.push(day)
 			this.node.append(day.node)
 		}
 	},
 	_insert: function(revision){
-		var rev_day = Math.floor((revision.timestamp() - this.origin)/MS_DAY)
+		var rev_day = Math.floor((revision.timestamp() - this.origin)/miliseconds.DAY)
 		if(rev_day < this.max_days){
 			this._ensure_days(rev_day+1)
 			revision.set_grid(this) //This is a bit of a hack. :\
@@ -586,7 +586,7 @@ UI.DayGrid = Class.extend({
 		}
 	},
 	_normalize: function(){
-		var current_max = Set.max(this.days.map(function(d){return d.length()})) //Check if we are newly too tall
+		var current_max = this.days.map(function(d){return d.length()}).max() //Check if we are newly too tall
 		if(current_max != this.max_revisions){ //We are!
 			for(var i=0;i<this.days.length;i++){
 				var day = this.days[i]
@@ -619,9 +619,9 @@ UI.DayGrid = Class.extend({
 })
 
 /**
-Represents a column in `UI.DayGrid`.
+Represents a column in `ui.DayGrid`.
 */
-UI.DayGrid.Day = Class.extend({
+ui.DayGrid.Day = Class.extend({
 	/**
 	:Parameters:
 		day : int
@@ -664,7 +664,7 @@ UI.DayGrid.Day = Class.extend({
 	Inserts a new revision and automatically renormalizes the day's height.
 	
 	:Parameters:
-		revision : `UI.DayGrid.Revision`
+		revision : `ui.DayGrid.Revision`
 			the revision to insert
 	*/
 	insert: function(revision){
@@ -712,7 +712,7 @@ UI.DayGrid.Day = Class.extend({
 /**
 Represents a revision block that can be selected.
 */
-UI.DayGrid.Revision = Class.extend({
+ui.DayGrid.Revision = Class.extend({
 	init: function(instance){
 		this.node = $("<div>")
 			.addClass("revision")
@@ -753,15 +753,15 @@ UI.DayGrid.Revision = Class.extend({
 	top: function(){
 		return (
 			this.node.position().top + 
-			this.node.parent().position().top + //UI.DayGrid.Day.container.node.position().top
-			this.node.parent().parent().position().top//UI.DayGrid.Day.node.position().top
+			this.node.parent().position().top + //ui.DayGrid.Day.container.node.position().top
+			this.node.parent().parent().position().top//ui.DayGrid.Day.node.position().top
 		)
 	},
 	left: function(){
 		return (
 			this.node.position().left + //Should be zero 
-			this.node.parent().position().left + //UI.DayGrid.Day.container.node.position().left -- should be zero
-			this.node.parent().parent().position().left //UI.DayGrid.Day.node.position().left -- the real value we want
+			this.node.parent().position().left + //ui.DayGrid.Day.container.node.position().left -- should be zero
+			this.node.parent().parent().position().left //ui.DayGrid.Day.node.position().left -- the real value we want
 		)
 	},
 	right: function(){
@@ -781,7 +781,7 @@ UI.DayGrid.Revision = Class.extend({
 	}
 })
 
-UI.RevisionGraph = Class.extend({
+ui.RevisionGraph = Class.extend({
 	init: function(origin){
 		this.node = $("<div>")
 			.addClass("revision_graph")
@@ -805,7 +805,7 @@ UI.RevisionGraph = Class.extend({
 		this.node.append(this.label.y.node)
 		
 		//Grid
-		this.grid = new UI.DayGrid(origin)
+		this.grid = new ui.DayGrid(origin)
 		this.grid.revision_selected.attach(this._select_revision.bind(this))
 		this.node.append(this.grid.node)
 		
@@ -826,7 +826,7 @@ UI.RevisionGraph = Class.extend({
 		this.node.append(this.label.x.node)
 		
 		//Details
-		this.details = new UI.RevisionDetails()
+		this.details = new ui.RevisionDetails()
 		this.details.hide()
 		this.node.append(this.details.node)
 		
@@ -849,4 +849,3 @@ UI.RevisionGraph = Class.extend({
 		}
 	}
 })
-

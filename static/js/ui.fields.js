@@ -1,14 +1,18 @@
-UI = window.UI || {}
+ui = window.ui || {}
 
-UI.Field = Class.extend({
+ui.Field = Class.extend({
 	init: function(id, name, opts){
-		opts = opts || {}'
+		opts = opts || {}
 		
 		this.id   = id
 		this.name = name
 		
 		this.node = $("<div>")
 			.addClass("field")
+			
+		if(opts.tooltip){
+			this.node.attr("title", opts.tooltip)
+		}
 		
 		if(opts.class){
 			this.node.addClass(opts.class)
@@ -21,29 +25,30 @@ UI.Field = Class.extend({
 					.append(opts.label || '')
 			}
 			this.node.append(this._label.node)
-			
-			if(opts.tooltip){
-				this._label.node.attr("title", opts.tooltip)
-			}
 		}
 		
+		this.default = opts.default || ""
+		
 		this.changed = new Event(this) //This may not work.  
+	},
+	reset: function(){
+		this.val(this.default)
 	},
 	_changed: function(e){
 		this.changed.notify()
 	}
 })
-UI.Field.TYPES = {}
-UI.Field.from_doc = function(doc){
+ui.Field.TYPES = {}
+ui.Field.from_doc = function(doc, formatting){
 	Class = this.TYPES[doc.type] 
 	if(Class){
-		return Class.from_doc(doc)
+		return Class.from_doc(doc, formatting)
 	}else{
 		throw "Configuration Error: Field type " + doc.type + " not available."
 	}
-}.bind(UI.Field)
+}
 
-UI.SelectField = UI.Field.extend({
+ui.SelectField = ui.Field.extend({
 	init: function(name, options, opts){
 		opts = opts || {}
 		
@@ -57,7 +62,9 @@ UI.SelectField = UI.Field.extend({
 			node: $("<select>")
 				.attr('name', this.name)
 				.attr('id', this.id)
-				.change(this._changed.bind(this)),
+				.attr('tabindex', opts.tabindex || 1)
+				.change(this._changed.bind(this))
+				.keydown(util.stop_propagation),
 			labels: {},
 			values: {}
 		}
@@ -72,9 +79,9 @@ UI.SelectField = UI.Field.extend({
 	val: function(value){
 		if(value === undefined){
 			var label = this._select.node.val()
-			return this.values[label]
+			return this._select.values[label]
 		}else{
-			var label = this.labels[value]
+			var label = this._select.labels[value]
 			this._select.node.val(label)
 		}
 	},
@@ -92,7 +99,7 @@ UI.SelectField = UI.Field.extend({
 		}
 	},
 	_render: function(options){
-		for(var label=0;i<options.length;i++){
+		for(var i=0;i<options.length;i++){
 			var option = options[i]
 			var label = String(option.label || option.value)
 			this._select.values[label] = option.value
@@ -110,22 +117,31 @@ UI.SelectField = UI.Field.extend({
 		}
 	}
 })
-UI.SelectField.TYPE = "select"
-UI.Field.TYPES[UI.SelectField.TYPE] = UI.SelectField
-UI.SelectField.from_doc = function(doc){
-	return new UI.SelectField(
+ui.SelectField.TYPE = "select"
+ui.Field.TYPES[ui.SelectField.TYPE] = ui.SelectField
+ui.SelectField.from_doc = function(doc, formatting){
+	formatting = formatting || {}
+	return new ui.SelectField(
 		doc.name,
-		doc.options,
+		doc.options.map(
+			function(op){
+				return {
+					label: (op.label || "").format(formatting),
+					value: op.value,
+					tooltip: (op.tooltip || "").format(formatting)
+				}
+			}
+		),
 		{
 			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
+			label:   (doc.label || "").format(formatting),
+			tooltip: (doc.tooltip || "").format(formatting),
 			default: doc.default
 		}
 	)
 }
 
-UI.RadioField = UI.Field.extend({
+ui.RadioField = ui.Field.extend({
 	init: function(name, radios, opts){
 		opts = opts || {}
 		
@@ -148,13 +164,14 @@ UI.RadioField = UI.Field.extend({
 			this.append(radios[i])
 		}
 		if(opts.default){
+			logger.debug("radio_field." + name + " set default as " + opts.default)
 			this.val(opts.default)
 		}
 	},
-	_radio_changed: function(radio, checked){
-		if(checked){
-			this.selection = radio
-			this.changed.notify(radio.value)
+	_handle_radio_checked: function(radio){
+		logger.debug("radio_field." + this.name + " changed to " + radio.value)
+		if(this._select_radio(radio)){
+			this.changed.notify(radio)
 		}
 	},
 	val: function(value){
@@ -165,13 +182,37 @@ UI.RadioField = UI.Field.extend({
 				return null
 			}
 		}else{
-			this.selection = this._radios.values[value] || null
-			if(this.selection){
-				this.selection.checked(true)
+			var radio = this._radios.values[value]
+			if(radio){
+				this._select_radio(radio)
 			}else{
-				throw val + " not available in radio set (" + 
-				      this._radios.values.keys().join(", ") + ")"
+				this._deselect()
 			}
+		}
+	},
+	label: function(){
+		if(this.selection){
+			return this.selection.label
+		}else{
+			return null
+		}
+	},
+	_deselect: function(){
+		if(this.selection){
+			logger.debug("radio_field." + this.name + " deselecting radio." + this.selection.label)
+			this.selection.selected(false)
+		}
+	},
+	_select_radio: function(radio){
+		if(this.selection != radio){
+			this._deselect()
+			
+			logger.debug("radio_field." + this.name + " selecting radio." + radio.label)
+			this.selection = radio
+			this.selection.selected(true)
+			return true
+		}else{
+			return false
 		}
 	},
 	disabled: function(disabled){
@@ -190,40 +231,43 @@ UI.RadioField = UI.Field.extend({
 		radio.set_name(this.name)
 		this._radios.node.append(radio.node)
 		this._radios.values[radio.value] = radio
-		radio.changed.attach(this._radio_changed.bind(this))
+		radio.checked.attach(this._handle_radio_checked.bind(this))
 	}
 })
-UI.RadioField.TYPE = "radio"
-UI.Field.TYPES[UI.RadioField.TYPE] = UI.RadioField
-UI.RadioField.from_doc = function(doc){
+ui.RadioField.TYPE = "radio"
+ui.Field.TYPES[ui.RadioField.TYPE] = ui.RadioField
+ui.RadioField.from_doc = function(doc, formatting){
+	formatting = formatting || {}
+	
 	var radios = []
 	var radio_docs = doc.options || []
-	for(var i=0;radio_docs.length;i++){
+	for(var i=0;i<radio_docs.length;i++){
 		var radio_doc = radio_docs[i]
-		var radio = new UI.RadioField.Radio(
-			radio_doc.label,
+		var radio = new ui.RadioField.Radio(
+			(radio_doc.label || "").format(formatting),
 			radio_doc.value, 
 			{
-				radio_doc.class,
-				radio_doc.tooltip
+				class: radio_doc.class,
+				tooltip: (radio_doc.tooltip || "").format(formatting),
+				tabindex: doc.tabindex
 			}
 		)
 		radios.push(radio)
 	}
-	return new UI.RadioField(
+	return new ui.RadioField(
 		doc.name,
 		radios,
 		{
 			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
+			label:   (doc.label || "").format(formatting),
+			tooltip: (doc.tooltip || "").format(formatting),
 			default: doc.default
 		}
 	)
 }
 
 
-UI.RadioField.Radio = Class.extend({
+ui.RadioField.Radio = Class.extend({
 	init: function(label, value, opts){
 		opts = opts || {}
 		
@@ -232,6 +276,8 @@ UI.RadioField.Radio = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("radio_option")
+			.addClass("clickable")
+			.click(this._handle_click.bind(this))
 		
 		if(opts.tooltip){
 			this.node.attr('title', opts.tooltip)
@@ -240,12 +286,14 @@ UI.RadioField.Radio = Class.extend({
 			this.node.addClass(opts.class)
 		}
 		
-		this._radio = {
+		this._input = {
 			node: $("<input>")
 				.attr('type', "radio")
-				.change(this._changed.bind(this))
+				.attr('tabindex', opts.tabindex || 1)
+				.keydown(util.stop_propagation)
+				.change(this._handle_check.bind(this)) // Douchebag event says "change", means "check"
 		}
-		this.node.append(this._radio.node)
+		this.node.append(this._input.node)
 		
 		this._label = {
 			node: $("<label>")
@@ -253,14 +301,30 @@ UI.RadioField.Radio = Class.extend({
 		}
 		this.node.append(this._label.node)
 		
-		this.changed = new Event(this)
+		this.checked = new Event(this)
+	},
+	_handle_click: function(e){
+		logger.debug("radio." + this.label + " handling click")
+		if(!this.disabled()){
+			this.selected(true)
+		}
+	},
+	_handle_check: function(e){
+		// Note that this function will only be called when the user clicks
+		// on the radio button.  
+		
+		//logger.debug("radio." + this.label + " handling user check")
+		
+		//By calling this function, we make the behavior uniform. 
+		//this.selected(true)
+		
 	},
 	set_name: function(name){
 		this.id = name + "_" + this.value
 		
-		this._radio.node.attr('name', name)
-		this._radio.node.attr('id', this.id)
-		this._label.node.attr('for', this.id)
+		this._input.node.attr('name', name)
+		this._input.node.attr('id', this.id)
+		//this._label.node.attr('for', this.id)
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -268,37 +332,43 @@ UI.RadioField.Radio = Class.extend({
 		}else{
 			if(disabled){
 				this.node.addClass("disabled")
-				this._radio.node.attr('disabled', true)
+				this._input.node.attr('disabled', true)
 			}else{
 				this.node.removeClass("disabled")
-				this._radio.node.removeAttr('disabled')
+				this._input.node.removeAttr('disabled')
 			}
 		}
 	},
-	checked: function(checked){
+	selected: function(selected){
+		if(selected === undefined){
+			return this.node.hasClass("selected")
+		}else{
+			logger.debug("radio." + this.label + " is set to " + Boolean(selected))
+			if(selected){
+				if(!this.selected()){
+					this.node.addClass("selected")
+					this.checked.notify()
+				}
+			}else{
+				this.node.removeClass("selected")
+			}
+			this._checked(selected)
+		}
+	},
+	_checked: function(checked){
 		if(checked === undefined){
-			return this._radio.node.is(":checked")
+			return this._input.node.is(":checked")
 		}else{
 			if(checked){
-				this._radio.node.attr('checked', "checked")
+				this._input.node.attr('checked', "checked")
 			}else{
-				this._radio.node.removeAttr('checked')
+				this._input.node.removeAttr('checked')
 			}
 		}
-	},
-	_changed: function(e){
-		if(this.checked()){
-			this.node.addClass("checked")
-		}else{
-			this.node.removeClass("checked")
-		}
-		
-		//notify of change
-		this.changed.notify(this.checked())
 	}
 })
 
-UI.TextField = UI.Field.extend({
+ui.TextField = ui.Field.extend({
 	init: function(name, opts){
 		opts = opts || {}
 		
@@ -312,7 +382,9 @@ UI.TextField = UI.Field.extend({
 			node: $("<input>")
 				.attr('id', this.id)
 				.attr('type', opts.password ? "password" : "text")
+				.attr('tabindex', opts.tabindex || 1)
 				.keydown(this._key_pressed.bind(this))
+				.keydown(util.stop_propagation)
 		}
 		this.node.append(this._input.node)
 		
@@ -350,21 +422,23 @@ UI.TextField = UI.Field.extend({
 		this._input.node.focus()
 	}
 })
-UI.TextField.TYPE = "text"
-UI.Field.TYPES[UI.TextField.TYPE] = UI.TextField
-UI.TextField.from_doc = function(doc){
-	return new UI.TextField(
+ui.TextField.TYPE = "text"
+ui.Field.TYPES[ui.TextField.TYPE] = ui.TextField
+ui.TextField.from_doc = function(doc, formatting){
+	formatting = formatting || {}
+	return new ui.TextField(
 		doc.name,
 		{
-			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
-			default: doc.default
+			class:    doc.class,
+			label:    (doc.label || "").format(formatting),
+			tooltip:  (doc.tooltip || "").format(formatting),
+			default:  (doc.default || "").format(formatting),
+			tabindex: doc.tabindex
 		}
 	)
 }
 
-UI.TextareaField = UI.Field.extend({
+ui.TextareaField = ui.Field.extend({
 	init: function(name, opts){
 		opts = opts || {}
 		
@@ -377,7 +451,9 @@ UI.TextareaField = UI.Field.extend({
 		this._textarea = {
 			node: $("<textarea>")
 				.attr('id', this.id)
+				.attr('tabindex', opts.tabindex || 1)
 				.keydown(this._key_pressed.bind(this))
+				.keydown(util.stop_propagation)
 		}
 		this.node.append(this._textarea.node)
 		
@@ -415,21 +491,24 @@ UI.TextareaField = UI.Field.extend({
 		this._textarea.node.focus()
 	}
 })
-UI.TextareaField.TYPE = "textarea"
-UI.Field.TYPES[UI.TextareaField.TYPE] = UI.TextareaField
-UI.TextareaField.from_doc = function(doc){
-	return new UI.TextareaField(
+ui.TextareaField.TYPE = "textarea"
+ui.Field.TYPES[ui.TextareaField.TYPE] = ui.TextareaField
+ui.TextareaField.from_doc = function(doc, formatting){
+	formatting = formatting || {}
+	
+	return new ui.TextareaField(
 		doc.name,
 		{
-			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
-			default: doc.default
+			class:    doc.class,
+			label:    (doc.label || "").format(formatting),
+			tooltip:  (doc.tooltip || "").format(formatting),
+			default:  (doc.default || "").format(formatting),
+			tabindex: doc.tabindex
 		}
 	)
 }
 
-UI.CheckField = UI.Field.extend({
+ui.CheckField = ui.Field.extend({
 	init: function(name, opts){
 		opts = opts || {}
 		
@@ -449,15 +528,17 @@ UI.CheckField = UI.Field.extend({
 			node: $("<input>")
 				.attr('id', this.id)
 				.attr('type', "checkbox")
+				.attr('tabindex', opts.tabindex || 1)
 				.change(this._changed.bind(this))
+				.keydown(util.stop_propagation)
 				
 		}
 		this.node.prepend(this._input.node) //Prepended to get in front of the label.
 		
-		this.checked(opts.default)
+		this.val(opts.default)
 	},
 	_changed: function(e){
-		if(this.checked()){
+		if(this.val()){
 			this.node.addClass("checked")
 		}else{
 			this.node.removeClass("checked")
@@ -466,12 +547,12 @@ UI.CheckField = UI.Field.extend({
 	},
 	val: function(value){
 		if(value === undefined){
-			return this.checkbox.node.is(":checked")
+			return this._input.node.is(":checked")
 		}else{
 			if(value){
-				this.checkbox.node.attr("checked", "checked")
+				this._input.node.attr("checked", "checked")
 			}else{
-				this.checkbox.node.removeAttr("checked")
+				this._input.node.removeAttr("checked")
 			}
 		}
 	},
@@ -481,10 +562,10 @@ UI.CheckField = UI.Field.extend({
 		}else{
 			if(disabled){
 				this.node.addClass("disabled")
-				this.checkbox.node.attr('disabled', true)
+				this._input.node.attr('disabled', true)
 			}else{
 				this.node.removeClass("disabled")
-				this.checkbox.node.removeAttr('disabled')
+				this._input.node.removeAttr('disabled')
 			}
 		}
 	},
@@ -492,16 +573,18 @@ UI.CheckField = UI.Field.extend({
 		this._input.node.focus()
 	}
 })
-UI.CheckField.TYPE = "textarea"
-UI.Field.TYPES[UI.CheckField.TYPE] = UI.CheckField
-UI.CheckField.from_doc = function(doc){
-	return new UI.CheckField(
+ui.CheckField.TYPE = "check"
+ui.Field.TYPES[ui.CheckField.TYPE] = ui.CheckField
+ui.CheckField.from_doc = function(doc, formatting){
+	formatting = formatting || {}
+	return new ui.CheckField(
 		doc.name,
 		{
-			class:   doc.class,
-			label:   doc.label,
-			tooltip: doc.tooltip,
-			default: doc.default
+			class:    doc.class,
+			label:    (doc.label || "").format(formatting),
+			tooltip:  (doc.tooltip || "").format(formatting),
+			default:  (doc.default || ""),
+			tabindex: doc.tabindex
 		}
 	)
 }
