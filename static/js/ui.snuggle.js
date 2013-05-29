@@ -1,7 +1,8 @@
 ui.Snuggle = Class.extend({
 	init: function(){
-		
 		this.node = $("body")
+		
+		logger.info("Starting up Snuggle UI.")
 		
 		// Set up help
 		this.help = new ui.HelpSlider()
@@ -16,7 +17,7 @@ ui.Snuggle = Class.extend({
 		
 		// Set up filters
 		this.filter_menu = new ui.FilterMenu()
-		this.filter_menu.changed.attach(this._handle_filter_menu_change)
+		this.filter_menu.changed.attach(this._handle_filter_menu_change.bind(this))
 		this.node.append(this.filter_menu.node)
 		
 		// Set up user list
@@ -36,14 +37,14 @@ ui.Snuggle = Class.extend({
 		
 		this.filters_change_delay = setTimeout(
 			this._update_query.bind(this), 
-			SNUGGLE.ui.filter_delay * 1000
+			delays.update_filters
 		)
 	},
 	_load_help: function(){
 		servers.local.help(
-			configuration.snuggle.ui.help,
+			configuration.i18n.lang,
 			function(content){
-				this.help.load_content($(content).find("help_content").html())
+				this.help.load_content($(content).find("body").html())
 			}.bind(this),
 			function(message, doc, meta){
 				alert(message)

@@ -4,12 +4,11 @@ author:
   email: aaron.halfaker@gmail.com
   url: http://halfaker.info
 
+lang: en-us
+
 "✔": "✔"
-"✔ good-faith": "✔ good-faith"
 "?": "?"
-"? ambiguous": "? ambiguous"
 "✗": "✗"
-"✗ bad-faith": "✗ bad-faith"
 
 ambiguous: ambiguous
 any page: any page
@@ -51,7 +50,7 @@ new users that have been categorized as good-faith: new users that have been cat
 new users that have been categorized as ambiguous: new users that have been categorized as ambiguous
 new users that have been categorized as bad-faith: new users that have been categorized as bad-faith
 newcomers with more than: newcomers with more than
-not logged in...: not logged in...
+Not logged in...: Not logged in...
 
 Password: Password
 

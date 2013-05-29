@@ -66,12 +66,14 @@ ui.FilterMenu = Class.extend({
 		this.changed.notify()
 	},
 	val: function(val){
+		logger.debug("filter_menu setting val")
 		if(!val){
 			return $.extend(
 				this.filters.val(),
 				{category: this.categories.val()}
 			)
 		}else{
+			logger.debug("filter_menu setting val")
 			this.filters.val(val)
 			this.categories.val(val.category)
 			
@@ -84,9 +86,9 @@ ui.FilterMenu = Class.extend({
 Represents a set of filters for paring down and sorting a list of users.
 */
 ui.FilterMenu.Filters = Class.extend({
-	init: function(category){
+	init: function(categories){
 		// Track changes to category
-		category.changed.attach(this._handle_category_change.bind(this))
+		categories.changed.attach(this._handle_category_change.bind(this))
 		
 		this.node = $("<div>")
 			.addClass("filters")
@@ -94,6 +96,8 @@ ui.FilterMenu.Filters = Class.extend({
 		this.category = {
 			node: $("<span>")
 				.addClass("category")
+				.addClass("field-like")
+				.html(categories.selection.label)
 		}
 		this.node.append(this.category.node)
 		
@@ -190,10 +194,10 @@ ui.FilterMenu.Filters = Class.extend({
 		this.sorted_by.changed.attach(this._handle_field_change.bind(this))
 		this.direction.changed.attach(this._handle_field_change.bind(this))
 	},
-	_handle_field_change: function(category){
-		this.category.node.html(category.label())
+	_handle_category_change: function(categories){
+		this.category.node.html(categories.selection.label)
 	},
-	_handle_category_change: function(){
+	_handle_field_change: function(){
 		this.changed.notify()
 	},
 	
@@ -217,6 +221,7 @@ ui.FilterMenu.Filters = Class.extend({
 			this.namespace.val(val.namespace)
 			this.sorted_by.val(val.sorted_by)
 			this.direction.val(val.direction)
+			this.category.node.html(val.category)
 		}
 	}
 })

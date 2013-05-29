@@ -49,11 +49,11 @@ controllers.UserList = Class.extend({
 			
 			if(view.end - view.bottom < 200 && !this.model.loading()){
 				logger.debug("Time to load more results!")
-				this._load_users()
+				this._load_more_users()
 			}
 		}
 	},
-	_load_users: function(){
+	_load_more_users: function(){
 		if(!this.query.complete){
 			logger.debug("Sending a request for more users.")
 			this.model.loading(true)

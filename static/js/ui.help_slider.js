@@ -9,6 +9,7 @@ ui.HelpSlider = Class.extend({
 		this.pane = {
 			node: $("<div>")
 				.addClass("pane")
+				.addClass("help_content")
 		}
 		
 		this.tab = {
@@ -30,7 +31,7 @@ ui.HelpSlider = Class.extend({
 		this.expanded(false)
 	},
 	load_content: function(content){
-		this.pane.html(content)
+		this.pane.node.html(content)
 	},
 	toggle: function(){
 		this.expanded(!this.expanded())

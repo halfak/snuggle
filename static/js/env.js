@@ -1,4 +1,9 @@
-
+delays = {
+	update_filters: 1000,
+	view_user: 1500,
+	check_snuggler_auth: 12000,
+	preview_action: 250
+}
 keys = {
 	ESCAPE: 27,
 	PAGE_UP: 33,

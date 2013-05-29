@@ -40,9 +40,11 @@ class Processor:
 		)
 	
 	def help(self, data):
-		path = os.join(self.static_dir, "help", data['lang'])
+		path = os.path.join(self.static_dir, "help", "%(lang)s.html" % data)
 		
-		return bottle.static_file(path, root=self.static_dir)
+		f = open(path)
+		
+		return responses.success(f.read())
 	
 	def default(self):
 		try:
