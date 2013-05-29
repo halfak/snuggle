@@ -19,13 +19,13 @@ controllers.UserList = Class.extend({
 	_handle_user_clicked: function(user){
 		this.model.select(user)
 	},
-	_handle_keypress: function(_, which){
-		if(which == keys.PAGE_UP){
+	_handle_keypress: function(_, e){
+		if(e.which == keys.PAGE_UP){
 			this.model.shift_selection(-1)
-			e.stopPropagation()
-		}else if(which == keys.PAGE_DOWN){
+			util.kill_event(e)
+		}else if(e.which == keys.PAGE_DOWN){
 			this.model.shift_selection(1)
-			e.stopPropagation()
+			util.kill_event(e)
 		}
 	},
 	append: function(user){
@@ -63,7 +63,7 @@ controllers.UserList = Class.extend({
 					this.model.loading(false)
 					if(query == this.query){ //If we are still running the same query
 						for(var i=0;i<docs.length;i++){
-							this.append(new controllers.User(docs[i], i))
+							this.append(new controllers.User(docs[i]))
 						}
 					}
 					this._read_until_full()

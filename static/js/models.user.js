@@ -25,14 +25,16 @@ models.User = Class.extend({
 			throw "Cannot load empty doc into model.User."
 		}
 		
-		this.id           = doc.id
-		this.name         = doc.name
-		this.registration = new Date(doc.registration*miliseconds.SECOND)
-		this.views        = doc.views
-		this.desirability = new models.User.Desirability(doc.desirability)
-		this.category     = new models.User.Category(doc.category)
-		this.activity     = new models.User.Activity(doc.activity)
-		this.talk         = new models.User.Talk(doc.talk)
+		this.id            = doc.id
+		this.name          = doc.name
+		this.registration  = new Date(doc.registration*miliseconds.SECOND)
+		this.views         = doc.views
+		this.has_user_page = doc.has_user_page
+		this.has_talk_page = doc.has_talk_page
+		this.desirability  = new models.User.Desirability(doc.desirability)
+		this.category      = new models.User.Category(doc.category)
+		this.activity      = new models.User.Activity(doc.activity)
+		this.talk          = new models.User.Talk(doc.talk)
 		
 		this.changed.notify()
 	},
@@ -127,9 +129,8 @@ models.User.Activity = Class.extend({
 	}
 })
 
-models.User.Activity.Revision = Selectable.extend({
+models.User.Activity.Revision = Class.extend({
 	init: function(doc){
-		this._super(this)
 		this.changed = new Event(this)
 		
 		if(!doc){
@@ -165,7 +166,7 @@ models.User.Talk = Class.extend({
 	init: function(doc){
 		this.changed = new Event(this)
 		
-		if(doc){
+		if(!doc){
 			this.last_id = 0
 			this.threads = []
 		}else{

@@ -2,6 +2,7 @@ div.action_menu {
 	position: relative;
 	white-space: nowrap;
 	z-index: 2;
+	font-weight: normal;
 }
 
 div.action_menu .handles {

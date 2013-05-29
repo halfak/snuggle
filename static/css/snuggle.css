@@ -1,25 +1,3 @@
-div.filter_menu{
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	height: 6em;
-}
-
-div.user_list{
-	position: fixed;
-	top: 6em;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
-	overflow-y: auto;
-	background: #fff;
-}
-div.user_list.loading{
-	padding-bottom: 50px;
-	background: #fff url(http://upload.wikimedia.org/wikipedia/commons/5/53/Loading_bar.gif) no-repeat bottom center;
-}
-
 div#status{
 	margin: .25em;
 	font-size: 1.4em;

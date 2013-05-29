@@ -58,7 +58,7 @@ ui.ActionMenu = Class.extend({
 		}
 		this.preview_delay = setTimeout(
 			this._load_preview.bind(this),  
-			SNUGGLE.ui.user_menu.preview_delay * 1000
+			delays.action_preview
 		)
 	},
 	_load_preview: function(){
@@ -245,7 +245,8 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 		this.cancel = new ui.Button({
 			label: "cancel",
 			tooltip: "Cancel this action.",
-			class: "cancel"
+			class: "cancel",
+			tabindex: tabindex.action_menu
 		})
 		this.cancel.activated.attach(this._cancel_activated.bind(this))
 		this.node.append(this.cancel.node)
@@ -253,7 +254,8 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 		this.submit = new ui.Button({
 			label: "submit", 
 			tooltip: "Complete this action.",
-			class: "submit"
+			class: "submit",
+			tabindex: tabindex.action_menu
 		})
 		this.submit.activated.attach(this._submit_activated.bind(this))
 		this.node.append(this.submit.node)
@@ -515,7 +517,8 @@ ui.UserAction.from_doc = function(doc, formatting){
 		util.linkify((doc.description || "").format(formatting)),
 		fields,
 		{
-			tooltip: doc.tooltip
+			tooltip: doc.tooltip,
+			tabindex: tabindex.action_menu
 		}
 	)
 }

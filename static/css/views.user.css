@@ -1,45 +1,47 @@
 div.user {
 	position: relative;
-	box-shadow: 0px 0px 2em rgba(0,0,0,.8);
 	height: 2em;
 	background: #eee;
-	margin: 1em;
+	margin: .5em 1em;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.2);
+	border: 1px solid #333;
 }
 div.user.selected {
 	/*outline: 3px solid rgba(0,0,200,.5);*/
 }
 div.user.expanded {
 	height: 20em;
-	overflow: visible;
 }
-	div.user div.info{
+	div.user .info{
+		position: relative;
 		display: inline-block;
 		width: 25%;
+		height: 100%;
 		vertical-align: top;
 		padding: .4em .5em;
 	}
-		div.user div.category{
+		div.user .info .category{
 			position: absolute;
 			bottom: 0px;
 			left: 0px;
 			right: 0px;
 		}
-	div.user div.activities{
+	div.user div.activity{
 		display: inline-block;
 		width: 40%;
-		vertical-align: top;
 		height: 100%;
+		vertical-align: top;
 	}
 	div.user div.talk{
 		display: inline-block;
 		width: 35%;
+		height: 100%;
 		vertical-align: top;
-		padding: .5em 1em;
 	}
 
 
 /**********************************Info     ***********************************/
-div.user div.info div.name{
+div.user div.info .name{
 	display: block;
 	width: 100%;
 	padding: .10em;
@@ -49,36 +51,17 @@ div.user div.info div.name{
 	position: relative;
 }
 
-div.user div.info div.actions{
+div.user div.info .name .user_actions{
 	display: none;
 	position: absolute;
 	top: .2em;
 	right: .2em;
+	font-size: .9em;
 }
 	
-	div.user div.info.expanded .name .dropper {
+	div.user div.info.expanded .name .user_actions {
 		display: block;
 	}
-	div.user div.info .name .dropper.expanded{
-		display: block;
-	}
-	/*div.user div.info .name .dropper .pane{
-		background: #fff;
-		border: 1px solid black;
-		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
-		z-index: 9;
-	}
-	div.user div.info .name .dropper .pane a{
-		display: block;
-		text-decoration: none;
-		border-bottom: 1px solid #008;
-		text-align: center;
-		font-weight: normal;
-		width: 7em;
-	}
-	div.user div.info .name .dropper .pane a:hover{
-		background: #ddF;
-	}*/
 
 div.user.good-faith div.info .name:before{
 	content: "\2714\0000a0";
@@ -148,28 +131,25 @@ div.user div.info div.edit_counts div.dropper{
 
 
 
-/********************************Contribs**************************************/
-div.user div.contribs {
-	height: 100%;
+/********************************Activty***************************************/
+div.user div.activity {
 	overflow: hidden;
 }
-div.user.expanded div.contribs {
-	height: auto;
+div.user.expanded div.activity {
 	overflow: visible;
 }
 
-
-div.user div.contribs div.revision{
+div.user div.activity div.revision{
 	/*background: #eee;*/
 }
 
 
 /********************************Talk******************************************/
 div.user div.talk{
-	height: 100%;
 	overflow: hidden;
 	white-space: nowrap;
 	text-align: right;
+	padding: .3em 1em;
 }
 
 div.user div.talk.expanded{

@@ -231,7 +231,7 @@ servers.MediaWiki = Class.extend({
 	}
 })
 servers.MediaWiki.from_config = function(){
-	return servers.MediaWiki(
+	return new servers.MediaWiki(
 		configuration.mediawiki.protocol + "://" + 
 		configuration.mediawiki.domain + 
 		configuration.mediawiki.path.scripts + 

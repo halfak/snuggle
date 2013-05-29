@@ -2,9 +2,9 @@ controllers = window.controllers || {}
 
 controllers.User = Class.extend({
 		
-	init: function(doc, index){
+	init: function(doc){
 		this.model = new models.User(doc)
-		this.view  = new views.User(this.model, index)
+		this.view  = new views.User(this.model)
 		this.id    = this.model.id
 		this.node  = this.view.node
 		
@@ -19,38 +19,41 @@ controllers.User = Class.extend({
 		this.permissions_error = new Event(this)
 		this.clicked           = new Event(this)
 	},
-	_handle_keypress: function(_, which){
-		logger.debug("Capturing keypress for user name=" + this.model.name + ": " + which)
-		if(this.selected()){
-			switch(which){
-				case keys.NUM_1:
-				case keys.NUM_PAD_1:
-					this.view.category.category.val("good-faith")
-					break
-				case keys.NUM_2:
-				case keys.NUM_PAD_2:
-					this.view.category.category.val("good-faith")
-					break
-				case keys.NUM_3:
-				case keys.NUM_PAD_3:
-					this.view.category.category.val("good-faith")
-					break
-				case keys.UP_ARROW:
-					this.view.activity.grid.shift_selection(0, -1)
-					break
-				case keys.RIGHT_ARROW:
-					this.view.activity.grid.shift_selection(1, 0)
-					break
-				case keys.DOWN_ARROW:
-					this.view.activity.grid.shift_selection(0, 1)
-					break
-				case keys.LEFT_ARROW:
-					this.view.activity.grid.shift_selection(-1, 0)
-					break
-				default:
-					// Nothing matched
-			}
+	_handle_keypress: function(_, e){
+		logger.debug("Capturing keypress for user name=" + this.model.name + ": " + e.which)
+		switch(e.which){
+			case keys.NUM_1:
+			case keys.NUM_PAD_1:
+				this.view.category.category.val("good-faith")
+				break
+			case keys.NUM_2:
+			case keys.NUM_PAD_2:
+				this.view.category.category.val("good-faith")
+				break
+			case keys.NUM_3:
+			case keys.NUM_PAD_3:
+				this.view.category.category.val("good-faith")
+				break
+			case keys.UP_ARROW:
+				this.view.activity.grid.shift_cursor(0, 1)
+				break
+			case keys.RIGHT_ARROW:
+				this.view.activity.grid.shift_cursor(1, 0)
+				break
+			case keys.DOWN_ARROW:
+				this.view.activity.grid.shift_cursor(0, -1)
+				break
+			case keys.LEFT_ARROW:
+				this.view.activity.grid.shift_cursor(-1, 0)
+				break
+			case keys.ESCAPE:
+				this.view.activity.grid.clear_cursor()
+				break
+			default:
+				return true
 		}
+		util.kill_event(e)
+		return false
 	},
 	_handle_click: function(){
 		this.clicked.notify(true)
@@ -72,7 +75,7 @@ controllers.User = Class.extend({
 						}
 					)
 				}.bind(this),
-				SNUGGLE.ui.user_view_delay * 1000
+				delays.user_view_delay * 1000
 			)
 		}
 	},
@@ -81,7 +84,7 @@ controllers.User = Class.extend({
 			SNUGGLE.snuggler.ping()
 		}else{
 			this.view.category.disabled(true)
-			SYSTEM.local.users.categorize(
+			servers.local.users.categorize(
 				this.model, this.view.category.val(),
 				function(doc){
 					if(doc){
@@ -107,7 +110,7 @@ controllers.User = Class.extend({
 		}else{
 			// Disable user_actions.  No clicky clicky.
 			this.view.info.user_actions.disabled(true)
-			this.local.users.perform_action(
+			servers.local.users.perform_action(
 				this.model,
 				action,
 				watch,
@@ -161,6 +164,9 @@ controllers.User = Class.extend({
 	},
 	in_document: function(){
 		return $(document, this.view.node[0])
+	},
+	set_index: function(index){
+		this.view.set_index(index)
 	},
 	top: function(){
 		return this.view.top()

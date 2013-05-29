@@ -1,28 +1,24 @@
-#snuggler{
+div.snuggler{
 	background: rgba(255,255,255,0.4);
 	padding: .1em .5em;
 	font-size: .9em;
 }
-#snuggler:hover{
+div.snuggler:hover{
 	background: rgba(255,255,255,0.6);
 }
 
-#snuggler.pinging{
+div.snuggler.pinging{
 	outline: 6px solid rgba(0,0,0,.6);
 	background: rgba(255,255,255,1);
 }
 
-#snuggler div.menu{
+div.snuggler div.menu{
 	display: inline-block;
 	vertical-align: top;
 	margin-left: 1em;
 }
 	
-	#snuggler a{
-		text-decoration: none;
-	}
-	
-	#snuggler div.menu div.pane{
+	div.snuggler div.menu div.pane{
 		width: 20em;
 		background-image: url("http://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/200px-Wikipedia-logo-v2.svg.png");
 		background-repeat: no-repeat;
@@ -34,19 +30,19 @@
 		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
 	}
 	
-	#snuggler div.menu div.pane p{
+	div.snuggler div.menu div.pane p{
 		text-align: left;
 		margin: 0px;
 		margin-bottom: 1em;
 		background: rgba(255,255,255,0.8);
 	}
 	
-	#snuggler div.menu div.pane div.input_field.text{
+	#snuggler div.menu div.pane div.field.text{
 		text-align: left;
 		margin-bottom: 1em;
 	}
 	
-		#snuggler div.menu div.pane div.input_field.text input{
+		#snuggler div.menu div.pane div.field.text input{
 			width: 95%;
 		}
 	

@@ -59,7 +59,7 @@ controllers.Snuggler = Class.extend({
 		)
 	},
 	ping: function(){
-		this.view.expanded(true)
+		this.view.menu.expanded(true)
 	},
 	authenticated: function(){
 		if(this.model.user){

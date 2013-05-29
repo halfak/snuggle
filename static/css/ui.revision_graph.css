@@ -1,10 +1,29 @@
+
 div.revision_graph{
 	position: relative;
-	height: 100%;
-	width: 100%;
 	padding: 0px 0px 0px 1.5em;
-	overflow: hidden;
 }
+
+div.revision_graph.expanded{
+	padding-bottom: 2.25em;
+}
+
+/******************************** expanded ************************************/
+div.revision_graph .label,
+div.revision_graph .breaks{
+	display:none;
+}
+
+div.revision_graph.expanded .label,
+div.revision_graph.expanded .breaks{
+	display: block;
+}
+
+div.revision_graph.expanded .day_grid{
+	border-bottom: 1px solid #666;
+}
+
+/*************************** label ********************************************/
 div.revision_graph div.label{
 	display: none;
 	font-weight: bold;
@@ -15,7 +34,7 @@ div.revision_graph div.label.y{
 	bottom: 0px;
 	left: -.5em;
 	height: 1em;
-	width: 20em;
+	width: 18em; /* This is a hack */
 	transform-origin: 0 0;
 	-webkit-transform-origin: 0 0;
 	-moz-transform-origin:    0 0;
@@ -28,78 +47,80 @@ div.revision_graph div.label.y{
 	-o-transform:rotate(-90deg); /* Opera */
 	margin-left: 1em;
 }
-div.revision_graph div.breaks{
-	display: none;
+div.revision_graph div.label.x{
 }
 div.revision_graph div.breaks.x div{
-	display:block;
+	display: inline-block;
 	width: 16.66666%;
-	float: left;
 	text-align: right;
 	font-size: .9em;
 }
 
-div.revision_graph.expanded{
-	padding-bottom: 2.5em;
-	overflow: visible;
-}
-div.revision_graph.expanded div.label{
-	display: block;
-}
-div.revision_graph.expanded div.label.x{
-	clear: left;
-}
-div.revision_graph.expanded div.breaks{
-	display: block;
-}
+/**************************** day_grid ****************************************/
 
-div.revision_graph div.day_grid{
-	border-left: 1px solid #bbb;
+div.revision_graph .day_grid{
+	display: block;
 	height: 100%;
-	width: 100%;
-	box-shadow: inset 0px 10px 10px rgba(0,0,0,.2);
+	
+	border: 1px solid #666;
+	border-top: none;
+	border-bottom: none;
+	
+	box-shadow: inset 2px 2px 2px rgba(0,0,0,.2);
+	background: #ccc;
 }
-div.revision_graph.expanded div.day_grid{
-	border-bottom: 1px solid #bbb;
-}
-	div.day_grid div.day{
+	div.day_grid .day{
+		display: block;
 		position: relative;
 		float:left;
-		border-right: 1px solid #bbb;
+		border-right: 1px solid #aaa;
 		border-left: none;
 		width: 3.333333%;
 		height: 100%;
-		background: #fff;
+		background: #ddd;
+		box-shadow: inset 0px 2px 2px rgba(0,0,0,.2);
 	}
-		div.day_grid div.day div.container{
-			position: absolute;
-			bottom: 0px;
-			left: 0px;
-			right: 0px;
-			margin: -1px;
-		}
-		div.day_grid div.day div.container div.revision{
-			position: relative;
-			border: 1px solid #666;
-			border-top: 0px;
-			z-index: 2;
-		}
-		div.day_grid div.day div.container div.revision:first-child{
-			border-top: 1px solid #666;
-		}
-		div.day_grid div.day div.container div.revision.selected{
-			outline: 2px solid black;
-			z-index: 3;
-		}
+	div.day_grid .day:first-child{
+		box-shadow: inset 2px 2px 2px rgba(0,0,0,.2);
+	}
+	
+	div.day_grid .day .container{
+		display: block;
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		margin: -1px;
+		margin-bottom: 0px;
+	}
+	
+	div.day_grid .day .revision{
+		border: 1px solid #666;
+		border-bottom: none;
+	}
+	
+	div.day_grid .day:first-child .revision{
+		box-shadow: inset 2px 0px 2px rgba(0,0,0,.2);
+	}
+	div.day_grid .day:first-child .revision:first-child{
+		box-shadow: inset 2px 2px 2px rgba(0,0,0,.2);
+	}
+	
+	div.day_grid .day .revision.selected{
+		position: relative;
+		z-index: 1;
+		outline: 2px solid black;
+		border-bottom: 1px solid #666;
+		box-shadow: none;
+	}
 
-div.revision_graph.expanded div.revision{
-	cursor: pointer;
-}
+	
+/************************** revision_details **********************************/
 
 div.revision_graph div.revision_details{
 	position: absolute;
-	top: 5px;
-	height: 17em;
+	top: 2%;
+	height: 85%;
 	width: 60%;
 	z-index: 2;
 	background: #eee;
@@ -112,9 +133,9 @@ div.revision_graph div.revision_details{
 		left: 0px;
 		bottom: 0px;
 		right: 0px;
-		overflow: auto;
 		font-size: .75em;
 	}
+
 	div.revision_details div.pointer{
 		position: absolute;
 		width: 40px;
@@ -131,13 +152,11 @@ div.revision_graph div.revision_details{
 	}
 	div.revision_details a.title{
 		display: block;
-		background: #fff;
 		text-align: center;
 		font-weight: bold;
 		text-decoration: none;
 		word-wrap: break-word;
-		font-size: 1.1em;
-		border-bottom: 3px double #000;
+		font-size: 1.2em;
 	}
 	div.revision_details a.timestamp{
 		padding: 0px .5em;
@@ -146,19 +165,29 @@ div.revision_graph div.revision_details{
 		padding: 0px .5em;
 		font-style: italic;
 		word-wrap: break-word;
-	}	
+	}
+	div.revision_details span.comment:before,
+	div.revision_details span.comment:after{
+		content: "\"";
+	}
 	div.revision_details div.diff{
 		bottom: 0px;
-		background: #fff;
-		overflow-y: auto;
+		overflow: auto;
 		clear: both;
-		margin-top: .5em;
+		font-size: .9em;
+		padding: .5em;
+		border-top: 1px solid #333;
+		/* Height is set in javascript */
+	
+		box-shadow: inset 2px 2px 2px rgba(0,0,0,.2);
+		background: #ccc;
 	}	
 		div.revision_details div.diff div{
-			font-size: .9em;
-			margin-bottom: .5em;
+			background: #eee;
+			padding-bottom: .5em;
 			padding: 0px .5em;
 			word-wrap: break-word;
+			box-shadow: 2px 2px 2px rgba(0,0,0,.2);
 		}
 		div.revision_details div.diff div.lineno{
 			font-weight: bold;
@@ -169,8 +198,15 @@ div.revision_graph div.revision_details{
 			content: "Line ";
 		}
 		div.revision_details div.diff div.context{
-			min-height: 1px;
-			border-top: 1px solid silver;
+			min-height: 3px;
+			border-top: 1px solid #999;
+			margin-bottom: .3em;
+		}
+		div.revision_details div.diff div.context.content{
+			color: #555;
+			min-height: 1.5em;
+			border-top: 0px;
+			margin-bottom: 0px;
 		}
 		div.revision_details div.diff div.change{
 			word-wrap: break-word;

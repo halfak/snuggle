@@ -137,8 +137,8 @@ views.Snuggler.Menu.Login = Class.extend({
 			"name", 
 			{
 				label: i18n.get("Username"), 
-				tooltip: i18n.get("your wiki username"), 
-				tabindex: 1
+				tooltip: i18n.get("your wiki username"),
+				tabindex: tabindex.snuggler_form
 			}
 		)
 		this.node.append(this.name.node)
@@ -150,17 +150,16 @@ views.Snuggler.Menu.Login = Class.extend({
 				label: i18n.get("Password"), 
 				tooltip: i18n.get("your wiki password"),
 				password: true,
-				tabindex: 2
+				tabindex: tabindex.snuggler_form
 			}
 		)
 		this.node.append(this.pass.node)
 		
 		this.login = new ui.Button(
-			'login',
 			{
 				label: i18n.get("log in"), 
-				tooltip: i18n.get("click here to log in."), 
-				tabindex: 3
+				tooltip: i18n.get("click here to log in."),
+				tabindex: tabindex.snuggler_form
 			}
 		)
 		this.login.activated.attach(this._handle_login_activated.bind(this))
@@ -211,7 +210,8 @@ views.Snuggler.Menu.Logout = Class.extend({
 			"logout",
 			{
 				label: i18n.get("log out"),
-				tooltip: i18n.get("click here to log out")
+				tooltip: i18n.get("click here to log out"),
+				tabindex: tabindex.snuggler_form
 			}
 		)
 		this.logout.activated.attach(this._handle_logout_activated)

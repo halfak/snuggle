@@ -4,15 +4,15 @@ views = window.views || {}
 A visual representation of a user.
 */
 views.User = Class.extend({
-	init: function(model, index){
+	init: function(model){
 		this.model = model
-		this.index = index
 		
 		this.node = $("<div>")
 			.addClass("user")
-			.attr("tabindex", index)
+			.attr('tabindex', tabindex.user)
 			.click(this._handle_click.bind(this))
-			.keypress(this._handle_keypress.bind(this))
+			.focus(this._handle_focus.bind(this))
+			.keydown(this._handle_keydown.bind(this))
 		
 		//Three major subcomponents: Info, Activity and Talk
 		this.info = new views.User.Info(model)
@@ -27,16 +27,18 @@ views.User = Class.extend({
 		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		
 		//The only event we care about.  Is someone clicking on me?
-		this.clicked     = new Event(this)
+		this.clicked    = new Event(this)
 		this.keypressed = new Event(this)
 		
 	},
 	_handle_click: function(e){
-		this.activity.clear()
-		this.clicked.notify()
+		this.node.focus()
 	},
-	_handle_keypress: function(e){
-		this.keypressed.notify(e.which)
+	_handle_focus: function(e){
+		this.clicked.notify() //Conflating with clicks. 
+	},
+	_handle_keydown: function(e){
+		this.keypressed.notify(e)
 	},
 	_handle_selected_change: function(){
 		this.selected(this.model.selected())
@@ -48,6 +50,9 @@ views.User = Class.extend({
 		}else{
 			if(selected){
 				this.node.addClass("selected")
+				if(!this.node.is(":focus")){
+					this.node.focus()
+				}
 			}else{
 				this.node.removeClass("selected")
 			}
@@ -66,6 +71,9 @@ views.User = Class.extend({
 			this.activity.expanded(expanded)
 			this.talk.expanded(expanded)
 		}
+	},
+	set_index: function(index){
+		this.node.attr('tabindex', index)
 	},
 	top: function(){
 		return this.node.position().top
@@ -219,7 +227,7 @@ views.User.Activity = ui.RevisionGraph.extend({
 		this._super(model.registration, 30)
 		this.model = model
 		
-		this.node.addClass("contribs")
+		this.node.addClass("activity")
 		
 		this.grid.load(this.model.activity.revisions.values().map(
 			function(revision){
@@ -287,16 +295,6 @@ views.User.Talk = ui.RevisionGraph.extend({
 				.addClass("threads")
 		}
 		this.node.append(this.threads.node)
-		
-		this.reloader = new ui.Button(
-			'reload',
-			{
-				label: 'reload talk',
-				title: "Reloads this user's talk page",
-				class: "reloader"
-			}
-		)
-		this.node.append(this.reloader.node)
 		
 		this.thread_clicked = new Event(this)
 		

@@ -1,9 +1,5 @@
 /* This node has a "container" so that it can have both an inset and regular box-shadow */
 
-div.filter_menu {
-	height: 4em;
-}
-
 div.filter_menu div.container{
 	position: absolute;
 	left: 0px;
@@ -80,8 +76,9 @@ div.filter_menu div.filters{
 		display: inline-block;
 		min-width: 9em;
 		text-align: center;
-		background: #ff9;
+		background: #eee;
 		border: 1px solid #999;
+		font-weight: bold;
 	}
 
 

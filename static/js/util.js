@@ -45,7 +45,13 @@ util = {
 		return $("<div>").append(element).html()
 	},
 	stop_propagation: function(e){
+		logger.debug("Stopping propagation for event " + e.type)
 		e.stopPropagation()
+	},
+	kill_event: function(e){
+		logger.debug("Killing event " + e.type)
+		e.stopPropagation()
+		e.preventDefault()
 	},
 	now_ms: function(){
 		return new Date() * 1

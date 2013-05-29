@@ -1,6 +1,6 @@
 delays = {
 	update_filters: 1000,
-	view_user: 1500,
+	user_view_delay: 1500,
 	check_snuggler_auth: 12000,
 	preview_action: 250
 }
@@ -26,4 +26,10 @@ miliseconds = {
 	MINUTE: 1000*60,
 	HOUR: 1000*60*60,
 	DAY: 1000*60*60*24
+}
+tabindex = {
+	filter_menu: 0,
+	user: 1,
+	action_menu: 2,
+	snuggler_form: 3
 }

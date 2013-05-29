@@ -3,7 +3,7 @@ ui = window.ui || {}
 
 ui.RevisionDetails = Class.extend({
 	init: function(){
-		this.node = $('<div>')
+		this.node = $("<div>")
 			.addClass("revision_details")
 			.hide()
 			.click(function(e){e.stopPropagation()})
@@ -46,14 +46,16 @@ ui.RevisionDetails = Class.extend({
 		if(revision){
 			this._position(revision, day)
 			
-			var page_title = Page.fullTitle(revision.page().namespace, revision.page().title).replace(/_/g, " ")
-			this.title.node.text(page_title)
-			this.title.node.attr('href', SYSTEM.page_link(page_title))
+			var page_name = util.page_name(revision.page().namespace, revision.page().title).replace(/_/g, " ")
+			this.title.node.text(page_name)
+			this.title.node.attr('href', util.page_link(page_name))
 			
 			this.revision.render(revision.id(), revision.timestamp(), revision.comment())
 			
 			this.revert.render(revision.revert())
 			this.revert.self(revision.self_revert())
+			
+			this.diff.set_height(this.node.innerHeight() - this.diff.top())
 			
 			//
 			//  This is probably wrong.
@@ -61,7 +63,7 @@ ui.RevisionDetails = Class.extend({
 			//
 			this.diff.loading(true)
 			this.loadingId = revision.id()
-			SYSTEM.mediawiki.revisions.diff(
+			servers.mediawiki.revisions.diff(
 				revision.id(),
 				function(id, diff){
 					if(diff){
@@ -168,9 +170,9 @@ ui.RevisionDetails.Revision = Class.extend({
 	*/
 	render: function(id, timestamp, comment){
 		this.timestamp.node.text(timestamp.format('wikiDate'))
-		this.timestamp.node.attr('href', SYSTEM.rev_diff_link(id))
+		this.timestamp.node.attr('href', util.rev_diff_link(id))
 		
-		this.comment.node.text(comment || "")
+		this.comment.node.append(util.linkify(comment || ""))
 	}
 })
 
@@ -245,9 +247,9 @@ ui.RevisionDetails.Revert = Class.extend({
 	*/
 	render: function(revert){
 		if(revert){
-			this.reverted.node.attr('href', SYSTEM.rev_diff_link(revert._id))
+			this.reverted.node.attr('href', util.rev_diff_link(revert._id))
 			this.user.node.text(revert.user.name)
-			this.user.node.attr('href', SYSTEM.user_link(revert.user.name))
+			this.user.node.attr('href', util.user_link(revert.user.name))
 			
 			this.comment.node.text(revert.comment || "")
 			this.show()
@@ -282,12 +284,22 @@ ui.RevisionDetails.Diff = Class.extend({
 			this.node.removeClass("loading")
 		}
 	},
+	top: function(){
+		return this.node.position().top
+	},
 	
 	/**
 	Clears the contents.
 	*/
 	clear: function(){
 		this.node.children().remove()
+	},
+	
+	/**
+	*/
+	set_height: function(height){
+		logger.debug("revision_detail.diff setting height to " + height)
+		this.node.css('height', height)
 	},
 	
 	/**
@@ -324,10 +336,17 @@ ui.RevisionDetails.Diff = Class.extend({
 				
 				var next = ops[i+1]
 				if(next !== undefined){
-					if(next.op == "change" && !next.context){
+					if(next.op == "change" || next.op == "added_line" || next.op == "removed_line"){
 						context.html(op.content)
-					}else if(next.op == "added_line" || next.op == "removed_line"){
+						context.addClass("content")
+					}
+				}
+				
+				var last = ops[i-1]
+				if(last !== undefined){
+					if(last.op == "change" || last.op == "added_line" || last.op == "removed_line"){
 						context.html(op.content)
+						context.addClass("content")
 					}
 				}
 				this.node.append(context)
@@ -407,26 +426,9 @@ ui.DayGrid = Class.extend({
 		
 		this.revision_selected = new Event(this)
 		
-		this._handle_key_down = function(e){
-			switch(e.which){
-				case KEYS.UP_ARROW:
-					this.shift_cursor(0, 1)
-					return false
-				case KEYS.DOWN_ARROW:
-					this.shift_cursor(0, -1)
-					return false
-				case KEYS.RIGHT_ARROW:
-					this.shift_cursor(1, 0)
-					return false
-				case KEYS.LEFT_ARROW:
-					this.shift_cursor(-1, 0)
-					return false
-				case KEYS.ESCAPE:
-					this.clear_cursor()
-					return false
-			}
-			return true
-		}.bind(this)
+	},
+	_handle_revision_clicked: function(day, index, revision){
+		this.set_cursor(day.day, index)
 	},
 	
 	/**
@@ -442,13 +444,10 @@ ui.DayGrid = Class.extend({
 		if(enabled === undefined){
 			return this.node.hasClass("enabled")
 		}else{
-			enabled = Boolean(enabled)
 			if(enabled){
 				this.node.addClass("enabled")
-				$(window).bind("keydown", this._handle_key_down)
 			}else{
 				this.node.removeClass("enabled")
-				$(window).unbind("keydown", this._handle_key_down)
 				this.clear_cursor()
 			}
 		}
@@ -570,7 +569,7 @@ ui.DayGrid = Class.extend({
 		days = Math.min(this.max_days, days)
 		for(var i=this.days.length;i<days;i++){
 			var day = new ui.DayGrid.Day(this.days.length)
-			day.revision_clicked.attach(this._revision_clicked.bind(this))
+			day.revision_clicked.attach(this._handle_revision_clicked.bind(this))
 			this.days.push(day)
 			this.node.append(day.node)
 		}
@@ -595,21 +594,15 @@ ui.DayGrid = Class.extend({
 		}
 		this.max_revisions = current_max //Remember what we did here
 	},
-	_revision_clicked: function(day, index, revision){
-		this.set_cursor(day.day, index)
-	},
 	_update_selection: function(revision, day, index){
 		if(this.selection != revision){
+			logger.debug("revision_graph.grid updating selection")
 			if(this.selection){
 				this.selection.selected(false)
 			}
 			
 			this.selection = revision
-			this.revision_selected.notify({
-				revision: this.selection, 
-				day: day, 
-				index: index
-			})
+			this.revision_selected.notify(revision, day, index)
 			
 			if(this.selection){
 				this.selection.selected(true)
@@ -642,6 +635,11 @@ ui.DayGrid.Day = Class.extend({
 		this.revision_clicked = new Event(this)
 		
 		this.list = []
+	},
+	_handle_revision_clicked: function(revision){
+		var index = this.list.indexOf(revision)
+		logger.debug("day revision clicked at index " + index)
+		this.revision_clicked.notify(index, revision)
 	},
 	/**
 	Sets the height of the bar by the proportion of space that it should 
@@ -683,7 +681,7 @@ ui.DayGrid.Day = Class.extend({
 		return this.list[index]
 	},
 	_insert: function(revision){
-		revision.clicked.attach(this._revision_clicked.bind(this))
+		revision.clicked.attach(this._handle_revision_clicked.bind(this))
 		
 		for(var i=0;i<this.list.length;i++){
 			var current = this.list[i]
@@ -703,9 +701,6 @@ ui.DayGrid.Day = Class.extend({
 			var revision = this.list[i]
 			revision.proportion(proportion)
 		}
-	},
-	_revision_clicked: function(revision){
-		this.revision_clicked.notify(this.list.indexOf(revision), revision)
 	}
 })
 
@@ -716,17 +711,17 @@ ui.DayGrid.Revision = Class.extend({
 	init: function(instance){
 		this.node = $("<div>")
 			.addClass("revision")
-			.click(function(e){
-				if(this.grid.enabled()){
-					this.clicked.notify()
-					return false
-				}else{
-					return true
-				}
-			}.bind(this))
+			.click(this._handle_click.bind(this))
 		
 		
 		this.clicked = new Event(instance || this)
+	},
+	_handle_click: function(e){
+		if(this.grid.enabled()){
+			logger.debug("day_grid.revision handling click")
+			this.clicked.notify()
+			util.stop_propagation(e)
+		}
 	},
 	id: function(){throw "Must be implemented by subclass"},
 	timestamp: function(){throw "Must be implemented by subclass"},
@@ -775,9 +770,6 @@ ui.DayGrid.Revision = Class.extend({
 	},
 	middle: function(){
 		return this.top() + (this.height()/2)
-	},
-	_handle_click: function(){
-		this.clicked.notify()
 	}
 })
 
@@ -785,7 +777,7 @@ ui.RevisionGraph = Class.extend({
 	init: function(origin){
 		this.node = $("<div>")
 			.addClass("revision_graph")
-			.click(function(e){this.grid.clear_cursor()}.bind(this))
+			.click(this._handle_click.bind(this))
 		
 		//Labels
 		this.label = {
@@ -806,7 +798,7 @@ ui.RevisionGraph = Class.extend({
 		
 		//Grid
 		this.grid = new ui.DayGrid(origin)
-		this.grid.revision_selected.attach(this._select_revision.bind(this))
+		this.grid.revision_selected.attach(this._handle_revision_selection.bind(this))
 		this.node.append(this.grid.node)
 		
 		//Breaks
@@ -831,8 +823,12 @@ ui.RevisionGraph = Class.extend({
 		this.node.append(this.details.node)
 		
 	},
-	_select_revision: function(grid, args){
-		this.details.load_revision(args.revision, args.day)
+	_handle_click: function(e){
+		logger.debug("revision_graph handling click.")
+		this.grid.clear_cursor()
+	},
+	_handle_revision_selection: function(_, revision, day, index){
+		this.details.load_revision(revision, day)
 	},
 	expanded: function(expanded){
 		if(expanded === undefined){

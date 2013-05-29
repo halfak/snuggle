@@ -47,7 +47,10 @@ ui.FilterMenu = Class.extend({
 					}
 				)
 			],
-			{class: "categories"}
+			{
+				class: "categories",
+				tabindex: tabindex.filter_menu
+			}
 		)
 		this.categories.val(null)
 		this.categories.changed.attach(this._handle_categories_change.bind(this))
@@ -124,7 +127,10 @@ ui.FilterMenu.Filters = Class.extend({
 				{value: 30},
 				{value: 35},
 				{value: 40}
-			]
+			],
+			{
+				tabindex: tabindex.filter_menu
+			}
 		)
 		this.node.append(this.min_edits.node)
 		
@@ -150,7 +156,10 @@ ui.FilterMenu.Filters = Class.extend({
 				{value: 13,   label: configuration.mediawiki.namespaces[13].name},
 				{value: 14,   label: configuration.mediawiki.namespaces[14].name},
 				{value: 15,   label: configuration.mediawiki.namespaces[15].name}
-			]
+			],
+			{
+				tabindex: tabindex.filter_menu
+			}
 			
 		)
 		this.node.append(this.namespace.node)
@@ -165,7 +174,10 @@ ui.FilterMenu.Filters = Class.extend({
 				{value: "activity.last_activity", label: i18n.get("last activity")},
 				{value: "activity.reverted", label: i18n.get("reverted edits")},
 				{value: "activity.counts.all", label: i18n.get("total edits")}
-			]
+			],
+			{
+				tabindex: tabindex.filter_menu
+			}
 		)
 		this.node.append(this.sorted_by.node)
 		
@@ -182,7 +194,10 @@ ui.FilterMenu.Filters = Class.extend({
 					i18n.get("descending"), "descending",
 					{tooltip: i18n.get("sort in descreasing order")}
 				)
-			]
+			],
+			{
+				tabindex: tabindex.filter_menu
+			}
 		)
 		this.direction.val("descending")
 		this.node.append(this.direction.node)

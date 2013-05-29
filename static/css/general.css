@@ -24,3 +24,7 @@ dl {
 		display: inline-block;
 		margin: 0px;
 	}
+	
+a {
+	text-decoration: none;
+}
