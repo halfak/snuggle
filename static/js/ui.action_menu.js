@@ -65,7 +65,7 @@ ui.ActionMenu = Class.extend({
 		logger.debug("action_menu: loading preview")
 		this.flyout.previewer.loading(true)
 		var action = this.flyout.action
-		SYSTEM.local.users.preview_action(
+		servers.local.users.preview_action(
 			this.user,
 			action,
 			this.flyout.controls.watch.val(),

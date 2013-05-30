@@ -10,7 +10,6 @@ views.User = Class.extend({
 		this.node = $("<div>")
 			.addClass("user")
 			.attr('tabindex', tabindex.user)
-			.click(this._handle_click.bind(this))
 			.focus(this._handle_focus.bind(this))
 			.keydown(this._handle_keydown.bind(this))
 		
@@ -27,15 +26,19 @@ views.User = Class.extend({
 		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		
 		//The only event we care about.  Is someone clicking on me?
-		this.clicked    = new Event(this)
+		this.focussed   = new Event(this)
 		this.keypressed = new Event(this)
 		
-	},
-	_handle_click: function(e){
-		this.node.focus()
+		this.manual_focus = false
+		
 	},
 	_handle_focus: function(e){
-		this.clicked.notify() //Conflating with clicks. 
+		// note that clicking causes focus
+		if(this.manual_focus){
+			this.manual_focus = false
+		}else{
+			this.focussed.notify()
+		}
 	},
 	_handle_keydown: function(e){
 		this.keypressed.notify(e)
@@ -46,17 +49,20 @@ views.User = Class.extend({
 	},
 	selected: function(selected){
 		if(selected === undefined){
-			return this.node.hasClass("selected")
+			return this.node.is(":focus")
 		}else{
 			if(selected){
 				this.node.addClass("selected")
-				if(!this.node.is(":focus")){
-					this.node.focus()
-				}
+				this._manual_focus()
 			}else{
 				this.node.removeClass("selected")
+				this.node.blur()
 			}
 		}
+	},
+	_manual_focus: function(){
+		this.manual_focus = true
+		this.node.focus()
 	},
 	expanded: function(expanded){
 		if(expanded == undefined){
@@ -232,7 +238,7 @@ views.User.Activity = ui.RevisionGraph.extend({
 		this.grid.load(this.model.activity.revisions.values().map(
 			function(revision){
 				return new views.User.Activity.Revision(this.model, revision)
-			}
+			}.bind(this)
 		))
 		
 		this.expanded(false)

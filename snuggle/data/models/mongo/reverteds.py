@@ -51,5 +51,5 @@ class Reverteds:
 			raise KeyError(id)
 	
 	def find(self, page_id):
-		for doc in self.mongo.db.reverteds.find({'revision.page._id': page_id}):
+		for doc in self.mongo.db.reverteds.find({'revision.page.id': page_id}):
 			yield types.Reverted.deserialize(util.demongoify(doc))

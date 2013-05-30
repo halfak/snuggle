@@ -68,7 +68,6 @@ ui.Button = Class.extend({
 		}
 	},
 	_handle_keypress: function(e){
-		console.log(e)
 		if(e.which == keys.ENTER || e.which == keys.SPACE){
 			if(!this.disabled()){
 				this.activated.notify()

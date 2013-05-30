@@ -224,7 +224,7 @@ class Changes(Synchronizer):
 				revision
 			)
 			self.model.reverteds.remove(reverted)
-			logging.debug("Revision %s by %s was reverted by %s" % (
+			logger.debug("Revision %s by %s was reverted by %s" % (
 					reverted.revision.id,
 					reverted.revision.user.id,
 					revision.user.id

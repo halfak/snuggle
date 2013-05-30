@@ -81,6 +81,7 @@ MWAPI = API.extend({
 	See API.request()
 	*/
 	request: function(data, type, success, error){
+		logger.info("mediawiki_api: " + type + "ing "+ JSON.stringify(data))
 		data.format="json"
 		this._super(
 			data,
@@ -107,6 +108,7 @@ LocalAPI = API.extend({
 	See API.request()
 	*/
 	request: function(object, action, data, type, success, error){
+		logger.info("local_api: " + type + "ing [" + object + "/" + action + "/]")
 		if(data){
 			data = JSON.stringify(data)
 		}else{

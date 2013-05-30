@@ -157,9 +157,15 @@ div.revision_graph div.revision_details{
 		text-decoration: none;
 		word-wrap: break-word;
 		font-size: 1.2em;
+		margin-top: .25em;
+	}
+	div.revision_details div.revision,
+	div.revision_details div.revert{
+		margin: .25em;
+		padding: .25em;
 	}
 	div.revision_details a.timestamp{
-		padding: 0px .5em;
+		padding-right: .5em;
 	}	
 	div.revision_details span.comment{
 		padding: 0px .5em;

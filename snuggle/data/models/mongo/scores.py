@@ -38,11 +38,18 @@ class Scores:
 		)
 		doc['n']
 	
-	def cull(self, min_attempts, id_less_than):
+	def cull(self, min_attempts, max_attempts, id_less_than):
 		doc = self.mongo.db.scores.remove(
 			{
-				"_id": {"$lt": id_less_than},
-				"attempts": {"$gt": min_attempts}
+				"$or": [
+					{
+						"_id": {"$lt": id_less_than},
+						"attempts": {"$gt": min_attempts}
+					},
+					{
+						"attempts": {"$gt": max_attempts}
+					}
+				]
 			},
 			safe=True
 		)

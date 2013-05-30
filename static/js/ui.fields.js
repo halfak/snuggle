@@ -63,8 +63,7 @@ ui.SelectField = ui.Field.extend({
 				.attr('name', this.name)
 				.attr('id', this.id)
 				.attr('tabindex', opts.tabindex || 1)
-				.change(this._changed.bind(this))
-				.keydown(util.stop_propagation),
+				.change(this._changed.bind(this)),
 			labels: {},
 			values: {}
 		}
@@ -384,7 +383,6 @@ ui.TextField = ui.Field.extend({
 				.attr('type', opts.password ? "password" : "text")
 				.attr('tabindex', opts.tabindex || 1)
 				.keydown(this._key_pressed.bind(this))
-				.keydown(util.stop_propagation)
 		}
 		this.node.append(this._input.node)
 		
@@ -395,7 +393,7 @@ ui.TextField = ui.Field.extend({
 		}
 	},
 	_key_pressed: function(e){
-		this.key_pressed.notify(e.keyCode)
+		this.key_pressed.notify(e)
 		this.changed.notify()
 	},
 	val: function(val){
@@ -453,7 +451,6 @@ ui.TextareaField = ui.Field.extend({
 				.attr('id', this.id)
 				.attr('tabindex', opts.tabindex || 1)
 				.keydown(this._key_pressed.bind(this))
-				.keydown(util.stop_propagation)
 		}
 		this.node.append(this._textarea.node)
 		
@@ -464,7 +461,7 @@ ui.TextareaField = ui.Field.extend({
 		}
 	},
 	_key_pressed: function(e){
-		this.key_pressed.notify(e.keyCode)
+		this.key_pressed.notify(e)
 		this.changed.notify()
 	},
 	val: function(val){

@@ -16,7 +16,8 @@ class Scores(Synchronizer):
 	user.
 	"""
 	def __init__(self, model, scores, 
-		loop_delay, scores_per_request, min_attempts, max_id_distance):
+	             loop_delay, scores_per_request, 
+	             min_attempts, max_attempts, max_id_distance):
 		"""
 		:Parameters:
 			model: `snuggle.data.models.Model`
@@ -35,6 +36,7 @@ class Scores(Synchronizer):
 		self.loop_delay         = float(loop_delay)
 		self.scores_per_request = int(scores_per_request)
 		self.min_attempts       = int(min_attempts)
+		self.max_attempts       = int(max_attempts)
 		self.max_id_distance    = int(max_id_distance)
 		
 		# Status
@@ -82,6 +84,7 @@ class Scores(Synchronizer):
 				#Cleanup scores.
 				culled = self.model.scores.cull(
 					self.min_attempts,
+					self.max_attempts,
 					id_less_than=self.last_scored_id - self.max_id_distance,
 					
 				)
@@ -161,6 +164,7 @@ class Scores(Synchronizer):
 			config.snuggle['scores_synchronizer']['loop_delay'],
 			config.snuggle['scores_synchronizer']['scores_per_request'],
 			config.snuggle['scores_synchronizer']['min_attempts'],
+			config.snuggle['scores_synchronizer']['max_attempts'],
 			config.snuggle['scores_synchronizer']['max_id_distance']
 		)
 		

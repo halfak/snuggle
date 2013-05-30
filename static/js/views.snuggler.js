@@ -68,7 +68,7 @@ views.Snuggler = Class.extend({
 			this.name.node.text("")
 			this.name.node.attr("")
 			this.menu.ready_login()
-		}else if(this.model.creds){
+		}else if(this.model.user){
 			this.preamble.node.text(i18n.get("Logged in as") + " ")
 			this.name.node.text(this.model.user.name)
 			this.name.node.attr('href', util.user_link(this.model.user.name))
@@ -207,7 +207,6 @@ views.Snuggler.Menu.Logout = Class.extend({
 		this.node.append(this.preamble.node)
 		
 		this.logout = new ui.Button(
-			"logout",
 			{
 				label: i18n.get("log out"),
 				tooltip: i18n.get("click here to log out"),

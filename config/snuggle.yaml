@@ -66,6 +66,7 @@ scores_synchronizer:
   # times and it's revision ID is at least 'max_id_distance' lower than a score 
   # that was successfully recorded.
   min_attempts: 5
+  max_attempts: 20
   max_id_distance: 1000
 
 # Specifies how changes will be acquired.  The two available options are to read

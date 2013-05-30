@@ -8,7 +8,7 @@ controllers.User = Class.extend({
 		this.id    = this.model.id
 		this.node  = this.view.node
 		
-		this.view.clicked.attach(this._handle_click.bind(this))
+		this.view.focussed.attach(this._handle_focus.bind(this))
 		this.view.keypressed.attach(this._handle_keypress.bind(this))
 		this.view.info.category.changed.attach(this._handle_category_changed.bind(this))
 		this.view.info.actions.submitted.attach(this._handle_action_submitted.bind(this))
@@ -17,7 +17,7 @@ controllers.User = Class.extend({
 		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		
 		this.permissions_error = new Event(this)
-		this.clicked           = new Event(this)
+		this.focussed          = new Event(this)
 	},
 	_handle_keypress: function(_, e){
 		logger.debug("Capturing keypress for user name=" + this.model.name + ": " + e.which)
@@ -55,8 +55,8 @@ controllers.User = Class.extend({
 		util.kill_event(e)
 		return false
 	},
-	_handle_click: function(){
-		this.clicked.notify(true)
+	_handle_focus: function(){
+		this.focussed.notify(true)
 	},
 	_handle_selected_change: function(){
 		if(this.selected()){

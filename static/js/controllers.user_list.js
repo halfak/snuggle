@@ -16,7 +16,7 @@ controllers.UserList = Class.extend({
 	_handle_view_change: function(_, view){
 		this._read_until_full()
 	},
-	_handle_user_clicked: function(user){
+	_handle_user_focus: function(user){
 		this.model.select(user)
 	},
 	_handle_keypress: function(_, e){
@@ -29,7 +29,7 @@ controllers.UserList = Class.extend({
 		}
 	},
 	append: function(user){
-		user.clicked.attach(this._handle_user_clicked.bind(this))
+		user.focussed.attach(this._handle_user_focus.bind(this))
 		this.model.append(user)
 	},
 	load: function(query){

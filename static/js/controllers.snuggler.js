@@ -15,7 +15,7 @@ controllers.Snuggler = Class.extend({
 	_handle_login_submit: function(_, creds){
 		if(creds.name.length > 0){
 			this.view.menu.disabled(true)
-			SYSTEM.local.snuggler.authenticate(
+			servers.local.snuggler.authenticate(
 				creds.name,
 				creds.pass,
 				function(doc){
@@ -63,8 +63,8 @@ controllers.Snuggler = Class.extend({
 	},
 	authenticated: function(){
 		if(this.model.user){
-			if(!this._last_check || util.now() - this._last_check > SNUGGLE.ui.auth_check_delay){
-					this._load_snuggler()
+			if(!this._last_check || util.now() - this._last_check > delays.check_snuggler_auth){
+				this._load_snuggler()
 			}
 			return true
 		}else{
@@ -74,8 +74,9 @@ controllers.Snuggler = Class.extend({
 	_load_snuggler: function(){
 		servers.local.snuggler.status(
 			function(doc){
-				if(doc.id){
-					this.model.load_doc(doc)
+				console.log(doc)
+				if(doc.logged_in){
+					this.model.load_doc(doc.snuggler)
 				}else{
 					this.model.clear()
 				}

@@ -47,8 +47,8 @@ changes_synchronizer:
   # Limit the number of changes per request to this number
   changes_per_request: 500
   # Ignore recent changes that occurred before this id & timestamp
-  starting_rcid: 577767588
-  starting_timestamp: 1368562710
+  starting_rcid: 581470057
+  starting_timestamp: 1369873855
   # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
   max_age: 2592000
 
@@ -66,6 +66,7 @@ scores_synchronizer:
   # times and it's revision ID is at least 'max_id_distance' lower than a score 
   # that was successfully recorded.
   min_attempts: 5
+  max_attempts: 20
   max_id_distance: 1000
 
 # Specifies how changes will be acquired.  The two available options are to read
