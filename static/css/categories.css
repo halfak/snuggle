@@ -1,0 +1,18 @@
+.good-faith{
+	background: #afa!important;
+}
+.good-faith.selected{
+	background: #bfb!important;
+}
+.ambiguous{
+	background: #ffa!important;
+}
+.ambiguous.selected{
+	background: #ffb!important;
+}
+.bad-faith{
+	background: #faa!important;
+}
+.bad-faith.selected{
+	background: #fbb!important;
+}

@@ -14,6 +14,9 @@ controllers.User = Class.extend({
 		this.view.info.actions.submitted.attach(this._handle_action_submitted.bind(this))
 		this.view.info.actions.loaded.attach(this._handle_action_loaded.bind(this))
 		
+		
+		SNUGGLE.snuggler.changed.attach(this._handle_snuggler_change.bind(this))
+		
 		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		
 		this.permissions_error = new Event(this)
@@ -25,26 +28,33 @@ controllers.User = Class.extend({
 			case keys.NUM_1:
 			case keys.NUM_PAD_1:
 				this.view.category.category.val("good-faith")
+				util.kill_event(e)
 				break
 			case keys.NUM_2:
 			case keys.NUM_PAD_2:
-				this.view.category.category.val("good-faith")
+				this.view.category.category.val("ambiguous")
+				util.kill_event(e)
 				break
 			case keys.NUM_3:
 			case keys.NUM_PAD_3:
-				this.view.category.category.val("good-faith")
+				this.view.category.category.val("bad-faith")
+				util.kill_event(e)
 				break
 			case keys.UP_ARROW:
 				this.view.activity.grid.shift_cursor(0, 1)
+				util.kill_event(e)
 				break
 			case keys.RIGHT_ARROW:
 				this.view.activity.grid.shift_cursor(1, 0)
+				util.kill_event(e)
 				break
 			case keys.DOWN_ARROW:
 				this.view.activity.grid.shift_cursor(0, -1)
+				util.kill_event(e)
 				break
 			case keys.LEFT_ARROW:
 				this.view.activity.grid.shift_cursor(-1, 0)
+				util.kill_event(e)
 				break
 			case keys.ESCAPE:
 				this.view.activity.grid.clear_cursor()
@@ -52,7 +62,6 @@ controllers.User = Class.extend({
 			default:
 				return true
 		}
-		util.kill_event(e)
 		return false
 	},
 	_handle_focus: function(){
@@ -137,6 +146,9 @@ controllers.User = Class.extend({
 		if(!SNUGGLE.snuggler.authenticated()){
 			SNUGGLE.snuggler.ping()
 		}
+	},
+	_handle_snuggler_change: function(){
+		this.view.info.actions.menu.load_preview()
 	},
 	_reload_user_talk: function(){
 		if(!SNUGGLE.snuggler.authenticated()){

@@ -41,6 +41,10 @@ ui.Dropper = Class.extend({
 		}
 		this.node.append(this.pane.node)
 		
+		if(opts.z_index){
+			this.pane.node.attr("z-index", opts.z_index)
+		}
+		
 		//This is experimental.  I'm not sure if it is kosher.
 		//Hopefully, if you click on something that doesn't capture the 
 		//click event, it will bubble up to the body and then we can 

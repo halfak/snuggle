@@ -53,6 +53,9 @@ views.Snuggler = Class.extend({
 			opts.callback || function(){}
 		)
 	},
+	reset: function(){
+		this.menu.login.reset()
+	},
 	_ping: function(steps, duration, callback){
 		if(steps > 0){
 			this.node.addClass("pinging")
@@ -141,6 +144,7 @@ views.Snuggler.Menu.Login = Class.extend({
 				tabindex: tabindex.snuggler_form
 			}
 		)
+		this.name.keypressed.attach(this._handle_keypress.bind(this))
 		this.node.append(this.name.node)
 		
 		
@@ -153,6 +157,7 @@ views.Snuggler.Menu.Login = Class.extend({
 				tabindex: tabindex.snuggler_form
 			}
 		)
+		this.pass.keypressed.attach(this._handle_keypress.bind(this))
 		this.node.append(this.pass.node)
 		
 		this.login = new ui.Button(
@@ -171,7 +176,15 @@ views.Snuggler.Menu.Login = Class.extend({
 		if(!this.disabled()){
 			this.submitted.notify()
 		}
-		e.preventDefault()
+		util.kill_event(e)
+	},
+	_handle_keypress: function(_, e){
+		if(!this.disabled()){
+			if(e.which == keys.ENTER){
+				this.submitted.notify()
+				util.kill_event(e)
+			}
+		}
 	},
 	_handle_login_activated: function(){
 		if(!this.disabled()){
@@ -213,7 +226,7 @@ views.Snuggler.Menu.Logout = Class.extend({
 				tabindex: tabindex.snuggler_form
 			}
 		)
-		this.logout.activated.attach(this._handle_logout_activated)
+		this.logout.activated.attach(this._handle_logout_activated.bind(this))
 		this.node.append(this.logout.node)
 		
 		this.submitted = new Event()

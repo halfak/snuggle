@@ -146,6 +146,7 @@ views.User.Info = Class.extend({
 				this.meta.hide()
 				/*this.counts.hide()*/
 			}
+			this.category.expanded(expanded)
 		}
 	},
 	_render: function(){
@@ -361,13 +362,6 @@ views.User.Category = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("category")
-			
-		this.header = {
-			node: $("<span>")
-				.addClass("header")
-				.text("Categorize")
-		}
-		this.node.append(this.header.node)
 		
 		this.history = new views.User.Category.History()
 		this.node.append(this.history.node)
@@ -376,21 +370,24 @@ views.User.Category = Class.extend({
 			"category",
 			[
 				new ui.RadioField.Radio(
-					i18n.get("good-faith"), "good-faith",
+					"&#x2713;", "good-faith",
 					{
-						tooltip: i18n.get("This user is at least trying to do something useful (or press #1)")
+						tooltip: i18n.get("This user is at least trying to do something useful (or press #1)"),
+						class: "button-like good-faith"
 					}
 				),
 				new ui.RadioField.Radio(
-					i18n.get("ambiguous"), "ambiguous",
+					"?", "ambiguous",
 					{
-						tooltip: i18n.get("Its unclear whether this editor is trying to be productive or not (or press #2)")
+						tooltip: i18n.get("Its unclear whether this editor is trying to be productive or not (or press #2)"),
+						class: "button-like ambiguous"
 					}
 				),
 				new ui.RadioField.Radio(
-					i18n.get("bad-faith"), "bad-faith",
+					"&#x2718;", "bad-faith",
 					{
-						tooltip: i18n.get("This editor is trying to cause harm or be disruptive (or press #3)")
+						tooltip: i18n.get("This editor is trying to cause harm or be disruptive (or press #3)"),
+						class: "button-like bad-faith"
 					}
 				),
 			],

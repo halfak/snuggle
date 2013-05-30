@@ -296,7 +296,7 @@ ui.RadioField.Radio = Class.extend({
 		
 		this._label = {
 			node: $("<label>")
-				.text(label)
+				.html(label)
 		}
 		this.node.append(this._label.node)
 		
@@ -382,18 +382,18 @@ ui.TextField = ui.Field.extend({
 				.attr('id', this.id)
 				.attr('type', opts.password ? "password" : "text")
 				.attr('tabindex', opts.tabindex || 1)
-				.keydown(this._key_pressed.bind(this))
+				.keydown(this._handle_keypressed.bind(this))
 		}
 		this.node.append(this._input.node)
 		
-		this.key_pressed = new Event(this)
+		this.keypressed = new Event(this)
 		
 		if(opts.default){
 			this.val(opts.default)
 		}
 	},
-	_key_pressed: function(e){
-		this.key_pressed.notify(e)
+	_handle_keypressed: function(e){
+		this.keypressed.notify(e)
 		this.changed.notify()
 	},
 	val: function(val){

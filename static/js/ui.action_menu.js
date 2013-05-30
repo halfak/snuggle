@@ -6,6 +6,7 @@ ui.ActionMenu = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("action_menu")
+			.keydown(this._handle_keydown.bind(this))
 		
 		this.handles = {
 			node: $("<div>")
@@ -20,13 +21,17 @@ ui.ActionMenu = Class.extend({
 		this.node.append(this.flyout.node)
 		
 		// Events
-		this.cancelled = new Event(this)
-		this.submitted = new Event(this)
-		this.loaded    = new Event(this)
+		this.cancelled  = new Event(this)
+		this.submitted  = new Event(this)
+		this.loaded     = new Event(this)
+		this.keypressed = new Event(this)
 		
 		for(var i=0;i<actions.length;i++){
 			this._add_action(actions[i])
 		}
+	},
+	_handle_keydown: function(e){
+		this.keypressed.notify(e)
 	},
 	_handle_submit: function(_, action, watch){
 		this.submitted.notify(action, watch)
@@ -57,31 +62,33 @@ ui.ActionMenu = Class.extend({
 			clearTimeout(this.preview_delay)
 		}
 		this.preview_delay = setTimeout(
-			this._load_preview.bind(this),  
+			this.load_preview.bind(this),  
 			delays.action_preview
 		)
 	},
-	_load_preview: function(){
-		logger.debug("action_menu: loading preview")
-		this.flyout.previewer.loading(true)
-		var action = this.flyout.action
-		servers.local.users.preview_action(
-			this.user,
-			action,
-			this.flyout.controls.watch.val(),
-			function(op_docs){
-				operations = op_docs.map(ui.ActionMenu.Operation.from_doc)
-				
-				this.flyout.load_preview(action, operations)
-				this.flyout.previewer.loading(false)
-			}.bind(this),
-			function(message, doc, meta){
-				operations = [new ui.ActionMenu.Error(doc)]
-				
-				this.flyout.load_preview(action, operations)
-				this.flyout.previewer.loading(false)
-			}.bind(this)
-		)
+	load_preview: function(){
+		if(this.flyout.action){
+			logger.debug("action_menu: loading preview")
+			this.flyout.previewer.loading(true)
+			var action = this.flyout.action
+			servers.local.users.preview_action(
+				this.user,
+				action,
+				this.flyout.controls.watch.val(),
+				function(op_docs){
+					operations = op_docs.map(ui.ActionMenu.Operation.from_doc)
+					
+					this.flyout.load_preview(action, operations)
+					this.flyout.previewer.loading(false)
+				}.bind(this),
+				function(message, doc, meta){
+					operations = [new ui.ActionMenu.Error(doc)]
+					
+					this.flyout.load_preview(action, operations)
+					this.flyout.previewer.loading(false)
+				}.bind(this)
+			)
+		}
 	},
 	_add_action: function(action){
 		this.handles.node.append(action.handle.node)
@@ -237,7 +244,8 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 			{
 				class: "watch", 
 				label: "watch user",
-				tooltip: "Adds the this user's page and talk page to your watchlist"
+				tooltip: "Adds the this user's page and talk page to your watchlist",
+				tabindex: tabindex.action_menu
 			}
 		)
 		this.node.append(this.watch.node)
@@ -430,7 +438,7 @@ ui.UserAction = Class.extend({
 		this.handle = {
 			node: $("<div>")
 				.addClass("handle")
-				.addClass("button-like")
+				.addClass("clickable")
 				.append($("<span>").append(name))
 				.click(this._handle_click.bind(this))
 				.attr("title", opts.tooltip || "")
@@ -510,6 +518,8 @@ ui.UserAction = Class.extend({
 ui.UserAction.from_doc = function(doc, formatting){
 	var fields = []
 	for(var i=0;i<doc.fields.length;i++){
+		var field_doc = doc.fields[i]
+		field_doc.tabindex = tabindex.action_menu
 		fields.push(ui.Field.from_doc(doc.fields[i], formatting))
 	}
 	return new ui.UserAction(
