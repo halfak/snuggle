@@ -180,13 +180,16 @@ views.User.Info = Class.extend({
 		if(this.model.category.category){
 			switch(this.model.category.category){
 				case "good-faith": 
-					this.current_category.node.append("&#x2713;")
+					this.current_category.node.html("&#x2713;")
+					break
 				case "ambiguous":
-					this.current_category.node.append("?")
+					this.current_category.node.html("?")
+					break
 				case "bad-faith":
-					this.current_category.node.append("&#x2718;")
+					this.current_category.node.html("&#x2718;")
+					break
 				default:
-					this.current_category.node.append(this.model.category.category)
+					this.current_category.node.html(this.model.category.category)
 			}
 			this.current_category.node.addClass("categorized")
 		}else{
@@ -446,6 +449,7 @@ views.User.Category = Class.extend({
 		this._render()
 	},
 	_handle_change: function(_){
+		logger.debug("view.user.category: Notifying a category change.")
 		this.changed.notify()
 	},
 	val: function(value){
@@ -481,7 +485,7 @@ views.User.Category = Class.extend({
 		this.category.val(this.model.category)
 	},
 	_render: function(){
-		this.category.val(this.model.category)
+		this.category.val(this.model.category.category)
 		
 		this.history.render(this.model.category.history)
 	}

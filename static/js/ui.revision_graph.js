@@ -172,7 +172,7 @@ ui.RevisionDetails.Revision = Class.extend({
 		this.timestamp.node.text(timestamp.format('wikiDate'))
 		this.timestamp.node.attr('href', util.rev_diff_link(id))
 		
-		this.comment.node.append(util.linkify(comment || ""))
+		this.comment.node.html(util.linkify(comment || ""))
 	}
 })
 

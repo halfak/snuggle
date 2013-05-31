@@ -383,36 +383,38 @@ ui.ActionMenu.Error.from_doc = function(doc){
 }
 
 ui.ActionMenu.Append = ui.ActionMenu.Operation.extend({
-	init: function(page_name, html){
+	init: function(page_name, html, comment){
 		this._super("Append to: " + util.htmlify(util.wiki_link(page_name)))
 		this.node.addClass("append")
-		this.html = new ui.HTMLPreview(html)
-		this.node.append(this.html.node)
+		
+		this.preview = new ui.EditPreview(html, comment)
+		this.node.append(this.preview.node)
 	}
 })
 ui.ActionMenu.Append.TYPE = "append"
 ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Append.TYPE] = ui.ActionMenu.Append
 ui.ActionMenu.Append.from_doc = function(doc){
-	return new ui.ActionMenu.Append(doc.page_name, doc.html)
+	return new ui.ActionMenu.Append(doc.page_name, doc.html, doc.comment)
 }
 
 ui.ActionMenu.Replace = ui.ActionMenu.Operation.extend({
-	init: function(page_name, html){
+	init: function(page_name, html, comment){
 		this._super("Replace " + util.htmlify(util.wiki_link(page_name)) + " with:")
 		this.node.addClass("replace")
-		this.html = new ui.HTMLPreview(html)
-		this.node.append(this.html.node)
+		
+		this.preview = new ui.EditPreview(html, comment)
+		this.node.append(this.preview.node)
 	}
 })
 ui.ActionMenu.Replace.TYPE = "replace"
 ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Replace.TYPE] = ui.ActionMenu.Replace
 ui.ActionMenu.Replace.from_doc = function(doc){
-	return new ui.ActionMenu.Replace(doc.page_name, doc.html)
+	return new ui.ActionMenu.Replace(doc.page_name, doc.html, doc.comment)
 }
 
 ui.ActionMenu.Watch = ui.ActionMenu.Operation.extend({
 	init: function(page_name){
-		this._super("Add " + util.htmlify(util.wiki_link(page_name)) + " to my watchlist.")
+		this._super("Watch: " + util.htmlify(util.wiki_link(page_name)))
 		this.node.addClass("watch021")
 	}
 })
@@ -422,11 +424,36 @@ ui.ActionMenu.Watch.from_doc = function(doc){
 	return new ui.ActionMenu.Watch(doc.page_name)
 }
 
+
 ui.HTMLPreview = Class.extend({
 	init: function(html){
 		this.node = $("<div>")
 			.addClass("wiki_format")
 			.append(html)
+	}
+})
+
+
+ui.EditPreview = Class.extend({
+	init: function(content, comment){
+		this.node = $("<div>")
+			.addClass("edit_preview")
+		
+		this.content = {
+			node: $("<div>")
+				.addClass("content")
+				.addClass("wiki_format")
+				.append(content)
+		}
+		this.node.append(this.content.node)
+		
+		this.comment = {
+			node: $("<div>")
+				.addClass("comment")
+				.addClass("wiki_format")
+				.append(comment)
+		}
+		this.node.append(this.comment.node)
 	}
 })
 

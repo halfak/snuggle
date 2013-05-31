@@ -39,7 +39,6 @@ class UserActions:
 			raise InvalidAction(request.action_name)
 		else:
 			if request.watch:
-				print("watch!")
 				results = self.watch_user.preview(request, snuggler)
 			else:
 				results = []

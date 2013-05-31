@@ -70,17 +70,19 @@ controllers.User = Class.extend({
 	_handle_category_changed: function(){
 		logger.debug("controllers.user: handling category change")
 		if(!SNUGGLE.snuggler.authenticated()){
-			console.log("pinging")
+			alert(i18n.get("You must log in before categorizing users."))
 			SNUGGLE.snuggler.ping()
+			this.view.info.category.reset()
 		}else{
-			this.view.category.disabled(true)
+			this.view.info.category.disabled(true)
 			servers.local.users.categorize(
-				this.model, this.view.category.val(),
+				this.model, 
+				this.view.info.category.val(),
 				function(doc){
 					if(doc){
 						this.model.category.load_doc(doc)
 					}
-					this.view.category.disabled(false)
+					this.view.info.category.disabled(false)
 				}.bind(this),
 				function(message, doc, meta){
 					if(doc.code == "permissions"){
@@ -89,7 +91,8 @@ controllers.User = Class.extend({
 					}else{
 							alert(message)
 					}
-					this.view.category.disabled(false)
+					this.view.info.category.reset()
+					this.view.info.category.disabled(false)
 				}.bind(this)
 			)
 		}

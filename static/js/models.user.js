@@ -74,7 +74,7 @@ models.User.Category = Class.extend({
 	init: function(doc){
 		this.changed = new Event(this)
 		
-		if(doc){
+		if(!doc){
 			this.category = 0
 			this.history = []
 		}else{
@@ -94,7 +94,7 @@ models.User.Category = Class.extend({
 	}
 })
 models.User.Category.deserialize = function(doc){
-	return new models.User.Category()
+	return new models.User.Category(doc.history, doc.category)
 }
 
 models.User.Activity = Class.extend({

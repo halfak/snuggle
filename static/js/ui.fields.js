@@ -35,7 +35,7 @@ ui.Field = Class.extend({
 		this.val(this.default)
 	},
 	_changed: function(e){
-		this.changed.notify()
+		return this.changed.notify(e).bool_or()
 	}
 })
 ui.Field.TYPES = {}
@@ -169,11 +169,10 @@ ui.RadioField = ui.Field.extend({
 	},
 	_handle_radio_checked: function(radio){
 		logger.debug("radio_field." + this.name + " changed to " + radio.value)
-		if(this._select_radio(radio)){
-			this.changed.notify(radio)
-		}
+		this._select_radio(radio)
+		this.changed.notify(radio)
 	},
-	val: function(value){
+	val: function(value, no_notify){
 		if(value === undefined){
 			if(this.selection){
 				return this.selection.value
@@ -306,6 +305,7 @@ ui.RadioField.Radio = Class.extend({
 		logger.debug("radio." + this.label + " handling click")
 		if(!this.disabled()){
 			this.selected(true)
+			util.stop_propagation(e)
 		}
 	},
 	_handle_check: function(e){

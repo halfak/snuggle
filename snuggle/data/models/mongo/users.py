@@ -216,4 +216,4 @@ class Users:
 			fields=['category'],
 			new=True
 		)
-		return doc
+		return doc['category']

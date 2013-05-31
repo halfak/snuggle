@@ -65,14 +65,14 @@ class Users:
 		try:
 			doc = self.model.users.categorize(
 				data['id'], 
-				types.Categorization(session['snuggler']['user'], data['category'])
+				types.Categorization(session['snuggler'], data['category'])
 			)
 			
 			try:
 				user = types.User(data['id'], data['name'])
 				event = types.CategorizeUser(
 					user, 
-					session['snuggler']['user'], 
+					session['snuggler'], 
 					data['category']
 				)
 				self.model.events.insert(event)

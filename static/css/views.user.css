@@ -57,28 +57,19 @@ div.user div.info .name .user_actions{
 		display: block;
 	}
 	
-	div.user div.info.expanded .name .current_category {
+	div.user div.info .name .current_category {
 		display: none
 	}
 	
-	div.user div.info.expanded .name .current_category.categorized {
+	div.user div.info .name .current_category.categorized {
 		display: inline-block;
-		padding: .25em .5em;
+		border-radius: .5em;
+		padding: 0em .25em;
 		margin-right: .5em;
-		background: #999;
+		background: #777;
 		color: #fff;
 	}
 
-div.user.good-faith div.info .name:before{
-	content: "\2714\0000a0";
-}
-div.user.bad-faith div.info .name:before{
-	content: "\2718\0000a0";
-}
-div.user.ambiguous div.info .name:before{
-	content: "?\0000a0";
-	font-weight: bold;
-}
 div.user div.info.viewed .name{
 	font-weight: normal;
 }

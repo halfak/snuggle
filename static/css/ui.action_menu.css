@@ -157,6 +157,8 @@ div.action_menu form .field{
 
 div.action_menu .previewer .operations{
 	display: inline-block;
+	position: relative;
+	z-index: 1;
 	min-width: 100%;
 	padding: .5em;
 }
@@ -175,6 +177,15 @@ div.action_menu .previewer .operation .wiki_format{
 	border: 1px solid black;
 	border-top: none;
 	box-shadow: 2px 2px 2px rgba(0,0,0,.2);
+	overflow: hidden;
+}
+div.action_menu .previewer .operation .wiki_format.comment{
+	font-style: italic;
+}
+div.action_menu .previewer .operation .wiki_format.comment:before{
+	content: "summary: ";
+	font-style: normal;
+	font-weight: bold;
 }
 div.action_menu .previewer .operation.error .description{
 	background: #f99;
