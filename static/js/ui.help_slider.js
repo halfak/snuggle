@@ -12,6 +12,7 @@ ui.HelpSlider = Class.extend({
 			node: $("<div>")
 				.addClass("pane")
 				.addClass("help_content")
+				.load("help/" + this.lang + ".html .help_content")
 		}
 		this.node.append(this.pane.node)
 		
@@ -19,23 +20,18 @@ ui.HelpSlider = Class.extend({
 			node: $("<div>")
 				.addClass("tab")
 				.addClass("clickable")
-				.append(i18n.get("help"))
+				.append($("<span>").html(i18n.get("help")))
 		}
+		this.node.append(this.tab.node)
 		this.tab.node.click(this._handle_click.bind(this))
 		
 		$("body").click(this._handle_body_click.bind(this))
-		
-		this.load_content()
 	},
 	_handle_click: function(){
 		this.toggle()
 	},
 	_handle_body_click: function(e){
 		this.expanded(false)
-	},
-	load_content: function(){
-		logger.debug("ui.help_slider: Loading help content for " + this.lang)
-		this.pane.node.load("help/" + this.lang + ".html .help_content")
 	},
 	toggle: function(){
 		this.expanded(!this.expanded())
