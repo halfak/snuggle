@@ -1,6 +1,9 @@
 div.dropper {
 	position: relative;
 }
+div.dropper:focus{
+	outline: none;
+}
 	div.dropper div.pane{
 		position: absolute;
 		top: 100%;

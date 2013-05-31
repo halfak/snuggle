@@ -189,7 +189,7 @@ div.revision_graph div.revision_details{
 		background: #ccc;
 	}	
 		div.revision_details div.diff div{
-			background: #eee;
+			background: #f6f6f6;
 			padding-bottom: .5em;
 			padding: 0px .5em;
 			word-wrap: break-word;

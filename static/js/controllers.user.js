@@ -8,7 +8,7 @@ controllers.User = Class.extend({
 		this.id    = this.model.id
 		this.node  = this.view.node
 		
-		this.view.focussed.attach(this._handle_focus.bind(this))
+		this.view.focus_set.attach(this._handle_focus.bind(this))
 		this.view.keypressed.attach(this._handle_keypress.bind(this))
 		this.view.info.category.changed.attach(this._handle_category_changed.bind(this))
 		this.view.info.actions.submitted.attach(this._handle_action_submitted.bind(this))
@@ -17,79 +17,60 @@ controllers.User = Class.extend({
 		
 		SNUGGLE.snuggler.changed.attach(this._handle_snuggler_change.bind(this))
 		
-		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
-		
 		this.permissions_error = new Event(this)
 		this.focussed          = new Event(this)
 	},
 	_handle_keypress: function(_, e){
-		logger.debug("Capturing keypress for user name=" + this.model.name + ": " + e.which)
-		switch(e.which){
-			case keys.NUM_1:
-			case keys.NUM_PAD_1:
-				this.view.category.category.val("good-faith")
-				util.kill_event(e)
-				break
-			case keys.NUM_2:
-			case keys.NUM_PAD_2:
-				this.view.category.category.val("ambiguous")
-				util.kill_event(e)
-				break
-			case keys.NUM_3:
-			case keys.NUM_PAD_3:
-				this.view.category.category.val("bad-faith")
-				util.kill_event(e)
-				break
-			case keys.UP_ARROW:
-				this.view.activity.grid.shift_cursor(0, 1)
-				util.kill_event(e)
-				break
-			case keys.RIGHT_ARROW:
-				this.view.activity.grid.shift_cursor(1, 0)
-				util.kill_event(e)
-				break
-			case keys.DOWN_ARROW:
-				this.view.activity.grid.shift_cursor(0, -1)
-				util.kill_event(e)
-				break
-			case keys.LEFT_ARROW:
-				this.view.activity.grid.shift_cursor(-1, 0)
-				util.kill_event(e)
-				break
-			case keys.ESCAPE:
-				this.view.activity.grid.clear_cursor()
-				break
-			default:
-				return true
+		if(this.view.focused()){
+			logger.debug("Capturing keypress for user name=" + this.model.name + ": " + e.which)
+			switch(e.which){
+				case keys.NUM_1:
+				case keys.NUM_PAD_1:
+					this.view.info.category.val("good-faith")
+					util.kill_event(e)
+					break
+				case keys.NUM_2:
+				case keys.NUM_PAD_2:
+					this.view.info.category.val("ambiguous")
+					util.kill_event(e)
+					break
+				case keys.NUM_3:
+				case keys.NUM_PAD_3:
+					this.view.info.category.val("bad-faith")
+					util.kill_event(e)
+					break
+				case keys.UP_ARROW:
+					this.view.activity.grid.shift_cursor(0, 1)
+					util.kill_event(e)
+					break
+				case keys.RIGHT_ARROW:
+					this.view.activity.grid.shift_cursor(1, 0)
+					util.kill_event(e)
+					break
+				case keys.DOWN_ARROW:
+					this.view.activity.grid.shift_cursor(0, -1)
+					util.kill_event(e)
+					break
+				case keys.LEFT_ARROW:
+					this.view.activity.grid.shift_cursor(-1, 0)
+					util.kill_event(e)
+					break
+				case keys.ESCAPE:
+					this.view.activity.grid.clear_cursor()
+					break
+				default:
+					return true
+			}
+			return false
 		}
-		return false
 	},
 	_handle_focus: function(){
 		this.focussed.notify(true)
 	},
-	_handle_selected_change: function(){
-		if(this.selected()){
-			if(this._view_delay){
-				clearTimeout(this._view_delay)
-			}
-			this._view_delay = setTimeout(
-				function(){
-					SYSTEM.local.users.view(
-						user,
-						function(doc){
-							this.model.add_view()
-						}.bind(this),
-						function(error){
-							LOGGING.error(error)
-						}
-					)
-				}.bind(this),
-				delays.user_view_delay * 1000
-			)
-		}
-	},
 	_handle_category_changed: function(){
+		logger.debug("controllers.user: handling category change")
 		if(!SNUGGLE.snuggler.authenticated()){
+			console.log("pinging")
 			SNUGGLE.snuggler.ping()
 		}else{
 			this.view.category.disabled(true)
@@ -98,8 +79,8 @@ controllers.User = Class.extend({
 				function(doc){
 					if(doc){
 						this.model.category.load_doc(doc)
-						this.view.category.disabled(false)
 					}
+					this.view.category.disabled(false)
 				}.bind(this),
 				function(message, doc, meta){
 					if(doc.code == "permissions"){

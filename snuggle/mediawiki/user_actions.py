@@ -1,3 +1,4 @@
+from snuggle import configuration
 from snuggle.errors import InvalidAction
 from snuggle.data import types
 
@@ -5,21 +6,45 @@ from .api import API
 
 class UserActions:
 	
-	def __init__(self, actions):
+	def __init__(self, api, actions):
 		self.actions = actions
-	
+		
+		self.watch_user = Action(
+			"watch_user",
+			[
+				Watch(
+					api, 
+					configuration.mediawiki["namespaces"][2]['prefixes'][0] + 
+					"%(user_name)s"
+				),
+				Watch(
+					api, 
+					configuration.mediawiki["namespaces"][3]['prefixes'][0] + 
+					"%(user_name)s"
+				)
+			]
+		)
 	
 	def perform(self, request, snuggler=None):
 		if request.action_name not in self.actions:
 			raise InvalidAction(request.type)
 		else:
-			return self.actions[request.action_name].perform(request, snuggler)
+			if request.watch:
+				results = self.watch_user.perform(request, snuggler)
+			else:
+				results = []
+			return self.actions[request.action_name].perform(request, snuggler) + results
 		
 	def preview(self, request, snuggler=None):
 		if request.action_name not in self.actions:
 			raise InvalidAction(request.action_name)
 		else:
-			return self.actions[request.action_name].preview(request, snuggler)
+			if request.watch:
+				print("watch!")
+				results = self.watch_user.preview(request, snuggler)
+			else:
+				results = []
+			return self.actions[request.action_name].preview(request, snuggler) + results
 	
 	@classmethod
 	def from_config(cls, config):
@@ -29,7 +54,7 @@ class UserActions:
 			action = Action.from_doc(doc, api)
 			actions[action.name] = action
 		
-		return cls(actions)
+		return cls(api, actions)
 
 
 class Action:

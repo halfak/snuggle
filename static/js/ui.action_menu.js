@@ -18,6 +18,7 @@ ui.ActionMenu = Class.extend({
 		this.flyout = new ui.ActionMenu.Flyout()
 		this.flyout.controls.submitted.attach(this._handle_submit.bind(this))
 		this.flyout.controls.cancelled.attach(this._handle_cancel.bind(this))
+		this.flyout.controls.watch.changed.attach(this._handle_action_changed.bind(this))
 		this.node.append(this.flyout.node)
 		
 		// Events
@@ -62,8 +63,8 @@ ui.ActionMenu = Class.extend({
 			clearTimeout(this.preview_delay)
 		}
 		this.preview_delay = setTimeout(
-			this.load_preview.bind(this),  
-			delays.action_preview
+			this.load_preview.bind(this),
+			delays.preview_action
 		)
 	},
 	load_preview: function(){

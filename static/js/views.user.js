@@ -26,7 +26,7 @@ views.User = Class.extend({
 		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		
 		//The only event we care about.  Is someone clicking on me?
-		this.focussed   = new Event(this)
+		this.focus_set  = new Event(this)
 		this.keypressed = new Event(this)
 		
 		this.manual_focus = false
@@ -37,7 +37,7 @@ views.User = Class.extend({
 		if(this.manual_focus){
 			this.manual_focus = false
 		}else{
-			this.focussed.notify()
+			this.focus_set.notify()
 		}
 	},
 	_handle_keydown: function(e){
@@ -49,13 +49,23 @@ views.User = Class.extend({
 	},
 	selected: function(selected){
 		if(selected === undefined){
-			return this.node.is(":focus")
+			return this.node.hasClass("selected")
 		}else{
 			if(selected){
 				this.node.addClass("selected")
-				this._manual_focus()
 			}else{
 				this.node.removeClass("selected")
+			}
+			this.focused(selected)
+		}
+	},
+	focused: function(focused){
+		if(focused == undefined){
+			return this.node.is(":focus")
+		}else{
+			if(focused){
+				this._manual_focus()
+			}else{
 				this.node.blur()
 			}
 		}
@@ -105,6 +115,12 @@ views.User.Info = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
+		this.current_category = {
+			node: $("<div>")
+				.addClass("current_category")
+		}
+		this.name.node.prepend(this.current_category.node)
+		
 		this.actions = new views.User.Info.Actions(this.model)
 		this.name.node.append(this.actions.node)
 		
@@ -124,11 +140,15 @@ views.User.Info = Class.extend({
 		this.node.append(this.category.node)
 		
 		this.model.viewed.attach(this._handle_view.bind(this))
+		this.model.category.changed.attach(this._handle_category_change.bind(this))
 		
 		this.expanded(false)
 		this._render()
 	},
 	_handle_view: function(){
+		this._render()
+	},
+	_handle_category_change: function(){
 		this._render()
 	},
 	expanded: function(expanded){
@@ -144,6 +164,7 @@ views.User.Info = Class.extend({
 				this.node.removeClass("expanded")
 				this.utc.hide()
 				this.meta.hide()
+				this.actions.expanded(false)
 				/*this.counts.hide()*/
 			}
 			this.category.expanded(expanded)
@@ -152,6 +173,24 @@ views.User.Info = Class.extend({
 	_render: function(){
 		if(this.model.views > 0){
 			this.node.addClass("viewed")
+		}
+		
+		
+		this.current_category.node.html("")
+		if(this.model.category.category){
+			switch(this.model.category.category){
+				case "good-faith": 
+					this.current_category.node.append("&#x2713;")
+				case "ambiguous":
+					this.current_category.node.append("?")
+				case "bad-faith":
+					this.current_category.node.append("&#x2718;")
+				default:
+					this.current_category.node.append(this.model.category.category)
+			}
+			this.current_category.node.addClass("categorized")
+		}else{
+			this.current_category.node.removeClass("categorized")
 		}
 		
 		this.counts.render(this.model.activity.counts)

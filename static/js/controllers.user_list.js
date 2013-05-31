@@ -18,6 +18,24 @@ controllers.UserList = Class.extend({
 	},
 	_handle_user_focus: function(user){
 		this.model.select(user)
+		if(this._view_delay){
+			clearTimeout(this._view_delay)
+		}
+		this._view_delay = setTimeout(
+			function(){
+				logger.
+				servers.local.users.view(
+					user,
+					function(doc){
+						this.model.add_view()
+					}.bind(this),
+					function(error){
+						LOGGING.error(error)
+					}
+				)
+			}.bind(this),
+			delays.user_view_delay * 1000
+		)
 	},
 	_handle_keypress: function(_, e){
 		if(e.which == keys.PAGE_UP){

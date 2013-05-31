@@ -56,6 +56,18 @@ div.user div.info .name .user_actions{
 	div.user div.info.expanded .name .user_actions {
 		display: block;
 	}
+	
+	div.user div.info.expanded .name .current_category {
+		display: none
+	}
+	
+	div.user div.info.expanded .name .current_category.categorized {
+		display: inline-block;
+		padding: .25em .5em;
+		margin-right: .5em;
+		background: #999;
+		color: #fff;
+	}
 
 div.user.good-faith div.info .name:before{
 	content: "\2714\0000a0";
@@ -215,6 +227,9 @@ div.user .category .radios.field .radio_option {
 	margin-right: 2%;
 	padding: .25em 0em;
 }
+div.user .category .radios.field .radio_option.selected{
+	border-width: 3px;
+}
 div.user .category .radios.field .radio_option.ambiguous{font-weight: bold;}
 
 	div.user .category .radios.field .radio_option label{
@@ -224,28 +239,6 @@ div.user .category .radios.field .radio_option.ambiguous{font-weight: bold;}
 	
 	div.user .category .radios.field .radio_option input {
 		display: none;
-	}
-		div.user div.category div.button span{
-			display: block;
-			border-radius: .25em;
-			box-shadow: inset 0px -.25em .5em rgba(0,0,0,.3);
-			padding: .25em 0px;
-			text-shadow: 1px 1px rgba(255,255,255,.5);
-		}
-		div.user div.category div.button:hover, div.user div.category div.button.selected{
-			box-shadow: 0px 0px .2em rgba(0,0,0,.8);
-		}
-		div.user div.category div.button.selected span{
-			box-shadow: inset 0px .25em .5em rgba(0,0,0,.3);
-		}
-	div.user div.category div.button.good-faith{
-		background: #afa;
-	}
-	div.user div.category div.button.ambiguous{
-		font-weight: bold;
-	}
-	div.user div.category div.button.bad-faith{
-		background: #faa;
 	}
 
 

@@ -31,5 +31,6 @@ tabindex = {
 	filter_menu: 0,
 	user: 1,
 	action_menu: 2,
-	snuggler_form: 3
+	snuggler_form: 3,
+	dropper: 100
 }
