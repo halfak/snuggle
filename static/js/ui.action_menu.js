@@ -34,8 +34,9 @@ ui.ActionMenu = Class.extend({
 	_handle_keydown: function(e){
 		this.keypressed.notify(e)
 	},
-	_handle_submit: function(_, action, watch){
-		this.submitted.notify(action, watch)
+	_handle_submit: function(_, watch){
+		logger.debug("ui.action_menu: Handling submit.")
+		this.submitted.notify(this.flyout.action, watch)
 	},
 	_handle_cancel: function(_){
 		this.flyout.expanded(false)
@@ -107,7 +108,7 @@ ui.ActionMenu = Class.extend({
 				this.node.removeClass("disabled")
 			}
 			this.flyout.disabled(disabled)
-			this.actions.list.map(function(action){action.disabled(disabled)})
+			this.handles.list.map(function(action){action.disabled(disabled)})
 		}
 	},
 	expanded: function(expanded){
@@ -278,7 +279,7 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 		this.cancelled.notify()
 	},
 	_submit_activated: function(_){
-		this.submitted.notify()
+		this.submitted.notify(this.watch.val())
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){

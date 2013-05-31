@@ -188,6 +188,7 @@ class Watch(Operation):
 	TYPE = "watch"
 	
 	def __init__(self, api, page_name):
+		self.api = api
 		self.page_name = page_name
 	
 	def preview(self, request, snuggler):

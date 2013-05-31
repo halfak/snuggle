@@ -10,7 +10,7 @@ class Reverteds:
 		self.mongo = mongo
 	
 	def __contains__(self, page_id):
-		return self.mongo.db.reverteds.find_one({'revision.page._id': page_id}) != None
+		return self.mongo.db.reverteds.find_one({'revision.page.id': page_id}) != None
 	
 	def insert(self, reverted):
 		

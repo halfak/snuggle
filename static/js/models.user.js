@@ -39,6 +39,7 @@ models.User = Class.extend({
 		this.changed.notify()
 	},
 	add_view: function(){
+		logger.debug("models.user: Adding view.")
 		this.views += 1
 		this.viewed.notify()
 	}
@@ -174,6 +175,7 @@ models.User.Talk = Class.extend({
 		}
 	},
 	load_doc: function(doc){
+		logger.debug("models.user.talk: loading new doc " + JSON.stringify(doc))
 		if(!doc){
 			throw "Cannot load empty doc into model.User.Talk."
 		}

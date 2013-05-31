@@ -18,24 +18,18 @@ controllers.UserList = Class.extend({
 	},
 	_handle_user_focus: function(user){
 		this.model.select(user)
-		if(this._view_delay){
-			clearTimeout(this._view_delay)
+	},
+	_handle_user_selected_change: function(user, selected){
+		if(selected){
+			if(this._view_delay){
+				clearTimeout(this._view_delay)
+			}
+			logger.debug("controllers.user_list: delaying view of user")
+			this._view_delay = setTimeout(
+				function(){this._add_user_view(user)}.bind(this),
+				delays.user_view_delay
+			)
 		}
-		this._view_delay = setTimeout(
-			function(){
-				logger.
-				servers.local.users.view(
-					user,
-					function(doc){
-						this.model.add_view()
-					}.bind(this),
-					function(error){
-						LOGGING.error(error)
-					}
-				)
-			}.bind(this),
-			delays.user_view_delay * 1000
-		)
 	},
 	_handle_keypress: function(_, e){
 		if(e.which == keys.PAGE_UP){
@@ -48,6 +42,7 @@ controllers.UserList = Class.extend({
 	},
 	append: function(user){
 		user.focussed.attach(this._handle_user_focus.bind(this))
+		user.selected_changed.attach(this._handle_user_selected_change.bind(this))
 		this.model.append(user)
 	},
 	load: function(query){
@@ -59,6 +54,18 @@ controllers.UserList = Class.extend({
 		
 		this._read_until_full()
 		
+	},
+	_add_user_view: function(user){
+		logger.debug("controller.user_list: requesting to add new user view.")
+		servers.local.users.view(
+			user,
+			function(doc){
+				user.add_view()
+			}.bind(this),
+			function(message, doc, meta){
+				logger.error(message)
+			}.bind(this)
+		)
 	},
 	_read_until_full: function(){
 		// This function checks to see if we should load

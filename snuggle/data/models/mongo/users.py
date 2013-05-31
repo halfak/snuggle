@@ -162,9 +162,13 @@ class Users:
 			raise KeyError(str(spec))
 	
 	def update_talk(self, user_id, rev_id, markup):
+		rev_id = rev_id if rev_id != None else 0
 		threads = mediawiki.threads.parse(markup)
+		
 		talk = types.Talk(rev_id, threads)
+		
 		self.set_talk(user_id, talk)
+		return talk
 	
 	def set_talk(self, user_id, talk):
 		self.mongo.db.users.update(

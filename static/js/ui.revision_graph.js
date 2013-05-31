@@ -251,7 +251,7 @@ ui.RevisionDetails.Revert = Class.extend({
 			this.user.node.text(revert.user.name)
 			this.user.node.attr('href', util.user_link(revert.user.name))
 			
-			this.comment.node.text(revert.comment || "")
+			this.comment.node.html(util.linkify(revert.comment || ""))
 			this.show()
 		}else{
 			this.hide()	

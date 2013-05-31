@@ -77,7 +77,7 @@ div.action_menu .flyout.expanded {
 		div.action_menu .flyout .panel .previewer .status{
 			position: absolute;
 			z-index: 0;
-			top: 0px;
+			bottom: 0px;
 			left: 0px;
 			right: 0px;
 			display: block;

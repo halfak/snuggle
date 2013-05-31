@@ -140,7 +140,6 @@ div.user div.category div.history{
 	top: 0px;
 	right: 1em;
 	font-size: .9em;
-	z-index: 2;
 }
 	div.user div.category div.history div.tab{
 		position: relative;

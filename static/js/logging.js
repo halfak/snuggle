@@ -99,7 +99,7 @@ logging.Console = Class.extend({
 			console.log(content)
 		}
 	},
-	error: function(content){recent
+	error: function(content){
 		if(console.error){
 			console.error(content)
 		}else if(console.log){

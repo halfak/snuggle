@@ -18,11 +18,12 @@ request = types.ActionRequest(
 	{
 		'header': "I am a test",
 		'message': "I am also a test"
-	}
+	},
+	True
 )
 print(request)
 
-id, name, cookies = api.users.authenticate('GLTester', getpass.getpass("GLTester's password: "))
+id, name, cookies = api.users.authenticate('EpochFail', getpass.getpass("EpochFail's password: "))
 snuggler = types.Snuggler(id, name, cookies)
 #print(snuggler)
 

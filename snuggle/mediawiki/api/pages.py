@@ -1,6 +1,10 @@
+import logging
+
 from snuggle import errors
 
 from .api_subset import APISubset
+
+logger = logging.getLogger("snuggle.mediawiki.api.pages")
 
 class Pages(APISubset):
 	
@@ -27,7 +31,7 @@ class Pages(APISubset):
 	def append(self, page_name, markup, cookies=None, comment=""):
 		edit_token = self._get_edit_token(page_name, cookies)
 		
-		doc, cookies = self.api.post(
+		doc, _ = self.api.post(
 			{
 				'action': "edit",
 				'title': page_name,
@@ -47,9 +51,9 @@ class Pages(APISubset):
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 	
 	def replace(self, page_name, markup, cookies=None, comment=""):
-		edit_token = self._get_edit_token(page_name, cookies=None)
+		edit_token = self._get_edit_token(page_name, cookies)
 		
-		doc, cookies = self.api.post(
+		doc, _ = self.api.post(
 			{
 				'action': "edit",
 				'title': page_name,
@@ -137,7 +141,7 @@ class Pages(APISubset):
 		
 	
 	def watch(self, page_name, cookies=None):
-		doc, cookies = self.api.post(
+		doc, _ = self.api.post(
 			{
 				'action': "query",
 				'prop': "info",
@@ -153,6 +157,8 @@ class Pages(APISubset):
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		except IndexError as e:
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
+		
+		logger.debug("Watching %s with token %s and cookies %s" % (page_name, page['watchtoken'], cookies))
 		
 		doc, cookies = self.api.post(
 			{

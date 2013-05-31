@@ -170,7 +170,7 @@ class Users:
 				user = self.model.users.get(name=doc['name'])
 			
 			rev_id, markup = self.mwapi.pages.get_markup(title="User_talk:" + user.name)
-			self.model.users.update_talk(user.id, rev_id, markup)
+			talk = self.model.users.update_talk(user.id, rev_id, markup)
 			if rev_id != None: self.model.users.set_talk_page(user.name)
 			return responses.success(talk.serialize())
 		except KeyError as e:

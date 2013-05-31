@@ -71,6 +71,7 @@ ui.Button = Class.extend({
 		if(e.which == keys.ENTER || e.which == keys.SPACE){
 			if(!this.disabled()){
 				this.activated.notify()
+				util.kill_event(e)
 			}
 		}
 	},

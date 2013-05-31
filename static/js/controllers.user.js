@@ -14,11 +14,13 @@ controllers.User = Class.extend({
 		this.view.info.actions.submitted.attach(this._handle_action_submitted.bind(this))
 		this.view.info.actions.loaded.attach(this._handle_action_loaded.bind(this))
 		
+		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		
 		SNUGGLE.snuggler.changed.attach(this._handle_snuggler_change.bind(this))
 		
 		this.permissions_error = new Event(this)
 		this.focussed          = new Event(this)
+		this.selected_changed  = new Event(this)
 	},
 	_handle_keypress: function(_, e){
 		if(this.view.focused()){
@@ -67,6 +69,9 @@ controllers.User = Class.extend({
 	_handle_focus: function(){
 		this.focussed.notify(true)
 	},
+	_handle_selected_change: function(){
+		this.selected_changed.notify(this.model.selected())
+	},
 	_handle_category_changed: function(){
 		logger.debug("controllers.user: handling category change")
 		if(!SNUGGLE.snuggler.authenticated()){
@@ -102,16 +107,16 @@ controllers.User = Class.extend({
 			SNUGGLE.snuggler.ping()
 		}else{
 			// Disable user_actions.  No clicky clicky.
-			this.view.info.user_actions.disabled(true)
+			this.view.info.actions.disabled(true)
 			servers.local.users.perform_action(
 				this.model,
 				action,
 				watch,
 				function(doc){
-					this.view.info.menu.disabled(false)
+					this.view.info.actions.disabled(false)
 					action.reset()
-					this.view.info.menu.expanded(false)
-					this._reload_user_talk(user)
+					this.view.info.actions.expanded(false)
+					this._reload_user_talk()
 				}.bind(this),
 				function(message, doc, meta){
 					doc = doc || {}
@@ -121,7 +126,7 @@ controllers.User = Class.extend({
 					}else{
 							alert(message)
 					}
-					user_view.info.menu.disabled(false)
+					this.view.info.actions.disabled(false)
 				}.bind(this)
 			)
 		}
@@ -154,6 +159,9 @@ controllers.User = Class.extend({
 					}.bind(this)
 			)
 		}
+	},
+	add_view: function(){
+		this.model.add_view()
 	},
 	selected: function(selected){
 		return this.model.selected(selected)

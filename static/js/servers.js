@@ -90,7 +90,7 @@ servers.Local.Users = Class.extend({
 			'user', 'view', 
 			{
 				id: user.id, 
-				name: user.info.name
+				name: user.name
 			},
 			success,
 			error
@@ -159,7 +159,7 @@ servers.Local.Users = Class.extend({
 			'user', 'reload/talk',
 			{
 				id: user.id,
-				name: user.info.name
+				name: user.name
 			},
 			success,
 			error

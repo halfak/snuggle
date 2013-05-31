@@ -98,13 +98,13 @@ div.revision_graph .day_grid{
 		border: 1px solid #666;
 		border-bottom: none;
 	}
-	
+	/*
 	div.day_grid .day:first-child .revision{
 		box-shadow: inset 2px 0px 2px rgba(0,0,0,.2);
 	}
 	div.day_grid .day:first-child .revision:first-child{
 		box-shadow: inset 2px 2px 2px rgba(0,0,0,.2);
-	}
+	}*/
 	
 	div.day_grid .day .revision.selected{
 		position: relative;
