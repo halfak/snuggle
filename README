@@ -48,5 +48,5 @@ Example synchronizer startup:
 
 Example web user interface startup:
   
-  % ./webd config/snuggle.yaml config/mediawiki.yaml config/language.yaml
+  % ./webd config/snuggle.yaml config/mediawiki.yaml config/i18n.yaml
 
