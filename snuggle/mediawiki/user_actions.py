@@ -8,7 +8,6 @@ class UserActions:
 	
 	def __init__(self, api, actions):
 		self.actions = actions
-		
 		self.watch_user = Action(
 			"watch_user",
 			[
