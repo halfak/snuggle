@@ -211,13 +211,12 @@ ui.FilterMenu.Filters = Class.extend({
 	},
 	_handle_category_change: function(categories){
 		this.category.node.html(categories.selection.label)
+		this.node.removeClass("good-faith")
+		this.node.removeClass("ambiguous")
+		this.node.removeClass("bad-faith")
+		this.node.removeClass("selected")
 		if(categories.selection.value){
 			this.node.addClass(categories.selection.value + " selected")
-		}else{
-			this.node.removeClass("good-faith")
-			this.node.removeClass("ambiguous")
-			this.node.removeClass("bad-faith")
-			this.node.removeClass("selected")
 		}
 	},
 	_handle_field_change: function(){

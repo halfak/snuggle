@@ -17,7 +17,7 @@ div.filter_menu div.categories{
 		position: relative;
 		display: inline-block;
 		text-align: bottom;
-		border: 1px solid #999;
+		border: 1px solid #666;
 		border-bottom: 0px;
 		font-size: 1em;
 		padding: .25em 2em;
@@ -66,8 +66,8 @@ div.filter_menu div.filters{
 	position: relative;
 	z-index: 1;
 	background: #eee;
-	border-top: 1px solid #999;
-	border-bottom: 1px solid #999;
+	border-top: 1px solid #888;
+	border-bottom: 1px solid #333;
 	padding: .25em 1em;
 	box-shadow: inset 0px -.75em 1em rgba(0,0,0,.2);
 	font-size: .9em;
@@ -77,7 +77,7 @@ div.filter_menu div.filters{
 		min-width: 9em;
 		text-align: center;
 		background: #eee;
-		border: 1px solid #999;
+		border: 1px solid #333;
 		font-weight: bold;
 	}
 

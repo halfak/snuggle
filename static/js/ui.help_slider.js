@@ -11,8 +11,10 @@ ui.HelpSlider = Class.extend({
 		this.pane = {
 			node: $("<div>")
 				.addClass("pane")
-				.addClass("help_content")
-				.load("help/" + this.lang + ".html .help_content")
+				.append(
+					$("<div>").addClass("container")
+						.load("help/" + this.lang + ".html .help_content")
+				)
 		}
 		this.node.append(this.pane.node)
 		
@@ -42,13 +44,13 @@ ui.HelpSlider = Class.extend({
 		}else{
 			if(expand){
 				this.pane.node.animate(
-					{"max-height": "400px"},
+					{"height": "400px"},
 					300
 				)
 				this.node.addClass("expanded")
 			}else{
 				this.pane.node.animate(
-					{"max-height": "1px"},
+					{"height": "1px"},
 					300,
 					function(){
 						this.node.removeClass("expanded")

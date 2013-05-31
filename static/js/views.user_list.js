@@ -8,8 +8,9 @@ views.UserList = Class.extend({
 		this.node = $("<div>")
 			.addClass("user_list")
 			.scroll(this._handle_view_change.bind(this))
-			.resize(this._handle_view_change.bind(this))
 			.keydown(this._handle_keydown.bind(this))
+		
+		$(window).resize(this._handle_view_change.bind(this))
 		
 		this.model.appended.attach(this._handle_append.bind(this))
 		this.model.cleared.attach(this._handle_clear.bind(this))
