@@ -87,9 +87,9 @@ servers.Local.Users = Class.extend({
 	},
 	view: function(user, success, error){
 		this.api.post(
-			'user', 'view', 
+			'user', 'view',
 			{
-				id: user.id, 
+				id: user.id,
 				name: user.name
 			},
 			success,

@@ -58,7 +58,7 @@ controllers.UserList = Class.extend({
 	_add_user_view: function(user){
 		logger.debug("controller.user_list: requesting to add new user view.")
 		servers.local.users.view(
-			user,
+			user.model,
 			function(doc){
 				user.add_view()
 			}.bind(this),
