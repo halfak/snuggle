@@ -5,11 +5,11 @@ ui.Snuggle = Class.extend({
 		logger.info("Starting up Snuggle UI.")
 		
 		// Set up help
-		this.help = new ui.HelpSlider()
-		this.node.append(this.help)
+		this.help = new ui.HelpSlider(configuration.i18n.lang)
+		this.node.append(this.help.node)
 		
 		// Perform initial query automatically
-		this._load_help()
+		//this._load_help()
 		
 		// Set up snuggler
 		this.snuggler = new controllers.Snuggler()
@@ -30,7 +30,7 @@ ui.Snuggle = Class.extend({
 		this.loading = false
 	},
 	_handle_filter_menu_change: function(_){
-		logger.debug("controller delaying filter change.")
+		logger.debug("ui.snuggle: controller delaying filter change.")
 		if(this.filters_change_delay){
 			clearTimeout(this.filters_change_delay)
 		}
@@ -41,10 +41,12 @@ ui.Snuggle = Class.extend({
 		)
 	},
 	_load_help: function(){
+		logger.debug("ui.snuggle: loading help content")
 		servers.local.help(
 			configuration.i18n.lang,
 			function(content){
-				this.help.load_content($(content).find("body").html())
+				console.log($(content).html())
+				this.help.load_content()
 			}.bind(this),
 			function(message, doc, meta){
 				alert(message)
@@ -52,7 +54,7 @@ ui.Snuggle = Class.extend({
 		)
 	},
 	_update_query: function(){
-		logger.debug("snuggle updating query")
+		logger.debug("ui.snuggle: updating query")
 		var query = servers.local.users.query(this.filter_menu.val())
 		this.user_list.load(query)
 	}

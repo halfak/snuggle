@@ -1,7 +1,9 @@
 ui = window.ui || {}
 
 ui.HelpSlider = Class.extend({
-	init: function(content){
+	init: function(lang){
+		this.lang = lang
+		
 		this.node = $("<div>")
 			.addClass("help_slider")
 			.click(util.stop_propagation)
@@ -11,6 +13,7 @@ ui.HelpSlider = Class.extend({
 				.addClass("pane")
 				.addClass("help_content")
 		}
+		this.node.append(this.pane.node)
 		
 		this.tab = {
 			node: $("<div>")
@@ -22,7 +25,7 @@ ui.HelpSlider = Class.extend({
 		
 		$("body").click(this._handle_body_click.bind(this))
 		
-		this.load_content(content)
+		this.load_content()
 	},
 	_handle_click: function(){
 		this.toggle()
@@ -30,8 +33,9 @@ ui.HelpSlider = Class.extend({
 	_handle_body_click: function(e){
 		this.expanded(false)
 	},
-	load_content: function(content){
-		this.pane.node.html(content)
+	load_content: function(){
+		logger.debug("ui.help_slider: Loading help content for " + this.lang)
+		this.pane.node.load("help/" + this.lang + ".html .help_content")
 	},
 	toggle: function(){
 		this.expanded(!this.expanded())

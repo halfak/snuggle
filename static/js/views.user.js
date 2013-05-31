@@ -273,7 +273,7 @@ views.User.Info.Actions = ui.Dropper.extend({
 
 views.User.Activity = ui.RevisionGraph.extend({
 	init: function(model){
-		this._super(model.registration, 30)
+		this._super(model.registration)
 		this.model = model
 		
 		this.node.addClass("activity")

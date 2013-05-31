@@ -422,7 +422,9 @@ ui.DayGrid = Class.extend({
 		this.selection = null
 		
 		this.days = []
-		this._ensure_days(Math.min(this.max_days, Math.floor((new Date() - this.origin)/miliseconds.DAY)))
+		var days_since_origin = Math.floor((util.now_ms() - this.origin)/miliseconds.DAY)
+		this._ensure_days(days_since_origin)
+		
 		
 		this.revision_selected = new Event(this)
 		
