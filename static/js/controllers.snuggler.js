@@ -67,7 +67,6 @@ controllers.Snuggler = Class.extend({
 		)
 	},
 	ping: function(){
-		console.log("snuggler ping")
 		this.view.menu.expanded(true)
 	},
 	authenticated: function(){
