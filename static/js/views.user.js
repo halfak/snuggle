@@ -203,7 +203,7 @@ views.User.Info = Class.extend({
 			'Last activity': this.model.activity.last_activity.format('wikiDate'),
 			'Views': this.model.views,
 			'Revisions': this.counts.node,
-			'Reverted': this.model.reverted
+			'Reverted': this.model.activity.reverted
 		})
 		
 		if(this.model.views > 0){

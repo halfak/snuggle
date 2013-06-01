@@ -42,7 +42,7 @@ ui.EditCounts.Graph = Class.extend({
 			if(ns != "all"){
 				this.node.append(
 					$("<tr>").append(
-						$("<th>").text(configuration.mediawiki.namespaces[ns] || "Article"),
+						$("<th>").html(configuration.mediawiki.namespaces[ns].name || "Article"),
 						$("<td>").append(
 							$("<div>")
 								.addClass("bar")
