@@ -524,7 +524,7 @@ views.User.Category.History = ui.Dropper.extend({
 			this.pane.node.html("")
 			this.pane.node.append(
 				$("<p>").append(
-					i18n.get("This user has yet to be categorized.")
+					i18n.get("This user has not been categorized yet.")
 				)
 			)
 		}

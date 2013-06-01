@@ -198,7 +198,7 @@ namespaces:
     prefixes:
       - "Special:"
   0:
-    name: Main
+    name: Articles
     prefixes:
       - ""
   1:

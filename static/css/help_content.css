@@ -30,3 +30,25 @@
 	margin: .5em 0px;
 	padding: 0px;
 }
+
+.figures.center {
+	text-align: center;
+}
+.figure {
+	display: inline-block;
+	vertical-align: top;
+	border: 1px solid #999;
+	background: #f0f0f0;
+	padding: .5em;
+	margin-bottom: .5em;
+}
+	.figure .pane{
+		display: block;
+		background: #fff;
+		border: 1px solid #aaa;
+		border-color: #ccc #aaa #aaa #ccc;
+	}
+	.figure .caption{
+		margin-top: 1em;
+		text-align: left;
+	}

@@ -1,5 +1,9 @@
 /* TODO: This is sort of a misc, catch-all */
 
+body {
+	font-family: sans-serif;
+}
+
 .clickable {
 	cursor: default;
 	-webkit-touch-callout: none;

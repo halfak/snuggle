@@ -1,16 +1,17 @@
 <html>
 <head>
 	<base href="/" target="_blank">
+	<link rel="stylesheet" href="css/general.css" />
 	<link rel="stylesheet" href="css/revisions.css" />
 	<link rel="stylesheet" href="css/threads.css" />
 	<link rel="stylesheet" href="css/help_content.css" />
 </head>
 <body>
 <div class="help_content">
-<p>
-Snuggle 1.0rc1
+<p class="version">
+Snuggle version: 1.0rc1
 </p>
-<h3>Quick Reference</h3>
+<h1>Quick Reference</h1>
 <p class="note">See the <a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">full documentation</a></p>
 <p>
 	Snuggle is designed to help you identify desirable new Wikipedia editors.  
@@ -18,51 +19,110 @@ Snuggle 1.0rc1
 	contributions and talk page messages.
 </p>
 
-<h4>New users</h4>
-<div class="figure center">
-	<a target="_blank" href="img/user.callout.png"><img src="img/user.callout.400.png"></a>
-</div>
-<ol>
-	<li>User account metadata and statistics.</li>
-	<li>
-		Interactive graph of user contribs for the first 30 days.  
-		Different colors represent different namespaces. E.g.:
-		<ul>
-			<li>Article <span class="revision ns_0"></span></li>
-			<li>Talk <span class="revision ns_1"></span></li>
-			<li>User <span class="revision ns_2"></span></li>
-			<li>User_talk <span class="revision ns_3"></span></li>
-			<li>Wikipedia <span class="revision ns_4"></span></li>
-			<li>Wikipedia_talk <span class="revision ns_5"></span></li>
-		</ul>
-		Revisions reverted by another editor are noted with a dot (<span class="revision ns_0 reverted"></span>).
-		Self reverts have a hollow dot (<span class="revision ns_0 reverted self"></span>)
-	</li>
-	<li>
-		Talk page activity.  Templated messages are noted with an icon. E.g. 
-		<span class="thread_icon warning level_2" title="Level 2 warning"></span>
-		<span class="thread_icon welcome" title="Welcome"></span>
-		<span class="thread_icon csd" title="Criteria for speedy deletion"></span>
-	</li>
-	<li>Categorization buttons.  This will move the user into one of the category lists.</li>
-</ol>
+<h2>User interface</h2>
+<div class="figures center"> <!-- Big center layout -->
 
-<h4>Category lists</h4>
-<div class="figure center">
-	<a target="_blank" href="img/categories.png"><img src="img/categories.400.png"></a>
+<div class="figure">
+	<a class="pane" target="_blank" href="img/controls.callout.png">
+		<img src="img/controls.callout.400.png">
+	</a>
+	<div class="caption" style="width: 400px;">
+		<b>Figure 1. Controls.</b> 
+		<ol type="A">
+			<li>Hand curated lists of users
+				<ul>
+					<li><b>uncategorized</b> - New users that have not been categorized yet.</li>
+					<li><b>good-faith</b> - New users that are at least trying to do something productive.</li>
+					<li><b>ambiguous</b> - New users whose motivations are unclear.</li>
+					<li><b>bad-faith</b> - New users that do not appear to be trying to be productive.</li>
+				</ul>
+			</li>
+			<li>Minimum number of edits.</li>
+			<li>The namespace that the minimum number of edits must exist in.</li>
+			<li>Metrics by which to sort users
+				<ul>
+					<li><b>desirability</b> - A machine-generated probability that the user is editing in good faith.</li>
+					<li><b>registration date</b> - The date that user registered.</li>
+					<li><b>last activity</b> - The date of the user's last edit.</li>
+					<li><b>reverted edits</b> - The number of the users edits that were reverted.</li>
+					<li><b>total edits</b> - The total number of edits the user performed.</li>
+				</ul>
+			</li>
+			<li>The direction to sort the users.  This allows you to reverse the order of any of the sorting metrics.</li>
+		</ol>
+	</div>
 </div>
-<p>Clicking on the tabs on the top of the interface allows you to view different categories of newcomers.</p>
 
-<h4 class="left">Controls</h4>
-<div class="figure center">
-	<a target="_blank" href="img/controls.png"><img src="img/controls.400.png"></a>
-</div>
-<p>A set of filters allow you to limit and sort the users that are listed in the interface.</p>
+<div class="figure">
+	<a class="pane" target="_blank" href="img/user.callout.png">
+		<img src="img/user.callout.400.png" />
+	</a>
+	<div class="caption" style="width: 400px;">
+		<b>Figure 2. Expanded user.</b>
+		<ol type="A">
+			<li>User account metadata and statistics.
+				<ul>
+					<li>Username</li>
+					<li>User - Talk - Contribs</li>
+					<li>Registration date</li>
+					<li>Last edit date</li>
+					<li># of times viewed in Snuggle</li>
+					<li>Revision count graph</li>
+					<li># of time reverted (non-self)</li>
+				</ul>
+			</li>
+			<li>
+				Talk page activity.  Certain types of messages are leveled with an icon 
+				e.g.:
+				<ul>
+					<li>
+						<span class="thread_icon deletion" title="Proposed for deletion"></span>
+						Proposal for deletion
+					</li>
+					<li>
+						<span class="thread_icon warning level_2" title="Level 2 warning"></span>
+						level 2 warning
+					</li>
+					<li>
+						<span class="thread_icon welcome" title="Welcome"></span>
+						welcome message
+					</li>
+					<li>
+						<span class="thread_icon csd" title="Criteria for speedy deletion"></span>
+						speed deletion
+					</li>
+					<li>
+						<span class="thread_icon" title="General discussion"></span>
+						General discussion
+					</li>
+				</ul>
+			</li>
+			<li>Categorization buttons.  This will move the user into one of the category lists (discussed below).</li>
+			<li>
+				Interactive graph of user contribs for the first 30 days.  
+				Different colors represent different namespaces. E.g.:
+				<ul>
+					<li>Article <span class="revision ns_0"></span></li>
+					<li>Talk <span class="revision ns_1"></span></li>
+					<li>User <span class="revision ns_2"></span></li>
+					<li>User_talk <span class="revision ns_3"></span></li>
+					<li>Wikipedia <span class="revision ns_4"></span></li>
+					<li>Wikipedia_talk <span class="revision ns_5"></span></li>
+				</ul>
+				Revisions reverted by another editor are noted with a dot (<span class="revision ns_0 reverted"></span>).
+				Self reverts have a hollow dot (<span class="revision ns_0 reverted self"></span>)
+			</li>
+		</ol>
+	</div>
+</div><!-- /figure 3 -->
 
-<h4>Keyboard shortcuts</h4>
+</div> <!-- /big center layout -->
+
+
+<h2>Keyboard shortcuts</h2>
 <p>
-	While you can use the mouse to peform some actions, 
-	you can use a set of keyboard shortcuts to peform 
+	While you can use the mouse to peform all actions, 
+	you can also use a set of keyboard shortcuts to peform 
 	some common actions at high speed.
 </p>
 <b>User selection</b>
@@ -86,11 +146,22 @@ Snuggle 1.0rc1
 	<span class="key">#3</span> for "bad-faith"
 </dd>
 
-<h4>See also:</h4>
+<h2>See also:</h2>
 <ul>
-	<li>The <a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">full documentation</a></li>
-	<li>The open <a target="_blank" href="https://bitbucket.org/halfak/snuggle">source code repository</a></li>
-	<li>The developer's <a target="_blank" href="http://en.wikipedia.org/wiki/User:EpochFail">user page</a></li>
+	<li>
+		The 
+		<a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">full documentation</a>
+	</li>
+	<li>
+		The open 
+		<a target="_blank" href="https://bitbucket.org/grouplens/snuggle">source code repository</a>
+		and
+		<a target="_blank" href="https://bitbucket.org/grouplens/snuggle/issues">issue tracker</a>
+	</li>
+	<li>
+		The developer's 
+		<a target="_blank" href="http://en.wikipedia.org/wiki/User:EpochFail">user page</a>
+	</li>
 </ul>
 </div>
 </body>
