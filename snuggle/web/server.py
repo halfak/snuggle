@@ -1,6 +1,8 @@
 import argparse
 from beaker.middleware import SessionMiddleware
 import bottle, logging, sys, time, random, yaml, traceback
+from web.wsgiserver import CherryPyWSGIServer
+from web.wsgiserver.ssl_builtin import BuiltinSSLAdapter
 
 from snuggle import configuration, mediawiki
 from snuggle.data import types
@@ -10,26 +12,6 @@ from snuggle.util import import_class
 from . import processing, routing
 
 logger = logging.getLogger("snuggle.web.server")
-
-def application(config, model):
-	
-	#configure processors
-	processing.configure(config, model)
-	
-	# Generates a random 25 character sequence
-	secret = "".join(chr(random.randrange(32,125)) for i in xrange(25))
-	
-	#construct app
-	return SessionMiddleware(
-		bottle.default_app(),
-		{
-			'session.type': "memory",
-			'session.key': "s_id",
-			'session.secret': secret,
-			'session.timeout': 60*30, #30 minutes
-			'session.auto': True
-		}
-	)
 
 def main():
 	def conf_snuggle(fn):
@@ -98,6 +80,7 @@ def main():
 	else:
 		run(configuration, args.debug)
 	
+
 def run(config, debug):
 	logger.info("Configuring system.")
 	
@@ -116,6 +99,14 @@ def run(config, debug):
 	
 	logger.info("Running server.")
 	try:
+		# Check if we are running ssl mode
+		if 'ssl' in config.snuggle['web_server']:
+			CherryPyWSGIServer.ssl_adapter = BuiltinSSLAdapter(
+				config.snuggle['web_server']['ssl']['cert'],
+				config.snuggle['web_server']['ssl']['key'],
+				None
+			)
+		
 		bottle.run(
 			app=app, 
 			host=config.snuggle['web_server']['host'],
@@ -141,6 +132,26 @@ def run(config, debug):
 			traceback.format_exc()
 		)
 		model.events.insert(event)
+
+def application(config, model):
+	
+	#configure processors
+	processing.configure(config, model)
+	
+	# Generates a random 25 character sequence
+	secret = "".join(chr(random.randrange(32,125)) for i in xrange(25))
+	
+	#construct app
+	return SessionMiddleware(
+		bottle.default_app(),
+		{
+			'session.type': "memory",
+			'session.key': "s_id",
+			'session.secret': secret,
+			'session.timeout': 60*30, #30 minutes
+			'session.auto': True
+		}
+	)
 
 if __name__ == "__main__":
 	logging.debug("calling main()")
