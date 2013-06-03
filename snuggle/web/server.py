@@ -1,8 +1,6 @@
 import argparse
 from beaker.middleware import SessionMiddleware
 import bottle, logging, sys, time, random, yaml, traceback
-from web.wsgiserver import CherryPyWSGIServer
-from web.wsgiserver.ssl_builtin import BuiltinSSLAdapter
 
 from snuggle import configuration, mediawiki
 from snuggle.data import types
@@ -99,13 +97,6 @@ def run(config, debug):
 	
 	logger.info("Running server.")
 	try:
-		# Check if we are running ssl mode
-		if 'ssl' in config.snuggle['web_server']:
-			CherryPyWSGIServer.ssl_adapter = BuiltinSSLAdapter(
-				config.snuggle['web_server']['ssl']['cert'],
-				config.snuggle['web_server']['ssl']['key'],
-				None
-			)
 		
 		bottle.run(
 			app=app, 
