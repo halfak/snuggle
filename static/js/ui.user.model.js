@@ -1,6 +1,6 @@
-models = window.models || {}
+// require: ui.user.js
 
-models.User = Class.extend({
+ui.User.Model = Class.extend({
 	init: function(doc){
 		this.changed  = new Event(this)
 		this.viewed   = new Event(this)
@@ -31,10 +31,10 @@ models.User = Class.extend({
 		this.views         = doc.views
 		this.has_user_page = doc.has_user_page
 		this.has_talk_page = doc.has_talk_page
-		this.desirability  = new models.User.Desirability(doc.desirability)
-		this.category      = new models.User.Category(doc.category)
-		this.activity      = new models.User.Activity(doc.activity)
-		this.talk          = new models.User.Talk(doc.talk)
+		this.desirability  = new ui.User.Model.Desirability(doc.desirability)
+		this.category      = new ui.User.Model.Category(doc.category)
+		this.activity      = new ui.User.Model.Activity(doc.activity)
+		this.talk          = new ui.User.Model.Talk(doc.talk)
 		
 		this.changed.notify()
 	},
@@ -45,7 +45,7 @@ models.User = Class.extend({
 	}
 })
 
-models.User.Desirability = Class.extend({
+ui.User.Model.Desirability = Class.extend({
 	init: function(doc){
 		this.changed = new Event(this)
 		
@@ -67,11 +67,11 @@ models.User.Desirability = Class.extend({
 		this.changed.notify()
 	}
 })
-models.User.Desirability.deserialize = function(doc){
-	return new models.User.Desirability(doc.likelihood, doc.scores)
+ui.User.Model.Desirability.deserialize = function(doc){
+	return new ui.User.Model.Desirability(doc.likelihood, doc.scores)
 }
 
-models.User.Category = Class.extend({
+ui.User.Model.Category = Class.extend({
 	init: function(doc){
 		this.changed = new Event(this)
 		
@@ -94,11 +94,11 @@ models.User.Category = Class.extend({
 		this.changed.notify()
 	}
 })
-models.User.Category.deserialize = function(doc){
-	return new models.User.Category(doc.history, doc.category)
+ui.User.Model.Category.deserialize = function(doc){
+	return new ui.User.Model.Category(doc.history, doc.category)
 }
 
-models.User.Activity = Class.extend({
+ui.User.Model.Activity = Class.extend({
 	init: function(doc){
 		this.changed = new Event(this)
 		
@@ -123,14 +123,14 @@ models.User.Activity = Class.extend({
 		this.counts = doc.counts
 		this.revisions = {}
 		for(var id in doc.revisions){
-			this.revisions[id] = new models.User.Activity.Revision(doc.revisions[id])
+			this.revisions[id] = new ui.User.Model.Activity.Revision(doc.revisions[id])
 		}
 		
 		this.changed.notify()
 	}
 })
 
-models.User.Activity.Revision = Class.extend({
+ui.User.Model.Activity.Revision = Class.extend({
 	init: function(doc){
 		this.changed = new Event(this)
 		
@@ -163,7 +163,7 @@ models.User.Activity.Revision = Class.extend({
 	}
 })
 
-models.User.Talk = Class.extend({
+ui.User.Model.Talk = Class.extend({
 	init: function(doc){
 		this.changed = new Event(this)
 		

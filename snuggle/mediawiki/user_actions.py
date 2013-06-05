@@ -48,9 +48,10 @@ class UserActions:
 	def from_config(cls, config):
 		api = API.from_config(config)
 		actions = {}
-		for doc in config.mediawiki['user_actions']:
-			action = Action.from_doc(doc, api)
-			actions[action.name] = action
+		for name in config.mediawiki['user_actions']['actions']:
+			doc = config.mediawiki['user_actions']['actions'][name]
+			action = Action.from_doc(name, doc, api)
+			actions[name] = action
 		
 		return cls(api, actions)
 
@@ -70,9 +71,9 @@ class Action:
 		return [operation.preview(request, snuggler) for operation in self.operations]
 			
 	@classmethod
-	def from_doc(cls, doc, api):
+	def from_doc(cls, name, doc, api):
 		return cls(
-			doc['name'],
+			name,
 			[Operation.from_doc(d, api) for d in doc['operations']]
 		)
 

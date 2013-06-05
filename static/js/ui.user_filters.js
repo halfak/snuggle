@@ -3,10 +3,10 @@ ui = window.ui || {}
 /**
 Represents the menu for selecting a set of filters for the user_list.
 */
-ui.FilterMenu = Class.extend({
+ui.UserFilters = Class.extend({
 	init: function(){
 		this.node = $("<div>")
-			.addClass("filter_menu")
+			.addClass("user_filters")
 		
 		this.container = {
 			node: $("<div>")
@@ -56,7 +56,7 @@ ui.FilterMenu = Class.extend({
 		this.categories.changed.attach(this._handle_categories_change.bind(this))
 		this.container.node.append(this.categories.node)
 		
-		this.filters = new ui.FilterMenu.Filters(this.categories)
+		this.filters = new ui.UserFilters.Filters(this.categories)
 		this.filters.changed.attach(this._handle_filters_change.bind(this))
 		this.container.node.append(this.filters.node)
 		
@@ -88,7 +88,7 @@ ui.FilterMenu = Class.extend({
 /**
 Represents a set of filters for paring down and sorting a list of users.
 */
-ui.FilterMenu.Filters = Class.extend({
+ui.UserFilters.Filters = Class.extend({
 	init: function(categories){
 		// Track changes to category
 		categories.changed.attach(this._handle_category_change.bind(this))

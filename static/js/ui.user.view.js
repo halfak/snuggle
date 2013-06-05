@@ -1,9 +1,6 @@
-views = window.views || {}
+// requires: ui.user.js
 
-/**
-A visual representation of a user.
-*/
-views.User = Class.extend({
+ui.User.View = Class.extend({
 	init: function(model){
 		this.model = model
 		
@@ -101,7 +98,7 @@ views.User = Class.extend({
 		return this.node.outerHeight(true)
 	}
 })
-views.User.Info = Class.extend({
+ui.User.View.Info = Class.extend({
 	init: function(model){
 		this.model = model
 		
@@ -213,19 +210,19 @@ views.User.Info = Class.extend({
 		}
 	}
 })
-views.User.Info.Actions = ui.Dropper.extend({
+ui.User.View.Info.Actions = ui.Dropper.extend({
 	init: function(model){
 		this.model = model
 		
-		var user = {id: this.model.id, name: this.model.id}
-		var formatting = {user_name: this.model.name, user_id: this.model.id}
-		
-		actions = configuration.mediawiki.user_actions.map(
-			function(doc){
-				return new ui.UserAction.from_doc(doc, formatting)
-			}.bind(this)
+		// Load user actions from the configuration
+		actions = configuration.mediawiki.user_actions.display.map(
+			function(name){
+				var action_doc = configuration.mediawiki.user_actions.actions[name]
+				actions.push(new ui.UserAction.from_doc(name, action_doc, formatting)
+			}
 		)
-		var user = {id: this.model.id, name: this.model.id}
+		
+		// Construct menu with actions
 		this.menu = new ui.ActionMenu(this.model, actions)
 		this._super("", this.menu.node, {tooltip: "User actions menu -- click to expand"})
 		this.changed.attach(this._handle_changed.bind(this))
@@ -271,7 +268,7 @@ views.User.Info.Actions = ui.Dropper.extend({
 })
 
 
-views.User.Activity = ui.RevisionGraph.extend({
+ui.User.View.Activity = ui.RevisionGraph.extend({
 	init: function(model){
 		this._super(model.registration)
 		this.model = model
@@ -290,7 +287,7 @@ views.User.Activity = ui.RevisionGraph.extend({
 		this.grid.clear_cursor()
 	}
 })
-views.User.Activity.Revision = ui.DayGrid.Revision.extend({
+ui.User.View.Activity.Revision = ui.DayGrid.Revision.extend({
 	init: function(model, revision){
 		this._super(this)
 		this.model = model
@@ -332,7 +329,7 @@ views.User.Activity.Revision = ui.DayGrid.Revision.extend({
 		}
 	}
 })
-views.User.Talk = ui.RevisionGraph.extend({
+ui.User.View.Talk = ui.RevisionGraph.extend({
 	init: function(model){
 		this.model = model
 		
@@ -378,7 +375,7 @@ views.User.Talk = ui.RevisionGraph.extend({
 		this.threads.node.children().remove()
 	}
 })
-views.User.Talk.Thread = Class.extend({
+ui.User.View.Talk.Thread = Class.extend({
 	init: function(title, classes){
 		title = title || ""
 		classes = classes || []
@@ -398,7 +395,7 @@ views.User.Talk.Thread = Class.extend({
 	}
 })
 	
-views.User.Category = Class.extend({
+ui.User.View.Category = Class.extend({
 	init: function(model){
 		this.model = model
 		
@@ -490,7 +487,7 @@ views.User.Category = Class.extend({
 		this.history.render(this.model.category.history)
 	}
 })
-views.User.Category.History = ui.Dropper.extend({
+ui.User.View.Category.History = ui.Dropper.extend({
 	init: function(){
 		this._super("history")
 		
@@ -539,3 +536,5 @@ views.User.Category.History = ui.Dropper.extend({
 		}
 	}
 })
+
+

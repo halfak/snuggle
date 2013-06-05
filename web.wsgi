@@ -15,4 +15,4 @@ configuration.snuggle.load_yaml(open("config/snuggle.dev"))
 configuration.mediawiki.load_yaml(open("config/enwiki.mediawiki.dev"))
 
 #start the application
-app = server.app() #Note: This config file must be set
+app = server.app(configuration) # Note: This config file must be set

@@ -1,9 +1,135 @@
-views = window.views || {}
+ui = window.ui || {}
 
-/**
-Represents a visual control for managing logged in status as a snuggler
-*/
-views.Snuggler = Class.extend({
+ui.Snuggler = Class.extend({
+	init: function(){
+		this.model = new models.Snuggler()
+		this.view  = new ui.Snuggler.View(this.model)
+		this.node  = this.view.node
+		
+		this.view.login_submitted.attach(this._handle_login_submit.bind(this))
+		this.view.logout_submitted.attach(this._handle_logout_submit.bind(this))
+		
+		this.model.changed.attach(this._handle_change.bind(this))
+		
+		this.changed = new Event(this)
+		
+		this._load_snuggler()
+	},
+	_handle_change: function(){
+		this.changed.notify()
+	},
+	_handle_login_submit: function(_, creds){
+		if(creds.name.length > 0){
+			this.view.menu.disabled(true)
+			servers.local.snuggler.authenticate(
+				creds.name,
+				creds.pass,
+				function(doc){
+					this.model.load_doc(doc)
+					this.view.menu.disabled(false)
+					this.view.menu.expanded(false)
+					this.view.reset()
+				}.bind(this),
+				function(message, doc, meta){
+					if(doc && doc.code && doc.code == "authentication"){
+						if(meta.type == "password"){
+							alert("Could not log in.  Password incorrect.")
+						}else if(meta.type == "username"){
+							alert("Could not log in.  No user by the name '" + creds.name + "'.")
+						}else if(meta.type == "connection"){
+							alert("Could not log in.  Connection to " + MEDIAWIKI.domain + " failed.")
+						}else{
+							alert(message)
+						}
+					}else{
+						alert(message)
+					}
+					this.view.menu.disabled(false)
+				}.bind(this)
+			)
+		}else{
+			alert("You must specify a username in order to log in.")
+		}
+	},
+	_handle_logout_submit: function(){
+		this.view.menu.disabled(true)
+		servers.local.snuggler.log_out(
+			function(doc){
+				this.model.clear()
+				this.view.menu.disabled(false)
+				this.view.menu.expanded(false)
+			}.bind(this),
+			function(message, doc){
+				alert(message)
+				this.view.menu.disabled(false)
+			}.bind(this)
+		)
+	},
+	ping: function(){
+		this.view.menu.expanded(true)
+	},
+	authenticated: function(){
+		if(this.model.user){
+			if(!this._last_check || util.now() - this._last_check > delays.check_snuggler_auth){
+				this._load_snuggler()
+			}
+			return true
+		}else{
+			return false
+		}
+	},
+	_load_snuggler: function(){
+		servers.local.snuggler.status(
+			function(doc){
+				if(doc.logged_in){
+					this.model.load_doc(doc.snuggler)
+				}else{
+					this.model.clear()
+				}
+			}.bind(this),
+			function(message, doc, meta){
+				alert(message)
+			}.bind(this)
+		)
+	}
+})
+
+ui.Snuggler.Model = Class.extend({
+		
+	/** */
+	init: function(){
+		this.user = null
+		this.changed = new Event(this)
+	},
+	
+	/**
+	Sets the credentials (usually after login).
+		
+	:Parameters:
+		id : int
+			Wikipedia user identifier
+		name : string
+			Wikipedia username
+	*/
+	load_doc: function(doc){
+		logger.debug("Loading information for snuggler " + JSON.stringify(doc))
+		this.user = {
+			id: doc.id,
+			name: doc.name
+		}
+		this.changed.notify(this.user)
+	},
+	
+	/**
+	Clears the credentials (usually after logging out.
+	*/
+	clear: function(){
+		this.user = null
+		this.changed.notify(this.user)
+	}
+})
+
+ui.Snuggler.View = Class.extend({
 	init: function(model){
 		this.model = model
 		
@@ -23,7 +149,7 @@ views.Snuggler = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.menu = new views.Snuggler.Menu()
+		this.menu = new ui.Snuggler.View.Menu()
 		this.menu.login.submitted.attach(this._handle_login_submit.bind(this))
 		this.menu.logout.submitted.attach(this._handle_logout_submit.bind(this))
 		this.node.append(this.menu.node)
@@ -41,17 +167,6 @@ views.Snuggler = Class.extend({
 	},
 	_handle_logout_submit: function(_){
 		this.logout_submitted.notify()
-	},
-	/**
-	Produces a visual ping to draw the users attention to the element.
-	*/
-	ping: function(steps, opts){
-		opts = opts || {}
-		this._ping(
-			steps || 3, 
-			opts.duration || 500,
-			opts.callback || function(){}
-		)
 	},
 	reset: function(){
 		this.menu.login.reset()
@@ -86,14 +201,14 @@ views.Snuggler = Class.extend({
 	}
 })
 
-views.Snuggler.Menu = ui.Dropper.extend({
+ui.Snuggler.View.Menu = ui.Dropper.extend({
 	init: function(){
 		this._super("", "", {class: "simple"})
 		this.node.addClass("menu")
 		
-		this.login = new views.Snuggler.Menu.Login()
+		this.login = new ui.Snuggler.View.Menu.Login()
 		
-		this.logout = new views.Snuggler.Menu.Logout()
+		this.logout = new ui.Snuggler.View.Menu.Logout()
 	},
 	ready_login: function(){
 		this.set_content(this.login.node)
@@ -123,7 +238,7 @@ views.Snuggler.Menu = ui.Dropper.extend({
 	}
 })
 
-views.Snuggler.Menu.Login = Class.extend({
+ui.Snuggler.View.Menu.Login = Class.extend({
 	init: function(){
 		this.node = $("<form>")
 			.addClass("login")
@@ -206,7 +321,7 @@ views.Snuggler.Menu.Login = Class.extend({
 	}
 })
 
-views.Snuggler.Menu.Logout = Class.extend({
+ui.Snuggler.View.Menu.Logout = Class.extend({
 	init: function(){
 		this.node = $("<form>")
 			.addClass("logout")

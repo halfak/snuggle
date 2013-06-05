@@ -1,10 +1,10 @@
-controllers = window.controllers || {}
+ui = window.ui || {}
 
-controllers.User = Class.extend({
+ui.User = Class.extend({
 		
-	init: function(doc){
-		this.model = new models.User(doc)
-		this.view  = new views.User(this.model)
+	init: function(model, view){
+		this.model = model
+		this.view  = view || new ui.User.View(this.model)
 		this.id    = this.model.id
 		this.node  = this.view.node
 		
@@ -182,3 +182,4 @@ controllers.User = Class.extend({
 		return this.view.height()
 	}
 })
+

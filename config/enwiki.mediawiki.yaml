@@ -89,101 +89,120 @@ threads:
 # page.  The order in which they are listed will determine how they appear in
 # the user interface.
 #
-# label: The name to be used for this field.  This will be used as a label in 
-#        the user interface and also as an identifier within the system.
-# description: the preamble that appears before the form explaining what action
-#              will be taken
-# form: specifies the components of the form that will be presented in the UI.
-#   name: the identifier to be used for the form field (important for string 
-#         formatting)
-#   label: the label that will appear next to the field in the user interface.
-#   default: (optional) an optional default value to be set for the field.
-#   options: (only relevant for radio and select fields) a set of options for 
-#            the user to select from.
-# operations: a set of actions to be performed on the wiki.
+#display: Specifies which actions to display in the user interface.  Removing a
+#         an action name from this list will effectively disable the action.
+#actions: 
+#   name: The name to be used for this field.  This will be used as a label in 
+#          the user interface and also as an identifier within the system.
+#   description: the preamble that appears before the form explaining what 
+#                action will be taken.  Can contain wiki links and references 
+#                to the user.
+#   summary: this is used to represent the action taken when presenting the 
+#            log of user actions performed.  Use %(user)s and %(snuggler)s to 
+#            depict where each actor should be referenced.
+#   fields: specifies the components of the form that will be presented in 
+#          the UI.
+#     type: the type of form field (text|textarea|select|option|check)
+#     name: the identifier to be used for the form field (important for
+#           string formatting)
+#     label: the label that will appear next to the field in the user
+#            interface.
+#     default: (optional) an optional default value to be set for the
+#              field.
+#     options: (only relevant for radio and select fields) a set of
+#              options for the user to select from.
+#   operations: a set of actions to be performed on the wiki.
 user_actions:
-  - # send message #############################################################
-    name: send message
-    description: >
-      Posts a new message on 
-      [[User:%(user_name)s|%(user_name)s]]'s 
-      [[User_talk:%(user_name)s|talk page]].
-    fields:
-      - # header
-        name: header
-        label: Header
-        type: text
-        tooltip: a header for the message
-        default: "Hello %(user_name)s"
-      - # message
-        name: message
-        label: Message
-        type: textarea
-        tooltip: the body of the message
-    operations:
-      - #Appends the message to the user's talk page
-        type: append
-        page_name: "User_talk:%(user_name)s"
-        markup: "==%(header)s==\n%(message)s ~~~~"
-        comment: "%(header)s"
-  - # teahouse invite ##########################################################
-    name: invite to teahouse
-    description: >
-      Posts an invitation to the [[WP:Teahouse]] on 
-      [[User:%(user_name)s|%(user_name)s]]'s 
-      [[User_talk:%(user_name)s|talk page]].
-    fields:
-      - # template
-        name: template
-        label: Template
-        type: radio
-        tooltip: the template to be used for the invitation.
-        default: :Wikipedia:Teahouse/Invitation
-        options:
-          - # Standard invitation
-            label: Invitation
-            value: :Wikipedia:Teahouse/Invitation
-            tooltip: The standard invitation template.
-          - # Optional other invitiation style
-            label: Invitation2
-            value: :Wikipedia:Teahouse/Invitation2
-            tooltip: An alternative invitation template.
-      - # header
-        name: header
-        label: Header
-        type: text
-        tooltip: a header for the message
-        default: "You're invited to the [[WP:Teahouse|Teahouse]]."
-      - # message
-        name: message
-        label: Message
-        type: textarea
-        tooltip: the body of the message
-    operations:
-      - # Appends the template to the user's talk page
-        type: append
-        page_name: "User_talk:%(user_name)s"
-        markup: "==%(header)s==\n{{subst%(template)s|message=%(message)s|sign=~~~~}}"
-        comment: "%(header)s"
-  - # report vandalism #########################################################
-    name: report vandalism
-    description: >
-      Reports vandals and spammers to admins via the 
-      [[WP:AIV|Administrator's notice board]]. Use only for
-      <b>obvious</b> and <b>persistent</b> cases. Please review
-      [[WP:Spam]], [[WP:Vandaism]] and the [[AIV Guide]].
-    fields:
-      - # reason
-        name: reason
-        type: "text"
-        label: Reason for listing <small>(optional, keep it brief)</small>
-        tooltip: the reason that %(user_name)s is being reported
-    operations:
-      - # Appends a list item to the bottom of AIV
-        type: append
-        page_name: Wikipedia:Administrator_intervention_against_vandalism
-        markup: "* {{Vandal|%(user_name)s}} %(reason)s ~~~~"
-        comment: "Reporting [[User:%(user_name)s]] for %(reason)s"
+  display:
+    - send message
+    - invite to teahouse
+    - report abuse
+  actions:
+    send message:
+      label: send message
+      description: >
+        Posts a new message on 
+        [[User:%(user_name)s|%(user_name)s]]'s 
+        [[User_talk:%(user_name)s|talk page]].
+      summary: "%(snuggler)s sent a message to %(user)s"
+      fields:
+        - # header
+          name: header
+          label: Header
+          type: text
+          tooltip: a header for the message
+          default: "Hello %(user_name)s"
+        - # message
+          name: message
+          label: Message
+          type: textarea
+          tooltip: the body of the message
+      operations:
+        - #Appends the message to the user's talk page
+          type: append
+          page_name: "User_talk:%(user_name)s"
+          markup: "==%(header)s==\n%(message)s ~~~~"
+          comment: "%(header)s"
+    invite to teahouse:
+      label: invite to teahouse
+      description: >
+        Posts an invitation to the [[WP:Teahouse]] on 
+        [[User:%(user_name)s|%(user_name)s]]'s 
+        [[User_talk:%(user_name)s|talk page]].
+      summary: "%(snuggler)s invited %(user)s to the teahouse"
+      fields:
+        - # template
+          name: template
+          label: Template
+          type: radio
+          tooltip: the template to be used for the invitation.
+          default: :Wikipedia:Teahouse/Invitation
+          options:
+            - # Standard invitation
+              label: Invitation
+              value: :Wikipedia:Teahouse/Invitation
+              tooltip: The standard invitation template.
+            - # Optional other invitiation style
+              label: Invitation2
+              value: :Wikipedia:Teahouse/Invitation2
+              tooltip: An alternative invitation template.
+        - # header
+          name: header
+          label: Header
+          type: text
+          tooltip: a header for the message
+          default: "You're invited to the [[WP:Teahouse|Teahouse]]."
+        - # message
+          name: message
+          label: Message
+          type: textarea
+          tooltip: the body of the message
+      operations:
+        - # Appends the template to the user's talk page
+          type: append
+          page_name: "User_talk:%(user_name)s"
+          markup: "==%(header)s==\n{{subst%(template)s|message=%(message)s|sign=~~~~}}"
+          comment: "%(header)s"
+    report vandalism:
+      label: report vandalism
+      description: >
+        Reports vandals and spammers to admins via the 
+        [[WP:AIV|Administrator's notice board]]. Use only for
+        <b>obvious</b> and <b>persistent</b> cases. Please review
+        [[WP:Spam]], [[WP:Vandaism]] and the [[AIV Guide]].
+      summary: "%(snuggler)s reported %(user)s to administrators"
+      fields:
+        - # reason
+          name: reason
+          type: "text"
+          label: Reason for listing <small>(optional, keep it brief)</small>
+          tooltip: the reason that %(user_name)s is being reported
+      operations:
+        - # Appends a list item to the bottom of AIV
+          type: append
+          page_name: Wikipedia:Administrator_intervention_against_vandalism
+          markup: "* {{Vandal|%(user_name)s}} %(reason)s ~~~~"
+          comment: "Reporting [[User:%(user_name)s]] for %(reason)s"
 
 # Namespaces are configurable for MediaWiki installations.  This datastructure
 # describes the configuration of the English Wikipedia.  Note that the Main 

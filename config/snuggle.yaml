@@ -12,9 +12,6 @@ root_directory: ~/snuggle
 web_server:
   host: 0.0.0.0
   port: 80
-  ssl: 
-    cert: /etc/ssl/private/star.wmflabs.org.pem
-    key: /etc/ssl/private/star.wmflabs.org.key
 
 # The configuration for the synchronization server.  The synchronization server
 # keeps Snuggle's data up-to-date by listening to a recent_changes feed.
