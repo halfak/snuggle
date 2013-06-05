@@ -1,7 +1,7 @@
-import sys
+import sys, os
 
 # update the path so we can do some imports. 
-sys.path = ['/var/www/halfak/snuggle'] + sys.path
+sys.path = ['/sites/snuggle'] + sys.path
 
 # get into our directory
 os.chdir(os.path.dirname(__file__))
@@ -15,4 +15,6 @@ configuration.snuggle.load_yaml(open("config/snuggle.dev"))
 configuration.mediawiki.load_yaml(open("config/enwiki.mediawiki.dev"))
 
 #start the application
-app = server.app(configuration) # Note: This config file must be set
+<<<<<<< local
+app = server.app(configuration) # Note: This config file must be set=======
+app = server.app(configuration) #Note: This config file must be set>>>>>>> other
