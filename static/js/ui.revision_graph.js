@@ -61,6 +61,7 @@ ui.RevisionDetails = Class.extend({
 			//  This is probably wrong.
 			//
 			//
+			this.diff.clear()
 			this.diff.loading(true)
 			this.loadingId = revision.id()
 			servers.mediawiki.revisions.diff(
