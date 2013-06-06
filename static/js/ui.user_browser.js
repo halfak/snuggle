@@ -40,10 +40,10 @@ ui.UserBrowser = Class.extend({
 			delays.update_user_filters
 		)
 	},
-	_update_query: function(){
-		logger.debug("ui.snuggle: updating query")
-		var query = servers.local.users.query(this.filter_menu.val())
-		this.user_list.load(query)
+	_update_cursor: function(){
+		logger.debug("ui.snuggle: updating cursor")
+		var query = servers.local.users.cursor(this.filter_menu.val())
+		this.user_list.load(cursor)
 	}
 })
 

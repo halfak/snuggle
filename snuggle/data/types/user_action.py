@@ -13,6 +13,7 @@ class ActionRequest(serializable.Type):
 
 class OperationResult(serializable.Type):
 	TYPES = {}
+	PUBLIC = False
 	
 	def serialize(self):
 		doc = serializable.Type.serialize(self)
@@ -39,15 +40,16 @@ class EditPreview(OperationResult):
 	
 
 class ReplacePreview(EditPreview):
-	TYPE = "replace"
+	TYPE = "replace preview"
 OperationResult.TYPES[ReplacePreview.TYPE] = ReplacePreview
 
 class AppendPreview(EditPreview):
-	TYPE = "append"
+	TYPE = "append preview"
 OperationResult.TYPES[AppendPreview.TYPE] = AppendPreview
 
 class EditResult(OperationResult):
 	TYPE = "edit result"
+	PUBLIC = True
 	
 	def __init__(self, rev_id, page_name):
 		self.rev_id = int(rev_id)
@@ -56,7 +58,7 @@ class EditResult(OperationResult):
 OperationResult.TYPES[EditResult.TYPE] = EditResult
 	
 class WatchPreview(OperationResult):
-	TYPE = "watch"
+	TYPE = "watch preview"
 	
 	def __init__(self, page_name):
 		self.page_name = unicode(page_name)

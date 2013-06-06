@@ -62,7 +62,7 @@ servers.Local.Users = Class.extend({
 	init: function(api){
 		this.api = api
 	},
-	get: function(filters, success, error, limit, skip){
+	query: function(filters, success, error, limit, skip){
 		filters = filters || {}
 		limit   = limit || 25
 		skip    = skip || 0
@@ -108,7 +108,7 @@ servers.Local.Users = Class.extend({
 			error
 		)
 	},
-	query: function(filters){
+	cursor: function(filters){
 		return new servers.Local.Users.Cursor(this, filters)
 	},
 	watch: function(user, success, error){
@@ -180,7 +180,7 @@ servers.Local.Users.Cursor = Class.extend({
 	},
 	next: function(n, success, error){
 		if(!this.complete){
-			this.users.get(
+			this.users.query(
 				this.filters,
 				function(docs){
 					if(docs.length == 0){
@@ -212,7 +212,7 @@ servers.Local.Events = Class.extend({
 	init: function(api){
 		this.api = api
 	},
-	get: function(filters, success, error, limit, skip){
+	query: function(filters, success, error, limit, skip){
 		filters = filters || {}
 		limit   = limit || 25
 		skip    = skip || 0
@@ -230,7 +230,7 @@ servers.Local.Events = Class.extend({
 			error
 		)
 	},
-	query: function(filters){
+	cursor: function(filters){
 		return servers.Local.Events.Cursor(this, filters)
 	}
 })
@@ -248,7 +248,7 @@ servers.Local.Events.Cursor = Class.extend({
 	},
 	next: function(n, success, error){
 		if(!this.complete){
-			this.events.get(
+			this.events.query(
 				this.filters,
 				function(docs){
 					if(docs.length == 0){

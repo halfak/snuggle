@@ -36,7 +36,7 @@ class Snugglers:
 		session['snuggler'] = types.Snuggler(id, name, cookies)
 		
 		try:
-			event = types.SnugglerLogin(session['snuggler'])
+			event = types.SnugglerLoggedIn(session['snuggler'])
 			self.model.events.insert(event)
 		except Exception as e:
 			logger.error(traceback.format_exc())
@@ -46,7 +46,7 @@ class Snugglers:
 	def log_out(self, session):
 		if 'snuggler' in session:
 			try:
-				event = types.SnugglerLogout(session['snuggler'])
+				event = types.SnugglerLoggedOut(session['snuggler'])
 				self.model.events.insert(event)
 			except Exception as e:
 				logger.error(traceback.format_exc())

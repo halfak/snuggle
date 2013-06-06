@@ -18,17 +18,23 @@ class Events:
 		request = types.ActionRequest.serialize(doc)
 	
 	def query(self, session, query):
+		"""
+		Queries for PUBLIC events and public event content only.
+		"""
 		try:
 			start = time.time()
-			events = list(self.model.users.query(deserialize=False, **query))
+			event_docs = []
+			for event in self.model.events.query(**query):
+				if event.PUBLIC:
+					if event.TYPE == types.UserAction.TYPE:
 			end = time.time()
 		except Exception:
 			logger.error(traceback.format_exc())
-			return responses.database_error("getting a set of users with query %s" % query)
+			return responses.database_error("getting a set of events with query %s" % query)
 		
 		try:
 			snuggler, data = user_data()
-			event = types.EventQuery(
+			event = types.EventsQueried(
 				query,
 				end-start,
 				len(events),

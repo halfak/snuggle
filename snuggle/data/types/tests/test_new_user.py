@@ -30,7 +30,10 @@ def test_complete_constructor():
 	name = "Herp"
 	registration = 1234567890
 	views = 0
+	has_talk_page = True
+	has_user_page = False
 	activity = Activity(
+		1234567890,
 		10,
 		5,
 		{
@@ -62,6 +65,7 @@ def test_complete_constructor():
 	
 	new_user = NewUser(
 		id, name, registration, views,
+		has_talk_page, has_user_page,
 		activity, desirability, talk, category
 	)
 	

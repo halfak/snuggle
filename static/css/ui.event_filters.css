@@ -1,1 +1,7 @@
+div.event_filters {
+	
+}
 
+div.event_filters .field {
+	display: inline-block;
+}

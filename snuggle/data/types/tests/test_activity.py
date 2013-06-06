@@ -11,6 +11,7 @@ def test_empty_constructor():
 	eq_(activity.self_reverted, 0)
 
 def test_constructor():
+	last_activity = 1234567890
 	reverted = 10
 	self_reverted = 5
 	revisions = {
@@ -28,6 +29,7 @@ def test_constructor():
 		'0': 1
 	}
 	activity = Activity(
+		last_activity,
 		reverted,
 		self_reverted,
 		revisions,

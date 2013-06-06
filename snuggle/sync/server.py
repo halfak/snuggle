@@ -50,7 +50,7 @@ def main():
 			import profile
 			
 		f = tempfile.NamedTemporaryFile()
-		profile.runctx("run(args.config, args.debug)", globals(), locals(), f.name)
+		profile.runctx("run(configuration, args.debug)", globals(), locals(), f.name)
 		p = pstats.Stats(f.name)
 		p.strip_dirs().sort_stats("time").print_stats(10)
 	else:
@@ -81,7 +81,7 @@ def run(config, debug):
 	logger.info("Using model %s." % config.snuggle['model']['module'])
 	Model = import_class(config.snuggle['model']['module'])
 	model = Model.from_config(config)
-	model.events.insert(types.ServerStart("sync"))
+	model.events.insert(types.ServerStarted("sync"))
 	
 	synchronizers = list(load_synchronizers(config, model))
 	
@@ -105,14 +105,14 @@ def run(config, debug):
 		for synchronizer in synchronizers:
 			synchronizer.join()
 		
-		event = types.ServerStop(
+		event = types.ServerStopped(
 			"sync",
 			start_time,
 			dict((s.NAME, s.status()) for s in synchronizers)
 		)
 		model.events.insert(event)
 	except Exception as e:
-		event = types.ServerStop(
+		event = types.ServerStopped(
 			"sync",
 			start_time,
 			dict((s.NAME, s.status()) for s in synchronizers),

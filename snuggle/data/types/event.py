@@ -1,3 +1,4 @@
+from collections import namedtuple
 import time
 
 from . import serializable
@@ -5,9 +6,20 @@ from .revision import UserRevision
 from .user import User, Snuggler
 from .user_action import ActionRequest, OperationResult
 
+class EventType(serializable.Type):
+	
+	def __init__(self, entity, action):
+		self.entity = entity
+		self.action = action
+	
+	def __hash__(self):
+		return hash((self.entity, self.action))
+
 class Event(serializable.Type):
-	TYPE = None
+	TYPE = EventType("server", "started")
+	
 	TYPES = {}
+	PUBLIC_TYPES = set()
 	
 	def __init__(self, system_time=None):
 		self.system_time = float(system_time) if system_time != None else time.time()
@@ -23,7 +35,8 @@ class Event(serializable.Type):
 	
 	def serialize(self):
 		doc = serializable.Type.serialize(self)
-		doc['type'] = self.TYPE
+		doc['type'] = self.TYPE.serialize()
+			
 		return doc
 	
 	@classmethod
@@ -31,12 +44,22 @@ class Event(serializable.Type):
 		if isinstance(doc_or_instance, cls):
 			return doc_or_instance
 		else:
-			Class = cls.TYPES[doc_or_instance['type']]
+			type = EventType.deserialize(doc_or_instance['type'])
+			Class = cls.TYPES[type]
 			del doc_or_instance['type']
 			return Class(**doc_or_instance)
-
-class ServerStart(Event):
-	TYPE = "server start"
+	
+	@classmethod
+	def register(cls, sub_class):
+		assert isinstance(sub_class, cls)
+		cls.TYPES[sub_class.TYPE] = sub_class
+		if sub_class.PUBLIC:
+			cls.PUBLIC_TYPES.add(sub_class.TYPE)
+		
+	
+class ServerStarted(Event):
+	TYPE = EventType("server", "start")
+	PUBLIC = True
 	
 	SERVERS = set([u'sync', u'web'])
 	
@@ -44,10 +67,11 @@ class ServerStart(Event):
 		Event.__init__(self, system_time)
 		self.server = unicode(server); assert server in self.SERVERS
 	
-Event.TYPES[ServerStart.TYPE] = ServerStart
+Event.TYPES[ServerStarted.TYPE] = ServerStarted
 
-class ServerStop(Event):
-	TYPE = "server stop"
+class ServerStopped(Event):
+	TYPE = EventType("server", "stopped")
+	PUBLIC = True
 	
 	SERVERS = set([u'sync', u'web'])
 	
@@ -58,59 +82,60 @@ class ServerStop(Event):
 		self.stats = stats
 		self.error = unicode(error) if error != None else None
 	
-Event.TYPES[ServerStop.TYPE] = ServerStop
+Event.TYPES[ServerStopped.TYPE] = ServerStopped
 
 class UILoaded(Event):
-	TYPE = "ui loaded"
+	TYPE = EventType("ui", "loaded")
 	
 	def __init__(self, snuggler=None, data=None, system_time=None):
 		Event.__init__(self, system_time)
 		self.snuggler = Snuggler.deserialize(snuggler) if snuggler != None else None
 		self.data = data
 	
-UILoaded.TYPES[UILoaded.TYPE] = UILoaded
+Event.TYPES[UILoaded.TYPE] = UILoaded
 
-class UserQuery(Event):
-	TYPE = "user query"
+class UsersQueried(Event):
+	TYPE = EventType("users", "queried")
 	
-	def __init__(self, query, wait_time, response_length, 
+	def __init__(self, filters, wait_time, response_length, 
 		         snuggler=None, data=None, system_time=None):
 		Event.__init__(self, system_time)
-		self.query = query
+		self.filters = filters
 		self.wait_time = float(wait_time)
 		self.response_length = int(response_length)
 		self.snuggler = Snuggler.deserialize(snuggler) if snuggler != None else None
 		self.data = data
 	
-UserQuery.TYPES[UserQuery.TYPE] = UserQuery
+Event.TYPES[UsersQueried.TYPE] = UsersQueried
 
-class EventQuery(Event):
-	TYPE = "event query"
+class EventsQueried(Event):
+	TYPE = EventType("events", "queried")
 	
-	def __init__(self, query, wait_time, response_length, 
+	def __init__(self, filters, wait_time, response_length, 
 		         snuggler=None, data=None, system_time=None):
 		Event.__init__(self, system_time)
-		self.query = query
+		self.filters = filters
 		self.wait_time = float(wait_time)
 		self.response_length = int(response_length)
 		self.snuggler = Snuggler.deserialize(snuggler) if snuggler != None else None
 		self.data = data
 	
-EventQuery.TYPES[EventQuery.TYPE] = EventQuery
+Event.TYPES[EventsQueried.TYPE] = EventsQueried
 
 
-class ViewUser(Event):
-	TYPE = "view user"
+class UserViewed(Event):
+	TYPE = EventType("user", "viewed")
 	
 	def __init__(self, user, snuggler, system_time=None):
 		Event.__init__(self, system_time)
 		self.user     = User.deserialize(user)
 		self.snuggler = Snuggler.deserialize(snuggler)
 	
-Event.TYPES[ViewUser.TYPE] = ViewUser
+Event.TYPES[UserViewed.TYPE] = UserViewed
 
-class CategorizeUser(Event):
-	TYPE = "categorizer user"
+class UserCategorized(Event):
+	TYPE = EventType("user", "categorized")
+	PUBLIC = True
 	
 	def __init__(self, user, snuggler, category, system_time=None):
 		Event.__init__(self, system_time)
@@ -118,10 +143,11 @@ class CategorizeUser(Event):
 		self.snuggler = Snuggler.deserialize(snuggler)
 		self.category = unicode(category)
 	
-Event.TYPES[CategorizeUser.TYPE] = CategorizeUser
+Event.TYPES[UserCategorized.TYPE] = UserCategorized
 	
-class UserAction(Event):
-	TYPE = "user action"
+class UserActioned(Event):
+	TYPE = EventType("user", "actioned")
+	PUBLIC = True
 	
 	def __init__(self, request, snuggler, results, system_time=None):
 		Event.__init__(self, system_time)
@@ -129,24 +155,30 @@ class UserAction(Event):
 		self.snuggler = Snuggler.deserialize(snuggler)
 		self.results  = serializable.List.deserialize(OperationResult, results)
 	
-Event.TYPES[UserAction.TYPE] = UserAction
-
+	def serialize(self):
+		doc = Event.serialize(self)
+		# Don't include results that are not considered "public"
+		doc['results'] = [r.serialize() for r in self.results if r.PUBLIC]
+		
+		return doc
 	
-class SnugglerLogin(Event):
-	TYPE = "snuggler login"
+Event.TYPES[UserActioned.TYPE] = UserActioned
+
+class SnugglerLoggedIn(Event):
+	TYPE = EventType("snuggler", "logged in")
 	
 	def __init__(self, snuggler, system_time=None):
 		Event.__init__(self, system_time)
 		self.snuggler  = Snuggler.deserialize(snuggler)
-Event.TYPES[SnugglerLogin.TYPE] = SnugglerLogin
+Event.TYPES[SnugglerLoggedIn.TYPE] = SnugglerLoggedIn
 
 	
-class SnugglerLogout(Event):
-	TYPE = "snuggler logout"
+class SnugglerLoggedOut(Event):
+	TYPE = EventType("snuggler", "logged out")
 	
 	def __init__(self, snuggler, system_time=None):
 		Event.__init__(self, system_time)
 		self.snuggler  = Snuggler.deserialize(snuggler)
 	
-Event.TYPES[SnugglerLogout.TYPE] = SnugglerLogout
+Event.TYPES[SnugglerLoggedOut.TYPE] = SnugglerLoggedOut
 

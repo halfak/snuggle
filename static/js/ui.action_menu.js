@@ -339,7 +339,7 @@ ui.ActionMenu.Flyout.Previewer = Class.extend({
 	}
 })
 
-ui.ActionMenu.Operation = Class.extend({
+ui.ActionMenu.OperationPreview = Class.extend({
 	init: function(description){
 		this.node = $("<div>")
 			.addClass("operation")
@@ -355,10 +355,10 @@ ui.ActionMenu.Operation = Class.extend({
 		throw "Not implemented... Must be subclasses"
 	}
 })
-ui.ActionMenu.Operation.TYPES = {}
-ui.ActionMenu.Operation.from_doc = function(doc){
-	logger.debug("Constructing operation type=" + doc.type)
-	Class = ui.ActionMenu.Operation.TYPES[doc.type] 
+ui.ActionMenu.OperationPreview.TYPES = {}
+ui.ActionMenu.OperationPreview.from_doc = function(doc){
+	logger.debug("Constructing operation preview type=" + doc.type)
+	Class = ui.ActionMenu.OperationPreview.TYPES[doc.type] 
 	if(Class){
 		return Class.from_doc(doc)
 	}else{
@@ -366,7 +366,7 @@ ui.ActionMenu.Operation.from_doc = function(doc){
 	}
 }
 
-ui.ActionMenu.Error = ui.ActionMenu.Operation.extend({
+ui.ActionMenu.Error = ui.ActionMenu.OperationPreview.extend({
 	init: function(doc){
 		if(doc.code){
 			var message = doc.code + ": " + doc.message
@@ -377,13 +377,14 @@ ui.ActionMenu.Error = ui.ActionMenu.Operation.extend({
 		this.node.addClass("error")
 	}
 })
+
 ui.ActionMenu.Error.TYPE = "error"
-ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Error.TYPE] = ui.ActionMenu.Append
+ui.ActionMenu.OperationPreview.TYPES[ui.ActionMenu.Error.TYPE] = ui.ActionMenu.Error
 ui.ActionMenu.Error.from_doc = function(doc){
 	return new ui.ActionMenu.Error(doc.code, doc.message)
 }
 
-ui.ActionMenu.Append = ui.ActionMenu.Operation.extend({
+ui.ActionMenu.AppendPreview = ui.ActionMenu.OperationPreview.extend({
 	init: function(page_name, html, comment){
 		this._super("Append to: " + util.htmlify(util.wiki_link(page_name)))
 		this.node.addClass("append")
@@ -392,13 +393,13 @@ ui.ActionMenu.Append = ui.ActionMenu.Operation.extend({
 		this.node.append(this.preview.node)
 	}
 })
-ui.ActionMenu.Append.TYPE = "append"
-ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Append.TYPE] = ui.ActionMenu.Append
-ui.ActionMenu.Append.from_doc = function(doc){
-	return new ui.ActionMenu.Append(doc.page_name, doc.html, doc.comment)
+ui.ActionMenu.AppendPreview.TYPE = "append preview"
+ui.ActionMenu.OperationPreview.TYPES[ui.ActionMenu.AppendPreview.TYPE] = ui.ActionMenu.AppendPreview
+ui.ActionMenu.AppendPreview.from_doc = function(doc){
+	return new ui.ActionMenu.AppendPreview(doc.page_name, doc.html, doc.comment)
 }
 
-ui.ActionMenu.Replace = ui.ActionMenu.Operation.extend({
+ui.ActionMenu.ReplacePreview = ui.ActionMenu.OperationPreview.extend({
 	init: function(page_name, html, comment){
 		this._super("Replace " + util.htmlify(util.wiki_link(page_name)) + " with:")
 		this.node.addClass("replace")
@@ -407,32 +408,23 @@ ui.ActionMenu.Replace = ui.ActionMenu.Operation.extend({
 		this.node.append(this.preview.node)
 	}
 })
-ui.ActionMenu.Replace.TYPE = "replace"
-ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Replace.TYPE] = ui.ActionMenu.Replace
-ui.ActionMenu.Replace.from_doc = function(doc){
-	return new ui.ActionMenu.Replace(doc.page_name, doc.html, doc.comment)
+ui.ActionMenu.ReplacePreview.TYPE = "replace preview"
+ui.ActionMenu.OperationPreview.TYPES[ui.ActionMenu.ReplacePreview.TYPE] = ui.ActionMenu.ReplacePreview
+ui.ActionMenu.ReplacePreview.from_doc = function(doc){
+	return new ui.ActionMenu.ReplacePreview(doc.page_name, doc.html, doc.comment)
 }
 
-ui.ActionMenu.Watch = ui.ActionMenu.Operation.extend({
+ui.ActionMenu.WatchPreview = ui.ActionMenu.OperationPreview.extend({
 	init: function(page_name){
 		this._super("Watch: " + util.htmlify(util.wiki_link(page_name)))
-		this.node.addClass("watch021")
+		this.node.addClass("watch")
 	}
 })
-ui.ActionMenu.Watch.TYPE = "watch"
-ui.ActionMenu.Operation.TYPES[ui.ActionMenu.Watch.TYPE] = ui.ActionMenu.Watch
-ui.ActionMenu.Watch.from_doc = function(doc){
-	return new ui.ActionMenu.Watch(doc.page_name)
+ui.ActionMenu.WatchPreview.TYPE = "watch preview"
+ui.ActionMenu.OperationPreview.TYPES[ui.ActionMenu.WatchPreview.TYPE] = ui.ActionMenu.WatchPreview
+ui.ActionMenu.WatchPreview.from_doc = function(doc){
+	return new ui.ActionMenu.WatchPreview(doc.page_name)
 }
-
-
-ui.HTMLPreview = Class.extend({
-	init: function(html){
-		this.node = $("<div>")
-			.addClass("wiki_format")
-			.append(html)
-	}
-})
 
 
 ui.EditPreview = Class.extend({

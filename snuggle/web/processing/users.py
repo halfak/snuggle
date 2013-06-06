@@ -26,7 +26,7 @@ class Users:
 		
 		try:
 			user = types.User(doc['id'], doc['name'])
-			event = types.ViewUser(
+			event = types.UserViewed(
 				user, 
 				session['snuggler']
 			)
@@ -47,7 +47,7 @@ class Users:
 		
 		try:
 			snuggler, data = user_data()
-			event = types.UserQuery(
+			event = types.UsersQueried(
 				query,
 				end-start,
 				len(users),
@@ -70,7 +70,7 @@ class Users:
 			
 			try:
 				user = types.User(data['id'], data['name'])
-				event = types.CategorizeUser(
+				event = types.UserCategorized(
 					user, 
 					session['snuggler'], 
 					data['category']
@@ -98,7 +98,7 @@ class Users:
 			)
 			
 			try:
-				event = types.WatchUser(
+				event = types.UserWatched(
 					user, 
 					session['snuggler']
 				)
@@ -134,7 +134,7 @@ class Users:
 				
 			
 		try:
-			event = types.UserAction(
+			event = types.UserActioned(
 				request,
 				session['snuggler'],
 				results

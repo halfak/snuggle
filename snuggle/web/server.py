@@ -86,7 +86,7 @@ def run(config, debug):
 	model = Model.from_config(config)
 	
 	start_time = time.time()
-	event = types.ServerStart("web")
+	event = types.ServerStarted("web")
 	model.events.insert(event)
 	
 	app = application(config, model)
@@ -116,7 +116,7 @@ def run(config, debug):
 	except Exception:
 		
 		# Record stop with error
-		event = types.ServerStop(
+		event = types.ServerStopped(
 			"web",
 			start_time,
 			{},

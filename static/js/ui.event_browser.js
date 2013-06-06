@@ -30,8 +30,8 @@ ui.EventBrowser = Class.extend({
 		)
 	},
 	_update_query: function(){
-		logger.debug("ui.recent_events: updating query")
-		var query = servers.local.events.query(this.filters.val())
-		this.user_list.load(query)
+		logger.debug("ui.recent_events: updating cursor")
+		var cursor = servers.local.events.cursor(this.filters.val())
+		this.user_list.load(cursor)
 	}
 })
