@@ -33,9 +33,6 @@ ui.Field = Class.extend({
 	},
 	reset: function(){
 		this.val(this.default)
-	},
-	_changed: function(e){
-		return this.changed.notify(e).bool_or()
 	}
 })
 ui.Field.TYPES = {}
@@ -63,7 +60,7 @@ ui.SelectField = ui.Field.extend({
 				.attr('name', this.name)
 				.attr('id', this.id)
 				.attr('tabindex', opts.tabindex || 1)
-				.change(this._changed.bind(this)),
+				.change(this._handle_change.bind(this)),
 			labels: {},
 			values: {}
 		}
@@ -74,6 +71,11 @@ ui.SelectField = ui.Field.extend({
 		if(opts.default){
 			this.val(opts.default)
 		}
+		
+		this.changed = new Event(this)
+	},
+	_handle_change: function(){
+		this.changed.notify()
 	},
 	val: function(value){
 		if(value === undefined){

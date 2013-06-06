@@ -196,30 +196,73 @@ servers.Local.Users.Cursor = Class.extend({
 		}else{
 			success([])
 		}
+	}
+})
+
+
+/**
+Represents the server's list of events.
+*/
+servers.Local.Events = Class.extend({
+	/**
+	:Parameters:
+		api : `LocalAPI`
+			an api for requesting and storing information
+	*/
+	init: function(api){
+		this.api = api
 	},
-	convert: function(doc){
-		for(var id in doc.revisions){
-			if(doc.revisions[id].revert && doc.revisions[id].revert.user._id == doc._id){
-				doc.revisions[id].revert.self = true
-			}
-		}
+	get: function(filters, success, error, limit, skip){
+		filters = filters || {}
+		limit   = limit || 25
+		skip    = skip || 0
 		
-		return {
-			id: doc._id,
-			info: {
-				name: doc.name,
-				registration: doc.registration,
-				reverted: doc.activity.reverted || 0,
-				counts: doc.activity.counts,
-				views: doc.views,
-				has_user: doc.has_user_page,
-				has_talk: doc.has_talk_page
-			},
-			contribs: doc.activity.revisions,
-			talk: {
-				topics: (doc.talk || {}).topics || []
-			},
-			category: doc.category
+		this.api.post(
+			'events', 'query', 
+			$.extend(
+				filters,
+				{
+					limit: limit,
+					skip: skip
+				}
+			), 
+			success, 
+			error
+		)
+	},
+	query: function(filters){
+		return servers.Local.Events.Cursor(this, filters)
+	}
+})
+
+/**
+Represents a database query cursor that can be read by calling next().
+*/
+servers.Local.Events.Cursor = Class.extend({
+	init: function(events, filters){
+		this.events = events
+		this.filters = filters
+		
+		this.skip = 0
+		this.complete = false
+	},
+	next: function(n, success, error){
+		if(!this.complete){
+			this.events.get(
+				this.filters,
+				function(docs){
+					if(docs.length == 0){
+						this.complete = true
+					}
+					this.skip += docs.length
+					success(this, docs)
+				}.bind(this),
+				error,
+				n,
+				this.skip
+			)
+		}else{
+			success([])
 		}
 	}
 })

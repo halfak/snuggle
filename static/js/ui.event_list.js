@@ -7,7 +7,7 @@ ui.EventList = Class.extend({
 		
 		this.node = this.view.node
 		
-		this.query = null
+		this.cursor = null
 	},
 	_handle_view_change: function(){
 		this._read_until_full()
@@ -21,20 +21,23 @@ ui.EventList = Class.extend({
 			this._load_more()
 		}
 	},
-	load: function(query){
-		this.query = query
+	load: function(cursor){
+		this.cursor = cursor
 		this.model.clear()
 		this._read_until_full()
 	},
+	append: function(event){
+		this.model.append(event)
+	},
 	_load_more: function(){
-		if(!this.query.complete && !this.view.loading()){
+		if(!this.cursor.complete && !this.view.loading()){
 			logger.debug("ui.event_list: sending a request for more events.")
 			this.view.loading(true)
-			this.query.next(
+			this.cursor.next(
 				10,
-				function(query, docs){
+				function(cursor, docs){
 					this.view.loading(false)
-					if(query == this.query){ //If we are still running the same query
+					if(cursor == this.cursor){ //If we are still reading from the same cursor
 						for(var i=0;i<docs.length;i++){
 							this.append(new ui.Event.from_doc(docs[i]))
 						}

@@ -1,4 +1,4 @@
-ui = ui || {}
+ui = window.ui || {}
 
 ui.Dropper = Class.extend({
 	/*

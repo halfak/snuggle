@@ -7,7 +7,7 @@ ui.UserList = Class.extend({
 		this.view  = view || new ui.UserList.View(this.model)
 		this.node = this.view.node
 		
-		this.query = null
+		this.cursor = null
 		this.selected = null
 		
 		this.view.view_changed.attach(this._handle_view_change.bind(this))
@@ -45,9 +45,9 @@ ui.UserList = Class.extend({
 		user.selected_changed.attach(this._handle_user_selected_change.bind(this))
 		this.model.append(user)
 	},
-	load: function(query){
-		//initialize query
-		this.query = query
+	load: function(cursor){
+		//initialize cursor
+		this.cursor = cursor
 		this.model.clear()
 		this._read_until_full()
 		
@@ -66,7 +66,7 @@ ui.UserList = Class.extend({
 	},
 	_read_until_full: function(){
 		// This function checks to see if we should load
-		if(!this.query.complete){
+		if(!this.cursor.complete){
 			view = this.view.view()
 			
 			if(view.end - view.bottom < 200 && !this.model.loading()){
@@ -76,14 +76,14 @@ ui.UserList = Class.extend({
 		}
 	},
 	_load_more_users: function(){
-		if(!this.query.complete){
+		if(!this.cursor.complete){
 			logger.debug("Sending a request for more users.")
 			this.model.loading(true)
-			this.query.next(
+			this.cursor.next(
 				10,
-				function(query, docs){
+				function(cursor, docs){
 					this.model.loading(false)
-					if(query == this.query){ //If we are still running the same query
+					if(cursor == this.cursor){ //If we are still reading from the same cursor
 						for(var i=0;i<docs.length;i++){
 							this.append(new controllers.User(docs[i]))
 						}

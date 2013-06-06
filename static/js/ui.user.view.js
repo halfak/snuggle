@@ -1,4 +1,4 @@
-// requires: ui.user.js
+// require: ui.user.js
 
 ui.User.View = Class.extend({
 	init: function(model){

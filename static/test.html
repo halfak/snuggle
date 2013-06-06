@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="css/border_box.css" />
+		<link rel="stylesheet" href="css/layout.css" />
+		<link rel="stylesheet" href="css/wiki_format.css" />
+		<link rel="stylesheet" href="css/ui.fields.css" />
+		<link rel="stylesheet" href="css/ui.event.css" />
+		<link rel="stylesheet" href="css/ui.event_filters.css" />
+		<link rel="stylesheet" href="css/ui.event_list.css" />
+		<link rel="stylesheet" href="css/ui.event_browser.css" />
+		<script language="javascript" src="config/configuration.js"></script>
+		<script language="javascript" src="js/lib/jquery-1.8.1.min.js"></script>
+		<script language="javascript" src="js/lib/class.js"></script>
+		<script language="javascript" src="js/lib/date.format.js"></script>
+		<script language="javascript" src="js/lib/javascript.js"></script>
+		<script language="javascript" src="js/util.js"></script>
+		<script language="javascript" src="js/event.js"></script>
+		<script language="javascript" src="js/i18n.js"></script>
+		<script language="javascript" src="js/ui.fields.js"></script>
+		<script language="javascript" src="js/ui.event.js"></script>
+		<script language="javascript" src="js/ui.event_filters.js"></script>
+		<script language="javascript" src="js/ui.event_list.js"></script>
+		<script language="javascript" src="js/ui.event_browser.js"></script>
+		<style>
+			div{border: 1px dashed black;margin: 1px;}
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			
+			
+			EVENT_BROWSER = new ui.EventBrowser()
+			$('<div>').append(EVENT_BROWSER.node)
+				.css("width", 500)
+				.appendTo($('body'))
+			
+		</script>
+	<body>

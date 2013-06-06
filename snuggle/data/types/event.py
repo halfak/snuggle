@@ -84,6 +84,20 @@ class UserQuery(Event):
 	
 UserQuery.TYPES[UserQuery.TYPE] = UserQuery
 
+class EventQuery(Event):
+	TYPE = "event query"
+	
+	def __init__(self, query, wait_time, response_length, 
+		         snuggler=None, data=None, system_time=None):
+		Event.__init__(self, system_time)
+		self.query = query
+		self.wait_time = float(wait_time)
+		self.response_length = int(response_length)
+		self.snuggler = Snuggler.deserialize(snuggler) if snuggler != None else None
+		self.data = data
+	
+EventQuery.TYPES[EventQuery.TYPE] = EventQuery
+
 
 class ViewUser(Event):
 	TYPE = "view user"

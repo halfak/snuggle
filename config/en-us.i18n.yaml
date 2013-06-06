@@ -10,6 +10,8 @@ lang: en-us
 "?": "?"
 "✗": "✗"
 
+all: all
+
 ambiguous: ambiguous
 any page: any page
 ascending: ascending
@@ -72,6 +74,7 @@ This user has not been categorized yet.: This user has not been categorized yet.
 "This user is at least trying to do something useful (or press #1)": "This user is at least trying to do something useful (or press #1)"
 "This editor is trying to cause harm or be disruptive (or press #3)": "This editor is trying to cause harm or be disruptive (or press #3)"
 total edits: total edits
+types of events by: types of events by
 
 uncategorized: uncategorized
 user: user

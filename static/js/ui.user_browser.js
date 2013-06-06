@@ -1,3 +1,5 @@
+ui = window.ui || {}
+
 ui.UserBrowser = Class.extend({
 	init: function(){
 		this.node = $("<div>")

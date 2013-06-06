@@ -1,8 +1,9 @@
+ui = window.ui || {}
+
 ui.EventFilters = Class.extend({
 	init: function(){
 		this.node = $("<div>")
 			.addClass("event_filters")
-		
 		this.type = new ui.SelectField(
 			"type",
 			[
@@ -27,7 +28,7 @@ ui.EventFilters = Class.extend({
 				tooltip: i18n.get("type the name of a snuggle user here to filter the list")
 			}
 		)
-		this.snuggle_name.changed.attach(this._handle_field_change.bind(this))
+		this.snuggler_name.changed.attach(this._handle_field_change.bind(this))
 		this.node.append(this.snuggler_name.node)
 		
 		this.changed = new Event(this)

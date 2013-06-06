@@ -8,21 +8,17 @@ ui.Snuggle = Class.extend({
 		this.help = new ui.HelpSlider(configuration.i18n.lang)
 		this.node.append(this.help.node)
 		
-		// Perform initial query automatically
-		//this._load_help()
-		
 		// Set up snuggler
 		this.snuggler = new ui.Snuggler()
 		$("#status").after(this.snuggler.node)
 		
 		// Set up user browser
 		this.user_browser = new ui.UserBrowser()
-		this.node.append(this.user_browser.node()
-		
-		// Perform initial query automatically
-		this._update_query()
-		
-		this.loading = false
+		this.node.append(this.user_browser.node)
+			
+		// Set up event browser
+		this.event_browser = new ui.EventBrowser()
+		this.node.append(this.event_browser.node)
 	},
 	_handle_filter_menu_change: function(_){
 		logger.debug("ui.snuggle: controller delaying filter change.")

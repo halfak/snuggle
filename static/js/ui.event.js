@@ -1,3 +1,5 @@
+ui = window.ui || {}
+
 ui.Event = Class.extend({
 	init: function(model, view){
 		this.model = model
