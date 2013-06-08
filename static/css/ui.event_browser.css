@@ -1,7 +1,25 @@
 div.event_browser {
-	
+	position: relative;
+}
+
+div.event_browser div.header{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	font-weight: bold;
+	font-size: 1.2em;
+	padding-left: .5em;
 }
 
 div.event_browser div.event_filters{
-	
+	position: absolute;
+	padding-left: .5em;
+	top: 1.5em;
+}
+div.event_browser div.event_list{
+	position: absolute;
+	top: 4.25em;
+	bottom: -1px;
+	left: -1px;
+	right: -1px;
 }

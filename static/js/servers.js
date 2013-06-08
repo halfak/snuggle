@@ -5,6 +5,7 @@ servers.Local = Class.extend({
 		this.api      = new LocalAPI(url)
 		this.snuggler = new servers.Local.Snuggler(this.api)
 		this.users    = new servers.Local.Users(this.api)
+		this.events   = new servers.Local.Events(this.api)
 	},
 	help: function(lang, success, error){
 		this.api.post("server", "help", {lang: lang}, success, error)
@@ -212,10 +213,10 @@ servers.Local.Events = Class.extend({
 	init: function(api){
 		this.api = api
 	},
-	query: function(filters, success, error, limit, skip){
+	query: function(filters, success, error, limit, after){
 		filters = filters || {}
-		limit   = limit || 25
-		skip    = skip || 0
+		limit = limit
+		after = after || 0
 		
 		this.api.post(
 			'events', 'query', 
@@ -223,7 +224,7 @@ servers.Local.Events = Class.extend({
 				filters,
 				{
 					limit: limit,
-					skip: skip
+					after: after
 				}
 			), 
 			success, 
@@ -231,7 +232,7 @@ servers.Local.Events = Class.extend({
 		)
 	},
 	cursor: function(filters){
-		return servers.Local.Events.Cursor(this, filters)
+		return new servers.Local.Events.Cursor(this, filters)
 	}
 })
 
@@ -243,23 +244,25 @@ servers.Local.Events.Cursor = Class.extend({
 		this.events = events
 		this.filters = filters
 		
-		this.skip = 0
+		this.last = null
 		this.complete = false
 	},
 	next: function(n, success, error){
 		if(!this.complete){
+			last_time = (this.last || {}).system_time
 			this.events.query(
 				this.filters,
 				function(docs){
 					if(docs.length == 0){
 						this.complete = true
+					}else{
+						this.last = docs[docs.length-1]
 					}
-					this.skip += docs.length
 					success(this, docs)
 				}.bind(this),
 				error,
 				n,
-				this.skip
+				last_time
 			)
 		}else{
 			success([])

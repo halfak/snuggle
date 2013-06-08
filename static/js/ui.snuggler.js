@@ -1,9 +1,9 @@
 ui = window.ui || {}
 
 ui.Snuggler = Class.extend({
-	init: function(){
-		this.model = new models.Snuggler()
-		this.view  = new ui.Snuggler.View(this.model)
+	init: function(model, view){
+		this.model = model || new ui.Snuggler.Model()
+		this.view  = view || new ui.Snuggler.View(this.model)
 		this.node  = this.view.node
 		
 		this.view.login_submitted.attach(this._handle_login_submit.bind(this))
@@ -256,7 +256,7 @@ ui.Snuggler.View.Menu.Login = Class.extend({
 			{
 				label: i18n.get("Username"), 
 				tooltip: i18n.get("your wiki username"),
-				tabindex: tabindex.snuggler_form
+				tabindex: env.tabindex.snuggler_form
 			}
 		)
 		this.name.keypressed.attach(this._handle_keypress.bind(this))
@@ -269,7 +269,7 @@ ui.Snuggler.View.Menu.Login = Class.extend({
 				label: i18n.get("Password"), 
 				tooltip: i18n.get("your wiki password"),
 				password: true,
-				tabindex: tabindex.snuggler_form
+				tabindex: env.tabindex.snuggler_form
 			}
 		)
 		this.pass.keypressed.attach(this._handle_keypress.bind(this))
@@ -279,7 +279,7 @@ ui.Snuggler.View.Menu.Login = Class.extend({
 			{
 				label: i18n.get("log in"), 
 				tooltip: i18n.get("click here to log in."),
-				tabindex: tabindex.snuggler_form
+				tabindex: env.tabindex.snuggler_form
 			}
 		)
 		this.login.activated.attach(this._handle_login_activated.bind(this))
@@ -338,7 +338,7 @@ ui.Snuggler.View.Menu.Logout = Class.extend({
 			{
 				label: i18n.get("log out"),
 				tooltip: i18n.get("click here to log out"),
-				tabindex: tabindex.snuggler_form
+				tabindex: env.tabindex.snuggler_form
 			}
 		)
 		this.logout.activated.attach(this._handle_logout_activated.bind(this))

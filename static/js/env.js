@@ -1,10 +1,10 @@
 env = {
 	delays: {
-		update_user_filters: 1000,
-		update_event_filters: 1000,
-		user_view_delay: 1500,
-		check_snuggler_auth: 12000,
-		preview_action: 250
+		update_cursor: 1000, // 1 second
+		user_view: 1500, // 1.5 seconds
+		check_snuggler_auth: 10000, // 10 seconds
+		preview_action: 250, // 0.25 seconds
+		element_rotation: 100 // 0.1 seconds
 	},
 	keys: {
 		ESCAPE: 27,
@@ -30,10 +30,11 @@ env = {
 		DAY: 1000*60*60*24
 	},
 	tabindex: {
-		filter_menu: 0,
 		user: 1,
 		action_menu: 2,
 		snuggler_form: 3,
+		user_filters: 50,
+		event_filters: 51,
 		dropper: 100
 	}
 }

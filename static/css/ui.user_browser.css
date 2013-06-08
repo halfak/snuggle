@@ -1,1 +1,15 @@
-
+div.user_filters{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 6em;
+}
+div.user_list{
+	position: fixed;
+	top: 6em;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	overflow-y: scroll;
+}

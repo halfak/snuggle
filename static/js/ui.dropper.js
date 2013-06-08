@@ -17,7 +17,7 @@ ui.Dropper = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("dropper")
-			.attr('tabindex', tabindex.dropper)
+			.attr('tabindex', env.tabindex.dropper)
 			
 		if(opts.class){this.node.addClass(opts.class)}
 		

@@ -10,8 +10,7 @@ ui.EventBrowser = Class.extend({
 				.addClass("header")
 				.html(i18n.get("Recent activity"))
 		}
-		this.node.append(this.header)
-		
+		this.node.append(this.header.node)
 		
 		this.filters = new ui.EventFilters()
 		this.filters.changed.attach(this._handle_filters_change.bind(this))
@@ -19,19 +18,28 @@ ui.EventBrowser = Class.extend({
 		
 		this.event_list = new ui.EventList()
 		this.node.append(this.event_list.node)
+		
+		this.loaded = false
 	},
 	_handle_filters_change: function(){
 		if(this.filters_change_delay){
 			clearTimeout(this.filters_change_delay)
 		}
 		this.filters_change_delay = setTimeout(
-			this._update_query.bind(this),
-			delays.update_event_filters
+			this._update_cursor.bind(this),
+			env.delays.update_cursor
 		)
 	},
-	_update_query: function(){
-		logger.debug("ui.recent_events: updating cursor")
+	load: function(){
+		if(!this.loaded){
+			logger.info("ui.event_browser: loading...")
+			this._update_cursor()
+			this.loaded = true
+		}
+	},
+	_update_cursor: function(){
+		logger.debug("ui.event_browser: updating cursor...")
 		var cursor = servers.local.events.cursor(this.filters.val())
-		this.user_list.load(cursor)
+		this.event_list.load(cursor)
 	}
 })

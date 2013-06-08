@@ -6,7 +6,7 @@ ui.User.View = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("user")
-			.attr('tabindex', tabindex.user)
+			.attr('tabindex', env.tabindex.user)
 			.focus(this._handle_focus.bind(this))
 			.keydown(this._handle_keydown.bind(this))
 		
@@ -218,7 +218,7 @@ ui.User.View.Info.Actions = ui.Dropper.extend({
 		actions = configuration.mediawiki.user_actions.display.map(
 			function(name){
 				var action_doc = configuration.mediawiki.user_actions.actions[name]
-				actions.push(new ui.UserAction.from_doc(name, action_doc, formatting)
+				actions.push(new ui.UserAction.from_doc(name, action_doc, formatting))
 			}
 		)
 		

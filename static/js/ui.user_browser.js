@@ -5,29 +5,16 @@ ui.UserBrowser = Class.extend({
 		this.node = $("<div>")
 			.addClass("user_browser")
 		
-		logger.info("ui.user_browser: loading...")
-		
-		// Set up help
-		this.help = new ui.UserBrowser.Help(configuration.i18n.lang)
-		this.node.append(this.help.node)
-		
-		// Set up snuggler
-		this.snuggler = new controllers.Snuggler()
-		$("#status").after(this.snuggler.node)
-		
 		// Set up filters
-		this.filter_menu = new ui.FilterMenu()
-		this.filter_menu.changed.attach(this._handle_filter_menu_change.bind(this))
-		this.node.append(this.filter_menu.node)
+		this.user_filters = new ui.UserFilters()
+		this.user_filters.changed.attach(this._handle_filter_menu_change.bind(this))
+		this.node.append(this.user_filters.node)
 		
 		// Set up user list
-		this.user_list = new controllers.UserList()
+		this.user_list = new ui.UserList()
 		this.node.append(this.user_list.node)
 		
-		// Perform initial query automatically
-		this._update_query()
-		
-		this.loading = false
+		this.loaded = false
 	},
 	_handle_filter_menu_change: function(_){
 		logger.debug("ui.snuggle: controller delaying filter change.")
@@ -36,76 +23,31 @@ ui.UserBrowser = Class.extend({
 		}
 		
 		this.filters_change_delay = setTimeout(
-			this._update_query.bind(this), 
-			delays.update_user_filters
+			this._update_cursor.bind(this), 
+			delays.update_cursor
 		)
 	},
-	_update_cursor: function(){
-		logger.debug("ui.snuggle: updating cursor")
-		var query = servers.local.users.cursor(this.filter_menu.val())
-		this.user_list.load(cursor)
-	}
-})
-
-ui.UserBrowser.Help = Class.extend({
-	init: function(lang){
-		this.lang = lang
-		
-		this.node = $("<div>")
-			.addClass("help_slider")
-			.click(util.stop_propagation)
-		
-		this.pane = {
-			node: $("<div>")
-				.addClass("pane")
-				.append(
-					$("<div>").addClass("container")
-						.load("help/" + this.lang + ".html .help_content")
-				)
-		}
-		this.node.append(this.pane.node)
-		
-		this.tab = {
-			node: $("<div>")
-				.addClass("tab")
-				.addClass("clickable")
-				.append($("<span>").html(i18n.get("help")))
-		}
-		this.node.append(this.tab.node)
-		this.tab.node.click(this._handle_click.bind(this))
-		
-		$("body").click(this._handle_body_click.bind(this))
-	},
-	_handle_click: function(){
-		this.toggle()
-	},
-	_handle_body_click: function(e){
-		this.expanded(false)
-	},
-	toggle: function(){
-		this.expanded(!this.expanded())
-	},
-	expanded: function(expand){
-		if(expand === undefined){
-			return this.node.hasClass("expanded")
+	visible: function(visible){
+		if(visible === undefined){
+			return this.node.css("display") != "none"
 		}else{
-			if(expand){
-				this.pane.node.animate(
-					{"height": "400px"},
-					300
-				)
-				this.node.addClass("expanded")
+			if(visible){
+				this.node.show()
 			}else{
-				this.pane.node.animate(
-					{"height": "1px"},
-					300,
-					function(){
-						this.node.removeClass("expanded")
-					}.bind(this)
-				)
-				
+				this.node.hide()
 			}
 		}
+	},
+	load: function(){
+		if(!this.loaded){
+			logger.info("ui.user_browser: loading...")
+			this._update_cursor()
+			this.loaded = true
+		}
+	},
+	_update_cursor: function(){
+		logger.debug("ui.user_browser: updating cursor...")
+		var cursor = servers.local.users.cursor(this.user_filters.val())
+		this.user_list.load(cursor)
 	}
-	
 })

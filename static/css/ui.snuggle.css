@@ -1,0 +1,51 @@
+body{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	box-shadow: inset 0px 0px 250px #000;
+	height: 100%;
+}
+div.system_status{
+	display: inline-block;
+	position: relative;
+	z-index: 10;
+	vertical-align: top;
+	margin: .25em;
+	font-size: 1.4em;
+}
+div.snuggler{
+	display: inline-block;
+	position: relative;
+	z-index: 10;
+	vertical-align: top;
+}
+div.help{
+	position: fixed;
+	z-index: 10;
+	top: 0px;
+	right: 0px;
+	white-space: nowrap;
+}
+div.welcome,
+div.user_browser{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	overflow: hidden;
+}
+div.welcome{
+	z-index: 9; /* Right beneath the system_status, snuggler and help */
+}
+div.user_browser{
+	z-index: 1; /* On the bottom -- beneath everything */
+}
+
+
+

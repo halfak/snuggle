@@ -1,16 +1,16 @@
-import time
+import time, sys
 
-from snuggle.data import types
+from snuggle.data import types as data_types
 
 from . import util
 
 class Events:
 	
 	QUERYABLE_TYPES = set([
-		types.UserActioned.TYPE,
-		types.UserCategorized.TYPE,
-		types.ServerStarted.TYPE,
-		types.ServerStopped.TYPE
+		data_types.UserActioned.TYPE,
+		data_types.UserCategorized.TYPE,
+		data_types.ServerStarted.TYPE,
+		data_types.ServerStopped.TYPE
 	])
 	
 	def __init__(self, mongo):
@@ -19,24 +19,34 @@ class Events:
 	def insert(self, event):
 		self.mongo.db.events.insert(util.mongoify(event.serialize()))
 	
-	def query(self, types=None, snuggler_name=None, 
-	          sort_by="server_time", direction="descending", limit=1000):
+	def query(self, types=None, snuggler_name=None, after=None, before=None, 
+	          sort_by="server_time", direction="descending", limit=1000,
+	          deserialize=True):
 		
-		spec = {}
+		query = {
+			'spec': {},
+			'sort':[(sort_by, 1 if direction == "ascending" else -1)],
+			'limit': limit
+		}
 		
-		if types == None:
+		if types in (None, []):
 			types = self.QUERYABLE_TYPES
 		else:
-			types = set(types) & self.QUERYABLE_TYPES
+			types = (
+				set(data_types.List.deserialize(data_types.EventType, types)) & 
+				self.QUERYABLE_TYPES
+			)
 		
-		spec['type'] = {'$in': [t.serialize() for t in types]}
+		query['spec']['type'] = {'$in': [t.serialize() for t in types]}
+			
+		if snuggler_name not in ("", None): query['spec']['snuggler.name'] = snuggler_name
+		if after != None: query['spec']['system_time'] = {'$gt': after}
+		if before != None: query['spec']['system_time'] = {'$lt': before}
 		
-		if snuggler_name != None: spec['snuggler.name'] = snuggler_name
+		docs = self.mongo.db.events.find(**query)
 		
-		return self.mongo.db.events.find(
-			spec,
-			sort=(sort_by, 1 if direction == "ascending" else -1),
-			limit=limit
-		)
-		
+		if deserialize:
+			return (data_types.Event.deserialize(util.demongoify(doc)) for doc in docs)
+		else:
+			return (util.demongoify(doc) for doc in docs)
 		

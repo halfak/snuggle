@@ -8,6 +8,7 @@ from snuggle.web.util import responses, user_data
 from .config import Config
 from .snugglers import Snugglers
 from .users import Users
+from .events import Events
 
 logger = logging.getLogger("snuggle.web.processing")
 
@@ -20,14 +21,15 @@ processor = NonProcessor()
 
 class Processor:
 	
-	def __init__(self, model, mwapi, actor, static_dir):
+	def __init__(self, model, mwapi, user_actions, static_dir):
 		self.model = model
 		self.mwapi = mwapi
 		self.static_dir = static_dir
 		
 		self.initialized = time.time()
 		
-		self.users = Users(model, mwapi, actor)
+		self.users = Users(model, mwapi, user_actions)
+		self.events = Events(model)
 		self.snugglers = Snugglers(model, mwapi)
 		self.config = Config()
 	

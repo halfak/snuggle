@@ -1,19 +1,19 @@
 /* This node has a "container" so that it can have both an inset and regular box-shadow */
 
-div.filter_menu div.container{
+div.user_filters div.container{
 	position: absolute;
 	left: 0px;
 	bottom: 0px;
 	right: 0px;
 }
 
-div.filter_menu div.categories{
+div.user_filters div.categories{
 	display: inline-block;
 	text-align: bottom;
 	white-space: nowrap;
 	margin-left: 4em;
 }
-	div.filter_menu div.categories div.radio_option{
+	div.user_filters div.categories div.radio_option{
 		position: relative;
 		display: inline-block;
 		text-align: bottom;
@@ -27,14 +27,14 @@ div.filter_menu div.categories{
 		box-shadow: inset 0px -.25em 1em rgba(0,0,0,.1);
 		text-shadow: 1px 1px #fff;
 	}
-	div.filter_menu div.categories div.radio_option:hover{
+	div.user_filters div.categories div.radio_option:hover{
 		background: #eee;
 		box-shadow: inset 0px .5em .5em rgba(255,255,255,.8);
 	}
-	div.filter_menu div.categories div.radio_option input{
+	div.user_filters div.categories div.radio_option input{
 		display: none;
 	}
-	div.filter_menu div.categories div.radio_option.selected{
+	div.user_filters div.categories div.radio_option.selected{
 		top: 1px;
 		z-index: 2;
 		background: #eee;
@@ -42,27 +42,27 @@ div.filter_menu div.categories{
 		box-shadow: inset 0px .5em .5em rgba(255,255,255,.8);
 	}
 	
-	div.filter_menu div.categories div.radio_option.good-faith:before {
+	div.user_filters div.categories div.radio_option.good-faith:before {
 		position: absolute;
 		left: .7em;
 		content: "\2714";
 		font-size: 1.2em;
 	}
-	div.filter_menu div.categories div.radio_option.ambiguous:before {
+	div.user_filters div.categories div.radio_option.ambiguous:before {
 		position: absolute;
 		left: .7em;
 		content: "?";
 		font-weight: bold;
 		font-size: 1.2em;
 	}
-	div.filter_menu div.categories div.radio_option.bad-faith:before {
+	div.user_filters div.categories div.radio_option.bad-faith:before {
 		position: absolute;
 		left: .7em;
 		content: "\2718";
 		font-size: 1.2em;
 	}
 	
-div.filter_menu div.filters{
+div.user_filters div.filters{
 	position: relative;
 	z-index: 1;
 	background: #eee;
@@ -72,7 +72,7 @@ div.filter_menu div.filters{
 	box-shadow: inset 0px -.75em 1em rgba(0,0,0,.2);
 	font-size: .9em;
 }	
-	div.filter_menu div.filters span.category{
+	div.user_filters div.filters span.category{
 		display: inline-block;
 		min-width: 9em;
 		text-align: center;
@@ -82,11 +82,11 @@ div.filter_menu div.filters{
 	}
 
 
-div.filter_menu div.filters div.field {
+div.user_filters div.filters div.field {
 	display: inline-block;
 	white-space: nowrap;
 }
-	div.filter_menu div.filters div.radios.field div.radio_option {
+	div.user_filters div.filters div.radios.field div.radio_option {
 		display: inline-block;
 	}
 

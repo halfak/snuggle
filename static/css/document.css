@@ -1,19 +1,18 @@
-.help_content{
-	padding: 1em;
+.document{
 }
 
-.help_content a{
+.document a{
 	text-decoration: none;
 }
 
-.help_content .revision{
+.document .revision{
 	display: inline-block;
 	border: 1px solid #333;
 	min-height: 1em;
 	min-width: 1em;
 }
 
-.help_content .key{
+.document .key{
 	display: inline-block;
 	background: #e6e6e6;
 	border: 1px solid #333;
@@ -23,9 +22,10 @@
 	font-family: monospace;
 }
 
-.help_content h1,
-.help_content h2,
-.help_content h3{
+.document h1,
+.document h2,
+.document h3,
+.document h4{
 	border-bottom: 1px solid #333;
 	margin: .5em 0px;
 	padding: 0px;

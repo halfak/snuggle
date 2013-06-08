@@ -16,7 +16,7 @@ ui.EventList = Class.extend({
 		// This function checks to see if we should load more events
 		view = this.view.view()
 		
-		if(view.end - view.bottom < 200 && !this.model.loading()){
+		if(view.end - view.bottom < 200 && !this.view.loading()){
 			logger.debug("ui.event_list: time to load more results!")
 			this._load_more()
 		}
@@ -30,7 +30,7 @@ ui.EventList = Class.extend({
 		this.model.append(event)
 	},
 	_load_more: function(){
-		if(!this.cursor.complete && !this.view.loading()){
+		if(this.cursor && !this.cursor.complete && !this.view.loading()){
 			logger.debug("ui.event_list: sending a request for more events.")
 			this.view.loading(true)
 			this.cursor.next(
@@ -79,6 +79,7 @@ ui.EventList.View = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("event_list")
+			.addClass("field-like")
 			.scroll(this._handle_scroll.bind(this))
 		
 		$(window).resize(this._handle_window_resize.bind(this))
@@ -90,7 +91,7 @@ ui.EventList.View = Class.extend({
 		this.node.append(this.event.node)
 	},
 	_handle_clear: function(){
-		this.node.children.detach()
+		this.node.children().detach()
 		this.loading(false)
 	},
 	_handle_scroll: function(){

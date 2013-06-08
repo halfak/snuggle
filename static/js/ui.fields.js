@@ -82,7 +82,8 @@ ui.SelectField = ui.Field.extend({
 			var label = this._select.node.val()
 			return this._select.values[label]
 		}else{
-			var label = this._select.labels[value]
+			var value_string = JSON.stringify(value)
+			var label = this._select.labels[value_string]
 			this._select.node.val(label)
 		}
 	},
@@ -104,7 +105,8 @@ ui.SelectField = ui.Field.extend({
 			var option = options[i]
 			var label = String(option.label || option.value)
 			this._select.values[label] = option.value
-			this._select.labels[option.value] = label
+			var value_string = JSON.stringify(option.value)
+			this._select.labels[value_string] = label
 			
 			var option_node = $("<option>")
 				.attr('value', label)

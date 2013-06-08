@@ -182,4 +182,6 @@ ui.User = Class.extend({
 		return this.view.height()
 	}
 })
-
+ui.User.from_doc = function(doc){
+	return new ui.User(ui.User.Model(doc))
+}

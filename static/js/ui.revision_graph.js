@@ -449,8 +449,10 @@ ui.DayGrid = Class.extend({
 		}else{
 			if(enabled){
 				this.node.addClass("enabled")
+				this.days.map(function(day){day.rendered(true)})
 			}else{
 				this.node.removeClass("enabled")
+				this.days.map(function(day){day.rendered(false)})
 				this.clear_cursor()
 			}
 		}
@@ -683,6 +685,23 @@ ui.DayGrid.Day = Class.extend({
 	get: function(index){
 		return this.list[index]
 	},
+	rendered: function(rendered){
+		if(rendered === undefined){
+			return this.node.hasClass("rendered")
+		}else{
+			if(rendered){
+				if(!this.node.hasClass("rendered")){
+					for(var i=0;i<this.list.length;i++){
+						this.container.node.append(this.list[i].node)
+					}
+				}
+				this.node.addClass("rendered")
+			}else{
+				this.container.node.children.detach()
+				this.node.removeClass("rendered")
+			}
+		}
+	},
 	_insert: function(revision){
 		revision.clicked.attach(this._handle_revision_clicked.bind(this))
 		
@@ -690,12 +709,12 @@ ui.DayGrid.Day = Class.extend({
 			var current = this.list[i]
 			if(current.timestamp() > revision.timestamp()){
 				this.list.splice(i, 0, revision)
-				revision.node.insertAfter(current.node)
+				//revision.node.insertAfter(current.node)
 				return
 			}
 		}
 		this.list.push(revision)
-		this.container.node.prepend(revision.node)
+		//this.container.node.prepend(revision.node)
 	},
 	_normalize: function(){
 		var proportion = 1/this.list.length

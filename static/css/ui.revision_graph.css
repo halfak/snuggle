@@ -139,6 +139,7 @@ div.revision_graph div.revision_details{
 	background: #eee;
 	border: 1px solid #000;
 	box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+	border-radius: 2px;
 }
 	div.revision_details div.body{
 		position: absolute;

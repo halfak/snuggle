@@ -49,7 +49,7 @@ ui.UserFilters = Class.extend({
 			],
 			{
 				class: "categories",
-				tabindex: tabindex.filter_menu
+				tabindex: env.tabindex.user_filters
 			}
 		)
 		this.categories.val(null)
@@ -129,7 +129,7 @@ ui.UserFilters.Filters = Class.extend({
 				{value: 40}
 			],
 			{
-				tabindex: tabindex.filter_menu
+				tabindex: env.tabindex.user_filters
 			}
 		)
 		this.node.append(this.min_edits.node)
@@ -158,7 +158,7 @@ ui.UserFilters.Filters = Class.extend({
 				{value: 15,   label: configuration.mediawiki.namespaces[15].name}
 			],
 			{
-				tabindex: tabindex.filter_menu
+				tabindex: env.tabindex.user_filters
 			}
 			
 		)
@@ -176,7 +176,7 @@ ui.UserFilters.Filters = Class.extend({
 				{value: "activity.counts.all", label: i18n.get("total edits")}
 			],
 			{
-				tabindex: tabindex.filter_menu
+				tabindex: env.tabindex.user_filters
 			}
 		)
 		this.node.append(this.sorted_by.node)
@@ -196,7 +196,7 @@ ui.UserFilters.Filters = Class.extend({
 				)
 			],
 			{
-				tabindex: tabindex.filter_menu
+				tabindex: env.tabindex.user_filters
 			}
 		)
 		this.direction.val("descending")

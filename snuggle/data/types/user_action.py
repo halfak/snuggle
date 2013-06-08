@@ -31,13 +31,13 @@ class OperationResult(serializable.Type):
 		
 	
 class EditPreview(OperationResult):
-	TYPE = "edit"
+	TYPE = "edit preview"
 	
 	def __init__(self, page_name, html, comment):
 		self.page_name = unicode(page_name)
 		self.html      = unicode(html)
 		self.comment   = unicode(comment)
-	
+OperationResult.TYPES[EditPreview.TYPE] = EditPreview
 
 class ReplacePreview(EditPreview):
 	TYPE = "replace preview"

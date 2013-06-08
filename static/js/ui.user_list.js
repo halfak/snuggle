@@ -66,32 +66,32 @@ ui.UserList = Class.extend({
 	},
 	_read_until_full: function(){
 		// This function checks to see if we should load
-		if(!this.cursor.complete){
+		if(this.cursor && !this.cursor.complete){
 			view = this.view.view()
 			
-			if(view.end - view.bottom < 200 && !this.model.loading()){
+			if(view.end - view.bottom < 200 && !this.view.loading()){
 				logger.debug("Time to load more results!")
 				this._load_more_users()
 			}
 		}
 	},
 	_load_more_users: function(){
-		if(!this.cursor.complete){
+		if(this.cursor && !this.cursor.complete){
 			logger.debug("Sending a request for more users.")
-			this.model.loading(true)
+			this.view.loading(true)
 			this.cursor.next(
 				10,
 				function(cursor, docs){
-					this.model.loading(false)
+					this.view.loading(false)
 					if(cursor == this.cursor){ //If we are still reading from the same cursor
 						for(var i=0;i<docs.length;i++){
-							this.append(new controllers.User(docs[i]))
+							this.append(new ui.User(docs[i]))
 						}
 					}
 					this._read_until_full()
 				}.bind(this),
 				function(message){
-					this.model.loading(false)
+					this.view.loading(false)
 					alert(message)
 				}.bind(this)
 			)
@@ -114,9 +114,6 @@ ui.UserList.Model = Class.extend({
 		this.appended          = new Event(this)
 		this.cleared           = new Event(this)
 		this.user_selected     = new Event(this)
-		this.loading_changed   = new Event(this)
-		
-		this.loading.status = false
 		
 		this.clear_selection()
 	},
@@ -287,7 +284,6 @@ ui.UserList.View = Class.extend({
 		
 		this.model.appended.attach(this._handle_append.bind(this))
 		this.model.cleared.attach(this._handle_clear.bind(this))
-		this.model.loading_changed.attach(this._handle_loading_change.bind(this))
 		this.model.user_selected.attach(this._handle_user_select.bind(this))
 		
 		this.view_changed = new Event(this)

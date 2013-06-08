@@ -4,37 +4,41 @@ ui.Snuggle = Class.extend({
 		
 		logger.info("ui.snuggle: loading...")
 		
+		this.status = new ui.SystemStatus()
+		this.status.element.clicked.attach(this._handle_status_element_clicked.bind(this))
+		this.node.append(this.status.node)
+		
+		this.welcome = new ui.Welcome()
+		this.welcome.start.attach(this._handle_welcome_start.bind(this))
+		this.node.append(this.welcome.node)
+		
 		// Set up help
-		this.help = new ui.HelpSlider(configuration.i18n.lang)
+		this.help = new ui.Help(configuration.i18n.lang)
 		this.node.append(this.help.node)
 		
 		// Set up snuggler
 		this.snuggler = new ui.Snuggler()
-		$("#status").after(this.snuggler.node)
+		this.node.append(this.snuggler.node)
 		
 		// Set up user browser
 		this.user_browser = new ui.UserBrowser()
+		this.user_browser.visible(false)
 		this.node.append(this.user_browser.node)
-			
-		// Set up event browser
-		this.event_browser = new ui.EventBrowser()
-		this.node.append(this.event_browser.node)
 	},
-	_handle_filter_menu_change: function(_){
-		logger.debug("ui.snuggle: controller delaying filter change.")
-		if(this.filters_change_delay){
-			clearTimeout(this.filters_change_delay)
-		}
+	_handle_welcome_start: function(){
+		this._toggle_welcome()
+	},
+	_handle_status_element_clicked: function(){
+		this._toggle_welcome()
+	},
+	_toggle_welcome: function(){
+		logger.debug("ui.snuggle: toggling welcome")
+		this.welcome.visible(!this.welcome.visible())
 		
-		this.filters_change_delay = setTimeout(
-			this._update_query.bind(this), 
-			delays.update_user_filters
-		)
-	},
-	_update_query: function(){
-		logger.debug("ui.snuggle: updating query")
-		var query = servers.local.users.query(this.filter_menu.val())
-		this.user_list.load(query)
+		if(!this.welcome.visible()){
+			this.user_browser.load()
+			this.user_browser.visible(true)
+		}
 	}
 })
 

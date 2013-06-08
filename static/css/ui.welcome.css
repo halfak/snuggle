@@ -1,0 +1,48 @@
+div.welcome {
+	padding: 2em 5em 2em 5em;
+}
+
+div.welcome .pane{
+	position: relative;
+	height: 100%;
+	background: #f0f0f0;
+	padding: 1em;
+	box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+	border: 1px solid #000;
+	border-radius: 3px;
+	text-align: right;
+}
+	div.welcome .pane .event_browser{
+		position: absolute;
+		top: 1em;
+		left: 0em;
+		bottom: 0em;
+		right: 16em;
+		text-align: left;
+	}
+	div.welcome .pane .prose {
+		position: absolute;
+		top: 0em;
+		right: 0em;
+		bottom: 0em;
+		padding: 1em;
+		width: 16em;
+		overflow: auto;
+		text-align: center;
+	}
+	
+		div.welcome .pane .prose .element{
+			display: inline-block;
+			text-align: left;
+			font-size: 4.5em;
+		}
+		div.welcome .pane .prose .content{
+			display: inline-block;
+			text-align: left;
+		}
+		div.welcome .pane .prose .continue{
+			background: #ff0;
+			font-size: 1.2em;
+			display: inline-block;
+			text-align: left;
+		}

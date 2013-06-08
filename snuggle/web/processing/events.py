@@ -9,10 +9,8 @@ from snuggle.web.util import responses, user_data
 logger = logging.getLogger("snuggle.web.processing.users")
 
 class Events:
-	def __init__(self, model, mwapi, user_actions):
+	def __init__(self, model):
 		self.model = model
-		self.mwapi = mwapi
-		self.user_actions = user_actions
 	
 	def action(self, session, doc):
 		request = types.ActionRequest.serialize(doc)
@@ -26,7 +24,9 @@ class Events:
 			event_docs = []
 			for event in self.model.events.query(**query):
 				if event.PUBLIC:
-					if event.TYPE == types.UserAction.TYPE:
+					event_docs.append(event.serialize())
+				
+			
 			end = time.time()
 		except Exception:
 			logger.error(traceback.format_exc())
@@ -37,7 +37,7 @@ class Events:
 			event = types.EventsQueried(
 				query,
 				end-start,
-				len(events),
+				len(event_docs),
 				snuggler,
 				data
 			)
@@ -46,5 +46,5 @@ class Events:
 			logger.error(traceback.format_exc())
 			
 		
-		return responses.success(users)
+		return responses.success(event_docs)
 	
