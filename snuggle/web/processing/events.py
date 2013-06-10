@@ -1,6 +1,7 @@
 import logging, traceback, time
 from bottle import request
 
+from snuggle import configuration
 from snuggle import mediawiki
 from snuggle import errors
 from snuggle.data import types
@@ -31,6 +32,11 @@ class Events:
 		except Exception:
 			logger.error(traceback.format_exc())
 			return responses.database_error("getting a set of events with query %s" % query)
+		
+		query['after'] = max(
+			query.get('after', 0), 
+			time.time() - configuration.snuggle['changes_synchronizer']['max_age']
+		)
 		
 		try:
 			snuggler, data = user_data()

@@ -98,5 +98,18 @@ def user_query(session, data):
 def user_query(session, data):
 	return processing.processor.users.query(session, data)
 
+# /user/get/
+@get("/user/get/<query>")
+@preprocessors.session
+@preprocessors.query_data(json.loads)
+def user_query(session, data):
+	return processing.processor.users.get(session, data)
+
+@post("/user/get/")
+@preprocessors.session
+@preprocessors.post_data(json.loads)
+def user_query(session, data):
+	return processing.processor.users.get(session, data)
+
 
 

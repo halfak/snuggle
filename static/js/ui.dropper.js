@@ -12,12 +12,11 @@ ui.Dropper = Class.extend({
 		}
 	
 	*/
-	init: function(tab, content, opts){
+	init: function(opts){
 		opts = opts || {}
 		
 		this.node = $("<div>")
 			.addClass("dropper")
-			.attr('tabindex', env.tabindex.dropper)
 			
 		if(opts.class){this.node.addClass(opts.class)}
 		
@@ -25,10 +24,18 @@ ui.Dropper = Class.extend({
 			node: $("<div>")
 				.addClass("tab")
 				.addClass("clickable")
-				.append($("<span>").append(tab || ""))
 				.click(this._handle_tab_click.bind(this))
 		}
 		this.node.append(this.tab.node)
+		if(opts.label){
+			this.tab.node.append(
+				$("<span>")
+					.addClass("label")
+					.append(opts.label)
+			)
+		}
+		this.tab.node.append($("<span>").addClass("status"))
+		
 		if(opts.tooltip){
 			this.tab.node.attr('title', opts.tooltip)
 		}
@@ -36,9 +43,10 @@ ui.Dropper = Class.extend({
 		this.pane = {
 			node: $("<div>")
 				.addClass("pane")
-				.append(content || "")
+				.append(opts.content || "")
 				.hide()
 				.click(function(e){e.stopPropagation()})
+				.attr('tabindex', env.tabindex.dropper)
 		}
 		this.node.append(this.pane.node)
 		
@@ -62,7 +70,7 @@ ui.Dropper = Class.extend({
 		this.expanded(false)
 	},
 	_handle_body_keydown: function(e){
-		if(e.which == keys.ESCAPE){
+		if(e.which == env.keys.ESCAPE){
 			this.expanded(false)
 		}
 	},

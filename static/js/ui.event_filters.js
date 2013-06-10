@@ -20,8 +20,8 @@ ui.EventFilters = Class.extend({
 				{
 					label: i18n.get("system events"), 
 					value: [
-						{entity: "system", action: "started"},
-						{entity: "system", action: "stopped"}
+						{entity: "server", action: "started"},
+						{entity: "server", action: "stopped"}
 					]
 				}
 			],

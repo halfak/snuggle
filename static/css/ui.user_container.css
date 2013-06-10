@@ -1,0 +1,7 @@
+div.user_container{
+	
+}
+	div.user_container div.pane{
+		border: none;
+		z-index: 2;
+	}

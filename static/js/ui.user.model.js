@@ -27,7 +27,7 @@ ui.User.Model = Class.extend({
 		
 		this.id            = doc.id
 		this.name          = doc.name
-		this.registration  = new Date(doc.registration*miliseconds.SECOND)
+		this.registration  = new Date(doc.registration*env.miliseconds.SECOND)
 		this.views         = doc.views
 		this.has_user_page = doc.has_user_page
 		this.has_talk_page = doc.has_talk_page
@@ -89,8 +89,10 @@ ui.User.Model.Category = Class.extend({
 		}
 		
 		this.category = doc.category || null
-		this.history = doc.history
-		
+		this.history = doc.history.map(function(h){
+			h.timestamp = new Date(h.timestamp*env.miliseconds.SECOND)
+			return h
+		})
 		this.changed.notify()
 	}
 })
@@ -117,7 +119,7 @@ ui.User.Model.Activity = Class.extend({
 			throw "Cannot load empty doc into model.User.Activity."
 		}
 		
-		this.last_activity = new Date(doc.last_activity*miliseconds.SECOND)
+		this.last_activity = new Date(doc.last_activity*env.miliseconds.SECOND)
 		this.reverted = doc.reverted
 		this.self_reverted = doc.self_reverted
 		this.counts = doc.counts
@@ -153,7 +155,7 @@ ui.User.Model.Activity.Revision = Class.extend({
 		
 		this.id = doc.id
 		this.page = doc.page
-		this.timestamp = new Date(doc.timestamp*miliseconds.SECOND)
+		this.timestamp = new Date(doc.timestamp*env.miliseconds.SECOND)
 		this.comment = doc.comment
 		this.diff = doc.diff
 		this.sha1 = doc.sha1

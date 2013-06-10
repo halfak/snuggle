@@ -7,3 +7,7 @@ div.user_list{
 div.user_list.loading{
 	background: #bbb url(http://upload.wikimedia.org/wikipedia/commons/5/53/Loading_bar.gif) no-repeat bottom center;
 }
+
+div.user_list div.user{
+	margin: .5em 1em;
+}

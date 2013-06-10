@@ -2,7 +2,7 @@ div.welcome {
 	padding: 2em 5em 2em 5em;
 }
 
-div.welcome .pane{
+div.welcome > .pane{
 	position: relative;
 	height: 100%;
 	background: #f0f0f0;
@@ -11,8 +11,9 @@ div.welcome .pane{
 	border: 1px solid #000;
 	border-radius: 3px;
 	text-align: right;
+	max-height: 900px;
 }
-	div.welcome .pane .event_browser{
+	div.welcome > .pane .event_browser{
 		position: absolute;
 		top: 1em;
 		left: 0em;
@@ -20,7 +21,7 @@ div.welcome .pane{
 		right: 16em;
 		text-align: left;
 	}
-	div.welcome .pane .prose {
+	div.welcome > .pane .prose {
 		position: absolute;
 		top: 0em;
 		right: 0em;
@@ -31,16 +32,16 @@ div.welcome .pane{
 		text-align: center;
 	}
 	
-		div.welcome .pane .prose .element{
+		div.welcome > .pane .prose > .element{
 			display: inline-block;
 			text-align: left;
 			font-size: 4.5em;
 		}
-		div.welcome .pane .prose .content{
+		div.welcome > .pane .prose > .content{
 			display: inline-block;
 			text-align: left;
 		}
-		div.welcome .pane .prose .continue{
+		div.welcome > .pane .prose > .continue{
 			background: #ff0;
 			font-size: 1.2em;
 			display: inline-block;

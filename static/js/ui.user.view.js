@@ -11,13 +11,13 @@ ui.User.View = Class.extend({
 			.keydown(this._handle_keydown.bind(this))
 		
 		//Three major subcomponents: Info, Activity and Talk
-		this.info = new views.User.Info(model)
+		this.info = new ui.User.View.Info(model)
 		this.node.append(this.info.node)
 		
-		this.activity = new views.User.Activity(model)
+		this.activity = new ui.User.View.Activity(model)
 		this.node.append(this.activity.node)
 		
-		this.talk = new views.User.Talk(model)
+		this.talk = new ui.User.View.Talk(model)
 		this.node.append(this.talk.node)
 		
 		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
@@ -118,7 +118,7 @@ ui.User.View.Info = Class.extend({
 		}
 		this.name.node.prepend(this.current_category.node)
 		
-		this.actions = new views.User.Info.Actions(this.model)
+		this.actions = new ui.User.View.Info.Actions(this.model)
 		this.name.node.append(this.actions.node)
 		
 		this.utc = new ui.UTC(
@@ -133,7 +133,7 @@ ui.User.View.Info = Class.extend({
 		
 		this.counts = new ui.EditCounts()
 		
-		this.category = new views.User.Category(model)
+		this.category = new ui.User.View.Category(this.model)
 		this.node.append(this.category.node)
 		
 		this.model.viewed.attach(this._handle_view.bind(this))
@@ -214,17 +214,25 @@ ui.User.View.Info.Actions = ui.Dropper.extend({
 	init: function(model){
 		this.model = model
 		
+		var formatting = {
+			user_id: this.model.id,
+			user_name: this.model.name
+		}
+		
 		// Load user actions from the configuration
 		actions = configuration.mediawiki.user_actions.display.map(
 			function(name){
 				var action_doc = configuration.mediawiki.user_actions.actions[name]
-				actions.push(new ui.UserAction.from_doc(name, action_doc, formatting))
+				return new ui.UserAction.from_doc(action_doc, formatting)
 			}
 		)
 		
 		// Construct menu with actions
 		this.menu = new ui.ActionMenu(this.model, actions)
-		this._super("", this.menu.node, {tooltip: "User actions menu -- click to expand"})
+		this._super({
+			tooltip: "User actions menu -- click to expand",
+			content: this.menu.node
+		})
 		this.changed.attach(this._handle_changed.bind(this))
 		
 		this.node.addClass("user_actions")
@@ -277,7 +285,7 @@ ui.User.View.Activity = ui.RevisionGraph.extend({
 		
 		this.grid.load(this.model.activity.revisions.values().map(
 			function(revision){
-				return new views.User.Activity.Revision(this.model, revision)
+				return new ui.User.View.Activity.Revision(this.model, revision)
 			}.bind(this)
 		))
 		
@@ -363,7 +371,7 @@ ui.User.View.Talk = ui.RevisionGraph.extend({
 		this._clear()
 		for(var i=0;i<this.model.talk.threads.length;i++){
 			var thread = this.model.talk.threads[i]
-			var talk_thread = new views.User.Talk.Thread(
+			var talk_thread = new ui.User.View.Talk.Thread(
 				thread.title,
 				thread.classes
 			)
@@ -402,7 +410,7 @@ ui.User.View.Category = Class.extend({
 		this.node = $("<div>")
 			.addClass("category")
 		
-		this.history = new views.User.Category.History()
+		this.history = new ui.User.View.Category.History()
 		this.node.append(this.history.node)
 		
 		this.category = new ui.RadioField(
@@ -489,7 +497,7 @@ ui.User.View.Category = Class.extend({
 })
 ui.User.View.Category.History = ui.Dropper.extend({
 	init: function(){
-		this._super("history")
+		this._super({label:"history"})
 		
 		this.node.addClass("history")
 	},
@@ -500,20 +508,20 @@ ui.User.View.Category.History = ui.Dropper.extend({
 			.append(
 				$("<span>")
 					.addClass("timestamp")
-					.text(new Date(timestamp*1000).format('wikiDate'))
+					.text(timestamp.format('wikiDate'))
+			)
+			.append(
+				$("<a>")
+					.addClass("snuggler")
+					.text(String(snuggler.name))
+					.attr('href', util.user_href(snuggler.name))
+					.attr('target', "_blank")
 			)
 			.append(
 				$("<span>")
 					.addClass("category")
 					.addClass(category)
 					.text(category)
-			)
-			.append(
-				$("<a>")
-					.addClass("snuggler")
-					.text(String(snuggler.name))
-					.attr('href', util.user_link(snuggler.name))
-					.attr('target', "_blank")
 			)
 	},
 	render: function(history){

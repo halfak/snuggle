@@ -47,8 +47,8 @@ changes_synchronizer:
   # Limit the number of changes per request to this number
   changes_per_request: 500
   # Ignore recent changes that occurred before this id & timestamp
-  starting_rcid: 581470057
-  starting_timestamp: 1369873855
+  starting_rcid: 583869411
+  starting_timestamp: 1370898926
   # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
   max_age: 2592000
 

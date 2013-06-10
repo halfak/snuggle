@@ -5,14 +5,6 @@ from snuggle.data import types as data_types
 from . import util
 
 class Events:
-	
-	QUERYABLE_TYPES = set([
-		data_types.UserActioned.TYPE,
-		data_types.UserCategorized.TYPE,
-		data_types.ServerStarted.TYPE,
-		data_types.ServerStopped.TYPE
-	])
-	
 	def __init__(self, mongo):
 		self.mongo = mongo
 	
@@ -20,7 +12,7 @@ class Events:
 		self.mongo.db.events.insert(util.mongoify(event.serialize()))
 	
 	def query(self, types=None, snuggler_name=None, after=None, before=None, 
-	          sort_by="server_time", direction="descending", limit=1000,
+	          sort_by="system_time", direction="descending", limit=1000,
 	          deserialize=True):
 		
 		query = {
@@ -30,14 +22,20 @@ class Events:
 		}
 		
 		if types in (None, []):
-			types = self.QUERYABLE_TYPES
+			types = data_types.Event.PUBLIC_TYPES
 		else:
 			types = (
 				set(data_types.List.deserialize(data_types.EventType, types)) & 
-				self.QUERYABLE_TYPES
+				data_types.Event.PUBLIC_TYPES
 			)
 		
-		query['spec']['type'] = {'$in': [t.serialize() for t in types]}
+		# This is gross, but here we are.  It turns out that Mongo can't handle
+		# unordered document matches.  
+		query['spec'] = {'$or': [
+				{'type.entity': t.entity, 'type.action': t.action} 
+				for t in types
+			]
+		}
 			
 		if snuggler_name not in ("", None): query['spec']['snuggler.name'] = snuggler_name
 		if after != None: query['spec']['system_time'] = {'$gt': after}

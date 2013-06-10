@@ -9,7 +9,7 @@ ui.UTC = Class.extend({
 			node: $("<a>")
 				.addClass("user_page")
 				.text("user")
-				.attr("href", util.user_link(username))
+				.attr("href", util.user_href(username))
 				.attr("target", "_blank")
 		}
 		this.node.append(this.user_page.node)
@@ -21,7 +21,7 @@ ui.UTC = Class.extend({
 			node: $("<a>")
 				.addClass("talk_page")
 				.text("talk")
-				.attr("href", util.user_talk_link(username))
+				.attr("href", util.user_talk_href(username))
 				.attr("target", "_blank")
 		}
 		this.node.append(this.talk_page.node)
@@ -33,7 +33,7 @@ ui.UTC = Class.extend({
 			node: $("<a>")
 				.addClass("contribs")
 				.text("contribs")
-				.attr("href", util.user_contribs_link(username))
+				.attr("href", util.user_contribs_href(username))
 				.attr("target", "_blank")
 		}
 		this.node.append(this.contribs.node)

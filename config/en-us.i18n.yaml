@@ -12,6 +12,7 @@ lang: en-us
 
 all: all
 all events: all events
+as: as
 
 ambiguous: ambiguous
 any page: any page
@@ -23,6 +24,7 @@ by user: by user
 
 categorizations: categorizations
 Categorize: Categorize
+categorized: categorized
 categorize this user based on their activity: categorize this user based on their activity
 Checking for previous session...: Checking for previous session...
 click here to log in.: click here to log in.
@@ -73,6 +75,8 @@ sort in increasing order: sort in increasing order
 sort in descreasing order: sort in descreasing order
 sorted by: sorted by
 start snuggle: start snuggle
+server started: server started
+server stopped: server stopped
 system events: system events
 
 talk: talk

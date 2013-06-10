@@ -9,14 +9,17 @@ ui.Event = Class.extend({
 	}
 })
 ui.Event.TYPES = {}
+ui.Event.stringify_type = function(type){
+	return JSON.stringify(type.entity) + "|" + JSON.stringify(type.action)
+}
 ui.Event.from_doc = function(doc){
-	var string_type = JSON.stringify(doc.type)
+	var string_type = ui.Event.stringify_type(doc.type)
 	var Class = ui.Event.TYPES[string_type]
 	
 	if(!Class){
 		throw "Event class not found " + string_type
 	}else{
-		Class.from_doc(doc)
+		return Class.from_doc(doc)
 	}
 }
 ui.Event.Model = Class.extend({
@@ -34,6 +37,7 @@ ui.Event.View = Class.extend({
 		this.system_time = {
 			node: $("<div>")
 				.addClass("system_time")
+				.text(this.model.system_time.format("wikiDate"))
 		}
 		this.node.append(this.system_time.node)
 		
@@ -55,10 +59,10 @@ ui.UserCategorized = ui.Event.extend({
 		)
 	}
 })
-ui.Event.TYPES[JSON.stringify({entity: "user", action: "categorized"})] = ui.UserCategorized
+ui.Event.TYPES[ui.Event.stringify_type({entity: "user", action: "categorized"})] = ui.UserCategorized
 ui.UserCategorized.from_doc = function(doc){
 	var model = new ui.UserCategorized.Model(
-		new Date(doc.system_time*miliseconds.SECOND),
+		new Date(doc.system_time*env.miliseconds.SECOND),
 		doc.snuggler, 
 		doc.user, 
 		doc.category
@@ -91,10 +95,7 @@ ui.UserCategorized.View = ui.Event.View.extend({
 		
 		this.summary.node.append(" <span>" + i18n.get("categorized") + "</span> ")
 		
-		this.user = new ui.UserContainer(
-			this.model.user.id, 
-			this.model.user.name
-		)
+		this.user = new ui.UserContainer(this.model.user)
 		this.summary.node.append(this.user.node)
 		
 		this.summary.node.append(" <span>" + i18n.get("as") + "</span> ")
@@ -103,7 +104,7 @@ ui.UserCategorized.View = ui.Event.View.extend({
 			node: $("<span>")
 				.addClass("category")
 				.addClass(this.model.category)
-				.html(i18.get(this.model.category))
+				.html(i18n.get(this.model.category))
 		}
 		this.summary.node.append(this.category.node)
 	}
@@ -118,16 +119,16 @@ ui.UserActioned = ui.Event.extend({
 		)
 	}
 })
-ui.Event.TYPES[JSON.stringify({entity: "user", action: "actioned"})] = ui.UserActioned
+ui.Event.TYPES[ui.Event.stringify_type({entity: "user", action: "actioned"})] = ui.UserActioned
 ui.UserActioned.from_doc = function(doc){
 	model = new ui.UserActioned.Model(
-		new Date(doc.system_time*miliseconds.SECOND),
+		new Date(doc.system_time*env.miliseconds.SECOND),
 		doc.snuggler,
 		doc.request,
 		doc.results
 	)
 	
-	return new ui.UserAction(model)
+	return new ui.UserActioned(model)
 }
 ui.UserActioned.Model = ui.Event.Model.extend({
 	init: function(system_time, snuggler, request, results){
@@ -140,6 +141,7 @@ ui.UserActioned.Model = ui.Event.Model.extend({
 ui.UserActioned.View = ui.Event.View.extend({
 	init: function(model){
 		this._super(model)
+		// _super inits this.node and this.summary.node
 		
 		this.node.addClass("user_actioned")
 		
@@ -147,13 +149,10 @@ ui.UserActioned.View = ui.Event.View.extend({
 			node: $("<a>")
 				.addClass("snuggler")
 				.attr('target', "_blank")
-				.attr('href', util.user_link(this.model.snuggler.name))
+				.attr('href', util.user_href(this.model.snuggler.name))
 				.text(this.model.snuggler.name)
 		}
-		this.user = new ui.UserContainer(
-			this.model.request.user.id, 
-			this.model.request.user.name
-		)
+		this.user = new ui.UserContainer(this.model.request.user)
 		this._sequence_action_summary()
 		
 		
@@ -168,12 +167,12 @@ ui.UserActioned.View = ui.Event.View.extend({
 		}
 		var summary = action_doc.summary || ""
 		var last_index = 0
-		while((match = ui.UserAction.View.ACTORS_RE.exec(summary) != null)){
+		while((match = ui.UserActioned.View.ACTORS_RE.exec(summary)) != null){
 			// Append the pre-match matter
 			if(match.index > last_index){
 				this.summary.node.append(
 					" <span>" + 
-					summary.substr(last_index, match.index) + 
+					summary.substr(last_index, match.index-last_index) + 
 					"</span> "
 				)
 			}
@@ -201,34 +200,34 @@ ui.UserActioned.View = ui.Event.View.extend({
 ui.UserActioned.View.ACTORS_RE = /\%\((user|snuggler)\)s/g
 
 
-ui.SystemStarted = ui.Event.extend({
+ui.ServerStarted = ui.Event.extend({
 	init: function(model, view){
-		model = model || new ui.SystemStarted.Model()
+		model = model || new ui.ServerStarted.Model()
 		this._super(
 			model,
-			view || new ui.SystemStarted.View(model)
+			view || new ui.ServerStarted.View(model)
 		)
 	}
 })
-ui.Event.TYPES[JSON.stringify({entity: "system", action: "started"})] = ui.SystemStarted
-ui.SystemStarted.from_doc = function(doc){
-	var model = new ui.SystemStarted.Model(
-		new Date(doc.system_time*miliseconds.SECOND),
+ui.Event.TYPES[ui.Event.stringify_type({entity: "server", action: "started"})] = ui.ServerStarted
+ui.ServerStarted.from_doc = function(doc){
+	var model = new ui.ServerStarted.Model(
+		new Date(doc.system_time*env.miliseconds.SECOND),
 		doc.server
 	)
-	return new ui.SystemStarted(model)
+	return new ui.ServerStarted(model)
 }
-ui.SystemStarted.Model = ui.Event.Model.extend({
+ui.ServerStarted.Model = ui.Event.Model.extend({
 	init: function(system_time, server){
 		this._super(system_time)
 		
 		this.server = server
 	}
 })
-ui.SystemStarted.View = ui.Event.View.extend({
+ui.ServerStarted.View = ui.Event.View.extend({
 	init: function(model){
 		this._super(model)
-		// _super inits this.node and this.description.node
+		// _super inits this.node and this.summary.node
 		
 		this.node.addClass('system_started')
 		
@@ -238,32 +237,32 @@ ui.SystemStarted.View = ui.Event.View.extend({
 				.text(this.model.server)
 		}
 		this.summary.node.append(this.server.node)
-		this.summary.node.append("<span>" + i18n.get("started") + "<span>")
+		this.summary.node.append(" <span>" + i18n.get("server started") + "<span>")
 	}
 })
 
 
-ui.SystemStopped = ui.Event.extend({
+ui.ServerStopped = ui.Event.extend({
 	init: function(model, view){
-		model = model || new ui.SystemStopped.Model()
+		model = model || new ui.ServerStopped.Model()
 		this._super(
 			model,
-			view || new ui.SystemStopped.View(model)
+			view || new ui.ServerStopped.View(model)
 		)
 	}
 })
-ui.Event.TYPES[JSON.stringify({entity: "system", action: "stopped"})] = ui.SystemStopped
-ui.SystemStopped.from_doc = function(doc){
-	var model = new ui.SystemStarted.Model(
-		new Date(doc.system_time*miliseconds.SECOND),
+ui.Event.TYPES[ui.Event.stringify_type({entity: "server", action: "stopped"})] = ui.ServerStopped
+ui.ServerStopped.from_doc = function(doc){
+	var model = new ui.ServerStopped.Model(
+		new Date(doc.system_time*env.miliseconds.SECOND),
 		doc.server,
-		new Date(doc.start_time*miliseconds.SECOND).
+		new Date(doc.start_time*env.miliseconds.SECOND),
 		doc.stats,
 		doc.error
 	)
-	return new ui.SystemStarted(model)
+	return new ui.ServerStopped(model)
 }
-ui.SystemStopped.Model = ui.Event.Model.extend({
+ui.ServerStopped.Model = ui.Event.Model.extend({
 	init: function(system_time, server, start_time, stats, error){
 		this._super(system_time)
 		
@@ -273,10 +272,10 @@ ui.SystemStopped.Model = ui.Event.Model.extend({
 		this.error      = error
 	}
 })
-ui.SystemStopped.View = ui.Event.View.extend({
+ui.ServerStopped.View = ui.Event.View.extend({
 	init: function(model){
 		this._super(model)
-		// _super inits this.node and this.description.node
+		// _super inits this.node and this.summary.node
 		
 		this.node.addClass('system_started')
 		
@@ -286,6 +285,6 @@ ui.SystemStopped.View = ui.Event.View.extend({
 				.text(this.model.server)
 		}
 		this.summary.node.append(this.server.node)
-		this.summary.node.append("<span>" + i18n.get("stopped") + "<span>")
+		this.summary.node.append(" <span>" + i18n.get("server stopped") + "<span>")
 	}
 })

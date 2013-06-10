@@ -1,34 +1,38 @@
 div.dropper {
 	position: relative;
+	display: inline-block;
 }
 div.dropper:focus{
 	outline: none;
 }
 	div.dropper div.pane{
 		position: absolute;
+		padding: 0px;
 		top: 100%;
 		left: 0px;
+		height: auto;
 	}
 
-div.dropper.simple{
+div.dropper > div.tab {
 	display: inline-block;
-}
-div.dropper.simple div.tab {
 	border: 1px solid black;
-	width: 1em;
-	height: 1em;
 	border-radius: 3px;
 	text-align: center;
 }
-	div.dropper.simple div.tab span {
+	div.dropper > div.tab span.label {
 		display: inline-block;
+		margin-left: .2em;
+	}
+	div.dropper > div.tab span.status {
+		display: inline-block;
+		vertical-align: middle;
 		border: .4em solid #000;
 		border-color: #000 transparent transparent transparent;
 		border-width: .4em .3em 0px .3em;
 		vertical-align: center;
-		margin-top: .3em;
+		margin: .3em .2em;
 	}
-	div.dropper.simple.expanded div.tab span {
+	div.dropper.expanded > div.tab span.status {
 		border-color: transparent transparent #000 transparent;
 		border-width: 0px .3em .4em .3em;
 	}

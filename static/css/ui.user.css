@@ -2,12 +2,9 @@ div.user {
 	position: relative;
 	height: 2em;
 	background: #eee;
-	margin: .5em 1em;
 	box-shadow: 2px 2px 2px rgba(0,0,0,.2);
 	border: 1px solid #333;
-}
-div.user.selected {
-	/*outline: 3px solid rgba(0,0,200,.5);*/
+	text-align: left;
 }
 div.user.expanded {
 	height: 20em;
@@ -45,14 +42,18 @@ div.user div.info .name{
 	position: relative;
 }
 
-div.user div.info .name .user_actions{
-	display: none;
-	position: absolute;
-	top: .2em;
-	right: .2em;
-	font-size: .9em;
-}
-	
+	div.user div.info .name .user_actions{
+		display: none;
+		position: absolute;
+		top: .2em;
+		right: .2em;
+		font-size: .9em;
+	}
+		div.user div.info .name .user_actions > .pane{
+			right: 0px;
+			left: auto;
+		}
+		
 	div.user div.info.expanded .name .user_actions {
 		display: block;
 	}
@@ -185,16 +186,9 @@ div.user div.category div.history{
 					text-align: right;
 				}
 				div.user div.category div.history div.pane ul li span.category{
-					width: 6em;
-					border-width: 3px;
-					border-style: double;
+					padding: 0em .3em;
+					border: 1px solid #333;
 				}
-					div.user div.category div.history div.pane ul li span.category.good-faith{
-						background: #afa;
-					}
-					div.user div.category div.history div.pane ul li span.category.bad-faith{
-						background: #faa;
-					}
 				div.user div.category div.history div.pane ul li a.snuggler {}
 		
 

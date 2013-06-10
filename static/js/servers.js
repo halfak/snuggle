@@ -63,6 +63,17 @@ servers.Local.Users = Class.extend({
 	init: function(api){
 		this.api = api
 	},
+	get: function(user, success, error){
+		this.api.post(
+			'user', 'get',
+			{
+				id: user.id,
+				name: user.name
+			},
+			success,
+			error
+		)
+	},
 	query: function(filters, success, error, limit, skip){
 		filters = filters || {}
 		limit   = limit || 25
@@ -213,10 +224,10 @@ servers.Local.Events = Class.extend({
 	init: function(api){
 		this.api = api
 	},
-	query: function(filters, success, error, limit, after){
+	query: function(filters, success, error, limit, before){
 		filters = filters || {}
 		limit = limit
-		after = after || 0
+		before = before || null
 		
 		this.api.post(
 			'events', 'query', 
@@ -224,7 +235,7 @@ servers.Local.Events = Class.extend({
 				filters,
 				{
 					limit: limit,
-					after: after
+					before: before
 				}
 			), 
 			success, 

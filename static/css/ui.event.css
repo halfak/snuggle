@@ -1,1 +1,40 @@
+div.event {
+	font-family: sans-serif;
+	border: 1px solid #333;
+	background: #f6f6f6;
+	margin-bottom: .5em;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.2);
+	font-size: .9em;
+}
 
+	div.event .system_time{
+		display: inline-block;
+		vertical-align: top;
+		background: #e6e6e6;
+		padding: .28em .5em; /* Hack.  I don't know why this is necessary (halfak) */
+	}
+	div.event .summary{
+		display: inline-block;
+		vertical-align: top;
+		padding: .3em .5em;
+		border-left: 1px solid black;
+	}
+
+
+div.event.user_actioned{
+	
+}
+	div.event.user_actioned .snuggler{
+		display: inline-block;
+	}
+	div.event.user_actioned .user_container{
+		display: inline-block;
+	}
+
+div.event.user_categorized{
+	
+}
+	div.event.user_categorized .category{
+		padding: 0em .3em;
+		border: 1px solid #333;
+	}

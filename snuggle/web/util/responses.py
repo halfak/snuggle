@@ -61,5 +61,8 @@ def auth_required_error(action):
 
 def auth_error(type):
 	return error("authentication", "Authentication failed.", meta={'type': type})
+
+def unknown_user():
+	return error("unknown_user", "A user could not be found.")
 	
 

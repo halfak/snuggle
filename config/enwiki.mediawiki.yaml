@@ -183,8 +183,8 @@ user_actions:
           page_name: "User_talk:%(user_name)s"
           markup: "==%(header)s==\n{{subst%(template)s|message=%(message)s|sign=~~~~}}"
           comment: "%(header)s"
-    report vandalism:
-      label: report vandalism
+    report abuse:
+      label: report abuse
       description: >
         Reports vandals and spammers to admins via the 
         [[WP:AIV|Administrator's notice board]]. Use only for

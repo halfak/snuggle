@@ -48,7 +48,7 @@ ui.RevisionDetails = Class.extend({
 			
 			var page_name = util.page_name(revision.page().namespace, revision.page().title).replace(/_/g, " ")
 			this.title.node.text(page_name)
-			this.title.node.attr('href', util.page_link(page_name))
+			this.title.node.attr('href', util.page_href(page_name))
 			
 			this.revision.render(revision.id(), revision.timestamp(), revision.comment())
 			
@@ -171,7 +171,7 @@ ui.RevisionDetails.Revision = Class.extend({
 	*/
 	render: function(id, timestamp, comment){
 		this.timestamp.node.text(timestamp.format('wikiDate'))
-		this.timestamp.node.attr('href', util.rev_diff_link(id))
+		this.timestamp.node.attr('href', util.rev_diff_href(id))
 		
 		this.comment.node.html(util.linkify(comment || ""))
 	}
@@ -248,9 +248,9 @@ ui.RevisionDetails.Revert = Class.extend({
 	*/
 	render: function(revert){
 		if(revert){
-			this.reverted.node.attr('href', util.rev_diff_link(revert._id))
+			this.reverted.node.attr('href', util.rev_diff_href(revert._id))
 			this.user.node.text(revert.user.name)
-			this.user.node.attr('href', util.user_link(revert.user.name))
+			this.user.node.attr('href', util.user_href(revert.user.name))
 			
 			this.comment.node.html(util.linkify(revert.comment || ""))
 			this.show()
@@ -312,7 +312,7 @@ ui.RevisionDetails.Diff = Class.extend({
 	*/
 	diff: function(diff){
 		this.clear()
-		ops = WikiDiff.parse($("<table>" + diff + "</table>"))
+		ops = util.wiki_diff.parse($("<table>" + diff + "</table>"))
 		for(var i=0; i<ops.length; i++){var op = ops[i]
 			if(op.op == "change"){
 				var change = $('<div>')
@@ -423,7 +423,7 @@ ui.DayGrid = Class.extend({
 		this.selection = null
 		
 		this.days = []
-		var days_since_origin = Math.floor((util.now_ms() - this.origin)/miliseconds.DAY)
+		var days_since_origin = Math.floor((util.now_ms() - this.origin)/env.miliseconds.DAY)
 		this._ensure_days(days_since_origin)
 		
 		
@@ -531,6 +531,8 @@ ui.DayGrid = Class.extend({
 		day_delta   = day_delta || 0
 		index_delta = index_delta || 0
 		
+		logger.debug("ui.daygrid: shifting cursor by (" + day_delta + ", " + index_delta + ")")
+		
 		if(!this.cursor){
 			this.set_cursor(0, 0)
 		}else{
@@ -580,7 +582,7 @@ ui.DayGrid = Class.extend({
 		}
 	},
 	_insert: function(revision){
-		var rev_day = Math.floor((revision.timestamp() - this.origin)/miliseconds.DAY)
+		var rev_day = Math.floor((revision.timestamp() - this.origin)/env.miliseconds.DAY)
 		if(rev_day < this.max_days){
 			this._ensure_days(rev_day+1)
 			revision.set_grid(this) //This is a bit of a hack. :\
@@ -692,12 +694,12 @@ ui.DayGrid.Day = Class.extend({
 			if(rendered){
 				if(!this.node.hasClass("rendered")){
 					for(var i=0;i<this.list.length;i++){
-						this.container.node.append(this.list[i].node)
+						this.container.node.prepend(this.list[i].node)
 					}
 				}
 				this.node.addClass("rendered")
 			}else{
-				this.container.node.children.detach()
+				this.container.node.children().detach()
 				this.node.removeClass("rendered")
 			}
 		}
@@ -707,7 +709,7 @@ ui.DayGrid.Day = Class.extend({
 		
 		for(var i=0;i<this.list.length;i++){
 			var current = this.list[i]
-			if(current.timestamp() > revision.timestamp()){
+			if(current.timestamp() < revision.timestamp()){
 				this.list.splice(i, 0, revision)
 				//revision.node.insertAfter(current.node)
 				return

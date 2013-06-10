@@ -17,6 +17,7 @@ class EventType(serializable.Type):
 
 class Event(serializable.Type):
 	TYPE = EventType("server", "started")
+	PUBLIC = False
 	
 	TYPES = {}
 	PUBLIC_TYPES = set()
@@ -52,23 +53,23 @@ class Event(serializable.Type):
 	
 	@classmethod
 	def register(cls, sub_class):
-		assert isinstance(sub_class, cls)
+		assert issubclass(sub_class, cls)
 		cls.TYPES[sub_class.TYPE] = sub_class
 		if sub_class.PUBLIC:
 			cls.PUBLIC_TYPES.add(sub_class.TYPE)
 		
 	
 class ServerStarted(Event):
-	TYPE = EventType("server", "start")
+	TYPE = EventType("server", "started")
 	PUBLIC = True
 	
 	SERVERS = set([u'sync', u'web'])
 	
 	def __init__(self, server, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.server = unicode(server); assert server in self.SERVERS
-	
-Event.TYPES[ServerStarted.TYPE] = ServerStarted
+		
+Event.register(ServerStarted)
 
 class ServerStopped(Event):
 	TYPE = EventType("server", "stopped")
@@ -77,81 +78,81 @@ class ServerStopped(Event):
 	SERVERS = set([u'sync', u'web'])
 	
 	def __init__(self, server, start_time, stats, error=None, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.server = server; assert server in self.SERVERS
 		self.start_time = int(start_time)
 		self.stats = stats
 		self.error = unicode(error) if error != None else None
-	
-Event.TYPES[ServerStopped.TYPE] = ServerStopped
+		
+Event.register(ServerStopped)
 
 class UILoaded(Event):
 	TYPE = EventType("ui", "loaded")
 	
 	def __init__(self, snuggler=None, data=None, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.snuggler = Snuggler.deserialize(snuggler) if snuggler != None else None
 		self.data = data
-	
-Event.TYPES[UILoaded.TYPE] = UILoaded
+		
+Event.register(UILoaded)
 
 class UsersQueried(Event):
 	TYPE = EventType("users", "queried")
 	
 	def __init__(self, filters, wait_time, response_length, 
 		         snuggler=None, data=None, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.filters = filters
 		self.wait_time = float(wait_time)
 		self.response_length = int(response_length)
 		self.snuggler = Snuggler.deserialize(snuggler) if snuggler != None else None
 		self.data = data
-	
-Event.TYPES[UsersQueried.TYPE] = UsersQueried
+		
+Event.register(UsersQueried)
 
 class EventsQueried(Event):
 	TYPE = EventType("events", "queried")
 	
 	def __init__(self, filters, wait_time, response_length, 
 		         snuggler=None, data=None, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.filters = filters
 		self.wait_time = float(wait_time)
 		self.response_length = int(response_length)
 		self.snuggler = Snuggler.deserialize(snuggler) if snuggler != None else None
 		self.data = data
 	
-Event.TYPES[EventsQueried.TYPE] = EventsQueried
+Event.register(EventsQueried)
 
 
 class UserViewed(Event):
 	TYPE = EventType("user", "viewed")
 	
 	def __init__(self, user, snuggler, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.user     = User.deserialize(user)
 		self.snuggler = Snuggler.deserialize(snuggler)
 	
-Event.TYPES[UserViewed.TYPE] = UserViewed
+Event.register(UserViewed)
 
 class UserCategorized(Event):
 	TYPE = EventType("user", "categorized")
 	PUBLIC = True
 	
 	def __init__(self, user, snuggler, category, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.user     = User.deserialize(user)
 		self.snuggler = Snuggler.deserialize(snuggler)
 		self.category = unicode(category)
 	
-Event.TYPES[UserCategorized.TYPE] = UserCategorized
+Event.register(UserCategorized)
 	
 class UserActioned(Event):
 	TYPE = EventType("user", "actioned")
 	PUBLIC = True
 	
 	def __init__(self, request, snuggler, results, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.request  = ActionRequest.deserialize(request)
 		self.snuggler = Snuggler.deserialize(snuggler)
 		self.results  = serializable.List.deserialize(OperationResult, results)
@@ -163,23 +164,23 @@ class UserActioned(Event):
 		
 		return doc
 	
-Event.TYPES[UserActioned.TYPE] = UserActioned
+Event.register(UserActioned)
 
 class SnugglerLoggedIn(Event):
 	TYPE = EventType("snuggler", "logged in")
 	
 	def __init__(self, snuggler, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.snuggler  = Snuggler.deserialize(snuggler)
-Event.TYPES[SnugglerLoggedIn.TYPE] = SnugglerLoggedIn
+
+Event.register(SnugglerLoggedIn)
 
 	
 class SnugglerLoggedOut(Event):
 	TYPE = EventType("snuggler", "logged out")
 	
 	def __init__(self, snuggler, id=None, system_time=None):
-		Event.__init__(self, system_time)
+		Event.__init__(self, system_time=system_time)
 		self.snuggler  = Snuggler.deserialize(snuggler)
 	
-Event.TYPES[SnugglerLoggedOut.TYPE] = SnugglerLoggedOut
-
+Event.register(SnugglerLoggedOut)

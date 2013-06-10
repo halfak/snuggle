@@ -39,7 +39,7 @@ ui.EventList = Class.extend({
 					this.view.loading(false)
 					if(cursor == this.cursor){ //If we are still reading from the same cursor
 						for(var i=0;i<docs.length;i++){
-							this.append(new ui.Event.from_doc(docs[i]))
+							this.append(ui.Event.from_doc(docs[i]))
 						}
 					}
 					this._read_until_full() //Continue reading if necessary
@@ -80,6 +80,7 @@ ui.EventList.View = Class.extend({
 		this.node = $("<div>")
 			.addClass("event_list")
 			.addClass("field-like")
+			.addClass("visual_container")
 			.scroll(this._handle_scroll.bind(this))
 		
 		$(window).resize(this._handle_window_resize.bind(this))
@@ -87,8 +88,8 @@ ui.EventList.View = Class.extend({
 		this.view_changed = new Event(this)
 		
 	},
-	_handle_append: function(event){
-		this.node.append(this.event.node)
+	_handle_append: function(_, event){
+		this.node.append(event.node)
 	},
 	_handle_clear: function(){
 		this.node.children().detach()

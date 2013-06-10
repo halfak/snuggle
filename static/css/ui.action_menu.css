@@ -6,6 +6,7 @@ div.action_menu {
 }
 
 div.action_menu .handles {
+	position: relative;
 	display: inline-block;
 	border: 1px solid #333;
 	vertical-align: top;
@@ -37,6 +38,9 @@ div.action_menu .handles {
 	
 div.action_menu .flyout {
 	display:none;
+	position: absolute;
+	left: 100%;
+	top: 0px;
 	vertical-align: top;
 	white-space: nowrap;
 	min-height: 15em;
@@ -46,7 +50,7 @@ div.action_menu .flyout {
 	box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
 }
 div.action_menu .flyout.expanded {
-	display: inline-block;
+	display: block;
 	/* Width controlled in javascript */
 }
 
@@ -110,6 +114,7 @@ div.action_menu div.form{
 	width: 25em;
 	padding: .5em;
 	position: relative;
+	margin-bottom: 1em;
 }
 div.action_menu form{
 	display: block;

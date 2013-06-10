@@ -24,7 +24,7 @@ ui.UserBrowser = Class.extend({
 		
 		this.filters_change_delay = setTimeout(
 			this._update_cursor.bind(this), 
-			delays.update_cursor
+			env.delays.update_cursor
 		)
 	},
 	visible: function(visible){

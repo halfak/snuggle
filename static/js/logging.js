@@ -110,4 +110,4 @@ logging.Console = Class.extend({
 
 
 //Set a default
-logger = new logging.Logger(logging.DEBUG)
+logger = new logging.Logger(logging.INFO)

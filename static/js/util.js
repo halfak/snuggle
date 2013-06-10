@@ -23,13 +23,13 @@ util = {
 		       "?diff=prev&oldid=" + rev_id
 	},
 	user_href: function(username){
-		return util.page_link(util.page_name(2, username))
+		return util.page_href(util.page_name(2, username))
 	},
 	user_talk_href: function(username){
-		return util.page_link(util.page_name(3, username))
+		return util.page_href(util.page_name(3, username))
 	},
 	user_contribs_href: function(username){
-		return util.page_link(util.page_name(-1, "Contributions/" + username))
+		return util.page_href(util.page_name(-1, "Contributions/" + username))
 	},
 	wiki_link: function(page_name, display){
 		if(display == undefined){
@@ -38,7 +38,7 @@ util = {
 		return $("<a>")
 			.html(display)
 			.attr('target', "_blank")
-			.attr('href', util.page_link(page_name))
+			.attr('href', util.page_href(page_name))
 			.addClass("wiki-link")
 	},
 	htmlify: function(element){

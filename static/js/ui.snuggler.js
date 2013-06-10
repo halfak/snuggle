@@ -189,7 +189,7 @@ ui.Snuggler.View = Class.extend({
 		}else if(this.model.user){
 			this.preamble.node.text(i18n.get("Logged in as") + " ")
 			this.name.node.text(this.model.user.name)
-			this.name.node.attr('href', util.user_link(this.model.user.name))
+			this.name.node.attr('href', util.user_href(this.model.user.name))
 			this.name.node.attr('target', "_blank")
 			this.menu.ready_logout()
 		}else{
@@ -295,7 +295,7 @@ ui.Snuggler.View.Menu.Login = Class.extend({
 	},
 	_handle_keypress: function(_, e){
 		if(!this.disabled()){
-			if(e.which == keys.ENTER){
+			if(e.which == env.keys.ENTER){
 				this.submitted.notify()
 				util.kill_event(e)
 			}

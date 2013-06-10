@@ -65,7 +65,7 @@ ui.ActionMenu = Class.extend({
 		}
 		this.preview_delay = setTimeout(
 			this.load_preview.bind(this),
-			delays.preview_action
+			env.delays.preview_action
 		)
 	},
 	load_preview: function(){
@@ -78,7 +78,7 @@ ui.ActionMenu = Class.extend({
 				action,
 				this.flyout.controls.watch.val(),
 				function(op_docs){
-					operations = op_docs.map(ui.ActionMenu.Operation.from_doc)
+					operations = op_docs.map(ui.ActionMenu.OperationPreview.from_doc)
 					
 					this.flyout.load_preview(action, operations)
 					this.flyout.previewer.loading(false)
@@ -160,13 +160,13 @@ ui.ActionMenu.Flyout = Class.extend({
 		this.unload()
 	},
 	_set_max_width: function(){
-		var left = $(this.node).offset().left
-		var right = $(window).innerWidth()
+		container_node = this.node.closest(".visual_container") || $(window)
+		
+		var container_right = container_node.offset().left+container_node.outerWidth()
 		
 		this.panel.node.css("width", 2)
 		var left = $(this.panel.node).offset().left
-		var right = $(window).innerWidth()
-		this.panel.node.css("width", (right-left)-20)
+		this.panel.node.css("width", (container_right-left)-20)
 		
 		this.panel.node.css("height", 2)
 		this.panel.node.css("height", this.node.innerHeight())
@@ -247,7 +247,7 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 				class: "watch", 
 				label: "watch user",
 				tooltip: "Adds the this user's page and talk page to your watchlist",
-				tabindex: tabindex.action_menu
+				tabindex: env.tabindex.action_menu
 			}
 		)
 		this.node.append(this.watch.node)
@@ -256,7 +256,7 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 			label: "cancel",
 			tooltip: "Cancel this action.",
 			class: "cancel",
-			tabindex: tabindex.action_menu
+			tabindex: env.tabindex.action_menu
 		})
 		this.cancel.activated.attach(this._cancel_activated.bind(this))
 		this.node.append(this.cancel.node)
@@ -265,7 +265,7 @@ ui.ActionMenu.Flyout.Controls = Class.extend({
 			label: "submit", 
 			tooltip: "Complete this action.",
 			class: "submit",
-			tabindex: tabindex.action_menu
+			tabindex: env.tabindex.action_menu
 		})
 		this.submit.activated.attach(this._submit_activated.bind(this))
 		this.node.append(this.submit.node)
@@ -540,16 +540,16 @@ ui.UserAction.from_doc = function(doc, formatting){
 	var fields = []
 	for(var i=0;i<doc.fields.length;i++){
 		var field_doc = doc.fields[i]
-		field_doc.tabindex = tabindex.action_menu
+		field_doc.tabindex = env.tabindex.action_menu
 		fields.push(ui.Field.from_doc(doc.fields[i], formatting))
 	}
 	return new ui.UserAction(
-		doc.name,
+		doc.label,
 		util.linkify((doc.description || "").format(formatting)),
 		fields,
 		{
 			tooltip: doc.tooltip,
-			tabindex: tabindex.action_menu
+			tabindex: env.tabindex.action_menu
 		}
 	)
 }

@@ -27,15 +27,15 @@ ui.UserList = Class.extend({
 			logger.debug("ui.user_list: delaying view of user")
 			this._view_delay = setTimeout(
 				function(){this._add_user_view(user)}.bind(this),
-				delays.user_view_delay
+				env.delays.user_view_delay
 			)
 		}
 	},
 	_handle_keypress: function(_, e){
-		if(e.which == keys.PAGE_UP){
+		if(e.which == env.keys.PAGE_UP){
 			this.model.shift_selection(-1)
 			util.kill_event(e)
-		}else if(e.which == keys.PAGE_DOWN){
+		}else if(e.which == env.keys.PAGE_DOWN){
 			this.model.shift_selection(1)
 			util.kill_event(e)
 		}
@@ -85,7 +85,7 @@ ui.UserList = Class.extend({
 					this.view.loading(false)
 					if(cursor == this.cursor){ //If we are still reading from the same cursor
 						for(var i=0;i<docs.length;i++){
-							this.append(new ui.User(docs[i]))
+							this.append(ui.User.from_doc(docs[i]))
 						}
 					}
 					this._read_until_full()
@@ -277,6 +277,7 @@ ui.UserList.View = Class.extend({
 		
 		this.node = $("<div>")
 			.addClass("user_list")
+			.addClass("visual_container")
 			.scroll(this._handle_view_change.bind(this))
 			.keydown(this._handle_keydown.bind(this))
 		

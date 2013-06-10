@@ -3,9 +3,10 @@ ui = window.ui || {}
 ui.User = Class.extend({
 		
 	init: function(model, view){
-		this.model = model
+		this.model = model || new ui.User.Model()
 		this.view  = view || new ui.User.View(this.model)
 		this.id    = this.model.id
+		this.name  = this.model.name
 		this.node  = this.view.node
 		
 		this.view.focus_set.attach(this._handle_focus.bind(this))
@@ -26,38 +27,38 @@ ui.User = Class.extend({
 		if(this.view.focused()){
 			logger.debug("Capturing keypress for user name=" + this.model.name + ": " + e.which)
 			switch(e.which){
-				case keys.NUM_1:
-				case keys.NUM_PAD_1:
+				case env.keys.NUM_1:
+				case env.keys.NUM_PAD_1:
 					this.view.info.category.val("good-faith")
 					util.kill_event(e)
 					break
-				case keys.NUM_2:
-				case keys.NUM_PAD_2:
+				case env.keys.NUM_2:
+				case env.keys.NUM_PAD_2:
 					this.view.info.category.val("ambiguous")
 					util.kill_event(e)
 					break
-				case keys.NUM_3:
-				case keys.NUM_PAD_3:
+				case env.keys.NUM_3:
+				case env.keys.NUM_PAD_3:
 					this.view.info.category.val("bad-faith")
 					util.kill_event(e)
 					break
-				case keys.UP_ARROW:
+				case env.keys.UP_ARROW:
 					this.view.activity.grid.shift_cursor(0, 1)
 					util.kill_event(e)
 					break
-				case keys.RIGHT_ARROW:
+				case env.keys.RIGHT_ARROW:
 					this.view.activity.grid.shift_cursor(1, 0)
 					util.kill_event(e)
 					break
-				case keys.DOWN_ARROW:
+				case env.keys.DOWN_ARROW:
 					this.view.activity.grid.shift_cursor(0, -1)
 					util.kill_event(e)
 					break
-				case keys.LEFT_ARROW:
+				case env.keys.LEFT_ARROW:
 					this.view.activity.grid.shift_cursor(-1, 0)
 					util.kill_event(e)
 					break
-				case keys.ESCAPE:
+				case env.keys.ESCAPE:
 					this.view.activity.grid.clear_cursor()
 					break
 				default:
@@ -183,5 +184,5 @@ ui.User = Class.extend({
 	}
 })
 ui.User.from_doc = function(doc){
-	return new ui.User(ui.User.Model(doc))
+	return new ui.User(new ui.User.Model(doc))
 }

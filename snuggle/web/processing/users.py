@@ -36,6 +36,33 @@ class Users:
 		
 		return responses.success(True)
 	
+	def get(self, session, doc):
+		try:
+			user = types.User.deserialize(doc)
+			start = time.time()
+			user_doc = self.model.users.get(id=user.id, deserialize=False)
+			end = time.time()
+			return responses.success(user_doc)
+		except KeyError:
+			logger.warning("User %s not found." % user)
+			return responses.unknown_user()
+		except Exception:
+			logger.error(traceback.format_exc())
+			return responses.database_error("getting a set of users with query %s" % query)
+		
+		try:
+			snuggler, data = user_data()
+			event = types.UsersQueried(
+				doc,
+				end-start,
+				1,
+				snuggler,
+				data
+			)
+			self.model.events.insert(event)
+		except Exception as e:
+			logger.error(traceback.format_exc())
+	
 	def query(self, session, query):
 		try:
 			start = time.time()
