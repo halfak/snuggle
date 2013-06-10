@@ -5,7 +5,7 @@ author:
   url: http://halfaker.info
 
 # This configuration file specifies the behavior of Snuggle
-root_directory: ~/snuggle
+root_directory: /sites/snuggle
 
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.
