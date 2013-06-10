@@ -89,6 +89,7 @@ ui.UserCategorized.View = ui.Event.View.extend({
 			node: $("<a>")
 				.addClass("snuggler")
 				.attr("target", "_blank")
+				.attr('href', util.user_href(this.model.snuggler.name))
 				.html(this.model.snuggler.name)
 		}
 		this.summary.node.append(this.snuggler.node)
