@@ -14,8 +14,8 @@ ui.UserContainer = ui.Dropper.extend({
 		
 		this.loaded = false
 	},
-	_handle_dropper_change: function(_, expanded){
-		if(expanded){
+	_handle_dropper_change: function(){
+		if(this.expanded()){
 			this._load_user_info()
 		}
 		this._update_position()
@@ -24,17 +24,19 @@ ui.UserContainer = ui.Dropper.extend({
 		this._update_position()
 	},
 	_update_position: function(){
-		container_node = this.node.closest(".visual_container")
-		
-		this.pane.node.css(
-			'width',
-			Math.max(container_node.innerWidth() - 25)
-		)
-		
-		this.pane.node.css(
-			'left',
-			((this.tab.node.offset().left - container_node.offset().left)*-1)+10
-		)
+		if(this.expanded()){
+			container_node = this.node.closest(".visual_container")
+			
+			this.pane.node.css(
+				'width',
+				Math.max(container_node.innerWidth() - 25)
+			)
+			
+			this.pane.node.css(
+				'left',
+				((this.tab.node.offset().left - container_node.offset().left)*-1)+10
+			)
+		}
 	},
 	_load_user_info: function(){
 		if(!this.loaded){

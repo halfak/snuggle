@@ -4,4 +4,5 @@ div.user_container{
 	div.user_container div.pane{
 		border: none;
 		z-index: 2;
+		box-shadow: 0px 0px 10px rgba(0,0,0,0.8);
 	}

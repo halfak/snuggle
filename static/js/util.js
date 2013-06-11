@@ -28,8 +28,12 @@ util = {
 	user_talk_href: function(username){
 		return util.page_href(util.page_name(3, username))
 	},
-	user_contribs_href: function(username){
-		return util.page_href(util.page_name(-1, "Contributions/" + username))
+	user_contribs_href: function(username, ns){
+		var href = util.page_href(util.page_name(-1, "Contributions/" + username))
+		if(ns){
+			href += "?namespace=" + ns
+		}
+		return href
 	},
 	wiki_link: function(page_name, display){
 		if(display == undefined){

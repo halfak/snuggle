@@ -193,7 +193,7 @@ ui.User.View.Info = Class.extend({
 			this.current_category.node.removeClass("categorized")
 		}
 		
-		this.counts.render(this.model.activity.counts)
+		this.counts.render(this.model, this.model.activity.counts)
 		
 		this.meta.render({
 			'Registered': this.model.registration.format('wikiDate'),

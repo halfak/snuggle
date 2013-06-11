@@ -1,5 +1,7 @@
 import sys
 
+sys.path.append("../")
+
 from snuggle import configuration
 from snuggle import mediawiki
 from snuggle.data import models

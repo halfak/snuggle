@@ -1,4 +1,3 @@
-#!/usr/bin/python
 ################################################################################
 #
 # This file demonstrates an incompatibility between the MediaWiki API at
