@@ -1,3 +1,2 @@
 #!/bin/sh
 python -tt -c "from snuggle.web import server; server.main();" "$@"
-

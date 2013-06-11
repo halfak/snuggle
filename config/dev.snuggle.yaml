@@ -12,6 +12,13 @@ root_directory: ~/Sandbox/snuggle
 web_server:
   host: 0.0.0.0
   port: 8081
+  beaker:
+    session.type: "memory"
+    session.key: "s_id"
+    #session.secret is randomly generated
+    # 30 minutes
+    session.timeout: 1800
+    session.auto: True
 
 # The configuration for the synchronization server.  The synchronization server
 # keeps Snuggle's data up-to-date by listening to a recent_changes feed.

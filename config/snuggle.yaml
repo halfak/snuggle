@@ -12,6 +12,15 @@ root_directory: /sites/snuggle
 web_server:
   host: 0.0.0.0
   port: 80
+  beaker:
+    session.type: "file"
+    session.data_dir: "/tmp/snuggle_sessions"
+    session.auto: True
+    session.key: "s_id"
+    # Replace with randomly generated string. See ./generate_secret
+    session.secret: "REGENERATE ME: ogz8AU0/SL66MI.Zhnmr{x|1d,/Y6/J&/1Tib&86%?4`wBoT@"
+    # 30 minutes
+    session.timeout: 1800
 
 # The configuration for the synchronization server.  The synchronization server
 # keeps Snuggle's data up-to-date by listening to a recent_changes feed.

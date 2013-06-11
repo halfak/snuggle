@@ -82,14 +82,11 @@ def main():
 def run(config, debug):
 	logger.info("Configuring system.")
 	
-	Model = import_class(config.snuggle['model']['module'])
-	model = Model.from_config(config)
-	
 	start_time = time.time()
 	event = types.ServerStarted("web")
 	model.events.insert(event)
 	
-	app = application(config, model)
+	app, model = application(config)
 	
 	for prefixes, route in inspect_routes(app.app):
 		abs_prefix = '/'.join(part for p in prefixes for part in p.split('/'))
@@ -124,25 +121,29 @@ def run(config, debug):
 		)
 		model.events.insert(event)
 
-def application(config, model):
+def application(config):
+	
+	Model = import_class(config.snuggle['model']['module'])
+	model = Model.from_config(config)
 	
 	#configure processors
 	processing.configure(config, model)
 	
-	# Generates a random 25 character sequence
-	secret = "".join(chr(random.randrange(32,125)) for i in xrange(25))
+	if 'session.secret' not in config.snuggle['web_server']['beaker']:
+		# Generates a random 25 character sequence
+		secret = "".join(chr(random.randrange(32,125)) for i in xrange(25))
+		beaker_config = dict(
+			config.snuggle['web_server']['beaker'].items() + 
+			{'session.secret': secret}.items()
+		)
+	else:
+		beaker_config = config.snuggle['web_server']['beaker']
 	
 	#construct app
 	return SessionMiddleware(
 		bottle.default_app(),
-		{
-			'session.type': "memory",
-			'session.key': "s_id",
-			'session.secret': secret,
-			'session.timeout': 60*30, #30 minutes
-			'session.auto': True
-		}
-	)
+		beaker_config
+	), model
 
 if __name__ == "__main__":
 	logging.debug("calling main()")
