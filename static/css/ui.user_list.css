@@ -1,11 +1,11 @@
 div.user_list{
-	background: #bbb;
+	background: #ccc;
 	box-shadow: inset 2px 2px 3px rgba(0,0,0,.2);
 	padding-bottom: 50px;
 }
 
 div.user_list.loading{
-	background: #bbb url(http://upload.wikimedia.org/wikipedia/commons/5/53/Loading_bar.gif) no-repeat bottom center;
+	background: #ccc url(http://upload.wikimedia.org/wikipedia/commons/5/53/Loading_bar.gif) no-repeat bottom center;
 }
 
 div.user_list div.user{

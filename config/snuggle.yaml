@@ -5,7 +5,8 @@ author:
   url: http://halfaker.info
 
 # This configuration file specifies the behavior of Snuggle
-root_directory: /sites/snuggle
+# TODO: Assume the CWD is root?
+root_directory: /sites/snuggle.localhost.org
 
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.
@@ -56,8 +57,8 @@ changes_synchronizer:
   # Limit the number of changes per request to this number
   changes_per_request: 500
   # Ignore recent changes that occurred before this id & timestamp
-  starting_rcid: 577767588
-  starting_timestamp: 1368562710
+  starting_rcid: 583869411
+  starting_timestamp: 1370898926
   # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
   max_age: 2592000
 

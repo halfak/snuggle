@@ -6,4 +6,3 @@ from . import server
 from . import events
 
 from . import static #must be last
-

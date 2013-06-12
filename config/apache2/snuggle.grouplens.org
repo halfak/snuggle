@@ -1,14 +1,21 @@
-<VirtualHost *:443>
+<VirtualHost snuggle.grouplens.org:80>
 	ServerAdmin aaron.halfaker@gmail.com
 	ServerName snuggle.grouplens.org
-	DocumentRoot /sites/snuggle
+	
+	Redirect permanent / https://snuggle.grouplens.org
+
+</VirtualHost>
+<VirtualHost snuggle.grouplens.org:443>
+	ServerAdmin aaron.halfaker@gmail.com
+	ServerName snuggle.grouplens.org
+	DocumentRoot /sites/snuggle.grouplens.org
 	
 	# WSGI Settings
-	WSGIScriptAlias / /sites/snuggle/web.wsgi
+	WSGIScriptAlias / /sites/snuggle.grouplens.org/web.wsgi
 	
 	WSGIDaemonProcess snuggle.grouplens.org \
-		python-path=/sites/snuggle \
-		python-eggs=/var/cache/apache2/python-eggs/snuggle
+		python-path=/sites/snuggle.grouplens.org \
+		python-eggs=/var/cache/apache2/python-eggs/snuggle.grouplens.org
 	
 	WSGIApplicationGroup %{GLOBAL}
 	

@@ -1,10 +1,17 @@
-<VirtualHost *:443>
+<VirtualHost snuggle.localhost.org:80>
 	ServerAdmin aaron.halfaker@gmail.com
 	ServerName snuggle.localhost.org
-	DocumentRoot /sites/snuggle
+	
+	Redirect permanent / https://snuggle.localhost.org
+
+</VirtualHost>
+<VirtualHost snuggle.localhost.org:443>
+	ServerAdmin aaron.halfaker@gmail.com
+	ServerName snuggle.localhost.org
+	DocumentRoot /sites/snuggle.localhost.org
 	
 	# WSGI Settings
-	WSGIScriptAlias / /sites/snuggle/web.wsgi
+	WSGIScriptAlias / /sites/snuggle.localhost.org/web.wsgi
 	
 	WSGIDaemonProcess snuggle.localhost.org \
 		python-path=/sites/snuggle \
@@ -16,8 +23,8 @@
 	
 	# SSL Stuff
 	SSLEngine On
-	SSLCertificateFile /sites/snuggle/config/apache2/self-ssl/snuggle.localhost.org.crt
-	SSLCertificateKeyFile /sites/snuggle/config/apache2/self-ssl/snuggle.localhost.org.key
+	SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+	SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
 	<Location />
 			SSLRequireSSL On
 			SSLVerifyClient optional
