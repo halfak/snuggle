@@ -11,7 +11,7 @@
 	DocumentRoot /sites/snuggle.localhost.org
 	
 	# WSGI Settings
-	WSGIScriptAlias / /sites/snuggle.localhost.org/web.wsgi
+	WSGIScriptAlias / /sites/snuggle.localhost.org/snuggle.localhost.wsgi
 	
 	WSGIDaemonProcess snuggle.localhost.org \
 		python-path=/sites/snuggle \

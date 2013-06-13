@@ -10,7 +10,7 @@ from snuggle import configuration
 from snuggle.web import server #Load the application
 
 # load configuration
-configuration.snuggle.load_yaml(open("config/snuggle.yaml"))
+configuration.snuggle.load_yaml(open("config/snuggle.grouplens.yaml"))
 configuration.mediawiki.load_yaml(open("config/enwiki.mediawiki.yaml"))
 configuration.i18n.load_yaml(open("config/en-us.i18n.yaml"))
 

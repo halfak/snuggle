@@ -11,7 +11,7 @@
 	DocumentRoot /sites/snuggle.grouplens.org
 	
 	# WSGI Settings
-	WSGIScriptAlias / /sites/snuggle.grouplens.org/web.wsgi
+	WSGIScriptAlias / /sites/snuggle.grouplens.org/snuggle.grouplens.wsgi
 	
 	WSGIDaemonProcess snuggle.grouplens.org \
 		python-path=/sites/snuggle.grouplens.org \
@@ -23,8 +23,10 @@
 	
 	# SSL Stuff
 	SSLEngine On
-	SSLCertificateFile /etc/ssl/private/snuggle.grouplens.org.crt
-	SSLCertificateKeyFile /etc/ssl/private/snuggle.grouplens.org.key
+	SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+	SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+	#SSLCertificateFile /etc/ssl/private/snuggle.grouplens.org.crt
+	#SSLCertificateKeyFile /etc/ssl/private/snuggle.grouplens.org.key
 	<Location />
 			SSLRequireSSL On
 			SSLVerifyClient optional
