@@ -6,6 +6,7 @@ ui.Snuggle = Class.extend({
 		
 		this.status = new ui.SystemStatus()
 		this.status.element.clicked.attach(this._handle_status_element_clicked.bind(this))
+		this.status.visible(false)
 		this.node.append(this.status.node)
 		
 		this.welcome = new ui.Welcome()
@@ -35,7 +36,10 @@ ui.Snuggle = Class.extend({
 		logger.debug("ui.snuggle: toggling welcome")
 		this.welcome.visible(!this.welcome.visible())
 		
-		if(!this.welcome.visible()){
+		if(this.welcome.visible()){
+			this.status.visible(false)
+		}else{
+			this.status.visible(true)
 			this.user_browser.load()
 			this.user_browser.visible(true)
 		}

@@ -10,9 +10,15 @@ div.event {
 	div.event .system_time{
 		display: inline-block;
 		vertical-align: top;
-		background: #e6e6e6;
-		padding: .28em .5em; /* Hack.  I don't know why this is necessary (halfak) */
+		text-align: center;
+		overflow: hidden;
 	}
+		div.event .system_time span{
+			display: inline-block;
+			background: #e6e6e6;
+			min-width: 10em;
+			padding: .3em .5em;
+		}
 	div.event .summary{
 		display: inline-block;
 		vertical-align: top;

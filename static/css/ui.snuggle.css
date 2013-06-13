@@ -1,3 +1,25 @@
+div.system_status{
+	display: inline-block;
+	position: relative;
+	z-index: 10;
+	vertical-align: top;
+	margin: .25em;
+	font-size: 1.5em;
+}
+div.snuggler{
+	display: inline-block;
+	position: relative;
+	z-index: 10;
+	vertical-align: top;
+}
+div.help{
+	position: fixed;
+	z-index: 10;
+	top: 0px;
+	right: 0px;
+	white-space: nowrap;
+}
+
 div.welcome,
 div.user_browser{
 	position: fixed;

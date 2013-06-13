@@ -37,7 +37,7 @@ ui.Event.View = Class.extend({
 		this.system_time = {
 			node: $("<div>")
 				.addClass("system_time")
-				.text(this.model.system_time.format("wikiDate"))
+				.html("<span>" + this.model.system_time.format("wikiDate") + "</span>")
 		}
 		this.node.append(this.system_time.node)
 		

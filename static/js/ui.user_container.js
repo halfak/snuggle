@@ -29,12 +29,12 @@ ui.UserContainer = ui.Dropper.extend({
 			
 			this.pane.node.css(
 				'width',
-				Math.max(container_node.innerWidth() - 25)
+				Math.max(container_node.innerWidth() - 35)
 			)
 			
 			this.pane.node.css(
 				'left',
-				((this.tab.node.offset().left - container_node.offset().left)*-1)+10
+				((this.tab.node.offset().left - container_node.offset().left)*-1)+12
 			)
 		}
 	},

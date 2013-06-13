@@ -65,6 +65,18 @@ ui.Element = Class.extend({
 			}
 		}
 	},
+	visible: function(visible){
+		if(visible === undefined){
+			return this.node.css("visibility") != "hidden"
+		}else{
+			logger.debug("ui.popover: setting visibility to " + Boolean(visible))
+			if(visible){
+				this.node.css("visibility", "visible")
+			}else{
+				this.node.css("visibility", "hidden")
+			}
+		}
+	},
 	_rotate: function(){
 		this._rotation_delay = setTimeout(
 			this._rotate.bind(this),

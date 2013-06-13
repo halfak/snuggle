@@ -3,11 +3,11 @@ div.user_filters{
 	top: 0px;
 	left: 0px;
 	right: 0px;
-	height: 6em;
+	height: 12ex;
 }
 div.user_list{
 	position: fixed;
-	top: 6em;
+	top: 12ex;
 	left: 0px;
 	right: 0px;
 	bottom: 0px;

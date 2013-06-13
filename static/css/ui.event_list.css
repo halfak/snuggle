@@ -1,6 +1,5 @@
 div.event_list{
-	background: #ddd;
+	background: #bbb;
 	padding: .5em;
-	overflow-x: visible;
 	overflow-y: scroll;
 }

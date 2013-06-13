@@ -14,6 +14,14 @@ ui.SystemStatus = Class.extend({
 		)
 		this.node.append(this.element.node)
 	},
+	visible: function(visible){
+		if(visible === undefined){
+			return this.node.css("visibility") != "none"
+		}else{
+			logger.debug("ui.system_status: setting visibility to " + Boolean(visible))
+			this.element.visible(visible)
+		}
+	},
 	loading: function(loading){
 		if(loading === undefined){
 			return this.node.hasClass("loading")

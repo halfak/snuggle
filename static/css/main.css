@@ -1,6 +1,17 @@
 /* TODO: This is sort of a misc, catch-all */
 
-body {
+body{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	background: #ddd;
+	box-shadow: inset 0px 0px 250px #000;
+	height: 100%;
 	font-family: sans-serif;
 }
 

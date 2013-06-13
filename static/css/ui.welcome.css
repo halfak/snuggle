@@ -1,5 +1,5 @@
 div.welcome {
-	padding: 2em 5em 2em 5em;
+	padding: 2em 2em 2em 2em;
 }
 
 div.welcome > .pane{
@@ -42,8 +42,7 @@ div.welcome > .pane{
 			text-align: left;
 		}
 		div.welcome > .pane .prose > .continue{
-			background: #ff0;
-			font-size: 1.2em;
+			font-size: 1.4em;
 			display: inline-block;
-			text-align: left;
+			text-align: center;
 		}
