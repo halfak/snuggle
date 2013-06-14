@@ -68,7 +68,7 @@ ui.EventList.Model = Class.extend({
 	},
 	clear: function(){
 		this.list = []
-		this.cleared.notify(event)
+		this.cleared.notify()
 	}
 })
 ui.EventList.View = Class.extend({
