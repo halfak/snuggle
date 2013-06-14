@@ -19,7 +19,7 @@ web_server:
     session.auto: True
     session.key: "s_id"
     # Replace with randomly generated string. See ./generate_secret
-    session.secret: "REGENERATE ME: ogz8AU0/SL66MI.Zhnmr{x|1d,/Y6/J&/1Tib&86%?4`wBoT@"
+    session.secret: lwpt]o`QSW1&LI@u\{z{t3&K3Sb*|T?yvIjW#e3 vIK`%JvTD/
     # 30 minutes
     session.timeout: 1800
 

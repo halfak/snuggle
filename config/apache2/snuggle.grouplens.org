@@ -23,10 +23,11 @@
 	
 	# SSL Stuff
 	SSLEngine On
-	SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
-	SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
-	#SSLCertificateFile /etc/ssl/private/snuggle.grouplens.org.crt
-	#SSLCertificateKeyFile /etc/ssl/private/snuggle.grouplens.org.key
+	#SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+	#SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+	SSLCertificateFile /etc/ssl/certs/star.grouplens.org.crt
+	SSLCACertificateFile /etc/ssl/incommon.ca
+	SSLCertificateKeyFile /etc/ssl/private/star.grouplens.org.key
 	<Location />
 			SSLRequireSSL On
 			SSLVerifyClient optional
