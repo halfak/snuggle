@@ -42,7 +42,9 @@ div.welcome > .pane{
 			text-align: left;
 		}
 		div.welcome > .pane .prose > .continue{
-			font-size: 1.4em;
+			font-size: 1.6em;
 			display: inline-block;
 			text-align: center;
+			background: #CCF;
+			border-radius: .25em;
 		}

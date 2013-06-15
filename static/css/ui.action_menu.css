@@ -71,7 +71,7 @@ div.action_menu .flyout.expanded {
 			top: 0px;
 			right: 0px;
 			left: 0px;
-			bottom: 2.50em;
+			bottom: 5ex;
 			background: #bbb;
 			border-top: 0px;
 			border-right: 0px;
@@ -80,13 +80,13 @@ div.action_menu .flyout.expanded {
 		}
 		div.action_menu .flyout .panel .previewer .status{
 			position: absolute;
-			z-index: 0;
+			z-index: 1;
 			bottom: 0px;
 			left: 0px;
 			right: 0px;
 			display: block;
 			text-align: center;
-			color: rgba(255,255,255,.2);
+			color: rgba(255,255,255,.3);
 			font-size: 5em;
 		}
 		div.action_menu .flyout .panel .controls {
@@ -94,7 +94,7 @@ div.action_menu .flyout.expanded {
 			right: 0px;
 			bottom: 0px;
 			text-align: right;
-			height: 1.75em;
+			height: 4ex;
 			padding-right: .5em;
 		}
 		div.action_menu .flyout .panel .controls .watch,

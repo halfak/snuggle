@@ -10,15 +10,21 @@ ui.User.View = Class.extend({
 			.focus(this._handle_focus.bind(this))
 			.keydown(this._handle_keydown.bind(this))
 		
+		this.container = {
+			node: $("<div>")
+				.addClass("container")
+		}
+		this.node.append(this.container.node)
+		
 		//Three major subcomponents: Info, Activity and Talk
 		this.info = new ui.User.View.Info(model)
-		this.node.append(this.info.node)
+		this.container.node.append(this.info.node)
 		
 		this.activity = new ui.User.View.Activity(model)
-		this.node.append(this.activity.node)
+		this.container.node.append(this.activity.node)
 		
 		this.talk = new ui.User.View.Talk(model)
-		this.node.append(this.talk.node)
+		this.container.node.append(this.talk.node)
 		
 		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		

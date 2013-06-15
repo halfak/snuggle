@@ -197,6 +197,7 @@ div.revision_graph div.revision_details{
 		font-size: .9em;
 		padding: .5em;
 		border-top: 1px solid #333;
+		border-bottom: 1px solid #333;
 		/* Height is set in javascript */
 	
 		box-shadow: inset 2px 2px 2px rgba(0,0,0,.2);

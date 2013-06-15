@@ -68,7 +68,8 @@ ui.Welcome = ui.Popover.extend({
 		
 		this.continue = new ui.Button({
 			label: i18n.get("start snuggle"), 
-			class: "continue"
+			class: "continue",
+			tooltip: i18n.get("load up the list of newcomers")
 		})
 		this.continue.activated.attach(this._handle_continue_activation.bind(this))
 		this.prose.node.append(this.continue.node)

@@ -53,7 +53,7 @@ ui.UserList = Class.extend({
 		
 	},
 	_add_user_view: function(user){
-		logger.debug("controller.user_list: requesting to add new user view.")
+		logger.debug("ui.user_list: requesting to add new user view.")
 		servers.local.users.view(
 			user.model,
 			function(doc){
@@ -77,17 +77,17 @@ ui.UserList = Class.extend({
 	},
 	_load_more_users: function(){
 		if(this.cursor && !this.cursor.complete){
-			logger.debug("Sending a request for more users.")
+			logger.debug("ui.user_list: sending a request for more users.")
 			this.view.loading(true)
 			this.cursor.next(
 				10,
 				function(cursor, docs){
-					this.view.loading(false)
 					if(cursor == this.cursor){ //If we are still reading from the same cursor
 						for(var i=0;i<docs.length;i++){
 							this.append(ui.User.from_doc(docs[i]))
 						}
 					}
+					this.view.loading(false)
 					this._read_until_full()
 				}.bind(this),
 				function(message){
@@ -281,6 +281,18 @@ ui.UserList.View = Class.extend({
 			.scroll(this._handle_view_change.bind(this))
 			.keydown(this._handle_keydown.bind(this))
 		
+		this.users = {
+			node: $("<div>")
+				.addClass("users")
+		}
+		this.node.append(this.users.node)
+		
+		this.status = {
+			node: $("<div>")
+				.addClass("status")
+		}
+		this.node.append(this.status.node)
+		
 		$(window).resize(this._handle_view_change.bind(this))
 		
 		this.model.appended.attach(this._handle_append.bind(this))
@@ -299,7 +311,7 @@ ui.UserList.View = Class.extend({
 		this._append(user)
 	},
 	_handle_clear: function(){
-		this.node.html("")
+		this.users.node.html("")
 	},
 	_handle_user_select: function(_, user){
 		this._show_user(user)
@@ -312,24 +324,26 @@ ui.UserList.View = Class.extend({
 	},
 	loading: function(loading){
 		if(loading === undefined){
-			return this.node.hasClass("loading")
+			return this.status.node.hasClass("loading")
 		}else{
 			if(loading){
-				this.node.addClass("loading")
+				this.status.node.addClass("loading")
+				this.status.node.text(i18n.get("Loading..."))
 			}else{
-				this.node.removeClass("loading")
+				this.status.node.removeClass("loading")
+				this.status.node.text("")
 			}
 		}
 	},
 	view: function(){
 		return {
 			top: this.node.scrollTop(),
-			bottom: this.node.scrollTop()+this.node.height(),
+			bottom: this.node.scrollTop()+this.node.innerHeight(),
 			end: this.node[0].scrollHeight
 		}
 	},
 	_append: function(user){
-		this.node.append(user.node)
+		this.users.node.append(user.node)
 	},
 	_show_user: function(user){
 		if(user){

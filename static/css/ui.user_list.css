@@ -1,11 +1,20 @@
 div.user_list{
+	position: relative;
 	background: #ccc;
 	box-shadow: inset 2px 2px 3px rgba(0,0,0,.2);
-	padding-bottom: 50px;
 }
 
-div.user_list.loading{
-	background: #ccc url(http://upload.wikimedia.org/wikipedia/commons/5/53/Loading_bar.gif) no-repeat bottom center;
+div.user_list > .users{
+	min-height: 100%;
+}
+div.user_list > .status{
+	position: relative;
+	z-index: 1;
+	display: block;
+	text-align: center;
+	color: rgba(0,0,0,.4);
+	font-size: 5em;
+	margin-top: -1.2em;
 }
 
 div.user_list div.user{

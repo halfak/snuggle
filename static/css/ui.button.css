@@ -16,11 +16,15 @@ div.button{
 	-ms-user-select: none;
 	user-select: none;
 }
+div.button:active{
+	box-shadow: inset 0px -7px 10px rgba(255,255,255,.2);
+}
 	div.button-like span.label,
 	div.button span.label{
+		display: block;
 		text-align: middle;
 		border-radius: 2px;
-		padding: .4em .5em;
+		padding: .4ex .7em;
 	}
 	
 	div.button-like.disabled,

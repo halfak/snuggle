@@ -6,6 +6,19 @@ div.user {
 	border: 1px solid #333;
 	text-align: left;
 }
+	div.user > .container{
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+	}
+div.user:focus {
+	outline: none;
+}
+	div.user:focus > .container{
+		outline: rgba(0,0,125,.2) solid .25em;
+	}
 div.user.expanded {
 	height: 20em;
 }
@@ -133,7 +146,8 @@ div.user div.category {
 	right: 0px;
 	background: #ddd;
 	padding: .5em 1em 1em 1em;
-	box-shadow: 0px 0px 10px #000;
+	border: 1px solid rgba(0,0,0,.8);
+	outline: rgba(0,0,0,.4) solid 2px;
 }
 
 div.user div.category div.history{

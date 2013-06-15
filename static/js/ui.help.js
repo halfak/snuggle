@@ -28,12 +28,18 @@ ui.Help = Class.extend({
 		this.tab.node.click(this._handle_click.bind(this))
 		
 		$("body").click(this._handle_body_click.bind(this))
+		$(window).resize(this._handle_window_resize.bind(this))
 	},
 	_handle_click: function(){
 		this.toggle()
 	},
 	_handle_body_click: function(e){
 		this.expanded(false)
+	},
+	_handle_window_resize: function(e){
+		if(this.expanded()){
+			this.pane.node.css('height', $(window).innerHeight() - 30)
+		}
 	},
 	toggle: function(){
 		this.expanded(!this.expanded())
@@ -44,14 +50,14 @@ ui.Help = Class.extend({
 		}else{
 			if(expand){
 				this.pane.node.animate(
-					{"height": "400px"},
-					300
+					{"height": $(window).innerHeight() - 30},
+					200
 				)
 				this.node.addClass("expanded")
 			}else{
 				this.pane.node.animate(
 					{"height": "1px"},
-					300,
+					200,
 					function(){
 						this.node.removeClass("expanded")
 					}.bind(this)
