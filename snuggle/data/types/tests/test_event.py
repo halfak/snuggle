@@ -79,7 +79,7 @@ def test_user_viewed():
 	snuggler = Snuggler(12, "Derp")
 	system_time = 1234567890
 	
-	user_viewed = UserViewed(user, snuggler, system_time)
+	user_viewed = UserViewed(user, snuggler, system_time=system_time)
 	
 	eq_(user_viewed.user, user)
 	eq_(user_viewed.snuggler, snuggler)
@@ -93,7 +93,7 @@ def test_user_categorized():
 	category = "ambiguous"
 	system_time = 1234567890
 	
-	user_categorized = UserCategorized(user, snuggler, category, system_time)
+	user_categorized = UserCategorized(user, snuggler, category, system_time=system_time)
 	
 	eq_(user_categorized.user, user)
 	eq_(user_categorized.snuggler, snuggler)
@@ -118,7 +118,7 @@ def test_user_actioned():
 	]
 	system_time = 1234567890
 	
-	user_actioned = UserActioned(request, snuggler, results, system_time)
+	user_actioned = UserActioned(request, snuggler, results, system_time=system_time)
 	
 	eq_(user_actioned.results, results)
 	eq_(user_actioned.snuggler, snuggler)

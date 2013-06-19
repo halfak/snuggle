@@ -35,53 +35,151 @@ requests:
 # the use of Snuggle across the history of edits in the wiki.
 comment_suffix: " ([[WP:Snuggle|Sn]])"
 
-# TODO: This section is experimental and does not work yet.
+
+# Thread traces are how socially relevant actions are recorded.  Historically,
+# the traces of actions relevant to a user and their behavior in Wikipedia have
+# been captured on their talk page.  This section specifies a set of traces that 
+# Snuggle will identify and present in the intergace.  Each "trace" specifies a 
+# regular expression intended to match the pattern of text that identifies a 
+# wiki trace.  Each section of a user's talk page (delimited
+# by level 2 headers) will be processed and at most one thread trace can be
+# discovered based on the priority.  Priority is determined by order.  Traces 
+# that appear first will be prioritized before other traces that could 
+# potentially match.
 #
-# Threads specifies a set of regular expressions and classes that summarize the
-# activity on a user's talk page.  Each section of a user's talk page (delimited
-# by level 2 headers) will be processed and at most one thread category can be
-# discovered based on the priority.
-#
-# classes: classes to be applied in the CSS that renders the talk threads
-# priority: determines which thread will be chosen first if there are multiple
-#           matches
-# expression: a regular expression to be used to check if the thread matches
-#             the thread type.  In most cases, this is looking for something of
-#             of the form "<!-- Template:... -->"
-# groups: for each group in the regular expression, a set of additional classes
-#         can be included.  The matched portion of the regular expression can
-#         be formatted in with "%s".  If no groups are present, specify "[]", 
-#         the empty list.  For groups that should be ignored, specify "{}", the 
-#         empty dictionary.
-threads:
-  - # vandalism warning ########################################################
-    classes: ["warning", "vandalism"]
-    priority: 2
-    expression: "Template:uw-vandalism([1-4])?"
-    groups:
-      - # level
-        classes: ["level_%s"]
-  - # spam warning #############################################################
-    classes: ["warning", "spam"]
-    priority: 2
-    expression: "Template:uw-spam([1-4])?"
-    groups:
-      - # level
-        classes: ["level_%s"]
-  - # copyright warning ########################################################
-    classes: ["warning", "copyright"]
-    priority: 2
-    expression: "Template:uw-copyright(-([a-z]+))?([1-4])?"
-    groups:
-      - {} # suffix
-      - {} # suffix type
-      - # level
-        classes: ["level_%s"]
-  - # block ####################################################################
-    classes: ["block"]
-    priority: 1
-    expression: "Template:.*?block.*?|uw-[a-z]*block[a-z]*"
-    groups: []
+# priority: A list of the keys used below sorted by priority
+# traces: A map of (key->trace_definition) pairs that describe traces and presentation.
+#   expression: a regular expression to be used to check if the thread matches
+#               the thread type.  In most cases, this is looking for something 
+#               of the form "<!-- Template:... -->"
+#   groups: for each group in the regular expression, the icon can be modified.
+#           Current the only supported operation is to add a superscript.
+#   icon:
+#     display: Text to include within the icon
+#     superscript: (optional) text to include in a superscript of the icon
+#     tooltip: A tooltip that will appear when a user hovers over the trace's 
+#              icon in the user interface.
+#     style: css based coloring information to be applied to the icon.  Use this
+#            to convey information about the meaning of the trace.  
+#            e.g. warnings are black and red and welcomes are green and blue.
+talk_threads:
+  priority:
+    - block
+    - vandal warning
+    - spam warning
+    - copyright warning
+    - general warning
+    - deletion notification
+    - csd notification
+    - articles for creation
+    - teahouse invitation
+    - welcome message
+  traces:
+    block: #####################################################################
+      expression: "Template:uw-[a-z0-9]*block"
+      groups: []
+      icon: 
+        label: block
+        tooltip: Block notification
+        style:
+          border-color: "#000"
+          background-color: "#ccc"
+          box-shadow-color: "#000"
+    vandal warning: ############################################################
+      expression: "Template:uw-vandalism([0-9]+)?"
+      groups:
+        - {superscript: "%(group)s"}
+      icon: 
+        label: vandal
+        tooltip: Vandalism warning
+        style:
+          border-color: "#000"
+          box-shadow-color: "#600"
+          background-color: "#f66"
+    spam warning: ##############################################################
+      expression: "Template:uw-spam([0-9]+)?"
+      groups:
+        - {superscript: "%(group)s"}
+      icon: 
+        label: spam
+        tooltip: Spam warning
+        style:
+          border-color: "#000"
+          background-color: "#f66"
+          box-shadow-color: "#600"
+    copyright warning: #########################################################
+      expression: "Template:uw-copyright(-([a-z]+))?([0-9]+)?"
+      groups:
+        - {} # No one cares
+        - {} # No one cares
+        - {superscript: "%(group)s"}
+      icon:
+        label: ©
+        tooltip: Copyright warning
+        style:
+          border-color: "#000"
+          background-color: "#bb0"
+          box-shadow-color: "#660"
+    general warning: ###########################################################
+      expression: "Template:uw-"
+      groups: [] # No groups in the expression
+      icon:
+        label: warn
+        tooltip: General warning
+        style:
+          border-color: "#000"
+          background-color: "#f66"
+          box-shadow-color: "#600"
+    deletion notification: #####################################################
+      expression: "Template:(proposed del.*?|prod|afd|.*?delet.*?)"
+      groups: []
+      icon:
+        label: del
+        tooltip: Notification of deletion proposal
+        style:
+          border-color: "#aaf"
+          background-color: "#fff"
+          box-shadow-color: "#aaf"
+    csd notification: ##########################################################
+      expression: "Template.*?csd|db-|speedy"
+      groups: []
+      icon: 
+        label: csd
+        tooltip: Notification of speedy deletion
+        style:
+          border-color: "#bb0"
+          background-color: "#ff0"
+          box-shadow-color: "#bb0"
+    articles for creation: #####################################################
+      expression: "Template:afc"
+      groups: [] # No groups in the expression
+      icon:
+        label: "afc"
+        tooltip: Articles for Creation
+        style:
+          border-color: "#bb0"
+          background-color: "#ff0"
+          box-shadow-color: "#bb0"
+    teahouse invitation: #######################################################
+      expression: "Template:teahouse"
+      groups: [] # No groups in the expression
+      icon:
+        label: TH
+        tooltip: Teahouse invitation
+        style:
+          border-color: "#6d6"
+          background-color: "#9f9"
+          box-shadow-color: "#6d6"
+    welcome message: ###########################################################
+      expression: "Template:w-[a-z]+|welcome|First article"
+      groups: [] # No groups in the expression
+      icon:
+        label: W
+        tooltip: Welcome message
+        style:
+          border-color: "#66f"
+          background-color: "#eef"
+          box-shadow-color: "#66f"
 
 
 # User actions represent actions that can be performed on wiki from Snuggle.  
