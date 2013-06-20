@@ -9,7 +9,7 @@ class RecentChanges(APISubset):
 		params = {
 			'action': "query",
 			'list': "recentchanges",
-			'rctype': "edit|log",
+			'rctype': "edit|log|new",
 			'rcprop': "ids|timestamp|user|userid|loginfo",
 			'rcdir': "newer",
 			'rclimit': limit
