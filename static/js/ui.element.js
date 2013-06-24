@@ -1,3 +1,5 @@
+ui = window.ui || {}
+
 ui.Element = Class.extend({
 	init: function(number, shells, symbol, name, mass){
 		this.node = $("<span>")

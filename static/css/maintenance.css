@@ -1,0 +1,13 @@
+div.maintenance_notice{
+	width: 750px;
+	background: rgba(255,255,255,.5);
+	margin: 5ex auto;
+	padding: 1em;
+}
+
+div.maintenance_notice .element{
+	float: right;
+	font-size: 3.5em;
+	margin-left: 1em;
+	margin-bottom: 1ex;
+}

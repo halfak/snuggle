@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<link rel="shortcut icon" href="favicon.ico" />
+		
+		<link rel="stylesheet" href="css/main.css" />
+		<link rel="stylesheet" href="css/border_box.css" />
+		<link rel="stylesheet" href="css/categories.css" />
+		<link rel="stylesheet" href="css/document.css" />
+		<link rel="stylesheet" href="css/maintenance.css" />
+		
+		<link rel="stylesheet" href="css/ui.element.css" />
+
+		<script language="javascript" src="js/lib/jquery-1.8.1.min.js"></script>
+		<script language="javascript" src="js/lib/class.js"></script>
+		<script language="javascript" src="js/lib/date.format.js"></script>
+		<script language="javascript" src="js/lib/javascript.js"></script>
+		<script language="javascript" src="js/ui.element.js"></script>
+		
+		<title>Snuggle: Temporarily down for maintenance</title>
+	</head>
+	<body>
+		<div class="maintenance_notice">
+			<h1>Snuggle is down for maintenance</h1>
+			<p>
+				We're sorry for any difficulty.  The good news is that, if your
+				seeing this notice, Snuggle is down on purpose and should be 
+				back up shortly.
+			</p>
+			
+			<p>
+				Please see the 
+				<a href="https://en.wikipedia.org/wiki/WP:Snuggle">the project 
+				page</a> for more information.
+			</p>
+		</div>
+		<script language="javascript">
+			element = new ui.Element(
+				50,
+				[2, 8, 18, 18, 4],
+				"Sn",
+				"Snuggle",
+				118.7
+			)
+			$("div.maintenance_notice").prepend(element.node)
+		</script>
+	<body>
+</html>

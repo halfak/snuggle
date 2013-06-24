@@ -1,0 +1,18 @@
+<VirtualHost snuggle.localhost.org:443>
+	ServerAdmin aaron.halfaker@gmail.com
+	ServerName snuggle.localhost.org
+	DocumentRoot /sites/snuggle.localhost.org/static
+	
+	DirectoryIndex maintenance.html
+	
+	# SSL Stuff
+	SSLEngine On
+	SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+	SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+	<Location />
+			SSLRequireSSL On
+			SSLVerifyClient optional
+			SSLVerifyDepth 1
+			SSLOptions +StdEnvVars +StrictRequire
+	</Location>
+</VirtualHost>

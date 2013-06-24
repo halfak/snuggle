@@ -1,0 +1,21 @@
+<VirtualHost snuggle.grouplens.org:443>
+	ServerAdmin aaron.halfaker@gmail.com
+	ServerName snuggle.grouplens.org
+	DocumentRoot /sites/snuggle.grouplens.org/static
+	
+	DirectoryIndex maintenance.html
+	
+	# SSL Stuff
+	SSLEngine On
+	#SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+	#SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+	SSLCertificateFile /etc/ssl/certs/star.grouplens.org.crt
+	SSLCACertificateFile /etc/ssl/incommon.ca
+	SSLCertificateKeyFile /etc/ssl/private/star.grouplens.org.key
+	<Location />
+			SSLRequireSSL On
+			SSLVerifyClient optional
+			SSLVerifyDepth 1
+			SSLOptions +StdEnvVars +StrictRequire
+	</Location>
+</VirtualHost>
