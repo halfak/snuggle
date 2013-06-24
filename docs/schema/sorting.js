@@ -3,6 +3,7 @@ db.users.ensureIndex({'activity.counts.all': 1, 'registration': 1})
 db.users.ensureIndex({'activity.counts.all': 1, 'activity.reverted': 1})
 db.users.ensureIndex({'activity.counts.all': 1, 'activity.last_timestamp': -1})
 db.users.ensureIndex({'activity.counts.all': 1, 'desirability.likelihood': -1})
+db.users.ensureIndex({'category.category': 1})
 
 db.users.ensureIndex({'activity.counts.0': 1, 'registration': 1})
 db.users.ensureIndex({'activity.counts.0': 1, 'activity.reverted': 1})

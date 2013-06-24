@@ -17,12 +17,13 @@ class MWAPI:
 		self.last_rcid = last_rcid,
 		self.last_timestamp = last_timestamp
 	
-	def read(self, limit=None):
+	def read(self, limit=None, types=None):
 		rccontinue, change_docs = self.api.recent_changes.read(
 			self.last_rcid, 
 			self.last_timestamp, 
 			self.rccontinue,
-			limit=limit
+			limit=limit,
+			types=types
 		)
 		
 		rev_ids = [doc['revid'] for doc in change_docs if doc['revid'] != 0]

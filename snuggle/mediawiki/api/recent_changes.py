@@ -5,11 +5,12 @@ from .api_subset import APISubset
 
 class RecentChanges(APISubset):
 	
-	def read(self, last_id=None, last_timestamp=None, rccontinue=None, limit=500):
+	def read(self, last_id=None, last_timestamp=None, rccontinue=None, limit=500, types=None):
+		
 		params = {
 			'action': "query",
 			'list': "recentchanges",
-			'rctype': "edit|log|new",
+			'rctype': "|".join(types if types != None else ['edit','log','new']),
 			'rcprop': "ids|timestamp|user|userid|loginfo",
 			'rcdir': "newer",
 			'rclimit': limit
