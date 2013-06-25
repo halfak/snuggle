@@ -281,6 +281,27 @@ ui.UserList.View = Class.extend({
 			.scroll(this._handle_view_change.bind(this))
 			.keydown(this._handle_keydown.bind(this))
 		
+		this.headers = {
+			node: $("<div>")
+				.addClass("headers")
+				.append(
+					$("<div>")
+						.addClass("info")
+						.append($("<span>").text(i18n.get("Username and stats")))
+				)
+				.append(
+					$("<div>")
+						.addClass("activity")
+						.append($("<span>").text(i18n.get("Interactive edit graph")))
+				)
+				.append(
+					$("<div>")
+						.addClass("talk")
+						.append($("<span>").text(i18n.get("Talk page activity")))
+				)
+		}
+		this.node.append(this.headers.node)
+		
 		this.users = {
 			node: $("<div>")
 				.addClass("users")

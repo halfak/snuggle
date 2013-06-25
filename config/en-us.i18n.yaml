@@ -43,6 +43,7 @@ good-faith: good-faith
 help: help
 history: history
 
+Interactive edit graph: Interactive edit graph
 "Its unclear whether this editor is trying to be productive or not (or press #2)": "Its unclear whether this editor is trying to be productive or not (or press #2)"
 
 last activity: last activity
@@ -82,6 +83,7 @@ server stopped: server stopped
 system events: system events
 
 talk: talk
+Talk page activity: Talk page activity
 This user has not been categorized yet.: This user has not been categorized yet.
 "This user is at least trying to do something useful (or press #1)": "This user is at least trying to do something useful (or press #1)"
 "This editor is trying to cause harm or be disruptive (or press #3)": "This editor is trying to cause harm or be disruptive (or press #3)"
@@ -91,6 +93,7 @@ uncategorized: uncategorized
 user: user
 user actions: user actions
 Username: Username
+Username and stats: Username and stats
 
 views: views
 

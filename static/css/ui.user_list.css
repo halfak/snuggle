@@ -4,6 +4,38 @@ div.user_list{
 	box-shadow: inset 2px 2px 3px rgba(0,0,0,.2);
 }
 
+div.user_list div.headers{
+	padding: 0ex 1em;
+	margin-bottom: -1ex;
+}
+
+	div.user_list div.headers div{
+		display: inline-block;
+	}
+		div.user_list div.headers div span{
+			display: block;
+			background: rgba(255,255,255,.3);
+			padding: .5ex 0em;
+			text-align: center;
+			font-weight: bold;
+		}
+	div.user_list div.headers div.info{
+		width: 25%;
+	}
+	div.user_list div.headers div.activity{
+		width: 40%;
+	}
+		div.user_list div.headers div.activity span{
+			margin-left: .75em;
+		}
+	div.user_list div.headers div.talk{
+		width: 35%;
+	}
+		div.user_list div.headers div.talk span{
+			margin-left: .75em;
+		}
+
+
 div.user_list > .users{
 	min-height: 100%;
 }
@@ -20,3 +52,4 @@ div.user_list > .status{
 div.user_list div.user{
 	margin: .5em 1em;
 }
+

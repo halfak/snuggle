@@ -124,6 +124,12 @@ ui.User.View.Info = Class.extend({
 		}
 		this.name.node.prepend(this.current_category.node)
 		
+		this.status = {
+			node: $("<div>")
+				.addClass("status")
+		}
+		this.name.node.prepend(this.status.node)
+		
 		this.actions = new ui.User.View.Info.Actions(this.model)
 		this.name.node.append(this.actions.node)
 		
@@ -194,7 +200,10 @@ ui.User.View.Info = Class.extend({
 				default:
 					this.current_category.node.html(this.model.category.category)
 			}
-			this.current_category.node.addClass("categorized")
+			
+			this.current_category.node.attr('class', "")
+			this.current_category.node.addClass(this.model.category.category)
+			this.current_category.node.addClass("current_category categorized")
 		}else{
 			this.current_category.node.removeClass("categorized")
 		}

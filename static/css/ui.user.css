@@ -55,6 +55,7 @@ div.user div.info .name{
 	position: relative;
 }
 
+
 	div.user div.info .name .user_actions{
 		display: none;
 		position: absolute;
@@ -71,17 +72,32 @@ div.user div.info .name{
 		display: block;
 	}
 	
+	div.user div.info .name div.status {
+		display: inline-block;
+		border: .4em solid #000;
+		border-color: transparent transparent transparent #000;
+		border-width: .4em 0px .4em .5em;
+		vertical-align: middle;
+		margin-right: .5em;
+	}
+	
+	div.user.expanded div.info .name div.status {
+		border-color: #000 transparent transparent transparent;
+		border-width: .5em .4em 0px .4em;
+	}
+	
 	div.user div.info .name .current_category {
-		display: none
+		display: none;
+		border-radius: .5em;
+		padding: 0em .25em;
+		margin-right: .5em;
+		color: #000;
+		border: 1px solid #333;
+		min-width: 1em;
 	}
 	
 	div.user div.info .name .current_category.categorized {
 		display: inline-block;
-		border-radius: .5em;
-		padding: 0em .25em;
-		margin-right: .5em;
-		background: #777;
-		color: #fff;
 	}
 
 div.user div.info.viewed .name{
