@@ -1,18 +1,18 @@
-last_updated: "May 11th, 2013"
+last_updated: "Jun 25th, 2013"
 author: 
-  name: Aaron Halfaker
-  email: aaron.halfaker@gmail.com
+  name: Aaron Halfaker / Henrique Andrade
+  email: aaron.halfaker@gmail.com / henriquedeandrade@gmail.com
   url: http://halfaker.info
 
 # The name of the MediaWiki installation we're running against.
-name: English Wikipedia
+name: Wikipédia em português
 
 # The protocol to use when linking to the MediaWiki web interface.  'https' is 
 # preferred if possible. 
 protocol: https
 
 # The base domain for the MediaWiki installation.
-domain: en.wikipedia.org
+domain: pt.wikipedia.org
 
 # The path to wiki pages and scripts on the server.  This is used for making API
 # requests and for linking back to the wiki from the the user interface.
@@ -71,16 +71,14 @@ talk_threads:
     - general warning
     - deletion notification
     - csd notification
-    - articles for creation
-    - teahouse invitation
     - welcome message
   traces:
     block: #####################################################################
-      expression: "Template:uw-[a-z0-9]*block"
+      expression: "Predefinição:Bloqueado-disc"
       groups: []
       icon: 
-        label: block
-        tooltip: Block notification
+        label: bloqueio
+        tooltip: Notificação de bloqueio
         style:
           border-color: "#000"
           background-color: "#ccc"
@@ -90,92 +88,70 @@ talk_threads:
       groups:
         - {superscript: "%(group)s"}
       icon: 
-        label: vandal
-        tooltip: Vandalism warning
+        label: vandalismo
+        tooltip: Alerta de Vandalismo
         style:
           border-color: "#000"
           box-shadow-color: "#600"
           background-color: "#f66"
     spam warning: ##############################################################
-      expression: "Template:uw-spam([0-9]+)?"
+      expression: "Predefinição:Propaganda"
       groups:
-        - {superscript: "%(group)s"}
+        - []
       icon: 
         label: spam
-        tooltip: Spam warning
+        tooltip: Alerta de Spam
         style:
           border-color: "#000"
           background-color: "#f66"
           box-shadow-color: "#600"
     copyright warning: #########################################################
-      expression: "Template:uw-copyright(-([a-z]+))?([0-9]+)?"
+      expression: "[[Wikipédia:OTRS/Como enviar a permissão]]"
       groups:
-        - {} # No one cares
-        - {} # No one cares
-        - {superscript: "%(group)s"}
+        - []
       icon:
         label: ©
-        tooltip: Copyright warning
+        tooltip: Aviso de VDA
         style:
           border-color: "#000"
           background-color: "#bb0"
           box-shadow-color: "#660"
     general warning: ###########################################################
-      expression: "Template:uw-"
-      groups: [] # No groups in the expression
+      expression: "Template:uw-huggle([0-9]+)"
+      groups: {superscript: "%(group)s"}
       icon:
-        label: warn
-        tooltip: General warning
+        label: alerta
+        tooltip: Alerta geral
         style:
           border-color: "#000"
           background-color: "#f66"
           box-shadow-color: "#600"
     deletion notification: #####################################################
-      expression: "Template:(proposed del.*?|prod|afd|.*?delet.*?)"
+      expression: "[[Wikipedia:Eliminação por votação|eliminação por votação]]"
       groups: []
       icon:
-        label: del
-        tooltip: Notification of deletion proposal
+        label: EV
+        tooltip: Notificação de eliminação por votação
         style:
           border-color: "#aaf"
           background-color: "#fff"
           box-shadow-color: "#aaf"
     csd notification: ##########################################################
-      expression: "Template.*?csd|db-|speedy"
+      expression: "Predefinição:Aviso-ER"
       groups: []
       icon: 
-        label: csd
-        tooltip: Notification of speedy deletion
+        label: ER
+        tooltip: Notificação de eliminação rápida
         style:
           border-color: "#bb0"
           background-color: "#ff0"
           box-shadow-color: "#bb0"
-    articles for creation: #####################################################
-      expression: "Template:afc"
+     welcome message: ###########################################################
+      expression: "Predefinição:Bem vindo(a)"
       groups: [] # No groups in the expression
       icon:
-        label: "afc"
-        tooltip: Articles for Creation
-        style:
-          border-color: "#bb0"
-          background-color: "#ff0"
-          box-shadow-color: "#bb0"
-    teahouse invitation: #######################################################
-      expression: "Template:teahouse"
-      groups: [] # No groups in the expression
-      icon:
-        label: TH
-        tooltip: Teahouse invitation
-        style:
-          border-color: "#6d6"
-          background-color: "#9f9"
-          box-shadow-color: "#6d6"
-    welcome message: ###########################################################
-      expression: "Template:w-[a-z]+|welcome|First article"
-      groups: [] # No groups in the expression
-      icon:
-        label: W
-        tooltip: Welcome message
+        label: boas vindas
+        tooltip: Mensagem de Boas vindas
         style:
           border-color: "#66f"
           background-color: "#eef"
@@ -213,210 +189,157 @@ talk_threads:
 user_actions:
   display:
     - send message
-    - invite to teahouse
     - report abuse
   actions:
     send message:
-      label: send message
+      label: enviar mensagem
       description: >
-        Posts a new message on 
-        [[User:%(user_name)s|%(user_name)s]]'s 
-        [[User_talk:%(user_name)s|talk page]].
-      summary: "%(snuggler)s sent a message to %(user)s"
+        Enviar uma mensagem na
+        [[Usuário(a)_Discussão:%(user_name)s|página de discussão]]
+	de [[Usuário(a):%(user_name)s|%(user_name)s]]
+        .
+      summary: "%(snuggler)s enviou uma mensagem para %(user)s"
       fields:
         - # header
           name: header
-          label: Header
+          label: Título
           type: text
-          tooltip: a header for the message
-          default: "Hello %(user_name)s"
+          tooltip: um título para a mensagem
+          default: "Olá %(user_name)s"
         - # message
           name: message
-          label: Message
+          label: Mensagem
           type: textarea
-          tooltip: the body of the message
+          tooltip: o corpo da mensagem
       operations:
         - #Appends the message to the user's talk page
           type: append
-          page_name: "User_talk:%(user_name)s"
+          page_name: "Usuário(a)_Discussão:%(user_name)s"
           markup: "==%(header)s==\n%(message)s ~~~~"
           comment: "%(header)s"
-    invite to teahouse:
-      label: invite to teahouse
-      description: >
-        Posts an invitation to the [[WP:Teahouse]] on 
-        [[User:%(user_name)s|%(user_name)s]]'s 
-        [[User_talk:%(user_name)s|talk page]].
-      summary: "%(snuggler)s invited %(user)s to the teahouse"
-      fields:
-        - # template
-          name: template
-          label: Template
-          type: radio
-          tooltip: the template to be used for the invitation.
-          default: :Wikipedia:Teahouse/Invitation
-          options:
-            - # Standard invitation
-              label: Invitation
-              value: :Wikipedia:Teahouse/Invitation
-              tooltip: The standard invitation template.
-            - # Optional other invitiation style
-              label: Invitation2
-              value: :Wikipedia:Teahouse/Invitation2
-              tooltip: An alternative invitation template.
-        - # header
-          name: header
-          label: Header
-          type: text
-          tooltip: a header for the message
-          default: "You're invited to the [[WP:Teahouse|Teahouse]]."
-        - # message
-          name: message
-          label: Message
-          type: textarea
-          tooltip: the body of the message
-      operations:
-        - # Appends the template to the user's talk page
-          type: append
-          page_name: "User_talk:%(user_name)s"
-          markup: "==%(header)s==\n{{subst%(template)s|message=%(message)s|sign=~~~~}}"
-          comment: "%(header)s"
     report abuse:
-      label: report abuse
+      label: pedir bloqueio
       description: >
-        Reports vandals and spammers to admins via the 
-        [[WP:AIV|Administrator's notice board]]. Use only for
-        <b>obvious</b> and <b>persistent</b> cases. Please review
-        [[WP:Spam]], [[WP:Vandaism]] and the [[AIV Guide]].
-      summary: "%(snuggler)s reported %(user)s to administrators"
+        Pedir bloqueios via 
+        [[WP:AIV|Administrator's notice board]]. Use apenas para
+        casos <b>óbvios</b> e <b>persistentes</b>.
+      summary: "%(snuggler)s solicitou o bloqueio de %(user)s para os administradores"
       fields:
         - # reason
-          name: reason
+          name: razão
           type: "text"
-          label: Reason for listing <small>(optional, keep it brief)</small>
-          tooltip: the reason that %(user_name)s is being reported
+          label: Indique sua razão<small>(seja sucinto)</small>
+          tooltip: a razão pela qual %(user_name)s deve ser bloqueado
       operations:
         - # Appends a list item to the bottom of AIV
           type: append
-          page_name: Wikipedia:Administrator_intervention_against_vandalism
-          markup: "* {{Vandal|%(user_name)s}} %(reason)s ~~~~"
-          comment: "Reporting [[User:%(user_name)s]] for %(reason)s"
+          page_name: Wikipédia:Pedidos/Bloqueio
+          markup: "{{subst:bloquear|%(user_name)s|2=%(reason)s}}"
+          comment: "Solicitando bloqueio de [[User:%(user_name)s]] por %(reason)s"
 
 # Namespaces are configurable for MediaWiki installations.  This datastructure
 # describes the configuration of the English Wikipedia.  Note that the Main 
 # namespace has an empty prefix
 namespaces:
   -2:
-    name: Media
+    name: Multimédia
     prefixes:
-      - "Media:"
+      - "Multimédia:"
   -1:
-    name: Special
+    name: Domínio Especial
     prefixes:
-      - "Special:"
+      - "Especial:"
   0:
-    name: Articles
+    name: Domínio Principal
     prefixes:
       - ""
   1:
-    name: Talk
+    name: Página de Discussão
     prefixes:
-      - "Talk:"
+      - "Discussão:"
   2:
-    name: User
+    name: Página de usuário
     prefixes:
-      - "User:"
+      - "Usuário(a):"
   3:
-    name: User talk
+    name: Página de discussão do usuário
     prefixes:
-      - "User_talk:"
+      - "Usuário(a)_Discussão:"
   4:
-    name: Wikipedia
+    name: Domínio Wikipédia
     prefixes:
-      - "Wikipedia:"
+      - "Wikipédia:"
       - "Project:"
       - "WP:"
   5:
-    name: Wikipedia_talk
+    name: Wikipédia Discussão
     prefixes:
-      - "Wikipedia_talk:"
+      - "Wikipédia_Discussão:"
       - "Project_talk:"
       - "WT:"
   6:
-    name: File
+    name: Ficheiro
     prefixes:
-      - "File:"
+      - "Ficheiro:"
       - "Image:"
   7:
-    name: File_talk
+    name: Ficheiro Discussão
     prefixes:
-      - "File_talk:"
+      - "Ficheiro_Discussão:"
       - "Image_talk:"
   8:
-    name: Mediawiki
+    name: Domínio Mediawiki
     prefixes:
       - "Mediawiki:"
   9:
-    name: Mediawiki_talk
+    name: MediaWiki Discussão
     prefixes:
-      - "Mediawiki_talk:"
+      - "MediaWiki_Discussão:"
   10:
-    name: Template
+    name: Domínio Predefinição
     prefixes:
-      - "Template:"
+      - "Predefinição:"
   11:
-    name: Template_talk
+    name: Predefinição Discussão
     prefixes:
-      - "Template_talk:"
+      - "Predefinição_Discussão:"
   12:
-    name: Help
+    name: Domínio Ajuda
     prefixes:
-      - "Help:"
+      - "Ajuda:"
   13:
-    name: Help_talk
+    name: Ajuda Discussão
     prefixes:
-      - "Help_talk:"
+      - "Ajuda_Discussão:"
   14:
-    name: Category
+    name: Domínio Categoria
     prefixes:
-      - "Category:"
+      - "Categoria:"
   15:
-    name: Category_talk
+    name: Categoria Discussão
     prefixes:
-      - "Category_talk:"
+      - "Categoria_Discussão:"
   100:
-    name: Portal
+    name: Domínio Portal
     prefixes:
       - "Portal:"
   101:
-    name: Portal_talk
+    name: Portal Discussão
     prefixes:
-      - "Portal_talk:"
-  108:
-    name: Book
+      - "Portal_Discussão:"
+  104:
+    name: Domínio Livro
     prefixes:
-      - "Book:"
-  446:
-    name: Education_program
+      - "Livro:"
+  105:
+    name: Livro Discussão
     prefixes:
-      - "Education_program:"
-  447:
-    name: Education_program_talk
-    prefixes:
-      - "Education_program_talk:"
-  710:
-    name: Timedtext
-    prefixes:
-      - "Timedtext:"
-  711:
-    name: Timedtext_talk
-    prefixes:
-      - "Timedtext_talk:"
+      - "Livro_Discussão:"
   828:
-    name: Module
+    name: Módulo Lua
     prefixes:
-      - "Module:"
+      - "Módulo:"
   829:
-    name: Module_talk
+    name: Módulo Discussão
     prefixes:
-      - "Module_talk:"
+      - "Módulo_Discussão:"

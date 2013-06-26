@@ -1,0 +1,168 @@
+<html>
+<head>
+	<base href="/" target="_blank">
+	<link rel="stylesheet" href="css/general.css" />
+	<link rel="stylesheet" href="css/revisions.css" />
+	<link rel="stylesheet" href="css/threads.css" />
+	<link rel="stylesheet" href="css/document.css" />
+</head>
+<body>
+<div class="document help_content">
+<p class="version">
+Snuggle versão: 1.1
+</p>
+<h1>Guia Rápido</h1>
+<p class="note">Veja a <a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">documentação completa aqui</a></p>
+<p>
+	O Snuggle foi desenvolvido para ajudá-lo a identificar editores novatos desejáveis.
+	A interface lista todas os novos usuários registrados nos últimos 30 dias junto de 
+	suas contribuições e mensagens em páginas de discussão.
+</p>
+
+<h2>Interface do usuário</h2>
+<div class="figures center"> <!-- Big center layout -->
+
+<div class="figure">
+	<a class="pane" target="_blank" href="img/controls.callout.png">
+		<img src="img/controls.callout.400.png">
+	</a>
+	<div class="caption" style="width: 400px;">
+		<b>Figura 1. Controles.</b> 
+		<ol type="A">
+			<li>Lista de usuários selecionados manualmente
+				<ul>
+					<li><b>não categorizado</b> - Novos usuários que ainda não foram categorizados. </li>
+					<li><b>boa fé</b> - Novos usuários que está pelo menos tentando fazer algo produtivo.</li>
+					<li><b>ambíguo</b> - Novos usuários cujas motivações não estão claras.</li>
+					<li><b>má fé</b> - Novos usuários que aparentam não estarem tentando ser produtivos.</li>
+				</ul>
+			</li>
+			<li>Número mínimo de edições.</li>
+			<li>O domínio onde o mínimo de edições foram feitas.</li>
+			<li>Critérios para ordenar usuários
+				<ul>
+					<li><b>desejabilidade</b> - Índice gerado automaticamente com a probabilidade do usuário estar editando com boa fé.</li>
+					<li><b>data de registro</b> - Data de registro do usuário.</li>
+					<li><b>última atividade</b> - Data da última edição do usuário.</li>
+					<li><b>edições revertidas</b> - Número de edições do usuário que foram revertidas.</li>
+					<li><b>total de edições</b> - Número total de edições do usuário.</li>
+				</ul>
+			</li>
+			<li>Direção para ordenar usuários.  Isso lhe permite inverter a order de qualquer critério de ordenação.</li>
+		</ol>
+	</div>
+</div>
+
+<div class="figure">
+	<a class="pane" target="_blank" href="img/user.callout.png">
+		<img src="img/user.callout.400.png" />
+	</a>
+	<div class="caption" style="width: 400px;">
+		<b>Figura 2. Usuário Expandido.</b>
+		<ol type="A">
+			<li>Metados e estatísticas da conta de usuário.
+				<ul>
+					<li>Nome de usuário</li>
+					<li>Nome - Discussão - Contribuições</li>
+					<li>Data de registro</li>
+					<li>Última atividade</li>
+					<li># de vezes visto no Snuggle</li>
+					<li>Gráfico com número de revisões</li>
+					<li># de edições revertidas (feitas por outro usuário)</li>
+				</ul>
+			</li>
+			<li>
+				Atividade da Página de Discussão.  Certos tipos de mensagem são marcadas com um ícone 
+				e.g.:
+				<ul>
+					<li>
+						<span class="thread_icon deletion" title="Proposed for deletion"></span>
+						Eliminação semirrápida
+					</li>
+					<li>
+						<span class="thread_icon warning level_2" title="Level 2 warning"></span>
+						Avisos de nível 2
+					</li>
+					<li>
+						<span class="thread_icon welcome" title="Welcome"></span>
+						Mensagem de boas vindas 
+					</li>
+					<li>
+						<span class="thread_icon csd" title="Criteria for speedy deletion"></span>
+						Eliminação rápida
+					</li>
+					<li>
+						<span class="thread_icon" title="General discussion"></span>
+						Discussões gerais
+					</li>
+				</ul>
+			</li>
+			<li>Botões de categorização. Eles irão mover o usuário para a lista de uma categoria (explicadas abaixo).</li>
+			<li>
+				Gráfico interativo de contribuições nos primeiros 30 dias.
+				Cores diferentes representam diferentes domínios. E.g.:
+				<ul>
+					<li>Principal <span class="revision ns_0"></span></li>
+					<li>Discussão <span class="revision ns_1"></span></li>
+					<li>Usuário(a) <span class="revision ns_2"></span></li>
+					<li>Usuário(a) Discussão <span class="revision ns_3"></span></li>
+					<li>Wikipédia <span class="revision ns_4"></span></li>
+					<li>Wikipédia Discussão <span class="revision ns_5"></span></li>
+				</ul>
+				Revisões revertidas por outro editor são marcadas com um ponto (<span class="revision ns_0 reverted"></span>).
+				Auto reversões tem um ponto vazado (<span class="revision ns_0 reverted self"></span>)
+			</li>
+		</ol>
+	</div>
+</div><!-- /figure 3 -->
+
+</div> <!-- /big center layout -->
+
+
+<h2>Atalhos de teclado</h2>
+<p>
+	Você pode utilizar o mouse para realizar todas as ações,
+	mas também dispõe de atalhos de teclado para realizar algumas
+	ações comuns em velocidade maior.
+</p>
+<b>Seleção de usuário</b>
+<dd>
+	<span class="key">Page Up</span> move para cima e 
+	<span class="key">Page Down</span> move para baixo
+</dd>
+<b>Seleção de revisão (no gráfico)</b>
+<dd>
+	As setas: 
+		<span class="key">&uarr;</span>, 
+		<span class="key">&rarr;</span>, 
+		<span class="key">&darr;</span> e 
+		<span class="key">&larr;</span>
+</dd>
+<b>Categorizar o usuário selecionado</b>
+<dd>
+	Teclas numéricas: 
+	<span class="key">#1</span> para "boa fé", 
+	<span class="key">#2</span> para "ambíguo" e 
+	<span class="key">#3</span> para "má fé"
+</dd>
+
+<h2>Veja também:</h2>
+<ul>
+	<li>
+		A 
+		<a target="_blank" href="http://en.wikipedia.org/wiki/WP:Snuggle">documentação completa</a>
+	</li>
+	<li>
+		O 
+		<a target="_blank" href="https://bitbucket.org/grouplens/snuggle">Repositório do Código-fonte</a>
+		e
+		<a target="_blank" href="https://bitbucket.org/grouplens/snuggle/issues">Bug tracker</a>
+	</li>
+	<li>
+		Página de usuário do  
+		<a target="_blank" href="http://en.wikipedia.org/wiki/User:EpochFail">desenvolvedor</a>
+	</li>
+</ul>
+</div>
+</body>
+</html>
