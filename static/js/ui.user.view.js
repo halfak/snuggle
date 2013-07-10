@@ -246,7 +246,8 @@ ui.User.View.Info.Actions = ui.Dropper.extend({
 		this.menu = new ui.ActionMenu(this.model, actions)
 		this._super({
 			tooltip: "User actions menu -- click to expand",
-			content: this.menu.node
+			content: this.menu.node,
+			label: "actions"
 		})
 		this.changed.attach(this._handle_changed.bind(this))
 		
