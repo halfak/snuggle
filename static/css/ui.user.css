@@ -72,7 +72,7 @@ div.user div.info .name{
 		display: block;
 	}
 	
-	div.user div.info .name div.status {
+	div.user div.info .name > div.status {
 		display: inline-block;
 		border: .4em solid #000;
 		border-color: transparent transparent transparent #000;
@@ -81,7 +81,7 @@ div.user div.info .name{
 		margin-right: .5em;
 	}
 	
-	div.user.expanded div.info .name div.status {
+	div.user.expanded div.info .name > div.status {
 		border-color: #000 transparent transparent transparent;
 		border-width: .5em .4em 0px .4em;
 	}
