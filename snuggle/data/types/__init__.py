@@ -13,7 +13,7 @@ from .reverted import Reverted
 from .revision import Revision, Revert, UserRevision, ChangeRevision
 from .score import Score
 from .serializable import List, Dict
-from .talk import Talk, Thread
+from .talk import Talk, Thread, Trace
 from .user import User, Snuggler
 from .user_action import ActionRequest, OperationResult
 from .user_action import ReplacePreview, AppendPreview

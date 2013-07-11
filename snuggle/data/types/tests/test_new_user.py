@@ -8,7 +8,7 @@ from ..new_user import NewUser
 from ..page import Page
 from ..revision import UserRevision
 from ..score import Score
-from ..talk import Talk, Thread
+from ..talk import Talk, Thread, Trace
 from ..user import User, Snuggler
 
 
@@ -60,7 +60,7 @@ def test_complete_constructor():
 	for score in scores:
 		desirability.add_score(score)
 	
-	talk = Talk(123456, [Thread("Quit derping", ["vandal", "level_2"])])
+	talk = Talk(123456, [Thread("Quit derping", Trace("vandal warning", {}))])
 	category = Category([Categorization(Snuggler(12, "Herp"), "ambiguous")])
 	
 	new_user = NewUser(

@@ -17,7 +17,7 @@ class Changes(Synchronizer):
 	
 	TODO: threading talk requests
 	"""
-	def __init__(self, model, changes, mwapi, 
+	def __init__(self, model, changes, mwapi,
 		     loop_delay, changes_per_request, max_age, 
 		     starting_rcid, starting_timestamp):
 		"""
@@ -34,9 +34,9 @@ class Changes(Synchronizer):
 		self.daemon = True
 		
 		# Resources
-		self.model   = model
-		self.changes = changes
-		self.mwapi   = mwapi
+		self.model         = model
+		self.changes       = changes
+		self.mwapi         = mwapi
 		
 		# Behavioral parameters
 		self.loop_delay = loop_delay

@@ -163,7 +163,8 @@ class Users:
 	
 	def update_talk(self, user_id, rev_id, markup):
 		rev_id = rev_id if rev_id != None else 0
-		threads = mediawiki.threads.parse(markup)
+		threads = self.mongo.thread_parser.parse(markup)
+		#threads = mediawiki.threads.parse(markup) Old version
 		
 		talk = types.Talk(rev_id, threads)
 		

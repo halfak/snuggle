@@ -101,7 +101,6 @@ talk_threads:
       groups:
         - {superscript: "%(group)s"}
       icon: 
-        label: spam
         tooltip: Spam warning
         style:
           border-color: "#000"
@@ -132,7 +131,8 @@ talk_threads:
           box-shadow-color: "#600"
     deletion notification: #####################################################
       expression: "Template:(proposed del.*?|prod|afd|.*?delet.*?)"
-      groups: []
+      groups:
+        - {} # No one cares
       icon:
         label: del
         tooltip: Notification of deletion proposal
@@ -142,7 +142,7 @@ talk_threads:
           box-shadow-color: "#aaf"
     csd notification: ##########################################################
       expression: "Template.*?csd|db-|speedy"
-      groups: []
+      groups: [] # No groups in the expression
       icon: 
         label: csd
         tooltip: Notification of speedy deletion

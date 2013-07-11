@@ -6,12 +6,15 @@ from .users import Users
 from .reverteds import Reverteds
 from .scores import Scores
 
+from snuggle.mediawiki import threads
+
 logger = logging.getLogger("snuggle.data.models.mongo")
 
 class Mongo:
 	
-	def __init__(self, db):
-		self.db          = db
+	def __init__(self, db, thread_parser):
+		self.db            = db
+		self.thread_parser = thread_parser
 		
 		self.changes   = Changes(self)
 		self.events    = Events(self)
@@ -39,6 +42,7 @@ class Mongo:
 			pymongo.Connection(
 				host=config.snuggle['model']['host'],
 				port=config.snuggle['model']['port']
-			)[config.snuggle['model']['database']]
+			)[config.snuggle['model']['database']],
+			threads.Parser.from_config(config)
 		)
 	

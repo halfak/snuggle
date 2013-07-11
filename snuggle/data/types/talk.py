@@ -1,9 +1,14 @@
 from . import serializable
 
+class Trace(serializable.Type):
+	def __init__(self, name, modifications=None):
+		self.name = name
+		self.modifications = modifications if modifications != None else {}
+
 class Thread(serializable.Type):
-	def __init__(self, title, classes=None):
+	def __init__(self, title, trace=None):
 		self.title = unicode(title)
-		self.classes = list(classes) if classes != None else None
+		self.trace = Trace.deserialize(trace) if trace != None else None
 
 class Talk(serializable.Type):
 	
