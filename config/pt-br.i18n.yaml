@@ -1,0 +1,117 @@
+last_updated: "Jun 25th, 2013"
+author: 
+  name: Aaron Halfaker / Henrique Andrade
+  email: aaron.halfaker@gmail.com / henriquedeandrade@gmail.com
+  url: http://halfaker.info
+
+lang: pt-br
+
+"✔": "✔"
+"?": "?"
+"✗": "✗"
+
+all: todos
+all events: todos eventos
+as: como
+
+ambiguous: ambíguo
+any page: qualquer página
+ascending: subindo
+
+bad-faith: má fé
+by: por
+by user: pelo usuário
+
+categorizations: categorizações
+Categorize: Categorizar
+categorized: categorizado
+categorize this user based on their activity: categorize esse usuário baseado em sua atividade
+Checking for previous session...: Checando sessões anteriores...
+click here to log in.: clique aqui para Entrar.
+click here to log out.: clique aqui para Sair.
+contribs: contribuições
+
+days since registration: dias desde o registro
+descending: descendo
+desirability: desejabilidade
+
+edits: edições
+edits to: edições para
+
+good-faith: boa fé
+
+help: ajuda
+history: histórico
+
+Interactive edit graph: Interactive edit graph
+"Its unclear whether this editor is trying to be productive or not (or press #2)": "Não é claro se esse usuário está tentando ser produtivo ou não (ou aperte #2)"
+
+last activity: última atividade
+load up the list of newcomers: carregar a lista de novatos
+Loading...: Carregando...
+Logged in as: Acessado como
+Log into your wiki account.: Entra com sua conta wiki.
+Log out of Snuggle?: Sair do Snuggle?
+log in: Entrar
+log out: Sair
+
+"new users that haven't been categorized yet": "novatos que ainda não foram categorizados"
+new users that have been categorized as good-faith: novatos que foram categorizados como de boa fé
+new users that have been categorized as ambiguous: novatos que foram categorizados como ambíguos
+new users that have been categorized as bad-faith: novatos que foram categorizados como de má fé
+newcomers with more than: novatos com mais de
+Not logged in...: Não logado...
+
+Password: Senha
+
+Recent activity: Atividade recente
+registered: registrado
+registration date: data de registro
+reverted: revertida
+reverted edits: edições revertidas
+revisions: revisões
+
+self-reverted: auto-revertida
+Snuggle: Snuggle
+Snuggler: Snuggler
+sort in increasing order: ordenar em ordem crescente
+sort in descreasing order: ordenar em ordem decrescente
+sorted by: ordenado por
+start snuggle: iniciar snuggle
+server started: servidor inciado
+server stopped: servido parado
+system events: eventos do sistema
+
+<<<<<<< local
+talk: talk
+Talk page activity: Talk page activity
+This user has not been categorized yet.: This user has not been categorized yet.
+"This user is at least trying to do something useful (or press #1)": "This user is at least trying to do something useful (or press #1)"
+"This editor is trying to cause harm or be disruptive (or press #3)": "This editor is trying to cause harm or be disruptive (or press #3)"
+total edits: total edits
+=======
+talk: discussão
+This user has not been categorized yet.: Esse usuário ainda não foi categorizado.
+"This user is at least trying to do something useful (or press #1)": "Esse usuário está ao menos tentando fazer algo util (ou aperte #1)"
+"This editor is trying to cause harm or be disruptive (or press #3)": "Esse editor está tentando causar dados (ou aperte #3)"
+total edits: total de edições
+>>>>>>> other
+
+<<<<<<< local
+uncategorized: uncategorized
+user: user
+user actions: user actions
+Username: Username
+Username and stats: Username and stats
+=======
+uncategorized: não categorizado
+user: usuário
+user actions: ações do usuário
+Username: Nome de usuário
+>>>>>>> other
+
+views: visualizações
+
+You must log in before categorizing users.: Você deve entrar antes de categorizar usuários.
+your wiki username: seu nome de usuário wiki
+your wiki password: sua senha wiki.
