@@ -407,7 +407,7 @@ ui.User.View.Talk.Thread = Class.extend({
 			.addClass("thread")
 		
 		if(trace){
-			var icon = new ui.User.View.Talk.Thread.TraceIcon(trace.name, trace.modification)
+			var icon = new ui.User.View.Talk.Thread.TraceIcon(trace.name, trace.modifications)
 		}else{
 			var icon = new ui.User.View.Talk.Thread.NoTraceIcon()
 		}
@@ -464,8 +464,10 @@ ui.User.View.Talk.Thread.TraceIcon = Class.extend({
 					}
 				}
 			}
+			
 			for(var name in modifications){
 				var value = modifications[name]
+				console.log()
 				if(name == "label"){
 					this.label.node.html(value)
 				}else if(name == "superscript"){

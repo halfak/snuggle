@@ -88,38 +88,47 @@ talk_threads:
     vandal warning: ############################################################
       expression: "Template:uw-vandalism([0-9]+)?"
       groups:
-        - {superscript: "%(group)s"}
+        - {
+          superscript: "%(group)s",
+          tooltip: "Vandalism warning -- level %(group)s",
+        }
       icon: 
         label: vand
         tooltip: Vandalism warning
         style:
           border-color: "#000"
-          box-shadow-color: "#600"
-          background-color: "#f66"
+          background-color: "#f99"
+          box-shadow-color: "#000"
     spam warning: ##############################################################
       expression: "Template:uw-spam([0-9]+)?"
       groups:
-        - {superscript: "%(group)s"}
+        - {
+          superscript: "%(group)s",
+          tooltip: "Spam warning -- level %(group)s",
+        }
       icon: 
         label: spam
         tooltip: Spam warning
         style:
           border-color: "#000"
-          background-color: "#f66"
-          box-shadow-color: "#600"
+          background-color: "#f99"
+          box-shadow-color: "#000"
     copyright warning: #########################################################
       expression: "Template:uw-copyright(-([a-z]+))?([0-9]+)?"
       groups:
         - {} # No one cares
         - {} # No one cares
-        - {superscript: "%(group)s"}
+        - {
+          superscript: "%(group)s",
+          tooltip: "Copyright warning -- level %(group)s",
+        }
       icon:
         label: ©
         tooltip: Copyright warning
         style:
           border-color: "#000"
-          background-color: "#bb0"
-          box-shadow-color: "#660"
+          background-color: "#dd0"
+          box-shadow-color: "#000"
     general warning: ###########################################################
       expression: "Template:uw-"
       groups: [] # No groups in the expression
@@ -128,7 +137,7 @@ talk_threads:
         tooltip: General warning
         style:
           border-color: "#000"
-          background-color: "#f66"
+          background-color: "#f99"
           box-shadow-color: "#000"
     deletion notification: #####################################################
       expression: "Template:(proposed del.*?|prod|afd|.*?delet.*?)"
