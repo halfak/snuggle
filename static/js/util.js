@@ -1,5 +1,5 @@
 util = {
-	LINK_RE: /\[\[([^\]|]+)(\|([^\]]+))?\]\]/g,
+	LINK_RE: /\[\[([^\]|]+)(\|:?([^\]]+))?\]\]/g,
 	link_replace: function(match, page_name, _, display){
 		return util.htmlify(util.wiki_link(page_name, display))
 	},

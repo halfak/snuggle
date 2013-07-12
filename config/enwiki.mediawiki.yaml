@@ -90,7 +90,7 @@ talk_threads:
       groups:
         - {superscript: "%(group)s"}
       icon: 
-        label: vandal
+        label: vand
         tooltip: Vandalism warning
         style:
           border-color: "#000"
@@ -101,6 +101,7 @@ talk_threads:
       groups:
         - {superscript: "%(group)s"}
       icon: 
+        label: spam
         tooltip: Spam warning
         style:
           border-color: "#000"

@@ -389,7 +389,7 @@ ui.User.View.Talk = ui.RevisionGraph.extend({
 			var thread = this.model.talk.threads[i]
 			var talk_thread = new ui.User.View.Talk.Thread(
 				thread.title,
-				thread.classes
+				thread.trace
 			)
 			
 			this.threads.node.append(talk_thread.node)
@@ -400,22 +400,87 @@ ui.User.View.Talk = ui.RevisionGraph.extend({
 	}
 })
 ui.User.View.Talk.Thread = Class.extend({
-	init: function(title, classes){
+	init: function(title, trace){
 		title = title || ""
-		classes = classes || []
 		
 		this.node = $("<div>")
 			.addClass("thread")
 		
-		icon = $("<dt>")
-			.attr('title', classes.join(", "))
-			.addClass("thread_icon")
-			.addClass(classes.join(" "))
+		if(trace){
+			var icon = new ui.User.View.Talk.Thread.TraceIcon(trace.name, trace.modification)
+		}else{
+			var icon = new ui.User.View.Talk.Thread.NoTraceIcon()
+		}
 		
-		this.node.append(icon)
-		this.node.append($('<dd>').text(title))
+		
+		this.node.append(icon.node)
+		this.node.append($('<dd>').html(util.linkify(title)))
 		
 		this.clicked = new Event(this)
+	}
+})
+ui.User.View.Talk.Thread.NoTraceIcon = Class.extend({
+	init: function(){
+		this.node = $("<dt>")
+			.addClass("trace_icon")
+			.addClass("no_trace")
+	}
+})
+ui.User.View.Talk.Thread.TraceIcon = Class.extend({
+	init: function(name, modifications){
+		this.node = $("<dt>")
+			.addClass("trace_icon")
+		
+		this.label = {
+			node: $("<span>")
+				.addClass("label")
+		}
+		this.node.append(this.label.node)
+		this.superscript = {
+			node: $("<span>")
+				.addClass("superscript")
+		}
+		this.node.append(this.superscript.node)
+		
+		var config_doc = configuration.mediawiki.talk_threads.traces[name]
+		if(!config_doc){
+			this.node.addClass("unknown")
+				.attr('title', i18n.get("Unknown conversation type") + ": " + name)
+		}else{
+			this.node.attr('title', config_doc.icon.tooltip)
+			if(config_doc.icon.label){
+				this.label.node.html(config_doc.icon.label)
+			}
+			if(config_doc.icon.superscript){
+				this.superscript.node.html(config_doc.icon.superscript)
+			}
+			if(config_doc.icon.style){
+				for(var property in config_doc.icon.style){
+					var value = config_doc.icon.style[property]
+					if(property == "box-shadow-color"){
+						this.node.css("box-shadow", "0px 0px 4px " + value)
+					}else{
+						this.node.css(property, value)
+					}
+				}
+			}
+			for(var name in modifications){
+				var value = modifications[name]
+				if(name == "label"){
+					this.label.node.html(value)
+				}else if(name == "superscript"){
+					this.superscript.node.html(value)
+				}else if(name == "tooltip"){
+					this.node.attr('title', value)
+				}else{
+					if(property == "box-shadow-color"){
+						this.node.css("box-shadow", "0px 0px 4px " + value)
+					}else{
+						this.node.css(property, value)
+					}
+				}
+			}
+		}
 	}
 })
 	
