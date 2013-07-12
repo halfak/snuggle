@@ -129,7 +129,7 @@ talk_threads:
         style:
           border-color: "#000"
           background-color: "#f66"
-          box-shadow-color: "#600"
+          box-shadow-color: "#000"
     deletion notification: #####################################################
       expression: "Template:(proposed del.*?|prod|afd|.*?delet.*?)"
       groups:
