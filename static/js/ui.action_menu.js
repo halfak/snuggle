@@ -451,7 +451,7 @@ ui.EditPreview = Class.extend({
 })
 
 ui.UserAction = Class.extend({
-	init: function(name, description, fields, opts){
+	init: function(name, label, description, fields, opts){
 		opts = opts || {}
 		
 		this.name = name
@@ -460,7 +460,7 @@ ui.UserAction = Class.extend({
 			node: $("<div>")
 				.addClass("handle")
 				.addClass("clickable")
-				.append($("<span>").append(name))
+				.append($("<span>").append(label))
 				.click(this._handle_click.bind(this))
 				.attr("title", opts.tooltip || "")
 		}
@@ -536,7 +536,7 @@ ui.UserAction = Class.extend({
 		}
 	}
 })
-ui.UserAction.from_doc = function(doc, formatting){
+ui.UserAction.from_doc = function(name, doc, formatting){
 	var fields = []
 	for(var i=0;i<doc.fields.length;i++){
 		var field_doc = doc.fields[i]
@@ -544,6 +544,7 @@ ui.UserAction.from_doc = function(doc, formatting){
 		fields.push(ui.Field.from_doc(doc.fields[i], formatting))
 	}
 	return new ui.UserAction(
+		name, 
 		doc.label,
 		util.linkify((doc.description || "").format(formatting)),
 		fields,

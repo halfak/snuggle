@@ -1,0 +1,25 @@
+<VirtualHost *:80>
+	ServerAdmin aaron.halfaker@gmail.com
+	ServerName pt-snuggle.instance-proxy.wmflabs.org
+	DocumentRoot /sites/pt-snuggle.labs.wmf
+	
+	# WSGI Settings
+	WSGIScriptAlias / /sites/pt-snuggle.labs.wmf/pt-snuggle.labs.wsgi
+	
+	WSGIDaemonProcess pt-snuggle.labs.wmf \
+		python-path=/sites/pt-snuggle.labs.wmf \
+		python-eggs=/var/cache/apache2/python-eggs/pt-snuggle
+	
+	WSGIApplicationGroup %{GLOBAL}
+	
+	AllowEncodedSlashes On
+	
+	<Directory />
+		AuthType Basic
+		AuthName "Snuggle for pt"
+		# (Following line optional)
+		AuthBasicProvider file
+		AuthUserFile /sites/pt-snuggle.labs.wmf/.htpasswd-private
+		Require valid-user
+	</Directory>
+</VirtualHost>

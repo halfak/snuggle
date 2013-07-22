@@ -69,6 +69,7 @@ class Processor:
 		static_dir = os.path.expanduser(
 			os.path.join(config.snuggle['root_directory'], "static")
 		)
+		
 		mwapi = mediawiki.API.from_config(config)
 		user_actions = mediawiki.UserActions.from_config(config)
 		return Processor(

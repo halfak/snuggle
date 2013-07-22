@@ -139,7 +139,7 @@ ui.UserFilters.Filters = Class.extend({
 		this.namespace = new ui.SelectField(
 			"namespace",
 			[
-				{value: i18n.get("all"), label: i18n.get("any page")},
+				{value: "all", label: i18n.get("any page")},
 				{value: 0,    label: configuration.mediawiki.namespaces[0].name},
 				{value: 1,    label: configuration.mediawiki.namespaces[1].name},
 				{value: 2,    label: configuration.mediawiki.namespaces[2].name},

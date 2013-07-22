@@ -238,7 +238,7 @@ ui.User.View.Info.Actions = ui.Dropper.extend({
 		actions = configuration.mediawiki.user_actions.display.map(
 			function(name){
 				var action_doc = configuration.mediawiki.user_actions.actions[name]
-				return new ui.UserAction.from_doc(action_doc, formatting)
+				return new ui.UserAction.from_doc(name, action_doc, formatting)
 			}
 		)
 		

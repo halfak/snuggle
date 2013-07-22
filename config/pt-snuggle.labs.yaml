@@ -6,7 +6,7 @@ author:
 
 # This configuration file specifies the behavior of Snuggle
 # TODO: Assume the CWD is root?
-root_directory: /sites/snuggle.grouplens.org
+root_directory: /sites/pt-snuggle.labs.wmf
 
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.
@@ -15,11 +15,11 @@ web_server:
   port: 80
   beaker:
     session.type: "file"
-    session.data_dir: "/tmp/snuggle_sessions"
+    session.data_dir: "/tmp/pt-snuggle_sessions"
     session.auto: True
     session.key: "s_id"
     # Replace with randomly generated string. See ./generate_secret
-    session.secret: 'es/C`vg3wXuL_ExZXe^jAj-M{7kXC9_dz:!8dZ0eJpp)R!mDdo'
+    session.secret: 'es/C`vg3wXuL_E435gv34dz:!8dZ0eJpp)R!mDdo'
     # 30 minutes
     session.timeout: 1800
 
@@ -32,7 +32,7 @@ web_server:
 sync_server:
   synchronizers:
     - changes_synchronizer
-    - scores_synchronizer
+    #- scores_synchronizer
 
 
 # Configuration for the data model
@@ -40,7 +40,7 @@ model:
   module: snuggle.data.models.Mongo
   host: localhost
   port: 27017
-  database: snuggle
+  database: pt-snuggle
 
 
 # The Changes Synchronizer
@@ -57,8 +57,8 @@ changes_synchronizer:
   # Limit the number of changes per request to this number
   changes_per_request: 500
   # Ignore recent changes that occurred before this id & timestamp
-  starting_rcid: 583869411
-  starting_timestamp: 1370898926
+  starting_rcid: 40294176
+  starting_timestamp: 1374105572
   # Forget users after 1 month = 60*60*24*30 = 2592000 seconds
   max_age: 2592000
 

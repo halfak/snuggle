@@ -61,7 +61,7 @@ util = {
 		return new Date() * 1
 	},
 	wiki_diff: {
-		line_re: /Line\ (([0-9]+,?)+):/,
+		line_re: /[a-z]\ (([0-9]+,?)+):/,
 		parse: function(table){
 			var trs = table.find("tr")
 			var ops = []

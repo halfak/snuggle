@@ -84,9 +84,9 @@ def run(config, debug):
 	
 	start_time = time.time()
 	event = types.ServerStarted("web")
-	model.events.insert(event)
 	
 	app, model = application(config)
+	model.events.insert(event)
 	
 	for prefixes, route in inspect_routes(app.app):
 		abs_prefix = '/'.join(part for p in prefixes for part in p.split('/'))

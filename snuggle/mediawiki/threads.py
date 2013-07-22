@@ -10,7 +10,7 @@ class TraceExtractor(object):
 		self.expression = expression
 		self.groups     = list(groups)
 		
-		assert len(self.groups) == self.expression.groups
+		assert len(self.groups) == self.expression.groups, self.name
 		
 	def extract(self, markup):
 		

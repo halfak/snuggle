@@ -74,7 +74,7 @@ ui.RevisionDetails = Class.extend({
 							this.show()
 						}
 					}else{
-						SYSTEM.mediawiki.revisions.markup(
+						servers.mediawiki.revisions.markup(
 							id,
 							function(id, markup){
 								this.diff.loading(false)

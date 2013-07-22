@@ -96,8 +96,7 @@ talk_threads:
           background-color: "#f66"
     spam warning: ##############################################################
       expression: "Predefinição:Propaganda"
-      groups:
-        - []
+      groups: []
       icon: 
         label: spam
         tooltip: Alerta de Spam
@@ -106,9 +105,8 @@ talk_threads:
           background-color: "#f66"
           box-shadow-color: "#600"
     copyright warning: #########################################################
-      expression: "[[Wikipédia:OTRS/Como enviar a permissão]]"
-      groups:
-        - []
+      expression: "\\[\\[Wikipédia:OTRS/Como enviar a permissão\\]\\]"
+      groups: []
       icon:
         label: ©
         tooltip: Aviso de VDA
@@ -118,7 +116,8 @@ talk_threads:
           box-shadow-color: "#660"
     general warning: ###########################################################
       expression: "Template:uw-huggle([0-9]+)"
-      groups: {superscript: "%(group)s"}
+      groups: 
+        - {superscript: "%(group)s"}
       icon:
         label: alerta
         tooltip: Alerta geral
@@ -127,7 +126,7 @@ talk_threads:
           background-color: "#f66"
           box-shadow-color: "#600"
     deletion notification: #####################################################
-      expression: "[[Wikipedia:Eliminação por votação|eliminação por votação]]"
+      expression: "\\[\\[Wikipedia:Eliminação por votação\\|eliminação por votação\\]\\]"
       groups: []
       icon:
         label: EV
@@ -146,8 +145,8 @@ talk_threads:
           border-color: "#bb0"
           background-color: "#ff0"
           box-shadow-color: "#bb0"
-     welcome message: ###########################################################
-      expression: "Predefinição:Bem vindo(a)"
+    welcome message: ###########################################################
+      expression: "Predefinição:Bem vindo"
       groups: [] # No groups in the expression
       icon:
         label: boas vindas
@@ -225,7 +224,7 @@ user_actions:
       summary: "%(snuggler)s solicitou o bloqueio de %(user)s para os administradores"
       fields:
         - # reason
-          name: razão
+          name: reason
           type: "text"
           label: Indique sua razão<small>(seja sucinto)</small>
           tooltip: a razão pela qual %(user_name)s deve ser bloqueado
@@ -322,6 +321,18 @@ namespaces:
     name: Domínio Portal
     prefixes:
       - "Portal:"
+  101:
+    name: Portal Discussão
+    prefixes:
+      - "Portal_Discussão:"
+  102:
+    name: Anexo
+    prefixes:
+      - "Anexo:"
+  103:
+    name: Anexo Discussão
+    prefixes:
+      - "Anexo_Discussão:"
   101:
     name: Portal Discussão
     prefixes:

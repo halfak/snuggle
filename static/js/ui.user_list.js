@@ -27,7 +27,7 @@ ui.UserList = Class.extend({
 			logger.debug("ui.user_list: delaying view of user")
 			this._view_delay = setTimeout(
 				function(){this._add_user_view(user)}.bind(this),
-				env.delays.user_view_delay
+				env.delays.user_view
 			)
 		}
 	},
