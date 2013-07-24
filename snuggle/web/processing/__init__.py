@@ -1,4 +1,6 @@
-import bottle, os.path, time, logging, traceback
+import bottle, os.path, time, logging, traceback, slimit
+
+import StringIO
 
 from snuggle import mediawiki, configuration
 from snuggle.data import types
@@ -9,6 +11,8 @@ from .config import Config
 from .snugglers import Snugglers
 from .users import Users
 from .events import Events
+from .style import Style
+from .script import Script
 
 logger = logging.getLogger("snuggle.web.processing")
 
@@ -32,6 +36,9 @@ class Processor:
 		self.events = Events(model)
 		self.snugglers = Snugglers(model, mwapi)
 		self.config = Config()
+		self.style = Style(self)
+		self.script = Script(self)
+		self.storage = {}
 	
 	def status(self):
 		return responses.success(
@@ -63,6 +70,9 @@ class Processor:
 	
 	def static_file(self, path):
 		return bottle.static_file(path, root=self.static_dir)
+		
+	def read(self, path):
+		return open(os.path.join(self.static_dir, path)).read()
 	
 	@staticmethod
 	def from_config(config, model):

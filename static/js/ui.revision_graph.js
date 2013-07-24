@@ -173,7 +173,13 @@ ui.RevisionDetails.Revision = Class.extend({
 		this.timestamp.node.text(timestamp.format('wikiDate'))
 		this.timestamp.node.attr('href', util.rev_diff_href(id))
 		
-		this.comment.node.html(util.linkify(comment || ""))
+		if(comment.trim().length > 0){
+			this.comment.node.html(util.linkify(comment || ""))
+			this.comment.node.removeClass("empty")
+		}else{
+			this.comment.node.html(i18n.get("(no edit summary)"))
+			this.comment.node.addClass("empty")
+		}
 	}
 })
 
@@ -252,7 +258,13 @@ ui.RevisionDetails.Revert = Class.extend({
 			this.user.node.text(revert.user.name)
 			this.user.node.attr('href', util.user_href(revert.user.name))
 			
-			this.comment.node.html(util.linkify(revert.comment || ""))
+			if(revert.comment.trim().length > 0){
+				this.comment.node.html(util.linkify(revert.comment || ""))
+				this.comment.node.removeClass("empty")
+			}else{
+				this.comment.node.html(i18n.get("(no edit summary)"))
+				this.comment.node.addClass("empty")
+			}
 			this.show()
 		}else{
 			this.hide()	

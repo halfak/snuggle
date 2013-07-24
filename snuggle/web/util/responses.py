@@ -63,6 +63,6 @@ def auth_error(type):
 	return error("authentication", "Authentication failed.", meta={'type': type})
 
 def unknown_user():
-	return error("unknown_user", "A user could not be found.")
+	return error("unknown_user", "No data could be found for this user.  This usually means that the user is greater than 30 days old and is no longer tracked.")
 	
 

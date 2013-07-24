@@ -190,6 +190,13 @@ div.revision_graph div.revision_details{
 	div.revision_details span.comment:after{
 		content: "\"";
 	}
+	div.revision_details span.comment.empty{
+		color: #999;
+	}
+	div.revision_details span.comment.empty:before,
+	div.revision_details span.comment.empty:after{
+		content: "";
+	}
 	div.revision_details div.diff{
 		bottom: 0px;
 		overflow: auto;
