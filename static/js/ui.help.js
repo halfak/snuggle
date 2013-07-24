@@ -23,9 +23,9 @@ ui.Help = Class.extend({
 				.addClass("tab")
 				.addClass("clickable")
 				.append($("<span>").html(i18n.get("help")))
+				.click(this._handle_click.bind(this))
 		}
 		this.node.append(this.tab.node)
-		this.tab.node.click(this._handle_click.bind(this))
 		
 		$("body").click(this._handle_body_click.bind(this))
 		$(window).resize(this._handle_window_resize.bind(this))
@@ -38,7 +38,7 @@ ui.Help = Class.extend({
 	},
 	_handle_window_resize: function(e){
 		if(this.expanded()){
-			this.pane.node.css('height', $(window).innerHeight() - 30)
+			this.pane.node.css('height', window.innerHeight - 30)
 		}
 	},
 	toggle: function(){
@@ -49,12 +49,14 @@ ui.Help = Class.extend({
 			return this.node.hasClass("expanded")
 		}else{
 			if(expand){
+				logger.debug("ui.help: expanding")
 				this.pane.node.animate(
-					{"height": $(window).innerHeight() - 30},
+					{"height": window.innerHeight - 30},
 					200
 				)
 				this.node.addClass("expanded")
 			}else{
+				logger.debug("ui.help: contracting")
 				this.pane.node.animate(
 					{"height": "1px"},
 					200,
