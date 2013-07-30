@@ -76,7 +76,7 @@ ui.User.Model.Category = Class.extend({
 		this.changed = new Event(this)
 		
 		if(!doc){
-			this.category = 0
+			this.category = null
 			this.history = []
 		}else{
 			this.load_doc(doc)

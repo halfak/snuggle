@@ -1,18 +1,24 @@
-.good-faith{
+.category.uncategorized{
+	background: #eee!important;
+	box-shadow: inset .3ex .3ex .2em rgba(0,0,0,.4);
+}
+.category.good-faith{
 	background: #afa!important;
 }
-.good-faith.selected{
+.category.good-faith.selected{
 	background: #bfb!important;
 }
-.ambiguous{
+.category.ambiguous{
 	background: #ffa!important;
 }
-.ambiguous.selected{
+.category.ambiguous.selected{
 	background: #ffb!important;
 }
-.bad-faith{
+.category.bad-faith{
 	background: #faa!important;
 }
-.bad-faith.selected{
+.category.bad-faith.selected{
 	background: #fbb!important;
 }
+
+

@@ -5,7 +5,7 @@ ui.Button = Class.extend({
 		opts = opts || {}
 		
 		if(opts.value){
-			this.value = value
+			this.value = opts.value
 		}
 		
 		//Create the nodes
@@ -65,13 +65,14 @@ ui.Button = Class.extend({
 	_handle_click: function(e){
 		if(!this.disabled()){
 			this.activated.notify()
+			util.stop_propagation(e)
 		}
 	},
 	_handle_keypress: function(e){
 		if(e.which == keys.ENTER || e.which == keys.SPACE){
 			if(!this.disabled()){
 				this.activated.notify()
-				util.kill_event(e)
+				util.stop_propagation(e)
 			}
 		}
 	},

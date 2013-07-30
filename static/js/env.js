@@ -33,8 +33,15 @@ env = {
 		user: 1,
 		action_menu: 2,
 		snuggler_form: 3,
+		categorizer: 4,
 		user_filters: 50,
 		event_filters: 51,
 		dropper: 100
+	},
+	icons: {
+		'good-faith': "\u2714",
+		'ambiguous': "?",
+		'bad-faith': "\u2717",
+		'history': "\u231b"
 	}
 }

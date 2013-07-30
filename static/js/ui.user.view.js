@@ -28,7 +28,7 @@ ui.User.View = Class.extend({
 		
 		this.model.selected_changed.attach(this._handle_selected_change.bind(this))
 		
-		//The only event we care about.  Is someone clicking on me?
+		//Events for parents to know about
 		this.focus_set  = new Event(this)
 		this.keypressed = new Event(this)
 		
@@ -503,21 +503,21 @@ ui.User.View.Category = Class.extend({
 					"&#x2713;", "good-faith",
 					{
 						tooltip: i18n.get("This user is at least trying to do something useful (or press #1)"),
-						class: "button-like good-faith"
+						class: "button-like category good-faith"
 					}
 				),
 				new ui.RadioField.Radio(
 					"?", "ambiguous",
 					{
 						tooltip: i18n.get("Its unclear whether this editor is trying to be productive or not (or press #2)"),
-						class: "button-like ambiguous"
+						class: "button-like category ambiguous"
 					}
 				),
 				new ui.RadioField.Radio(
 					"&#x2718;", "bad-faith",
 					{
 						tooltip: i18n.get("This editor is trying to cause harm or be disruptive (or press #3)"),
-						class: "button-like bad-faith"
+						class: "button-like category bad-faith"
 					}
 				),
 			],

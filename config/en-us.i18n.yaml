@@ -9,6 +9,7 @@ lang: en-us
 "✔": "✔"
 "?": "?"
 "✗": "✗"
+"⌛": "⌛"
 (no edit summary): (no edit summary)
 
 all: all
@@ -24,6 +25,7 @@ by: by
 by user: by user
 
 categorizations: categorizations
+categorization history: categorization history
 Categorize: Categorize
 categorized: categorized
 categorize this user based on their activity: categorize this user based on their activity
@@ -31,6 +33,7 @@ Checking for previous session...: Checking for previous session...
 click here to log in.: click here to log in.
 click here to log out.: click here to log out.
 contribs: contribs
+comment: comment
 
 days since registration: days since registration
 descending: descending
@@ -48,6 +51,7 @@ Interactive edit graph: Interactive edit graph
 "Its unclear whether this editor is trying to be productive or not (or press #2)": "Its unclear whether this editor is trying to be productive or not (or press #2)"
 
 last activity: last activity
+leave a comment explaining your decision (optional): leave a comment explaining your decision (optional)
 load up the list of newcomers: load up the list of newcomers
 Loading...: Loading...
 Logged in as: Logged in as

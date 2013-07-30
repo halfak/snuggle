@@ -1,0 +1,178 @@
+
+div.categorizer {
+	
+}
+
+/**** categorizer.expanded ****/
+div.categorizer.expanded div.container{
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+/**** categories ****/
+div.categorizer div.current div.category,
+div.categorizer .history > .history > table td.category div.category,
+div.categorizer div.button.category{
+	display: inline-block;
+	width: 2em;
+	height: 2.5ex;
+	border-radius: .25em;
+	border: 1px solid  #333;
+	text-align: center;
+}
+
+/**** content ****/
+div.categorizer div.container > div.content{
+	position: relative;
+}
+
+	/**** categories ****/
+	div.categorizer .content > div > .categories{
+		position: relative;
+		white-space: normal;
+		padding: .5ex .3em 0ex .3em;
+		background: #ccc;
+		border-top: 1px solid black;
+	}
+
+
+	div.categorizer .categories div.button.category{
+		margin-bottom: .75ex;
+		outline: none;
+	}
+	div.categorizer .categories div.button.category.selected{
+		border-width: .25ex;
+		box-shadow: none;
+	}
+	div.categorizer .categories div.button.category span.label{
+		padding: .25ex;
+		text-align: center;
+	}
+	div.categorizer .categories div.button.category.selected span.label{
+		padding: .1ex;
+	}
+
+	/**** form ****/
+	div.categorizer .categories > .form{
+		display: none;
+		position: absolute;
+		top: -1px;
+		bottom: -1px;
+		left: 100%;
+		margin-left: -1px;
+		background: #ccc;
+		border: 1px solid black;
+		border-left: none;
+		width: 25em;
+		padding: .5ex .5em;
+		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+	}
+	div.categorizer .categories > .form.expanded{
+		display: block;
+	}
+		div.categorizer .categories > .form .field {
+			padding: .25ex;
+			background: #ccc;
+		}
+		div.categorizer .categories > .form .field > input {
+			width: 100%;
+		}
+		div.categorizer .categories > .form .field > label {
+			display: block;
+			font-weight: bold;
+		}
+		
+		div.categorizer .categories > .form > .controls{
+			float: right;
+			font-size: .9em;
+		}
+			div.categorizer .categories > .form > .controls > .save{
+				margin-left: .5em;
+				font-weight: bold;
+			}
+
+/**** history ****/
+div.categorizer div.content > div > .history{
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	font-size: .9em;
+	
+}
+	div.categorizer .history > .tab{
+		display: block;
+		margin: 2px -1px -1px -1px;
+		border: 1px solid black;
+		white-space: nowrap;
+		cursor: default;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+	}
+	div.categorizer .history > .tab > span {
+		display: block;
+		background: #bbb;
+		padding: .25ex;
+		text-align: center;
+		font-weight: bold;
+		text-shadow: 2px 2px rgba(255,255,255,.5);
+		box-shadow: inset 0px -7px 10px rgba(0,0,0,.2);
+	}
+	
+	div.categorizer .history > .tab > span > .header{
+		display: none;
+		margin-left: .5em;
+	}
+	div.categorizer .history > .history{
+		display: none;
+		background: #eee;
+		margin: 0px .5em;
+		border: 1px solid black;
+		border-bottom-left-radius: .25em;
+		border-bottom-right-radius: .25em;
+		padding: 1ex .25em;
+	}
+		div.categorizer .history > .history > table {
+			font-size: .9em;
+		}
+		div.categorizer .history > .history > table td {
+			padding: 0ex .5em;
+		}
+		div.categorizer .history > .history > table td.category,
+		div.categorizer .history > .history > table td.timestamp,
+		div.categorizer .history > .history > table td.snuggler {
+			border: none;
+			white-space: nowrap;
+			vertical-align: top;
+		}
+		div.categorizer .history > .history > table td.comment {
+			min-width: 15em;
+			font-style: italic;
+		}
+		div.categorizer .history > .history > table td.comment.empty {
+			color: #666;
+		}
+	
+/****** history.expanded *******/
+div.categorizer div.content > div > div.history.expanded{
+	right: auto;
+	bottom: auto;
+}
+	
+	div.categorizer .history.expanded > .tab > span{
+		font-weight: normal;
+		text-shadow: none;
+		box-shadow: inset 0em .5em .5em rgba(0,0,0,.1);
+		padding: .25ex 1em;
+	}
+	div.categorizer .history.expanded > .tab > span > .header{
+		display: inline-block;
+	}
+	div.categorizer .history.expanded > .history{
+		display: block;
+		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
+	}

@@ -108,13 +108,14 @@ servers.Local.Users = Class.extend({
 			error
 		)
 	},
-	categorize: function(user, category, success, error){
+	categorize: function(user, data, success, error){
 		this.api.post(
 			'user', 'categorize', 
 			{
 				id: user.id,
 				name: user.name,
-				category: category
+				category: data.category,
+				comment: data.comment || ""
 			},
 			success,
 			error

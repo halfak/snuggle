@@ -155,7 +155,7 @@ div.user div.info div.edit_counts div.dropper{
 		}
 	
 
-div.user div.category {
+div.user div.info > div.category {
 	position: absolute;
 	bottom: 0px;
 	left: 0px;

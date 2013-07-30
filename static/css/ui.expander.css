@@ -1,0 +1,71 @@
+div.expander {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+}
+div.expander > div.container{
+	position: relative;
+	background: #ddd;
+	border: 1px solid black;
+	border-radius: .3em;
+	text-align: right;
+}
+div.expander > div.container.right-aligned{
+	left: auto;
+	right: 0px;
+}
+
+/*********** <expanded> ***********/
+div.expander.expanded{
+}
+div.expander.expanded > div.container{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	box-shadow: .75ex .75ex .5ex rgba(0,0,0,0.3);
+}
+div.expander.expanded > div.container > div.tab{
+	text-shadow: none;
+	box-shadow: inset 0em .5em .5em rgba(0,0,0,.2);
+}
+div.expander.expanded > div.container > div.content{
+	display: block;
+}
+
+/*********** Tab ***********/
+
+div.expander > div.container > div.tab{
+	box-shadow: inset 0px -7px 10px rgba(0,0,0,.2);
+	text-shadow: 2px 2px rgba(255,255,255,.5);
+	white-space: nowrap;
+	cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	padding: .3ex .3em;
+}
+	div.expander > div.container > div.tab > span.label{
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	div.expander > div.container > div.tab > span.status{
+		display: inline-block;
+		vertical-align: middle;
+		border: .4em solid #000;
+		border-color: #000 transparent transparent transparent;
+		border-width: .4em .3em 0px .3em;
+		vertical-align: center;
+		margin: .3em 0em .3em .2em;
+	}
+
+
+/*********** Content ***********/
+
+div.expander > div.container > div.content{
+	display: none;
+	text-align: left;
+}
