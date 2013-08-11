@@ -9,17 +9,7 @@ div.categorizer.expanded div.container{
 	border-bottom-left-radius: 0px;
 }
 
-/**** categories ****/
-div.categorizer div.current div.category,
-div.categorizer .history > .history > table td.category div.category,
-div.categorizer div.button.category{
-	display: inline-block;
-	width: 2em;
-	height: 2.5ex;
-	border-radius: .25em;
-	border: 1px solid  #333;
-	text-align: center;
-}
+
 
 /**** content ****/
 div.categorizer div.container > div.content{

@@ -11,7 +11,6 @@ ui.User = Class.extend({
 		
 		this.view.focus_set.attach(this._handle_focus.bind(this))
 		this.view.keypressed.attach(this._handle_keypress.bind(this))
-		this.view.info.category.changed.attach(this._handle_category_changed.bind(this))
 		this.view.info.actions.submitted.attach(this._handle_action_submitted.bind(this))
 		this.view.info.actions.loaded.attach(this._handle_action_loaded.bind(this))
 		
@@ -72,36 +71,6 @@ ui.User = Class.extend({
 	},
 	_handle_selected_change: function(){
 		this.selected_changed.notify(this.model.selected())
-	},
-	_handle_category_changed: function(){
-		logger.debug("controllers.user: handling category change")
-		if(!SNUGGLE.snuggler.authenticated()){
-			alert(i18n.get("You must log in before categorizing users."))
-			SNUGGLE.snuggler.ping()
-			this.view.info.category.reset()
-		}else{
-			this.view.info.category.disabled(true)
-			servers.local.users.categorize(
-				this.model, 
-				this.view.info.category.val(),
-				function(doc){
-					if(doc){
-						this.model.category.load_doc(doc)
-					}
-					this.view.info.category.disabled(false)
-				}.bind(this),
-				function(message, doc, meta){
-					if(doc.code == "permissions"){
-							logger.error("Permissions error while trying to change category.")
-							this.permissions_error.notify()
-					}else{
-							alert(message)
-					}
-					this.view.info.category.reset()
-					this.view.info.category.disabled(false)
-				}.bind(this)
-			)
-		}
 	},
 	_handle_action_submitted: function(_, action, watch){
 		if(!SNUGGLE.snuggler.authenticated()){

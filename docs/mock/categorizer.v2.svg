@@ -22,6 +22,17 @@
   <defs
      id="defs4">
     <linearGradient
+       id="linearGradient4168">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop4170" />
+      <stop
+         style="stop-color:#a2a2a2;stop-opacity:0;"
+         offset="1"
+         id="stop4172" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient4380">
       <stop
          style="stop-color:#000000;stop-opacity:1;"
@@ -675,6 +686,24 @@
        y1="143.36191"
        x2="157.66339"
        y2="117.4091" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4168"
+       id="linearGradient4174"
+       x1="188.01569"
+       y1="327.54779"
+       x2="183.68796"
+       y2="300.96991"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4168"
+       id="linearGradient4176"
+       x1="188.01569"
+       y1="327.54779"
+       x2="183.68796"
+       y2="300.96991"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -683,11 +712,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.5802607"
-     inkscape:cx="384.35221"
-     inkscape:cy="233.86053"
+     inkscape:zoom="1.1174131"
+     inkscape:cx="146.36701"
+     inkscape:cy="289.48334"
      inkscape:document-units="px"
-     inkscape:current-layer="g6165"
+     inkscape:current-layer="g5354"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1025"
@@ -1121,7 +1150,7 @@
       <g
          id="g5312">
         <rect
-           style="fill:#a2a2a2;fill-opacity:1;stroke:#000000;stroke-width:0.92199457;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           style="fill:url(#linearGradient4174);fill-opacity:1;stroke:#000000;stroke-width:0.92199456999999996;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
            id="rect3573-5-3"
            width="41.578003"
            height="19.383858"
@@ -1140,7 +1169,15 @@
                x="192.14285"
                y="413.79074" /></flowRegion><flowPara
              id="flowPara4119-0"
-             style="font-size:20px">⌛</flowPara></flowRoot>      </g>
+             style="font-size:20px">⌛</flowPara></flowRoot>        <rect
+           style="fill:url(#linearGradient4176);fill-opacity:1;stroke:#000000;stroke-width:0.92199456999999996;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           id="rect3573-5-3-6"
+           width="41.578003"
+           height="19.383858"
+           x="156.20352"
+           y="293.17639"
+           ry="4.2423949" />
+      </g>
     </g>
     <g
        id="g7556"

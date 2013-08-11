@@ -92,7 +92,7 @@ class Users:
 		try:
 			doc = self.model.users.categorize(
 				data['id'], 
-				types.Categorization(session['snuggler'], data['category'])
+				types.Categorization(session['snuggler'], data['category'], data['comment'])
 			)
 			
 			try:
@@ -109,7 +109,7 @@ class Users:
 			return responses.success(doc)
 		except Exception:
 			logger.error(traceback.format_exc())
-			return responses.database_error("storing a rating for user %s" % data)
+			return responses.database_error("storing a categorization for user %s" % data)
 		
 	
 	def watch(self, session, doc):

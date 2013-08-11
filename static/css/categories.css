@@ -21,4 +21,12 @@
 	background: #fbb!important;
 }
 
+.category.icon{
+	display: inline-block;
+	width: 2em;
+	height: 2.5ex;
+	border-radius: .25em;
+	border: 1px solid  #333;
+	text-align: center;
+}
 

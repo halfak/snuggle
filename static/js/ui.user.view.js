@@ -118,11 +118,9 @@ ui.User.View.Info = Class.extend({
 		}
 		this.node.append(this.name.node)
 		
-		this.current_category = {
-			node: $("<div>")
-				.addClass("current_category")
-		}
-		this.name.node.prepend(this.current_category.node)
+		this.category = new ui.Categorizer(this.model)
+		this.node.append(this.category.node)
+		this.name.node.prepend(this.category.current.node)
 		
 		this.status = {
 			node: $("<div>")
@@ -145,11 +143,7 @@ ui.User.View.Info = Class.extend({
 		
 		this.counts = new ui.EditCounts()
 		
-		this.category = new ui.User.View.Category(this.model)
-		this.node.append(this.category.node)
-		
 		this.model.viewed.attach(this._handle_view.bind(this))
-		this.model.category.changed.attach(this._handle_category_change.bind(this))
 		
 		this.expanded(false)
 		this._render()
@@ -176,36 +170,11 @@ ui.User.View.Info = Class.extend({
 				this.actions.expanded(false)
 				/*this.counts.hide()*/
 			}
-			this.category.expanded(expanded)
 		}
 	},
 	_render: function(){
 		if(this.model.views > 0){
 			this.node.addClass("viewed")
-		}
-		
-		
-		this.current_category.node.html("")
-		if(this.model.category.category){
-			switch(this.model.category.category){
-				case "good-faith": 
-					this.current_category.node.html("&#x2713;")
-					break
-				case "ambiguous":
-					this.current_category.node.html("?")
-					break
-				case "bad-faith":
-					this.current_category.node.html("&#x2718;")
-					break
-				default:
-					this.current_category.node.html(this.model.category.category)
-			}
-			
-			this.current_category.node.attr('class', "")
-			this.current_category.node.addClass(this.model.category.category)
-			this.current_category.node.addClass("current_category categorized")
-		}else{
-			this.current_category.node.removeClass("categorized")
 		}
 		
 		this.counts.render(this.model, this.model.activity.counts)

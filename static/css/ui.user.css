@@ -63,6 +63,15 @@ div.user div.info .name{
 		right: .2em;
 		font-size: .9em;
 	}
+		div.user div.info .name .user_actions .tab{
+			box-shadow: inset 0px -7px 10px rgba(0,0,0,.2);
+			text-shadow: 2px 2px rgba(255,255,255,.5);
+			background: #eee;
+		}
+		div.user div.info .name .user_actions.expanded .tab{
+			box-shadow: inset 0px 7px 10px rgba(0,0,0,.2);
+			text-shadow: none;
+		}
 		div.user div.info .name .user_actions > .pane{
 			right: 0px;
 			left: auto;
@@ -78,7 +87,8 @@ div.user div.info .name{
 		border-color: transparent transparent transparent #000;
 		border-width: .4em 0px .4em .5em;
 		vertical-align: middle;
-		margin-right: .5em;
+		margin-left: -.25em;
+		margin-right: .25em;
 	}
 	
 	div.user.expanded div.info .name > div.status {
@@ -86,18 +96,10 @@ div.user div.info .name{
 		border-width: .5em .4em 0px .4em;
 	}
 	
-	div.user div.info .name .current_category {
-		display: none;
-		border-radius: .5em;
-		padding: 0em .25em;
-		margin-right: .5em;
-		color: #000;
-		border: 1px solid #333;
-		min-width: 1em;
-	}
-	
-	div.user div.info .name .current_category.categorized {
+	div.user div.info .name .current {
 		display: inline-block;
+		vertical-align: middle;
+		margin-right: .5em;
 	}
 
 div.user div.info.viewed .name{
@@ -153,109 +155,14 @@ div.user div.info div.edit_counts div.dropper{
 		div.user div.info div.edit_counts div.dropper .pane td div.bar span{
 			padding-left: .5em;
 		}
-	
 
-div.user div.info > div.category {
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	background: #ddd;
-	padding: .5em 1em 1em 1em;
-	border: 1px solid rgba(0,0,0,.8);
-	outline: rgba(0,0,0,.4) solid 2px;
+div.user  .info > .categorizer{
+	display: none;
 }
 
-div.user div.category div.history{
-	position: absolute;
-	top: 0px;
-	right: 1em;
-	font-size: .9em;
-}
-	div.user div.category div.history div.tab{
-		position: relative;
-		border: 1px solid black;
-		border-radius: 0px 0px 5px 5px;
-		border-top: 0px;
-		padding: 0px 1em;
-		background: #ddd;
-		box-shadow: inset 0px -.25em .5em rgba(0,0,0,.2);
-		text-shadow: 1px 1px rgba(255,255,255,.5);
-	}
-	div.user div.category div.history.expanded div.tab{
-		box-shadow: inset 0px .25em .5em rgba(0,0,0,.2);
-	}
-	
-	div.user div.category div.history div.pane{
-		z-index: 3;
-		background: #f6f6f6;
-		border: 1px solid black;
-		min-width: 200px;
-		white-space: nowrap;
-		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
-	}
-		div.user div.category div.history div.pane p{
-			margin: 0px;
-			padding: .5em;
-		}
-		
-		div.user div.category div.history div.pane ul{
-			padding: .5em;
-			margin: 0px;
-		}
-			div.user div.category div.history div.pane ul li{
-				list-style: none;
-				border-bottom: 1px dashed #888;
-			}
-				div.user div.category div.history div.pane ul li span,
-				div.user div.category div.history div.pane ul li a {
-					margin: .25em;
-				}
-				div.user div.category div.history div.pane ul li span.timestamp{
-					width: 10em;
-					text-align: right;
-				}
-				div.user div.category div.history div.pane ul li span.category{
-					padding: 0em .3em;
-					border: 1px solid #333;
-				}
-				div.user div.category div.history div.pane ul li a.snuggler {}
-		
-
-div.user .category .radios.field > label{
+div.user.expanded  .info > .categorizer{
 	display: block;
-	font-weight: bold;
-	margin-bottom: .5em;
 }
-div.user .category .radios.field .radios{
-	text-align: center;
-}
-div.user .category .radios.field .radio_option {
-	display: inline-block;
-	border: 1px solid black;
-	border-radius: .25em;
-	white-space: nowrap;
-	overflow: hidden;
-	text-align: center;
-	width: 30%;
-	margin-right: 2%;
-	padding: .25em 0em;
-}
-div.user .category .radios.field .radio_option.selected{
-	border-width: 3px;
-}
-div.user .category .radios.field .radio_option.ambiguous{font-weight: bold;}
-
-	div.user .category .radios.field .radio_option label{
-		display: block;
-		font-weight: bold;
-	}
-	
-	div.user .category .radios.field .radio_option input {
-		display: none;
-	}
-
-
 
 /********************************Activty***************************************/
 div.user div.activity {

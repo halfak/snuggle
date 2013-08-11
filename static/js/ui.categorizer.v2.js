@@ -1,9 +1,9 @@
 ui = window.ui || {}
 
 ui.Categorizer = Class.extend({
-	init: function(model, view){
-		this.model = model // Expects the user model
-		this.view  = view || new ui.Categorizer.View(this.model.category)
+	init: function(user){
+		this.user = user // Expects the user model
+		this.view  = new ui.Categorizer.View(this.model.category)
 		
 		this.node = this.view.node
 		
@@ -21,14 +21,14 @@ ui.Categorizer = Class.extend({
 		}else{
 			this.view.categories.disabled(true)
 			servers.local.users.categorize(
-				this.model, 
+				this.user, 
 				{
 					category: this.view.categories.val(), 
 					comment: this.view.categories.form.comment.val()
 				},
 				function(doc){
 					if(doc){
-						this.model.category.load_doc(doc)
+						this.user.category.load_doc(doc)
 					}
 					this.view.categories.disabled(false)
 				}.bind(this),
@@ -99,11 +99,20 @@ ui.Categorizer.View = ui.Expander.extend({
 	},
 	_render: function(){
 		this.current.node.html("") // Clear
+		
+		var tooltip = ""
+		if(this.model.category){
+			tooltip = i18n.get("This user is currently categorized as ") + 
+			          i18n.get(this.model.category) + "."
+		}else{
+			tooltip = i18n.get("This user has not been categorized yet.")
+		}
 		this.current.node.append(
 			$("<div>")
 				.addClass("category")
 				.addClass(this.model.category || "uncategorized")
 				.text(env.icons[this.model.category] || "")
+				.attr('title', tooltip)
 		)
 	}
 })
