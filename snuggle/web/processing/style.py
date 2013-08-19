@@ -32,6 +32,7 @@ class Style:
 			sstream.write(self.processor.read("css/ui.event_filters.css"))
 			sstream.write(self.processor.read("css/ui.event_list.css"))
 			sstream.write(self.processor.read("css/ui.event_browser.css"))
+			sstream.write(self.processor.read("css/ui.categorizer.css"))
 			sstream.write(self.processor.read("css/ui.user.css"))
 			sstream.write(self.processor.read("css/ui.user_filters.css"))
 			sstream.write(self.processor.read("css/ui.user_list.css"))

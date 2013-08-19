@@ -35,6 +35,7 @@ class Script:
 			sstream.write(self.processor.read("js/ui.event_list.js"))
 			sstream.write(self.processor.read("js/ui.event_filters.js"))
 			sstream.write(self.processor.read("js/ui.event_browser.js"))
+			sstream.write(self.processor.read("js/ui.categorizer.js"))
 			sstream.write(self.processor.read("js/ui.user.js"))
 			sstream.write(self.processor.read("js/ui.user.model.js"))
 			sstream.write(self.processor.read("js/ui.user.view.js"))

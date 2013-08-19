@@ -4,7 +4,7 @@ sys.path.append("../")
 
 from snuggle import configuration
 from snuggle import mediawiki
-from snuggle.data import models
+from snuggle.data import models, types
 
 
 def main():
@@ -35,17 +35,36 @@ def main():
 		type=lambda s: unicode(s, 'utf-8'),
 		help='a specific username to reload'
 	)
+	parser.add_argument(
+		'--min_last_active',
+		type=int,
+		help='number of seconds since last activity',
+		default=60*60*24*5 # 5 days
+	)
 	
 	args = parser.parse_args()
 	
-	run(configuration, args.user_name)
+	run(configuration, args.user_name, args.min_last_active)
+
+def clear_talk(docs):
+	for doc in docs:
+		doc['talk']['threads'] = []
+		yield types.NewUser.deserialize(doc)
 	
-def run(config, user_name):
+
+def run(config, user_name, min_last_active):
 	api = mediawiki.API.from_config(configuration)
 	model = models.Mongo.from_config(configuration)
 	
 	if user_name == None:
-		users = model.users.query(sorted_by="activity.last_activity", limit=100000)
+		docs = model.users.query(
+			sorted_by="activity.last_activity", 
+			limit=100000,
+			min_last_active=min_last_active,
+			deserialize=False
+		)
+		users = clear_talk(docs)
+		
 	else:
 		users = [model.users.get(name=user_name)]
 	

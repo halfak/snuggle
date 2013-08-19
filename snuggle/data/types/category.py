@@ -11,7 +11,7 @@ CATEGORIES = set([
 
 class Categorization(serializable.Type):
 	
-	def __init__(self, snuggler, category, timestamp=None, comment=None):
+	def __init__(self, snuggler, category, comment=None, timestamp=None):
 		self.snuggler  = Snuggler.deserialize(snuggler)
 		self.category  = unicode(category); assert category in CATEGORIES
 		self.timestamp = float(timestamp) if timestamp != None else time.time()

@@ -78,6 +78,7 @@ class Users:
 			sort=[(sorted_by, 1 if direction == "ascending" else -1)],
 			limit=limit,
 			skip=skip,  #This is dumb, but it will work for now.
+			timeout=False # Not sure why this would be true by default
 		)
 		if not deserialize:
 			return (util.demongoify(doc) for doc in docs)
