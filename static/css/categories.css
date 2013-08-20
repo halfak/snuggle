@@ -1,30 +1,30 @@
 .category.uncategorized{
-	background: #eee!important;
-	box-shadow: inset .3ex .3ex .2em rgba(0,0,0,.4);
+	background: #f6f6f6!important;
 }
 .category.good-faith{
-	background: #afa!important;
+	background: #8f8!important;
 }
 .category.good-faith.selected{
 	background: #bfb!important;
 }
 .category.ambiguous{
-	background: #ffa!important;
+	background: #ff8!important;
 }
 .category.ambiguous.selected{
 	background: #ffb!important;
 }
 .category.bad-faith{
-	background: #faa!important;
+	background: #f88!important;
 }
 .category.bad-faith.selected{
 	background: #fbb!important;
 }
 
 .category.icon{
+	box-shadow: inset .15ex .15ex .2em rgba(0,0,0,.4);
 	display: inline-block;
-	width: 2em;
-	height: 2.5ex;
+	width: 1.75em;
+	height: 2.1ex;
 	border-radius: .25em;
 	border: 1px solid  #333;
 	text-align: center;

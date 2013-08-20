@@ -3,7 +3,7 @@ ui = window.ui || {}
 ui.Categorizer = Class.extend({
 	init: function(user){
 		this.user = user // Expects the user model
-		this.view  = new ui.Categorizer.View(this.model.category)
+		this.view  = new ui.Categorizer.View(this.user.category)
 		
 		this.node = this.view.node
 		
@@ -12,6 +12,12 @@ ui.Categorizer = Class.extend({
 	select: function(val){
 		this.view.expanded(true)
 		this.view.categories.select(val)
+	},
+	expanded: function(expanded){
+		this.view.expanded(expanded)
+	},
+	disabled: function(disabled){
+		this.view.disabled(disabled)
 	},
 	_handle_activation: function(_){
 		logger.debug("ui.Categorizer: handling activation")
@@ -31,6 +37,7 @@ ui.Categorizer = Class.extend({
 						this.user.category.load_doc(doc)
 					}
 					this.view.categories.disabled(false)
+					this.view.expanded(false)
 				}.bind(this),
 				function(message, doc, meta){
 					if(doc.code == "permissions"){
@@ -110,6 +117,7 @@ ui.Categorizer.View = ui.Expander.extend({
 		this.current.node.append(
 			$("<div>")
 				.addClass("category")
+				.addClass("icon")
 				.addClass(this.model.category || "uncategorized")
 				.text(env.icons[this.model.category] || "")
 				.attr('title', tooltip)
@@ -208,21 +216,21 @@ ui.Categorizer.View.Categories = Class.extend({
 				label: i18n.get(env.icons['good-faith']),
 				tooltip: i18n.get("This user is at least trying to do something useful (or press #1)"),
 				value: "good-faith",
-				class: "category good-faith",
+				class: "category icon good-faith",
 				tabindex: env.tabindex.categorizer
 			}),
 			ambiguous: new ui.Button({
 				label: i18n.get(env.icons['ambiguous']),
 				tooltip: i18n.get("Its unclear whether this editor is trying to be productive or not (or press #2)"),
 				value: "ambiguous",
-				class: "category ambiguous",
+				class: "category icon ambiguous",
 				tabindex: env.tabindex.categorizer
 			}),
 			'bad-faith': new ui.Button({
 				label: i18n.get(env.icons['bad-faith']),
 				tooltip: i18n.get("This editor is trying to cause harm or be disruptive (or press #3)"),
 				value: "bad-faith",
-				class: "category bad-faith",
+				class: "category icon bad-faith",
 				tabindex: env.tabindex.categorizer
 			})
 		}
@@ -251,7 +259,11 @@ ui.Categorizer.View.Categories = Class.extend({
 	},
 	val: function(val){
 		if(val === undefined){
-			return this.selected.value
+			if(this.selection){
+				return this.selection.value
+			}else{
+				return null
+			}
 		}else{
 			if(!val || this.buttons[val]){
 				this._select(this.buttons[val])

@@ -97,10 +97,8 @@ div.user div.info .name{
 		border-width: .5em .4em 0px .4em;
 	}
 	
-	div.user div.info .name .current {
-		display: inline-block;
-		vertical-align: middle;
-		margin-right: .5em;
+	div.user div.info .name div.categorizer{
+		z-index: 3;
 	}
 
 div.user div.info.viewed .name{

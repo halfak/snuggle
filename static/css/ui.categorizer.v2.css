@@ -1,7 +1,17 @@
 
 div.categorizer {
-	
+	margin: -1ex 0px;
 }
+div.categorizer.disabled > .container{
+	background: none;
+	border: none;
+}
+	div.categorizer.disabled > .container > .tab{
+		box-shadow: none;
+	}
+	div.categorizer.disabled > .container > .tab > .status{
+		visibility: hidden;
+	}
 
 /**** categorizer.expanded ****/
 div.categorizer.expanded div.container{
@@ -35,11 +45,11 @@ div.categorizer div.container > div.content{
 		box-shadow: none;
 	}
 	div.categorizer .categories div.button.category span.label{
-		padding: .25ex;
 		text-align: center;
+		padding: 0px;
 	}
 	div.categorizer .categories div.button.category.selected span.label{
-		padding: .1ex;
+		margin-top: -.1ex;
 	}
 
 	/**** form ****/
@@ -54,7 +64,7 @@ div.categorizer div.container > div.content{
 		border: 1px solid black;
 		border-left: none;
 		width: 25em;
-		padding: .5ex .5em;
+		padding: .25ex .5em;
 		box-shadow: 6px 6px 3px rgba(0,0,0,0.3);
 	}
 	div.categorizer .categories > .form.expanded{
@@ -76,7 +86,11 @@ div.categorizer div.container > div.content{
 			float: right;
 			font-size: .9em;
 		}
-			div.categorizer .categories > .form > .controls > .save{
+			div.categorizer .categories > .form > .controls > .button > span.label{
+				padding-top: .1ex;
+				padding-bottom: .1ex;
+			}
+			div.categorizer .categories > .form > .controls > .button.save{
 				margin-left: .5em;
 				font-weight: bold;
 			}

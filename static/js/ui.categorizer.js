@@ -14,6 +14,8 @@ ui.Categorizer = Class.extend({
 		this.view.expanded(true)
 		this.view.categories.select(val)
 	},
+	expanded: function(){
+	},
 	_handle_activation: function(_){
 		logger.debug("ui.categorizer: handling activation")
 		if(!SNUGGLE.snuggler.authenticated()){

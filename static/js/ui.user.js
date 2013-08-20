@@ -28,17 +28,17 @@ ui.User = Class.extend({
 			switch(e.which){
 				case env.keys.NUM_1:
 				case env.keys.NUM_PAD_1:
-					this.view.info.category.val("good-faith")
+					this.view.info.category.select("good-faith")
 					util.kill_event(e)
 					break
 				case env.keys.NUM_2:
 				case env.keys.NUM_PAD_2:
-					this.view.info.category.val("ambiguous")
+					this.view.info.category.select("ambiguous")
 					util.kill_event(e)
 					break
 				case env.keys.NUM_3:
 				case env.keys.NUM_PAD_3:
-					this.view.info.category.val("bad-faith")
+					this.view.info.category.select("bad-faith")
 					util.kill_event(e)
 					break
 				case env.keys.UP_ARROW:

@@ -71,7 +71,7 @@ ui.Expander = Class.extend({
 		}
 	},
 	disabled: function(disabled){
-		if(expanded === undefined){
+		if(disabled === undefined){
 			return this.node.hasClass("disabled")
 		}else{
 			if(disabled){

@@ -28,21 +28,21 @@ ui.UserFilters = Class.extend({
 				new ui.RadioField.Radio(
 					i18n.get("good-faith"), "good-faith", 
 					{
-						class: "good-faith",
+						class: "category good-faith",
 						tooltip: i18n.get("new users that have been categorized as good-faith")
 					}
 				),
 				new ui.RadioField.Radio(
 					i18n.get("ambiguous"), "ambiguous", 
 					{
-						class: "ambiguous",
+						class: "category ambiguous",
 						tooltip: i18n.get("new users that have been categorized as ambiguous")
 					}
 				),
 				new ui.RadioField.Radio(
 					i18n.get("bad-faith"), "bad-faith", 
 					{
-						class: "bad-faith",
+						class: "category bad-faith",
 						tooltip: i18n.get("new users that have been categorized as bad-faith")
 					}
 				)
@@ -94,7 +94,7 @@ ui.UserFilters.Filters = Class.extend({
 		categories.changed.attach(this._handle_category_change.bind(this))
 		
 		this.node = $("<div>")
-			.addClass("filters")
+			.addClass("filters category")
 		
 		this.category = {
 			node: $("<span>")
