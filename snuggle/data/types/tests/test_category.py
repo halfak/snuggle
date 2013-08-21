@@ -10,14 +10,17 @@ def test_empty_constructor():
 def test_categorization():
 	snuggler = Snuggler(10, "Herp")
 	category = "good-faith"
+	comment = "LGTM"
 	timestamp = 1234567890
 	categorization = Categorization(
 		snuggler,
 		category,
+		comment,
 		timestamp
 	)
 	eq_(categorization.snuggler, snuggler)
 	eq_(categorization.category, category)
+	eq_(categorization.comment, comment)
 	eq_(categorization.timestamp, timestamp)
 
 def test_category():

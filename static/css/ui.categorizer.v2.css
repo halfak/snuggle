@@ -1,6 +1,7 @@
 
 div.categorizer {
-	margin: -1ex 0px;
+	margin: -1ex .25em -1ex 0em;
+	font-weight: normal;
 }
 div.categorizer.disabled > .container{
 	background: none;

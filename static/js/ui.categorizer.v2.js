@@ -104,24 +104,28 @@ ui.Categorizer.View = ui.Expander.extend({
 	_handle_form_activation: function(_){
 		this.activated.notify()
 	},
-	_render: function(){
-		this.current.node.html("") // Clear
-		
+	_set_current: function(category){
 		var tooltip = ""
-		if(this.model.category){
+		if(category){
 			tooltip = i18n.get("This user is currently categorized as ") + 
-			          i18n.get(this.model.category) + "."
+			          i18n.get(category) + "."
 		}else{
 			tooltip = i18n.get("This user has not been categorized yet.")
 		}
+		
 		this.current.node.append(
 			$("<div>")
 				.addClass("category")
 				.addClass("icon")
-				.addClass(this.model.category || "uncategorized")
-				.text(env.icons[this.model.category] || "")
+				.addClass(category || "uncategorized")
+				.text(env.icons[category] || "")
 				.attr('title', tooltip)
 		)
+	},
+	_render: function(){
+		this.current.node.html("") // Clear
+		console.log(this.model)
+		this._set_current(this.model.category)
 	}
 })
 
@@ -347,11 +351,16 @@ ui.Categorizer.View.History = Class.extend({
 		}
 		this.node.append(this.history.node)
 		
+		this.model.changed.attach(this._handle_change.bind(this))
+		
 		this._render()
 	},
 	_handle_tab_click: function(e){
 		this.expanded(!this.expanded())
 		util.stop_propagation(e)
+	},
+	_handle_change: function(_){
+		this._render()
 	},
 	expanded: function(expanded){
 		if(expanded === undefined){
@@ -383,6 +392,7 @@ ui.Categorizer.View.History = Class.extend({
 						.append(
 							$("<div>")
 								.addClass("category")
+								.addClass("icon")
 								.addClass(categorization.category)
 								.append(env.icons[categorization.category])
 						)

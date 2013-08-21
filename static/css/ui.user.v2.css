@@ -59,6 +59,7 @@ div.user div.info .name{
 	div.user div.info .name .user_actions{
 		display: none;
 		position: absolute;
+		font-weight: normal;
 		top: .2em;
 		right: .2em;
 		font-size: .9em;

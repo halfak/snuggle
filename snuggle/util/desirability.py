@@ -10,9 +10,9 @@ from scipy.stats import beta
 from math import log, factorial, exp
 
 DESIRABLE = beta(1.277007, 6.254439)
-DESIRABLE_PRIOR = .8
+DESIRABLE_PRIOR = 1
 UNDESIRABLE = beta(1.973121, 3.162627)
-UNDESIRABLE_PRIOR = .2
+UNDESIRABLE_PRIOR = 1
 EPSILON = 0.005
 
 def beta_likelihood(scores, model):
@@ -21,7 +21,7 @@ def beta_likelihood(scores, model):
 	for score in scores:
 		log_p += log(
 			model.cdf(min(score + EPSILON, 1)) - 
-			model.cdf(max(score - EPSILON, 0.005))
+			model.cdf(max(score - EPSILON, EPSILON))
 		)
 	
 	try:

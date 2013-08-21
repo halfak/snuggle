@@ -27,7 +27,7 @@ class Mongo:
 		deaths = [doc['_id'] for doc in self.db.users.find({'registration': {"$lt": older_than}})]
 		
 		self.db.users.remove({'_id': {"$in": deaths}})
-		self.db.reverteds.remove({'revision.user._id': {'$in': deaths}})
+		self.db.reverteds.remove({'revision.user.id': {'$in': deaths}})
 		self.db.changes.remove({'timestamp': {"$lt": older_than}})
 		self.db.scores.remove({'user_id': {'$in': deaths}})
 	

@@ -45,7 +45,7 @@ div.expander > div.container > div.tab{
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	padding: .3ex .3em;
+	padding: .3ex .1em;
 }
 	div.expander > div.container > div.tab > span.label{
 		display: inline-block;
@@ -59,7 +59,7 @@ div.expander > div.container > div.tab{
 		border-color: #000 transparent transparent transparent;
 		border-width: .4em .3em 0px .3em;
 		vertical-align: center;
-		margin: .3em 0em .3em .2em;
+		margin: .3em 0em .3em .1em;
 	}
 
 

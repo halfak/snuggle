@@ -58,6 +58,7 @@ div.user div.info .name{
 
 	div.user div.info .name .user_actions{
 		display: none;
+		font-weight: normal;
 		position: absolute;
 		top: .2em;
 		right: .2em;
@@ -99,6 +100,7 @@ div.user div.info .name{
 	
 	div.user div.info .name .current {
 		display: inline-block;
+		font-weight: normal;
 		vertical-align: middle;
 		margin-right: .5em;
 	}

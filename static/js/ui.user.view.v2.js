@@ -186,7 +186,8 @@ ui.User.View.Info = Class.extend({
 			'Last activity': this.model.activity.last_activity.format('wikiDate'),
 			'Views': this.model.views,
 			'Revisions': this.counts.node,
-			'Reverted': this.model.activity.reverted
+			'Reverted': this.model.activity.reverted,
+			'Desirability': parseInt(this.model.desirability.likelihood*1000)/1000
 		})
 		
 		if(this.model.views > 0){

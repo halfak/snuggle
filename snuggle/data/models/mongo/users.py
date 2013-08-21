@@ -36,12 +36,18 @@ class Users:
 		)
 		return doc != None
 	
-	def insert(self, user):
+	def insert(self, user, upsert=False):
 		try:
-			self.mongo.db.users.insert(
-				util.mongoify(user.serialize()),
-				safe=True
-			)
+			if not upsert:
+				self.mongo.db.users.insert(
+					util.mongoify(user.serialize()),
+					safe=True
+				)
+			else:
+				self.mongo.db.users.save(
+					util.mongoify(user.serialize()),
+					safe=True
+				)
 			return 1
 		except DuplicateKeyError:
 			return 0
