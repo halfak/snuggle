@@ -101,9 +101,7 @@ ui.Expander.Tab = Class.extend({
 		if(opts.tooltip){
 			this.node.attr('title', opts.tooltip)
 		}
-		if(opts.tabindex){
-			this.node.attr('tabindex', opts.tabindex)
-		}
+		this.tabindex = opts.tabindex
 		
 		this.label = {
 			node: $("<span>")
@@ -125,6 +123,7 @@ ui.Expander.Tab = Class.extend({
 	_handle_click: function(e){
 		if(!this.disabled()){
 			this.activated.notify()
+			logger.debug("ui.expander.tab: handling click")
 			util.stop_propagation(e)
 		}
 	},
@@ -156,8 +155,10 @@ ui.Expander.Tab = Class.extend({
 		}else{
 			if(disabled){
 				this.node.addClass("disabled")
+				this.node.attr('tabindex', "")
 			}else{
 				this.node.removeClass("disabled")
+				this.node.attr('tabindex', this.tabindex)
 			}
 		}
 	}
