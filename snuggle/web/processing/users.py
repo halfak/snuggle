@@ -92,6 +92,7 @@ class Users:
 	
 	def categorize(self, session, data):
 		try:
+			categorization = types.Categorization(session['snuggler'], data['category'], data['comment'])
 			doc = self.model.users.categorize(
 				data['id'], 
 				types.Categorization(session['snuggler'], data['category'], data['comment'])
@@ -101,8 +102,7 @@ class Users:
 				user = types.User(data['id'], data['name'])
 				event = types.UserCategorized(
 					user, 
-					session['snuggler'], 
-					data['category']
+					categorization
 				)
 				self.model.events.insert(event)
 			except Exception as e:

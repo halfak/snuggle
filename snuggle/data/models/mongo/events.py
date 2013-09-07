@@ -8,8 +8,16 @@ class Events:
 	def __init__(self, mongo):
 		self.mongo = mongo
 	
-	def insert(self, event):
-		self.mongo.db.events.insert(util.mongoify(event.serialize()))
+	def insert(self, event, upsert=False):
+		try:
+			if not upsert:
+				self.mongo.db.events.insert(util.mongoify(event.serialize()))
+			else:
+				self.mongo.db.events.save(util.mongoify(event.serialize()))
+			
+			return 1
+		except DuplicateKeyError:
+			return 0
 	
 	def query(self, types=None, snuggler_name=None, after=None, before=None, 
 	          sort_by="system_time", direction="descending", limit=1000,

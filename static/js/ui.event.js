@@ -65,24 +65,24 @@ ui.UserCategorized.from_doc = function(doc){
 		new Date(doc.system_time*env.miliseconds.SECOND),
 		doc.snuggler, 
 		doc.user, 
-		doc.category
+		doc.categorization
 	)
 	return new ui.UserCategorized(model)
 }
 ui.UserCategorized.Model = ui.Event.Model.extend({
-	init: function(system_time, snuggler, user, category){
+	init: function(system_time, snuggler, user, categorization, comment){
 		this._super(system_time)
 		
 		this.snuggler  = snuggler
 		this.user     = user
-		this.category = category
+		this.categorization = categorization
 	}
 })
 ui.UserCategorized.View = ui.Event.View.extend({
 	init: function(model){
 		this._super(model)
 		// _super inits this.node and this.description.node
-		
+		console.log(model)
 		this.node.addClass('user_categorized')
 		
 		this.snuggler = {
@@ -104,10 +104,22 @@ ui.UserCategorized.View = ui.Event.View.extend({
 		this.category = {
 			node: $("<span>")
 				.addClass("category")
-				.addClass(this.model.category)
-				.html(i18n.get(this.model.category))
+				.addClass(this.model.categorization.category)
+				.html(i18n.get(this.model.categorization.category))
 		}
 		this.summary.node.append(this.category.node)
+		
+		this.comment = {
+			node: $("<span>")
+				.addClass("comment")
+		}
+		if(this.model.categorization.comment){
+			this.comment.node.html(util.linkify(this.model.categorization.comment))
+		}else{
+			this.comment.node.text(i18n.get("(no comment)"))
+			this.comment.node.addClass("empty")
+		}	
+		this.node.append(this.comment.node)
 	}
 })
 

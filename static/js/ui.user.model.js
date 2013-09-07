@@ -51,6 +51,7 @@ ui.User.Model.Desirability = Class.extend({
 		
 		if(!doc){
 			this.likelihood = null
+			this.ratio = .8
 			this.scores = []
 		}else{
 			this.load_doc(doc)

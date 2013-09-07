@@ -25,7 +25,9 @@ class Events:
 			event_docs = []
 			for event in self.model.events.query(**query):
 				if event.PUBLIC:
-					event_docs.append(event.serialize())
+					doc = event.serialize()
+					doc['id'] = None
+					event_docs.append(doc)
 				
 			
 			end = time.time()
