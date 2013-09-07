@@ -81,8 +81,8 @@ ui.UserCategorized.Model = ui.Event.Model.extend({
 ui.UserCategorized.View = ui.Event.View.extend({
 	init: function(model){
 		this._super(model)
-		// _super inits this.node and this.description.node
-		console.log(model)
+		// _super inits this.node and this.summary.node
+		
 		this.node.addClass('user_categorized')
 		
 		this.snuggler = {
