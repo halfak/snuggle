@@ -42,7 +42,7 @@ ui.EventList = Class.extend({
 							this.append(ui.Event.from_doc(docs[i]))
 						}
 					}
-					this._read_until_full() //Continue reading if necessary
+					if(this.view.visible()){this._read_until_full()} //Continue reading if necessary
 				}.bind(this),
 				function(message){
 					this.view.loading(false)
@@ -103,10 +103,14 @@ ui.EventList.View = Class.extend({
 	},
 	view: function(){
 		return {
+			visible: this.visible(),
 			top: this.node.scrollTop(),
 			bottom: this.node.scrollTop()+this.node.height(),
 			end: this.node[0].scrollHeight
 		}
+	},
+	visible: function(){
+		return this.node.is(":reallyvisible")
 	},
 	loading: function(loading){
 		if(loading === undefined){

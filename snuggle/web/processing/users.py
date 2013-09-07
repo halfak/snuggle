@@ -67,6 +67,8 @@ class Users:
 		try:
 			start = time.time()
 			users = list(self.model.users.query(deserialize=False, **query))
+			for user in users:
+				del user['desirability']['scores']
 			end = time.time()
 		except Exception:
 			logger.error(traceback.format_exc())

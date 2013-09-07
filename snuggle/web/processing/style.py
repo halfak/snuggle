@@ -22,6 +22,7 @@ class Style:
 			sstream.write(self.processor.read("css/ui.button.css"))
 			sstream.write(self.processor.read("css/ui.fields.css"))
 			sstream.write(self.processor.read("css/ui.dropper.css"))
+			sstream.write(self.processor.read("css/ui.expander.css"))
 			sstream.write(self.processor.read("css/ui.action_menu.css"))
 			sstream.write(self.processor.read("css/ui.help.css"))
 			sstream.write(self.processor.read("css/ui.revision_graph.css"))

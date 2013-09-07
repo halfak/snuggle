@@ -15,7 +15,7 @@
 }
 
 .trace_icon > .superscript{
-	vertical-align: super;
+	vertical-align: top;
+	position: relative;
 	font-size: 1.2ex;
 }
-

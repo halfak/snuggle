@@ -12,11 +12,12 @@ class NewUser(User):
 		User.__init__(self, id, name)
 		self.registration  = int(registration)
 		self.views         = 0
-		self.has_talk_page = False
-		self.has_user_page = False
 		self.activity      = Activity.deserialize(activity) if activity != None else Activity()
 		self.desirability  = Desirability.deserialize(desirability) if desirability != None else Desirability()
 		self.talk          = Talk.deserialize(talk) if talk != None else Talk()
 		self.category      = Category.deserialize(category) if category != None else Category()
+		
+		self.has_talk_page = has_talk_page or self.talk.last_id != 0
+		self.has_user_page = has_user_page
 	
 

@@ -169,7 +169,7 @@ ui.UserFilters.Filters = Class.extend({
 		this.sorted_by = new ui.SelectField(
 			"sorted_by",
 			[
-				{value: "desirability.likelihood", label: i18n.get("desirability")},
+				{value: "desirability.ratio", label: i18n.get("desirability")},
 				{value: "registration", label: i18n.get("registration date")},
 				{value: "activity.last_activity", label: i18n.get("last activity")},
 				{value: "activity.reverted", label: i18n.get("reverted edits")},

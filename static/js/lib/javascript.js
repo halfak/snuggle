@@ -101,3 +101,8 @@ Object.defineProperty(Object.prototype, 'values',{
 	configurable: true,
 	enumerable: false
 })
+
+jQuery.extend(
+  jQuery.expr[ ":" ], 
+  { reallyvisible : function (a) { return !(jQuery(a).is(':hidden') || jQuery(a).parents(':hidden').length); }}
+);

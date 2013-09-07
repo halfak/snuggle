@@ -119,8 +119,7 @@ ui.User.View.Info = Class.extend({
 		this.node.append(this.name.node)
 		
 		this.category = new ui.Categorizer(this.model)
-		this.node.append(this.category.node)
-		this.name.node.prepend(this.category.current.node)
+		this.name.node.prepend(this.category.node)
 		
 		this.status = {
 			node: $("<div>")
@@ -162,11 +161,14 @@ ui.User.View.Info = Class.extend({
 				this.node.addClass("expanded")
 				this.utc.show()
 				this.meta.show()
+				this.category.disabled(false)
 				/*this.counts.show()*/
 			}else{
 				this.node.removeClass("expanded")
 				this.utc.hide()
 				this.meta.hide()
+				this.category.disabled(true)
+				this.category.expanded(false)
 				this.actions.expanded(false)
 				/*this.counts.hide()*/
 			}
@@ -185,7 +187,7 @@ ui.User.View.Info = Class.extend({
 			'Views': this.model.views,
 			'Revisions': this.counts.node,
 			'Reverted': this.model.activity.reverted,
-			'Desirability': parseInt(this.model.desirability.likelihood*1000)/1000
+			'Desirability': (this.model.desirability.ratio||0).toPrecision(4)
 		})
 		
 		if(this.model.views > 0){

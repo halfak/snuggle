@@ -42,6 +42,7 @@ env = {
 		'good-faith': "\u2714",
 		'ambiguous': "?",
 		'bad-faith': "\u2717",
-		'history': "\u231b"
+		//'history': "\u231b",
+		'history': "\u231a"
 	}
 }

@@ -34,13 +34,14 @@ ui.EditCounts.Graph = Class.extend({
 		this.node.children().remove() //kill the children
 		for(var ns in counts){
 			if(ns != "all"){
+				var namespace = configuration.mediawiki.namespaces[ns] || {name: ns + ": "} 
 				this.node.append(
 					$("<tr>").append(
 						$("<th>").append(
 							$('<a>')
 								.attr('target', "_blank")
 								.attr('href', util.user_contribs_href(user.name, ns))
-								.text(configuration.mediawiki.namespaces[ns].name || "Article")
+								.text(namespace.name || "Article")
 						),
 						$("<td>").append(
 							$("<div>")

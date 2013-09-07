@@ -76,6 +76,8 @@ def test_complete_constructor():
 	eq_(new_user.views, views)
 	eq_(new_user.activity, activity)
 	eq_(new_user.desirability, desirability)
+	eq_(new_user.has_talk_page, has_talk_page)
+	eq_(new_user.has_user_page, has_user_page)
 	eq_(new_user.talk, talk)
 	eq_(new_user.category, category)
 	

@@ -62,7 +62,8 @@ ui.User.Model.Desirability = Class.extend({
 		}
 		
 		this.likelihood = doc.likelihood
-		this.scores = doc.scores
+		this.ratio      = doc.ratio
+		this.scores     = doc.scores
 		
 		this.changed.notify()
 	}

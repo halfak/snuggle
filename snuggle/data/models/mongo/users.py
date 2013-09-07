@@ -15,7 +15,7 @@ USER_FIELDS = [
 	'activity',
 	'talk',
 	'category',
-	'desirability',
+	'desirability.ratio',
 	'views',
 	'has_user_page',
 	'has_talk_page'

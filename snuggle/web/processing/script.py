@@ -22,6 +22,7 @@ class Script:
 			sstream.write(self.processor.read("js/ui.button.js"))
 			sstream.write(self.processor.read("js/ui.element.js"))
 			sstream.write(self.processor.read("js/ui.dropper.js"))
+			sstream.write(self.processor.read("js/ui.expander.js"))
 			sstream.write(self.processor.read("js/ui.fields.js"))
 			sstream.write(self.processor.read("js/ui.definition_list.js"))
 			sstream.write(self.processor.read("js/ui.edit_counts.js"))

@@ -1,10 +1,11 @@
+import sys
 from snuggle.util import desirability
 
 from . import serializable
 
 class Desirability(serializable.Type):
 	
-	def __init__(self, scores=None, likelihood=None):
+	def __init__(self, scores=None, ratio=None, likelihood=None):
 		# Note that likelihood is ignored purposefully.
 		scores = scores if scores is not None else {}
 		
@@ -16,6 +17,7 @@ class Desirability(serializable.Type):
 		"""
 		return {
 			'likelihood': self.likelihood(),
+			'ratio': self.ratio(),
 			'scores': self.scores
 		}
 	
@@ -24,4 +26,7 @@ class Desirability(serializable.Type):
 	
 	def likelihood(self):
 		return desirability.likelihood(self.scores.values())
+	
+	def ratio(self):
+		return min(sys.maxint, desirability.ratio(self.scores.values()))
 	

@@ -3,10 +3,9 @@ ui = window.ui || {}
 ui.Categorizer = Class.extend({
 	init: function(user){
 		this.user = user // Expects the user model
-		this.view = new ui.Categorizer.View(this.user.category)
+		this.view  = new ui.Categorizer.View(this.user.category)
 		
 		this.node = this.view.node
-		this.current = this.view.current
 		
 		this.view.activated.attach(this._handle_activation.bind(this))
 	},
@@ -14,10 +13,14 @@ ui.Categorizer = Class.extend({
 		this.view.expanded(true)
 		this.view.categories.select(val)
 	},
-	expanded: function(){
+	expanded: function(expanded){
+		this.view.expanded(expanded)
+	},
+	disabled: function(disabled){
+		this.view.disabled(disabled)
 	},
 	_handle_activation: function(_){
-		logger.debug("ui.categorizer: handling activation")
+		logger.debug("ui.Categorizer: handling activation")
 		if(!SNUGGLE.snuggler.authenticated()){
 			alert(i18n.get("You must log in before categorizing users."))
 			SNUGGLE.snuggler.ping()
@@ -27,13 +30,14 @@ ui.Categorizer = Class.extend({
 				this.user, 
 				{
 					category: this.view.categories.val(), 
-					comment: this.view.form.comment.val()
+					comment: this.view.categories.form.comment.val()
 				},
 				function(doc){
 					if(doc){
 						this.user.category.load_doc(doc)
 					}
 					this.view.categories.disabled(false)
+					this.view.expanded(false)
 				}.bind(this),
 				function(message, doc, meta){
 					if(doc.code == "permissions"){
@@ -49,41 +53,30 @@ ui.Categorizer = Class.extend({
 	}
 })
 
-ui.Categorizer.View = Class.extend({
+ui.Categorizer.View = ui.Expander.extend({
 	init: function(model){
 		this.model = model
 		
-		this.node = $("<div>")
-			.addClass("categorizer")
-		
-		
-		// Status indicator of the current category.  This can be included 
-		// anywhere else.  It does not appear in the categorizer widget.
 		this.current = {
 			node: $("<div>")
 				.addClass("current")
 		}
-			
-		this.history = new ui.Categorizer.View.History(this.model)
-		this.node.append(this.history.node)
-		
-		this.header = {
-			node: $("<div>")
-				.addClass("header")
-				.html(i18n.get("Categorize"))
-				.attr('title', i18n.get("categorize this user based on their activity"))
-		}
-		this.node.append(this.header.node)
-		
-		this.form = new ui.Categorizer.View.Form()
-		this.form.activated.attach(this._handle_form_activation.bind(this))
-		this.form.cancelled.attach(this._handle_form_cancellation.bind(this))
-		this.node.append(this.form.node)
 		
 		this.categories = new ui.Categorizer.View.Categories(this.model)
-		this.node.append(this.categories.node)
+		this.history    = new ui.Categorizer.View.History(this.model)
+		
+		this._super({
+			label: this.current.node,
+			content: $("<div>").append(this.categories.node).append(this.history.node),
+			tooltip: i18n.get("Click here to categorize this user"),
+			class: "categorizer",
+			tabindex: env.tabindex.categorizer
+		})
+		this.changed.attach(this._handle_expander_change.bind(this))
 		
 		this.categories.activated.attach(this._handle_categories_activation.bind(this))
+		this.categories.form.activated.attach(this._handle_form_activation.bind(this))
+		this.categories.form.cancelled.attach(this._handle_form_cancellation.bind(this))
 		
 		this.model.changed.attach(this._handle_change.bind(this))
 		
@@ -95,13 +88,14 @@ ui.Categorizer.View = Class.extend({
 	_handle_change: function(_){
 		this._render()
 	},
-	_handle_categories_activation: function(_){
-		logger.debug("ui.categorizer.view: Handling categories activation.")
-		if(this.categories.val() != this.model.category){
-			this.form.expanded(true)
-		}else{
-			this.form.expanded(false)
+	_handle_expander_change: function(_){
+		if(!this.expanded()){
+			this.categories.reset()
+			this.categories.form.expanded(false)
+			this.history.expanded(false)
 		}
+	},
+	_handle_categories_activation: function(_){
 	},
 	_handle_form_cancellation: function(_){
 		this.categories.reset()
@@ -110,24 +104,28 @@ ui.Categorizer.View = Class.extend({
 	_handle_form_activation: function(_){
 		this.activated.notify()
 	},
-	_render: function(){
-		this.current.node.html("") // Clear
-		
+	_set_current: function(category){
 		var tooltip = ""
-		if(this.model.category){
+		if(category){
 			tooltip = i18n.get("This user is currently categorized as ") + 
-			          i18n.get(this.model.category) + "."
+			          i18n.get(category) + "."
 		}else{
 			tooltip = i18n.get("This user has not been categorized yet.")
 		}
+		
 		this.current.node.append(
 			$("<div>")
 				.addClass("category")
 				.addClass("icon")
-				.addClass(this.model.category || "uncategorized")
-				.text(env.icons[this.model.category] || "")
+				.addClass(category || "uncategorized")
+				.text(env.icons[category] || "")
 				.attr('title', tooltip)
 		)
+	},
+	_render: function(){
+		this.current.node.html("") // Clear
+		console.log(this.model)
+		this._set_current(this.model.category)
 	}
 })
 
@@ -212,26 +210,31 @@ ui.Categorizer.View.Categories = Class.extend({
 		this.node = $("<div>")
 			.addClass("categories")
 		
+		this.form = new ui.Categorizer.View.Form()
+		this.form.cancelled.attach(this._handle_form_cancel.bind(this))
+		this.form.expanded(false)
+		this.node.append(this.form.node)
+		
 		this.buttons = {
 			'good-faith': new ui.Button({
 				label: i18n.get(env.icons['good-faith']),
 				tooltip: i18n.get("This user is at least trying to do something useful (or press #1)"),
 				value: "good-faith",
-				class: "category good-faith",
+				class: "category icon good-faith",
 				tabindex: env.tabindex.categorizer
 			}),
 			ambiguous: new ui.Button({
 				label: i18n.get(env.icons['ambiguous']),
 				tooltip: i18n.get("Its unclear whether this editor is trying to be productive or not (or press #2)"),
 				value: "ambiguous",
-				class: "category ambiguous",
+				class: "category icon ambiguous",
 				tabindex: env.tabindex.categorizer
 			}),
 			'bad-faith': new ui.Button({
 				label: i18n.get(env.icons['bad-faith']),
 				tooltip: i18n.get("This editor is trying to cause harm or be disruptive (or press #3)"),
 				value: "bad-faith",
-				class: "category bad-faith",
+				class: "category icon bad-faith",
 				tabindex: env.tabindex.categorizer
 			})
 		}
@@ -250,9 +253,13 @@ ui.Categorizer.View.Categories = Class.extend({
 	},
 	_handle_button_activation: function(button){
 		this._select(button)
+		this.activated.notify()
 	},
 	_handle_change: function(){
 		this._render()
+	},
+	_handle_form_cancel: function(){
+		this.reset()
 	},
 	val: function(val){
 		if(val === undefined){
@@ -270,6 +277,8 @@ ui.Categorizer.View.Categories = Class.extend({
 		}
 	},
 	reset: function(){
+		this.form.clear()
+		this.form.expanded(false)
 		this._render()
 	},
 	select: function(val){
@@ -277,6 +286,13 @@ ui.Categorizer.View.Categories = Class.extend({
 		this.activated.notify()
 	},
 	_select: function(button, notify){
+		if(button){
+			if(button.value != this.model.category){
+				this.form.expanded(true)
+			}else{
+				this.form.expanded(false)
+			}
+		}
 		if(button !== this.selection){
 			if(this.selection){
 				this.selection.selected(false)
@@ -287,8 +303,8 @@ ui.Categorizer.View.Categories = Class.extend({
 				logger.debug("ui.categorizer: Setting selection of button " + button.value)
 				this.selection.selected(true)
 			}
+			this.changed.notify()
 		}
-		this.activated.notify()
 	},
 	disabled: function(disabled){
 		if(disabled === undefined){
@@ -310,23 +326,52 @@ ui.Categorizer.View.Categories = Class.extend({
 })
 
 
-ui.Categorizer.View.History = ui.Dropper.extend({
+ui.Categorizer.View.History = Class.extend({
 	init: function(model){
 		this.model = model
+		
+		this.node = $("<div>")
+			.addClass("history")
+		
+		this.tab = {
+			node: $("<div>")
+				.addClass("tab")
+				.append(
+					$("<span>")
+						.append($("<span>").addClass("icon").html(i18n.get(env.icons['history'])))
+						.append($("<span>").addClass("header").html(i18n.get("categorization history")))
+				)
+				.click(this._handle_tab_click.bind(this))
+		}
+		this.node.append(this.tab.node)
 		
 		this.history = {
 			node: $("<div>")
 				.addClass("history")
 		}
+		this.node.append(this.history.node)
 		
-		this._super({
-			label: $("<span>").html(i18n.get("history")),
-			tooltip: i18n.get("click here to view the categorization history for this user"),
-			class: "history",
-			content: this.history.node
-		})
+		this.model.changed.attach(this._handle_change.bind(this))
 		
 		this._render()
+	},
+	_handle_tab_click: function(e){
+		this.expanded(!this.expanded())
+		util.stop_propagation(e)
+	},
+	_handle_change: function(_){
+		this._render()
+	},
+	expanded: function(expanded){
+		if(expanded === undefined){
+			return this.node.hasClass("expanded")
+		}else{
+			if(expanded){
+				this.node.addClass("expanded")
+			}else{
+				this.node.removeClass("expanded")
+			}
+		}
 	},
 	_render: function(){
 		this.history.node.html("") // Clears history space
@@ -347,6 +392,7 @@ ui.Categorizer.View.History = ui.Dropper.extend({
 						.append(
 							$("<div>")
 								.addClass("category")
+								.addClass("icon")
 								.addClass(categorization.category)
 								.append(env.icons[categorization.category])
 						)
