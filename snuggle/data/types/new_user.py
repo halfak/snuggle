@@ -11,7 +11,7 @@ class NewUser(User):
 	             activity=None, desirability=None, talk=None, category=None):
 		User.__init__(self, id, name)
 		self.registration  = int(registration)
-		self.views         = 0
+		self.views         = views
 		self.activity      = Activity.deserialize(activity) if activity != None else Activity()
 		self.desirability  = Desirability.deserialize(desirability) if desirability != None else Desirability()
 		self.talk          = Talk.deserialize(talk) if talk != None else Talk()
