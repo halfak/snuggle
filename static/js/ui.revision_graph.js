@@ -438,9 +438,13 @@ ui.DayGrid = Class.extend({
 		var days_since_origin = Math.floor((util.now_ms() - this.origin)/env.miliseconds.DAY)
 		this._ensure_days(days_since_origin)
 		
-		
 		this.revision_selected = new Event(this)
 		
+		$('body').click(this._handle_body_click.bind(this))
+		
+	},
+	_handle_body_click: function(e){
+		this.clear_cursor()
 	},
 	_handle_revision_clicked: function(day, index, revision){
 		this.set_cursor(day.day, index)

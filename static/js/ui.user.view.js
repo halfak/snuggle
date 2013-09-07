@@ -396,6 +396,7 @@ ui.User.View.Talk.Thread.NoTraceIcon = Class.extend({
 		this.node = $("<dt>")
 			.addClass("trace_icon")
 			.addClass("no_trace")
+			.attr('title', i18n.get("general discussion thread"))
 	}
 })
 ui.User.View.Talk.Thread.TraceIcon = Class.extend({
