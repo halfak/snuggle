@@ -68,7 +68,7 @@ ui.Categorizer.View = ui.Expander.extend({
 		this._super({
 			label: this.current.node,
 			content: $("<div>").append(this.categories.node).append(this.history.node),
-			tooltip: i18n.get("Click here to categorize this user"),
+			tooltip: i18n.get("Click here to move this user to a categorized list"),
 			class: "categorizer",
 			tabindex: env.tabindex.categorizer
 		})
@@ -107,7 +107,7 @@ ui.Categorizer.View = ui.Expander.extend({
 	_set_current: function(category){
 		var tooltip = ""
 		if(category){
-			tooltip = i18n.get("This user is currently categorized as ") + 
+			tooltip = i18n.get("This user is currently categorized as") + " " +
 			          i18n.get(category) + "."
 		}else{
 			tooltip = i18n.get("This user has not been categorized yet.")
