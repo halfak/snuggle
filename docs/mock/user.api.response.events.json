@@ -1,0 +1,155 @@
+/*
+This file contains three examples of queries that I'd like Snuggle's server-side sync & query system to support generally.  
+*/
+
+/* This query is inteded to be used by a gadget in the MediaWiki UI in order to gather all of the data for a single user. */
+{
+
+	debug: {
+		processor: "editors.query",
+		query: {
+			ids: [20302078], 
+			fields: ['id', 'name', 'registration', 'events', 'status', 'desirability'], 
+			debug: true
+		},
+		request: 1234567209.263,
+		response: 1234567890.483,
+		users: 1
+	}
+
+	editors: [
+		{
+			id: 20302078,
+			name: "WilfredOwnsWiki",
+			registration: 3245602637,
+			events: [
+				{type: "new_talk", timestamp: 3245623620, revision: { ... }, section: {index: 2,  title: "January 2013"}, trace: {name: "Block Notification", negative: true}},
+				{type: "block", timestamp: 3247792801, log_event: {id: 25121722, user: {id: 27263, text: "TheOriginalSoni"}, comment: "Indefinite block", ... },
+				{type: "revert", timestamp: 3245678923, reverted: 234567897, revision: {id: 234567899, page: {id: 12, title: "Anarchism", namespace: "0"}, ... },
+				{type: "edit", timestamp: 3245678902, revision: {id: 234567897, page: {id: 12, title: "Anarchism", namespace: "0"}, ... },
+				{type: "new_talk", timestamp: 3245623620, revision: { ... }, section: {index: 2, title: "January 2013"}, trace: {name: "Vandalism Warning", negative: true}},
+				{type: "revert", timestamp: 3245623620, reverted: 234567888, revision: {id: 234567890, page: {id: 12, title: "Anarchism", namespace: "0"}, ... },
+				{type: "edit", timestamp: 3245603726, revision: {id: 234567888, page: {id: 12, title: "Anarchism", namespace: "0"}, ... }
+			],
+			status: {
+				edits: {
+					total: {
+						all: 2,
+						0: 2
+					},
+					reverted: {
+						all: 2,
+						0: 2
+					},
+					sessions: 1
+				}
+				messages: {
+					total: 2,
+					negative: 2
+				},
+				blocked: {
+					total: 1,
+					currently: true
+				},
+				groups: [],
+				last_active: 3245678902
+			},
+			desirability: {
+				likelihood: 0.523221,
+				ratio: 1.1000232
+			}
+		}
+	]
+		
+}
+
+/* This query is intended to be used to populate a list of users (e.g. inside Snuggle's UI).  Note that events are not included in order to minimize bandwidth usage.*/
+{
+
+	debug: {
+		processor: "editors.query",
+		query: {
+			registration_after: 1234567890,
+			last_active: 1234595673, 
+			sort_by: "desirability.ratio",
+			direction: "ascending",
+			fields: ['id', 'name', 'registration', 'status', 'desirability'], 
+			limit: 10,
+			debug: true
+		},
+		request: 1234567209.263,
+		response: 1234567890.483,
+		users: 10
+	}
+
+	editors: [
+		{
+			id: 32456789,
+			name: "HorayFeet!",
+			registration: 1234567899,
+			status: {
+				edits: {
+					total: {
+						all: 12,
+						0: 10,
+						2: 2
+					},
+					reverted: {
+						all: 1,
+						0: 1
+					},
+					sessions: 3
+				},
+				messages: {
+					total: 3,
+					negative: 1
+				},
+				blocked: {
+					total: 1,
+					currently: true
+				},
+				groups: [],
+				last_active: 3245678902
+			},
+			desirability: {
+				likelihood: 0.9521,
+				ratio: 23.26261
+			}
+		},
+		...
+
+	]
+
+}
+
+
+/* This query gathers the events for a user.  This query is intended to be used in a flyweight design pattern to load user events as-needed within a listing of users. */
+{
+
+	debug: {
+		processor: "editors.query",
+		query: {
+			ids: [20302078], 
+			fields: ['id', 'events'], 
+			debug: true
+		},
+		request: 1234567209.263,
+		response: 1234567890.483,
+		users: 1
+	}
+
+	editors: [
+		{
+			id: 20302078,
+			events: [
+				{type: "new_talk", timestamp: 3245623620, revision: { ... }, section: {index: 2,  title: "January 2013"}, trace: {name: "Block Notification", negative: true}},
+				{type: "block", timestamp: 3247792801, log_event: {id: 25121722, user: {id: 27263, text: "TheOriginalSoni"}, comment: "Indefinite block", ... },
+				{type: "revert", timestamp: 3245678923, reverted: 234567897, revision: {id: 234567899, page: {id: 12, title: "Anarchism", namespace: "0"}, ... },
+				{type: "edit", timestamp: 3245678902, revision: {id: 234567897, page: {id: 12, title: "Anarchism", namespace: "0"}, ... },
+				{type: "new_talk", timestamp: 3245623620, revision: { ... }, section: {index: 2, title: "January 2013"}, trace: {name: "Vandalism Warning", negative: true}},
+				{type: "revert", timestamp: 3245623620, reverted: 234567888, revision: {id: 234567890, page: {id: 12, title: "Anarchism", namespace: "0"}, ... },
+				{type: "edit", timestamp: 3245603726, revision: {id: 234567888, page: {id: 12, title: "Anarchism", namespace: "0"}, ... }
+			]
+		}
+	]		
+}
