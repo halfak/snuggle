@@ -40,14 +40,24 @@ def test_constructor():
 		"12345678901234567890123457890aa"
 	)
 	
+	# Check #1
 	assert not reverted.check(not_reverting)
 	eq_(reverted.last_id, not_reverting.id)
 	
+	# Check #2
 	assert not reverted.check(revert_to)
 	eq_(reverted.last_id, revert_to.id)
 	
+	# Check #3
 	assert reverted.check(revert)
 	eq_(reverted.last_id, revert.id)
+	
+	# Check #4 & #5
+	reverted.check(Revision(12315, 1234567890, "", ByteDiff(100, 10), "12345678901234567890123457890aa"))
+	reverted.check(Revision(12316, 1234567890, "", ByteDiff(100, 10), "12345678901234567890123457890aa"))
+	
+	assert reverted.done()
+	
 	
 	eq_(reverted, Reverted.deserialize(reverted.serialize()))
 	

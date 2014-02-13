@@ -2,6 +2,11 @@ from . import serializable
 
 from .revision import ChangeRevision
 
+# TODO: Why not just track page state?
+# - One reason is that tracking page state in order to identify who was reverted
+#   would require storing HISTORY_LIMIT revisions inside the object rather than
+#   just the one.  It seems like that would be better though.
+
 class Reverted(serializable.Type):
 	
 	HISTORY_LIMIT = 5
@@ -9,7 +14,7 @@ class Reverted(serializable.Type):
 	def __init__(self, revision, history, processed=0, last_id=0, id=None):
 		self.revision  = ChangeRevision.deserialize(revision)
 		self.id        = self.revision.id
-		self.history   = history; assert history != None
+		self.history   = history; assert history != None # WTF.  Is this a dict or what?
 		self.processed = processed
 		self.last_id   = last_id
 	
@@ -25,4 +30,4 @@ class Reverted(serializable.Type):
 			return False
 	
 	def done(self):
-		self.processed >= self.HISTORY_LIMIT
+		return self.processed >= self.HISTORY_LIMIT

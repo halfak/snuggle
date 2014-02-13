@@ -1,4 +1,4 @@
-import bottle, os.path, time, logging, traceback, slimit
+import bottle, os.path, time, logging, traceback
 
 import StringIO
 

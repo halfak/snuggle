@@ -4,6 +4,7 @@ from ..byte_diff import ByteDiff
 from ..user import User, Snuggler
 from ..page import Page
 from ..revision import UserRevision
+from ..category import Categorization
 from ..event import Event, ServerStarted, ServerStopped, UILoaded, UsersQueried
 from ..event import EventsQueried, UserViewed, UserCategorized, UserActioned
 from ..event import SnugglerLoggedIn, SnugglerLoggedOut
@@ -90,14 +91,13 @@ def test_user_viewed():
 def test_user_categorized():
 	user     = User(10, "Herp")
 	snuggler = Snuggler(12, "Derp")
-	category = "ambiguous"
+	categorization = Categorization(snuggler, "ambiguous", "foo", 1234567890)
 	system_time = 1234567890
 	
-	user_categorized = UserCategorized(user, snuggler, category, system_time=system_time)
+	user_categorized = UserCategorized(user, categorization, system_time=system_time)
 	
 	eq_(user_categorized.user, user)
-	eq_(user_categorized.snuggler, snuggler)
-	eq_(user_categorized.category, category)
+	eq_(user_categorized.categorization, categorization)
 	eq_(user_categorized.system_time, system_time)
 	
 	eq_(user_categorized, Event.deserialize(user_categorized.serialize()))

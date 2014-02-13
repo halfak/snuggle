@@ -129,6 +129,8 @@ class Users:
 		)
 	
 	def set_reverted(self, user_id, rev_id, revert):
+		# TODO: check if revision was already reverted inc
+		# Still need to figure out why its so heavily over-counted. 
 		revert = types.Revert.convert(revert)
 		
 		inc = {}

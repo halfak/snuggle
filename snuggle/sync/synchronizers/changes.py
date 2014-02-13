@@ -223,7 +223,8 @@ class Changes(Synchronizer):
 				reverted.revision.id,
 				revision
 			)
-			self.model.reverteds.remove(reverted)
+			# A revision can only be reverted once.  Let's remove it.
+			self.model.reverteds.remove(reverted) 
 			logger.debug("Revision %s by %s was reverted by %s" % (
 					reverted.revision.id,
 					reverted.revision.user.id,

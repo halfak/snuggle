@@ -31,15 +31,21 @@ def beta_likelihood(scores, model):
 
 
 def likelihood(scores):
-	desirable_p = beta_likelihood(scores, DESIRABLE) * DESIRABLE_PRIOR
-	undesirable_p = beta_likelihood(scores, UNDESIRABLE) * UNDESIRABLE_PRIOR
-	
-	return desirable_p / (desirable_p + undesirable_p)
+	if len(scores) == 0:
+		return DESIRABLE_PRIOR
+	else:
+		desirable_p = beta_likelihood(scores, DESIRABLE) * DESIRABLE_PRIOR
+		undesirable_p = beta_likelihood(scores, UNDESIRABLE) * UNDESIRABLE_PRIOR
+		
+		return desirable_p / (desirable_p + undesirable_p)
 
 def ratio(scores):
-	desirable_p = beta_likelihood(scores, DESIRABLE) * DESIRABLE_PRIOR
-	undesirable_p = beta_likelihood(scores, UNDESIRABLE) * UNDESIRABLE_PRIOR
-	
-	return desirable_p / undesirable_p
+	if len(scores) == 0:
+		return DESIRABLE_PRIOR/UNDESIRABLE_PRIOR
+	else:
+		desirable_p = beta_likelihood(scores, DESIRABLE) * DESIRABLE_PRIOR
+		undesirable_p = beta_likelihood(scores, UNDESIRABLE) * UNDESIRABLE_PRIOR
+		
+		return desirable_p / undesirable_p
 	
 

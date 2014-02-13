@@ -1,4 +1,4 @@
-import logging, StringIO, slimit
+import logging, StringIO
 
 class Script:
 	def __init__(self, processor):
