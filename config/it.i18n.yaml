@@ -1,0 +1,109 @@
+last_updated: "May 9th, 2014"
+
+lang: it
+
+"✔": "✔"
+"?": "?"
+"✗": "✗"
+"⌛": "⌛"
+"⌚": "⌚"
+(no edit summary): (nessun oggetto)
+(no comment): (nessun commento)
+
+all: tutto # attribute of what?
+all events: tutti gli eventi
+as: come # context please
+
+ambiguous: ambiguo
+any page: qualsiasi pagina
+ascending: crescente
+
+bad-faith: malafede # hardcoded word order?
+by: di
+by user: dell'utente # or "da"?
+
+categorizations: categorizzazioni
+categorization history: cronologia della categorizzazione
+Categorize: Categorizza
+categorized: categorizzato
+categorize this user based on their activity: classifica quest'utente in base alle sue azioni
+Checking for previous session...: Controlla la sessione precedente...
+click here to log in.: accedi.
+click here to log out.: esci.
+Click here to move this user to a categorized list: Clicca qui per aggiungere l'utente a una classificazione
+click here to view the categorization history for this user: clicca qui per vedere la cronologia della classificazione di quest'utente
+contribs: contributi
+comment: commenta # action?
+
+days since registration: giorni dalla registrazione # is there a number of days
+descending: descrescente
+desirability: desiderabilità
+
+edits: contributi
+edits to: contributi a
+
+general discussion thread: discussione generale
+good-faith: buona fede # adjective
+
+help: aiuto
+history: cronologia
+
+Interactive edit graph: Grafico interattivo della cronologia
+"Its unclear whether this editor is trying to be productive or not (or press #2)": "Non è chiaro se l'utenza intenda essere costruttiva o no (o, premi #2)" # needs gender; why quotes?
+
+last activity: ultima attività
+leave a comment explaining your decision (optional): scrivi un commento per spiegare la tua decisione (opzionale)
+load up the list of newcomers: carica l'elenco dei nuovi arrivati
+Loading...: Caricamento in corso...
+Logged in as: Effettuato l'accesso come
+Log into your wiki account.: Accedi alla tua utenza wiki.
+Log out of Snuggle?: Esci da Snuggle?
+log in: accedi
+log out: esci
+
+"new users that haven't been categorized yet": "nuovi utenti non ancora classificati" # why quotes?
+new users that have been categorized as good-faith: nuovi utenti considerati in buona fede
+new users that have been categorized as ambiguous: nuovi utenti considerati ambigui
+new users that have been categorized as bad-faith: nuovi utenti considerati in malafede
+newcomers with more than: Nuovi utenti con oltre # lego
+Not logged in...: Accesso non effettuato...
+
+Password: Password
+
+Recent activity: Attività recente
+registered: registrato # confirmation? adjective?
+registration date: data di registrazione
+reverted: annullo # edit summary? lego
+reverted edits: annullo modifiche
+revisions: versioni
+
+self-reverted: auto-annullamento
+Snuggle: Snuggle
+Snuggler: Snuggolatore
+sort in increasing order: metti in ordine crescente
+sort in descreasing order: metti in ordine decrescente
+sorted by: in ordine per
+start snuggle: lancia snuggle
+server started: server lanciato
+server stopped: server interrotto
+system events: eventi di sistema
+
+talk: discussione
+Talk page activity: Attività nella discussione
+This user has not been categorized yet.: Utenza non ancora classificata.
+This user is currently categorized as: L'utenza è al momento considerata # lego
+"This user is at least trying to do something useful (or press #1)": "L'utenza sta almeno cercando di essere costruttiva (o premi #1)"
+"This editor is trying to cause harm or be disruptive (or press #3)": "L'utenza sta cercando di far danni (o premi #3)"
+total edits: modifiche totali
+
+uncategorized: non classificato
+user: utente
+user actions: azioni dell'utente
+Username: Nome utente
+Username and stats: Nome utente e statistiche
+
+views: modalità
+
+You must log in before categorizing users.: Devi accedere prima di classificare gli utenti.
+your wiki username: il tuo nome utente
+your wiki password: la tua password. # why period
