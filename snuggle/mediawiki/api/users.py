@@ -40,3 +40,20 @@ class Users(APISubset):
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
 	
+	def info(self):
+		self.api.post(
+			{
+				'action': 'query', 
+				'meta': 'userinfo'
+			}
+		)
+		
+		try:
+			return (
+				doc['query']['user_info']['id'],
+				doc['query']['user_info']['name']
+			)
+		except KeyError as e:
+			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
+			
+	

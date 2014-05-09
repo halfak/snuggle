@@ -19,22 +19,22 @@ class User(serializable.Type):
 
 class Snuggler(User, serializable.Type):
 	
-	def __init__(self, id, name, cookies=None):
+	def __init__(self, id, name, oauth=None):
 		User.__init__(self, id, name)
-		self.cookies = cookies
+		self.oauth = oauth
 	
 	def __eq__(self, other):
 		try:
 			return (
 				User.__eq__(self, other) and
-				self.cookies == other.cookies
+				self.oauth == other.oauth
 			)
 		except AttributeError:
 			return False
 	
 	def serialize(self):
 		"""
-		Overriding so that we forget cookies whenever we store snuggler info
+		Overriding so that we forget oauth whenever we store snuggler info
 		"""
 		return {
 			'id': self.id,

@@ -25,9 +25,10 @@ processor = NonProcessor()
 
 class Processor:
 	
-	def __init__(self, model, mwapi, user_actions, static_dir):
+	def __init__(self, model, mwapi, oauth, user_actions, static_dir):
 		self.model = model
 		self.mwapi = mwapi
+		self.oauth = oauth
 		self.static_dir = static_dir
 		
 		self.initialized = time.time()
@@ -81,6 +82,7 @@ class Processor:
 		)
 		
 		mwapi = mediawiki.API.from_config(config)
+		oauth = mediawiki.OAuth.from_config(config)
 		user_actions = mediawiki.UserActions.from_config(config)
 		return Processor(
 			model,

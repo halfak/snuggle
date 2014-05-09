@@ -1,4 +1,4 @@
-last_updated: "July 12th, 2013"
+last_updated: "May 9th, 2014"
 author: 
   name: Aaron Halfaker
   email: aaron.halfaker@gmail.com
@@ -7,6 +7,10 @@ author:
 # This configuration file specifies the behavior of Snuggle
 # TODO: Assume the CWD is root?
 root_directory: /sites/snuggle.grouplens.org
+
+oauth:
+  consumer_key: fe4651a8d592d0d284b3b3f1f1af4eaf
+  consumer_secret: ???
 
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.
@@ -19,7 +23,7 @@ web_server:
     session.auto: True
     session.key: "s_id"
     # Replace with randomly generated string. See ./generate_secret
-    session.secret: 'es/C`vg3wXuL_ExZXe^jAj-M{7kXC9_dz:!8dZ0eJpp)R!mDdo'
+    session.secret: '---------------------------------------'
     # 30 minutes
     session.timeout: 1800
 

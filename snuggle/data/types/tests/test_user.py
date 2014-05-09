@@ -39,16 +39,16 @@ def test_normalize():
 def test_snuggler():
 	id = 10
 	name = "Herp"
-	cookies = {
+	oauth = {
 		'foo': "Bar",
 		'herp': "Derp"
 	}
-	snuggler = Snuggler(id, name, cookies)
+	snuggler = Snuggler(id, name, oauth)
 	
 	
 	eq_(snuggler.id, id)
 	eq_(snuggler.name, name)
-	eq_(snuggler.cookies, cookies)
+	eq_(snuggler.oauth, oauth)
 	
 	# This should not match because the cookies member becomes None when the 
 	# object is serialized.
