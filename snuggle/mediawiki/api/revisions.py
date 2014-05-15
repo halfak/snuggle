@@ -11,7 +11,7 @@ class Revisions(APISubset):
 			current_ids = ids[:50]
 			ids = ids[50:]
 			
-			doc, cookies = self.api.post(
+			doc = self.api.post(
 				{
 					'action': "query",
 					'prop': "revisions",

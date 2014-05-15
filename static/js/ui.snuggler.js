@@ -6,8 +6,9 @@ ui.Snuggler = Class.extend({
 		this.view  = view || new ui.Snuggler.View(this.model)
 		this.node  = this.view.node
 		
-		this.view.login_submitted.attach(this._handle_login_submit.bind(this))
-		this.view.logout_submitted.attach(this._handle_logout_submit.bind(this))
+		this.view.menu.login.submitted.attach(this._handle_login_submit.bind(this))
+		this.view.menu.logout.submitted.attach(this._handle_logout_submit.bind(this))
+		$(window).focus(this._handle_window_focus.bind(this))
 		
 		this.model.changed.attach(this._handle_change.bind(this))
 		
@@ -19,37 +20,12 @@ ui.Snuggler = Class.extend({
 		this.changed.notify()
 	},
 	_handle_login_submit: function(_, creds){
-		if(creds.name.length > 0){
-			this.view.menu.disabled(true)
-			servers.local.snuggler.authenticate(
-				creds.name,
-				creds.pass,
-				function(doc){
-					this.model.load_doc(doc)
-					this.view.menu.disabled(false)
-					this.view.menu.expanded(false)
-					this.view.reset()
-				}.bind(this),
-				function(message, doc, meta){
-					if(doc && doc.code && doc.code == "authentication"){
-						if(meta.type == "password"){
-							alert("Could not log in.  Password incorrect.")
-						}else if(meta.type == "username"){
-							alert("Could not log in.  No user by the name '" + creds.name + "'.")
-						}else if(meta.type == "connection"){
-							alert("Could not log in.  Connection to " + MEDIAWIKI.domain + " failed.")
-						}else{
-							alert(message)
-						}
-					}else{
-						alert(message)
-					}
-					this.view.menu.disabled(false)
-				}.bind(this)
-			)
-		}else{
-			alert("You must specify a username in order to log in.")
+		
+		newwindow = window.open("/oauth/initiate/", "OAuth",'height=768,width=1024');
+		if(window.focus){
+			newwindow.focus()
 		}
+		
 	},
 	_handle_logout_submit: function(){
 		this.view.menu.disabled(true)
@@ -65,17 +41,21 @@ ui.Snuggler = Class.extend({
 			}.bind(this)
 		)
 	},
+	_handle_window_focus: function(e){
+		this.authenticated()
+	},
 	ping: function(){
 		this.view.menu.expanded(true)
 	},
 	authenticated: function(){
 		if(this.model.user){
-			if(!this._last_check || util.now() - this._last_check > delays.check_snuggler_auth){
-				this._load_snuggler()
-			}
 			return true
 		}else{
-			return false
+			if(this._load_snuggler()){
+				return true
+			}else{
+				return false
+			}
 		}
 	},
 	_load_snuggler: function(){
@@ -83,6 +63,7 @@ ui.Snuggler = Class.extend({
 			function(doc){
 				if(doc.logged_in){
 					this.model.load_doc(doc.snuggler)
+					this.view.menu.expanded(false)
 				}else{
 					this.model.clear()
 				}
@@ -150,23 +131,9 @@ ui.Snuggler.View = Class.extend({
 		this.node.append(this.name.node)
 		
 		this.menu = new ui.Snuggler.View.Menu()
-		this.menu.login.submitted.attach(this._handle_login_submit.bind(this))
-		this.menu.logout.submitted.attach(this._handle_logout_submit.bind(this))
 		this.node.append(this.menu.node)
 		
-		this.login_submitted = new Event()
-		this.logout_submitted = new Event()
-		
 		this.model.changed.attach(this._render.bind(this))
-	},
-	_handle_login_submit: function(_){
-		this.login_submitted.notify({
-			name: this.menu.login.name.val(),
-			pass: this.menu.login.pass.val()
-		})
-	},
-	_handle_logout_submit: function(_){
-		this.logout_submitted.notify()
 	},
 	reset: function(){
 		this.menu.login.reset()
@@ -230,11 +197,7 @@ ui.Snuggler.View.Menu = ui.Dropper.extend({
 		}
 	},
 	expanded: function(expanded){
-		ret = this._super(expanded)
-		if(expanded){
-			this.login.name.focus()
-		}
-		return ret
+		return this._super(expanded)
 	}
 })
 
@@ -251,30 +214,6 @@ ui.Snuggler.View.Menu.Login = Class.extend({
 		}
 		this.node.append(this.preamble.node)
 		
-		this.name = new ui.TextField(
-			"name", 
-			{
-				label: i18n.get("Username"), 
-				tooltip: i18n.get("your wiki username"),
-				tabindex: env.tabindex.snuggler_form
-			}
-		)
-		this.name.keypressed.attach(this._handle_keypress.bind(this))
-		this.node.append(this.name.node)
-		
-		
-		this.pass = new ui.TextField(
-			"password", 
-			{
-				label: i18n.get("Password"), 
-				tooltip: i18n.get("your wiki password"),
-				password: true,
-				tabindex: env.tabindex.snuggler_form
-			}
-		)
-		this.pass.keypressed.attach(this._handle_keypress.bind(this))
-		this.node.append(this.pass.node)
-		
 		this.login = new ui.Button(
 			{
 				label: i18n.get("log in"), 
@@ -287,19 +226,11 @@ ui.Snuggler.View.Menu.Login = Class.extend({
 		
 		this.submitted = new Event()
 	},
-	_handle_submit: function(){
+	_handle_submit: function(e){
 		if(!this.disabled()){
 			this.submitted.notify()
 		}
 		util.kill_event(e)
-	},
-	_handle_keypress: function(_, e){
-		if(!this.disabled()){
-			if(e.which == env.keys.ENTER){
-				this.submitted.notify()
-				util.kill_event(e)
-			}
-		}
 	},
 	_handle_login_activated: function(){
 		if(!this.disabled()){
@@ -310,14 +241,8 @@ ui.Snuggler.View.Menu.Login = Class.extend({
 		if(disabled === undefined){
 			return this.login.disabled()
 		}else{
-			this.name.disabled(disabled)
-			this.pass.disabled(disabled)
 			this.login.disabled(disabled)
 		}
-	},
-	reset: function(){
-		this.name.val('')
-		this.pass.val('')
 	}
 })
 

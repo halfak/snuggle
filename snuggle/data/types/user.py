@@ -19,15 +19,15 @@ class User(serializable.Type):
 
 class Snuggler(User, serializable.Type):
 	
-	def __init__(self, id, name, oauth=None):
+	def __init__(self, id, name, access_token=None):
 		User.__init__(self, id, name)
-		self.oauth = oauth
+		self.access_token = access_token
 	
 	def __eq__(self, other):
 		try:
 			return (
 				User.__eq__(self, other) and
-				self.oauth == other.oauth
+				self.access_token == other.access_token
 			)
 		except AttributeError:
 			return False

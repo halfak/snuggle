@@ -141,7 +141,7 @@ class Replace(Edit):
 			markup=markup,
 			page_name=page_name,
 			comment=comment,
-			cookies=snuggler.cookies if snuggler != None else None
+			access_token=snuggler.access_token if snuggler != None else None
 		)
 		return types.ReplacePreview(page_name, html, comment)
 	
@@ -152,7 +152,7 @@ class Replace(Edit):
 			page_name=page_name,
 			markup=markup,
 			comment=comment,
-			cookies=snuggler.cookies if snuggler != None else None
+			access_token=snuggler.access_token if snuggler != None else None
 		)
 		return types.EditResult(rev_id, page_name)
 
@@ -168,7 +168,7 @@ class Append(Edit):
 			markup=markup,
 			page_name=page_name,
 			comment=comment,
-			cookies=snuggler.cookies if snuggler != None else None
+			access_token=snuggler.access_token if snuggler != None else None
 		)
 		return types.AppendPreview(page_name, html, comment)
 	
@@ -179,7 +179,7 @@ class Append(Edit):
 			page_name=page_name,
 			markup=markup,
 			comment=comment,
-			cookies=snuggler.cookies if snuggler != None else None
+			access_token=snuggler.access_token if snuggler != None else None
 		)
 		return types.EditResult(rev_id, page_name)
 
@@ -201,7 +201,7 @@ class Watch(Operation):
 		page_name = self.page_name % self._vals(request, snuggler)
 		self.api.pages.watch(
 			page_name=page_name,
-			cookies=snuggler.cookies
+			access_token=snuggler.access_token
 		)
 		return types.WatchResult(page_name)
 	

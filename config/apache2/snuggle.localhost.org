@@ -1,11 +1,11 @@
-<VirtualHost snuggle.localhost.org:80>
+<VirtualHost snuggle.localhost.org:80 snuggle-en.wmflabs.org:80>
 	ServerAdmin aaron.halfaker@gmail.com
 	ServerName snuggle.localhost.org
 	
-	Redirect permanent / https://snuggle.localhost.org
+	Redirect permanent / https://snuggle-en.wmflabs.org
 
 </VirtualHost>
-<VirtualHost snuggle.localhost.org:443>
+<VirtualHost snuggle.localhost.org:443 snuggle-en.wmflabs.org:443>
 	ServerAdmin aaron.halfaker@gmail.com
 	ServerName snuggle.localhost.org
 	DocumentRoot /sites/snuggle.localhost.org

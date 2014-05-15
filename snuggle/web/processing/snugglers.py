@@ -13,6 +13,7 @@ class Snugglers:
 		self.model = model
 		self.mwapi = mwapi
 	
+	"""
 	def authenticate(self, session, creds):
 		try:
 			id, name, cookies = self.mwapi.users.authenticate(
@@ -42,6 +43,7 @@ class Snugglers:
 			logger.error(traceback.format_exc())
 		
 		return responses.success(session['snuggler'].serialize())
+	"""
 	
 	def log_out(self, session):
 		if 'snuggler' in session:

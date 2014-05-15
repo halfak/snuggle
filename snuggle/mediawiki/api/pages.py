@@ -8,15 +8,15 @@ logger = logging.getLogger("snuggle.mediawiki.api.pages")
 
 class Pages(APISubset):
 	
-	def _get_edit_token(self, page_name, cookies=None):
-		doc, cookies = self.api.post(
+	def _get_edit_token(self, page_name, access_token=None):
+		doc = self.api.post(
 			{
 				'action': "query",
 				'prop': "info|revisions",
 				'titles': page_name,
 				'intoken': "edit",
 			},
-			cookies=cookies
+			access_token=access_token
 		)
 		
 		try:
@@ -28,10 +28,10 @@ class Pages(APISubset):
 		
 		return page['edittoken']
 	
-	def append(self, page_name, markup, cookies=None, comment=""):
+	def append(self, page_name, markup, access_token=None, comment=""):
 		edit_token = self._get_edit_token(page_name, cookies)
 		
-		doc, _ = self.api.post(
+		doc = self.api.post(
 			{
 				'action': "edit",
 				'title': page_name,
@@ -39,7 +39,7 @@ class Pages(APISubset):
 				'summary': comment + self.api.comment_suffix,
 				'token': edit_token
 			},
-			cookies=cookies
+			access_token=access_token
 		)
 		
 		try:
@@ -50,10 +50,10 @@ class Pages(APISubset):
 		except KeyError as e:
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 	
-	def replace(self, page_name, markup, cookies=None, comment=""):
+	def replace(self, page_name, markup, access_token=None, comment=""):
 		edit_token = self._get_edit_token(page_name, cookies)
 		
-		doc, _ = self.api.post(
+		doc = self.api.post(
 			{
 				'action': "edit",
 				'title': page_name,
@@ -62,7 +62,7 @@ class Pages(APISubset):
 				'summary': comment + self.api.comment_suffix,
 				'format': "json"
 			},
-			cookies = cookies
+			access_token = access_token
 		)
 		
 		try:
@@ -97,7 +97,7 @@ class Pages(APISubset):
 			'rvpst': 1,
 			'format': "json"
 		})
-		doc, cookies = self.api.post(data)
+		doc = self.api.post(data)
 		
 		try:
 			page = doc['query']['pages'].values()[0]
@@ -116,8 +116,8 @@ class Pages(APISubset):
 				return None, ""
 		
 		
-	def preview(self, markup, page_name=None, comment="", cookies=None):
-		doc, cookies = self.api.post(
+	def preview(self, markup, page_name=None, comment=None, access_token=None):
+		doc = self.api.post(
 			{
 				'action': "parse",
 				'title': page_name,
@@ -126,7 +126,7 @@ class Pages(APISubset):
 				'summary': comment + self.api.comment_suffix,
 				'pst': True
 			},
-			cookies = cookies
+			access_token = access_token
 		)
 		
 		try:
@@ -140,15 +140,15 @@ class Pages(APISubset):
 		return page_name, html, comment
 		
 	
-	def watch(self, page_name, cookies=None):
-		doc, _ = self.api.post(
+	def watch(self, page_name, access_token=None):
+		doc = self.api.post(
 			{
 				'action': "query",
 				'prop': "info",
 				'titles': page_name,
 				'intoken': "watch"
 			},
-			cookies = cookies
+			access_token = access_token
 		)
 		
 		try:
@@ -160,13 +160,13 @@ class Pages(APISubset):
 		
 		logger.debug("Watching %s with token %s and cookies %s" % (page_name, page['watchtoken'], cookies))
 		
-		doc, cookies = self.api.post(
+		doc = self.api.post(
 			{
 				'action': "watch",
 				'title': page_name,
 				'token': page['watchtoken']
 			},
-			cookies = cookies
+			access_token = access_token
 		)
 		
 		try:
@@ -177,8 +177,8 @@ class Pages(APISubset):
 		except KeyError as e:
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 	
-	def history(self, page_id, rev_id, n, cookies=None):
-		doc, cookies = self.api.post(
+	def history(self, page_id, rev_id, n, access_token=None):
+		doc = self.api.post(
 			{
 				'action': "query",
 				'prop': "revisions",
@@ -186,7 +186,8 @@ class Pages(APISubset):
 				'rvdir': "older",
 				'rvstartid': rev_id-1,
 				'rvprop': "ids|sha1"
-			}
+			},
+			access_token=access_token
 		)
 		
 		try:

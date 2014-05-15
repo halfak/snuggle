@@ -25,7 +25,7 @@ class RecentChanges(APISubset):
 		elif last_timestamp != None:
 			params['rcstart'] = timestamp_to_string(last_timestamp)
 		
-		doc, cookies = self.api.post(params)
+		doc = self.api.post(params)
 		
 		try:
 			if 'query-continue' in doc:

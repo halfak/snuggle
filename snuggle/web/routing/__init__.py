@@ -1,4 +1,5 @@
 from . import default
+from . import oauth
 from . import users
 from . import snuggler
 from . import config

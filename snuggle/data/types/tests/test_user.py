@@ -1,4 +1,5 @@
 from nose.tools import eq_
+from mwoauth import AccessToken
 
 from ..user import User, Snuggler
 
@@ -39,16 +40,13 @@ def test_normalize():
 def test_snuggler():
 	id = 10
 	name = "Herp"
-	oauth = {
-		'foo': "Bar",
-		'herp': "Derp"
-	}
-	snuggler = Snuggler(id, name, oauth)
+	access_token = AccessToken("nothing", "nonsense")
+	snuggler = Snuggler(id, name, access_token)
 	
 	
 	eq_(snuggler.id, id)
 	eq_(snuggler.name, name)
-	eq_(snuggler.oauth, oauth)
+	eq_(snuggler.access_token, access_token)
 	
 	# This should not match because the cookies member becomes None when the 
 	# object is serialized.

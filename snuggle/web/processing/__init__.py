@@ -11,6 +11,7 @@ from .config import Config
 from .snugglers import Snugglers
 from .users import Users
 from .events import Events
+from .oauth import OAuth
 from .style import Style
 from .script import Script
 
@@ -25,16 +26,15 @@ processor = NonProcessor()
 
 class Processor:
 	
-	def __init__(self, model, mwapi, oauth, user_actions, static_dir):
+	def __init__(self, model, mwapi, mwoauth, user_actions, static_dir):
 		self.model = model
-		self.mwapi = mwapi
-		self.oauth = oauth
 		self.static_dir = static_dir
 		
 		self.initialized = time.time()
 		
 		self.users = Users(model, mwapi, user_actions)
 		self.events = Events(model)
+		self.oauth = OAuth(model, mwapi, mwoauth)
 		self.snugglers = Snugglers(model, mwapi)
 		self.config = Config()
 		self.style = Style(self)
@@ -87,6 +87,7 @@ class Processor:
 		return Processor(
 			model,
 			mwapi,
+			oauth,
 			user_actions,
 			static_dir
 		)

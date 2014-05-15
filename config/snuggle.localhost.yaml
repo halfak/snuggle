@@ -8,6 +8,10 @@ author:
 # TODO: Assume the CWD is root?
 root_directory: /sites/snuggle.localhost.org
 
+oauth:
+  consumer_key: fc1964fb3321aee0c73b2008bae1139b
+  consumer_secret: 75de1eb5a4ee545f954aba2f54c223a7be69b48e
+
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.
 web_server:

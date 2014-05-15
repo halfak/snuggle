@@ -13,7 +13,6 @@ protocol: https
 
 # The base domain for the MediaWiki installation.
 domain: en.wikipedia.org
-oauth_domain: mediawiki.org
 
 # The path to wiki pages and scripts on the server.  This is used for making API
 # requests and for linking back to the wiki from the the user interface.

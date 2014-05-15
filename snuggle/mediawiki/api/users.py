@@ -4,6 +4,7 @@ from .api_subset import APISubset
 
 class Users(APISubset):
 	
+	"""
 	def authenticate(self, username, password):
 		doc, cookies  = self.api.post(
 			{
@@ -38,20 +39,21 @@ class Users(APISubset):
 				raise Exception("Unexpected login result: %s" % doc['login']['result'])
 		except KeyError as e:
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
-		
+	"""
 	
-	def info(self):
-		self.api.post(
+	def info(self, access_token):
+		doc = self.api.post(
 			{
 				'action': 'query', 
 				'meta': 'userinfo'
-			}
+			},
+			access_token=access_token
 		)
 		
 		try:
 			return (
-				doc['query']['user_info']['id'],
-				doc['query']['user_info']['name']
+				doc['query']['userinfo']['id'],
+				doc['query']['userinfo']['name']
 			)
 		except KeyError as e:
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
