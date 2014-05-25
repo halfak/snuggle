@@ -9,8 +9,8 @@ author:
 root_directory: /sites/snuggle.localhost.org
 
 oauth:
-  consumer_key: 9d96eb05ffbcb38c3f7b256da3c1c1c9
-  consumer_secret: 766629a2a9e3553a5551db70320565e96270732e
+  consumer_key: d2e7e2078d3347dcbcfb1e1010e64451
+  consumer_secret: 55b5cfe2e7069bbb73f5bee2dc0cd02e48cde020
 
 # The configuration for the web server.  The web server provides the user 
 # interface and API for Snuggle.

@@ -81,6 +81,7 @@ class Changes(Synchronizer):
 				start = time.time()
 				
 				# Get changes
+				logger.info("Requesting a new set of changes from %s." % self.changes)
 				changes = self.changes.read(self.changes_per_request)
 				
 				# Apply changes

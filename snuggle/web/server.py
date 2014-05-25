@@ -2,6 +2,7 @@ import argparse
 from beaker.middleware import SessionMiddleware
 import bottle, logging, sys, time, random, yaml, traceback
 
+
 from snuggle import configuration, mediawiki
 from snuggle.data import types
 from snuggle.web.util import inspect_routes

@@ -63,6 +63,17 @@ class API:
 		
 		return doc
 	
+	def __repr__(self):
+		return "%s(%s, %s, headers=%s, comment_suffix=%s)" % (
+			self.__class__.__name__, 
+			repr(self.uri),
+			repr(self.consumer_token),
+			repr(self.headers),
+			repr(self.comment_suffix)
+		)
+	
+	def __str__(self): return repr(self)
+	
 	@staticmethod
 	def from_config(config):
 		uri = "%s://%s%s%s" % (

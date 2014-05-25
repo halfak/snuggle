@@ -69,11 +69,13 @@ def run(config, debug):
 		level=logging.DEBUG if debug else logging.INFO,
 		stream=LOGGING_STREAM,
 		datefmt='%H:%M:%S',
-		format='%(asctime)s %(name)-8s %(message)s'
+		format='%(asctime)s [%(levelname)s] %(name)-8s %(message)s'
 	)
 	requests_log = logging.getLogger("requests")
 	requests_log.setLevel(logging.WARNING)
 	logger = logging.Logger("snuggle.sync.server")
+	requests_log = logging.getLogger("urllib3")
+	requests_log.setLevel(logging.WARNING)
 	
 	
 	logger.info("Configuring system...")

@@ -19,14 +19,14 @@ class MWAPI:
 	
 	def read(self, limit=None, types=None):
 		rccontinue, change_docs = self.api.recent_changes.read(
-			self.last_rcid, 
-			self.last_timestamp, 
-			self.rccontinue,
+			last_id=self.last_rcid, 
+			last_timestamp=self.last_timestamp, 
+			rccontinue=self.rccontinue,
 			limit=limit,
 			types=types
 		)
 		
-		rev_ids = [doc['revid'] for doc in change_docs if doc['revid'] != 0]
+		rev_ids = [doc['revid'] for doc in change_docs if 'revid' in doc and doc['revid'] != 0]
 		rev_docs = dict(
 			(doc['revid'], doc) 
 			for doc in self.api.revisions.search(ids=rev_ids)
@@ -73,6 +73,11 @@ class MWAPI:
 			if 'sha1' in doc: history[doc['sha1']] = int(doc['revid'])
 		
 		return history
+	
+	def __repr__(self):
+		return "%s(%s)" % (self.__class__.__name__, repr(self.api))
+	
+	def __str__(self): return repr(self)
 	
 	@staticmethod
 	def from_config(config):

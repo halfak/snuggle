@@ -33,7 +33,7 @@ requests:
 # String to append at the end of comments for all page edit actions performed.
 # This is useful for directing other Wikipedians to Snuggle and for tracking 
 # the use of Snuggle across the history of edits in the wiki.
-comment_suffix: " ([[WP:Snuggle|Sn]])"
+comment_suffix: " ([[:en:WP:Snuggle|Sn]])"
 
 
 # Thread traces are how socially relevant actions are recorded.  Historically,
