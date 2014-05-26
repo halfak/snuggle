@@ -48,7 +48,7 @@ class MWAPI:
 						NewUser.from_doc(doc)
 					)
 				
-			elif doc['revid'] != 0:
+			elif 'revid' in doc and doc['revid'] != 0:
 				if doc['revid'] in rev_docs:
 					yield types.Change(
 						doc['rcid'],
@@ -97,7 +97,7 @@ class ChangeRevision(types.ChangeRevision):
 			string_to_timestamp(doc['timestamp']),
 			doc.get('comment', u""),
 			ByteDiff.from_doc(doc),
-			doc['sha1']
+			doc.get('sha1', "")
 		)
 	
 
