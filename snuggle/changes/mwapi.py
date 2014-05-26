@@ -105,7 +105,7 @@ class NewUser(types.NewUser):
 	
 	@staticmethod
 	def from_doc(doc): return NewUser(
-		doc['userid'], 
+		doc.get('userid', 0), 
 		doc['user'], 
 		string_to_timestamp(doc['timestamp'])
 	)
@@ -113,7 +113,7 @@ class NewUser(types.NewUser):
 class User(types.User):
 	
 	@staticmethod
-	def from_doc(doc): return User(doc['userid'], doc['user'])
+	def from_doc(doc): return User(doc.get('userid', 0), doc['user'])
 
 class Page(types.Page):
 	
