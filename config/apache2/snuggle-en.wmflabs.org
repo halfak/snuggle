@@ -1,0 +1,35 @@
+<Directory "/sites/snuggle-en.wmflabs.org">
+	Order allow,deny
+	Allow from all
+	Options FollowSymLinks MultiViews
+	# New directive needed in Apache 2.4.3: 
+	# Require all granted
+</Directory>
+<VirtualHost *:80>
+	ServerAdmin aaron.halfaker@gmail.com
+	ServerName snuggle-en.wmflabs.org
+	
+	DocumentRoot /sites/snuggle-en.wmflabs.org
+	
+	# WSGI Settings
+	WSGIScriptAlias / /sites/snuggle-en.wmflabs.org/snuggle-en.wmflabs.wsgi
+		
+	WSGIDaemonProcess snuggle-en.wmflabs.org \
+		python-path=/sites/snuggle-en.wmflabs.org/ \
+		python-eggs=/var/cache/apache2/python-eggs/snuggle
+	
+	WSGIApplicationGroup %{GLOBAL}
+	
+	AllowEncodedSlashes On
+	
+	# SSL Stuff
+	#SSLEngine On
+	#SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+	#SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+	#<Location />
+	#		SSLRequireSSL On
+	#		SSLVerifyClient optional
+	#		SSLVerifyDepth 1
+	#		SSLOptions +StdEnvVars +StrictRequire
+	#</Location>
+</VirtualHost>
