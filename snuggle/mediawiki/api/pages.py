@@ -29,7 +29,7 @@ class Pages(APISubset):
 		return page['edittoken']
 	
 	def append(self, page_name, markup, access_token=None, comment=""):
-		edit_token = self._get_edit_token(page_name, cookies)
+		edit_token = self._get_edit_token(page_name, access_token)
 		
 		doc = self.api.post(
 			{
@@ -51,7 +51,7 @@ class Pages(APISubset):
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 	
 	def replace(self, page_name, markup, access_token=None, comment=""):
-		edit_token = self._get_edit_token(page_name, cookies)
+		edit_token = self._get_edit_token(page_name, access_token)
 		
 		doc = self.api.post(
 			{
@@ -158,7 +158,7 @@ class Pages(APISubset):
 		except IndexError as e:
 			raise errors.MWAPIError('format', "API response has unexpected structure: %s" % doc)
 		
-		logger.debug("Watching %s with token %s and cookies %s" % (page_name, page['watchtoken'], cookies))
+		logger.debug("Watching %s with token %s and access_token %s" % (page_name, page['watchtoken'], access_token))
 		
 		doc = self.api.post(
 			{
