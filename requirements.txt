@@ -1,0 +1,7 @@
+argparse
+pymongo
+pyyaml
+requests
+requests-oauthlib
+scipy
+oursql

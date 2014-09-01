@@ -1,14 +1,19 @@
-import requests
-from requests_oauthlib import OAuth1
-from mwoauth import ConsumerToken
+import os
 
-from snuggle.errors import MWAPIError, AuthErrorPass, AuthErrorName, ConnectionError
+import requests
+import yaml
+from mwoauth import ConsumerToken
+from requests_oauthlib import OAuth1
+
 from snuggle import configuration
+from snuggle.errors import (AuthErrorName, AuthErrorPass, ConnectionError,
+                            MWAPIError)
 
 from .pages import Pages
 from .recent_changes import RecentChanges
 from .revisions import Revisions
 from .users import Users
+
 
 class API:
 	
@@ -65,7 +70,7 @@ class API:
 	
 	def __repr__(self):
 		return "%s(%s, %s, headers=%s, comment_suffix=%s)" % (
-			self.__class__.__name__, 
+			self.__class__.__name__,
 			repr(self.uri),
 			repr(self.consumer_token),
 			repr(self.headers),
@@ -83,14 +88,19 @@ class API:
 			config.mediawiki['file']['api']
 		)
 		
+		oauth_config = yaml.load(open(
+			os.path.join(
+				configuration.snuggle['root_directory'],
+				configuration.snuggle['oauth_config']
+			)
+		))
+		
 		consumer_token = ConsumerToken(
-			configuration.snuggle['oauth']['consumer_key'],
-			configuration.snuggle['oauth']['consumer_secret']
+			oauth_config['consumer_key'],
+			oauth_config['consumer_secret']
 		)
 		
 		headers = config.mediawiki['requests'].get('headers', {})
 		comment_suffix = config.mediawiki['comment_suffix']
 		
 		return API(uri, consumer_token, headers=headers, comment_suffix=comment_suffix)
-
-

@@ -1,5 +1,5 @@
 last_updated: "July 12th, 2013"
-author: 
+author:
   name: Aaron Halfaker
   email: aaron.halfaker@gmail.com
   url: http://halfaker.info
@@ -8,11 +8,9 @@ author:
 # TODO: Assume the CWD is root?
 root_directory: /sites/snuggle.localhost.org
 
-oauth:
-  consumer_key: d2e7e2078d3347dcbcfb1e1010e64451
-  consumer_secret: 55b5cfe2e7069bbb73f5bee2dc0cd02e48cde020
+oauth_config: config/snuggle.localhost.oauth.yaml
 
-# The configuration for the web server.  The web server provides the user 
+# The configuration for the web server.  The web server provides the user
 # interface and API for Snuggle.
 web_server:
   host: 0.0.0.0
@@ -49,11 +47,11 @@ model:
 
 # The Changes Synchronizer
 #
-# This synchronizer handles the lion's share of the work of tracking and 
-# populating new user data.  It reads from MediaWiki's recentchanges at a 
+# This synchronizer handles the lion's share of the work of tracking and
+# populating new user data.  It reads from MediaWiki's recentchanges at a
 # pre-defined interval to gather new users, their edits, changes to their talk
-# pages and reverts to their edits.  It also builds a work queue for the 
-# scores synchronizer. 
+# pages and reverts to their edits.  It also builds a work queue for the
+# scores synchronizer.
 changes_synchronizer:
   module: snuggle.sync.synchronizers.Changes
   # Main loop delay in seconds.  How often to attempt an update?
@@ -77,14 +75,14 @@ scores_synchronizer:
   # Only request up to this many scores per loop
   scores_per_request: 100
   # Stop requesting a score if it has been requested at least 'min_attempts'
-  # times and it's revision ID is at least 'max_id_distance' lower than a score 
+  # times and it's revision ID is at least 'max_id_distance' lower than a score
   # that was successfully recorded.
   min_attempts: 5
   max_attempts: 20
   max_id_distance: 1000
 
 # Specifies how changes will be acquired.  The two available options are to read
-# directly from the MySQL database behind MediaWiki (snuggle.changes.MySQL) or 
+# directly from the MySQL database behind MediaWiki (snuggle.changes.MySQL) or
 # to read from it's API (snuggle.changes.MWAPI).
 changes:
   module: snuggle.changes.MWAPI
@@ -97,8 +95,8 @@ changes:
 #  # Specifies where to read the password from
 #  read_default_file: /home/halfak/.my.cnf
 
-# Defines how revision scores will be acquired.  Currently, STiki is the only 
-# option since other anti-vandal bots don't provide a set of scores on a 
+# Defines how revision scores will be acquired.  Currently, STiki is the only
+# option since other anti-vandal bots don't provide a set of scores on a
 # per-request basis.
 scores:
   module: snuggle.scores.STiki
@@ -106,5 +104,3 @@ scores:
     uri: http://armstrong.cis.upenn.edu/stiki_api.php
     headers:
       User-Agent: Snuggle synchronizer (WP:Snuggle)
-
-

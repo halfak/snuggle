@@ -1,14 +1,14 @@
 <Directory "/sites/snuggle.localhost.org">
 	Order allow,deny
 	Allow from all
-	# New directive needed in Apache 2.4.3: 
+	# New directive needed in Apache 2.4.3:
 	Require all granted
 </Directory>
 <VirtualHost snuggle.localhost.org:80 snuggle-en.wmflabs.org:80>
 	ServerAdmin aaron.halfaker@gmail.com
 	ServerName snuggle.localhost.org
 	
-	Redirect permanent / https://snuggle-en.wmflabs.org
+	Redirect permanent / https://snuggle.localhost.org
 
 </VirtualHost>
 <VirtualHost snuggle.localhost.org:443 snuggle-en.wmflabs.org:443>
