@@ -47,7 +47,7 @@ class API:
 			#print(params)
 			r = requests.post(
 				self.uri,
-				params=params,
+				data=params,
 				auth=auth
 			)
 		except requests.ConnectionError as e:
