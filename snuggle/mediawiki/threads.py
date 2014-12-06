@@ -16,7 +16,7 @@ class TraceExtractor(object):
 		
 	def extract(self, markup):
 		
-		matches = list(self.expression.finditer(markup))
+		matches = list(self.expression.finditer(markup, re.I))
 		if len(matches) == 0:
 			return None
 		else:
