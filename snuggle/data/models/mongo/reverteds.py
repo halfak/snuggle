@@ -17,7 +17,7 @@ class Reverteds:
 		try:
 			self.mongo.db.reverteds.insert(
 				util.mongoify(reverted.serialize()),
-				safe=True
+				w=1
 			)
 			return 1
 		except DuplicateKeyError:
@@ -29,14 +29,14 @@ class Reverteds:
 			{'_id': reverted.revision.id}, 
 			util.mongoify(reverted.serialize()), 
 			upsert=True, 
-			safe=True
+			w=1
 		)
 		return doc['n']
 	
 	def remove(self, reverted):
 		doc = self.mongo.db.reverteds.remove(
 			{'_id': reverted.id},
-			safe=True
+			w=1
 		)
 		return doc['n'] > 0
 	

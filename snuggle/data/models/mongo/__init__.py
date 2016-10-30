@@ -39,7 +39,7 @@ class Mongo:
 		)
 		
 		return Mongo(
-			pymongo.Connection(
+			pymongo.MongoClient(
 				host=config.snuggle['model']['host'],
 				port=config.snuggle['model']['port']
 			)[config.snuggle['model']['database']],

@@ -12,7 +12,7 @@ class Changes:
 			{'_id': change.id},
 			util.mongoify(change.serialize()),
 			upsert=True,
-			safe=True
+			w=1
 		)
 	
 	def last(self):

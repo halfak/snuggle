@@ -12,7 +12,7 @@ class Scores:
 			{'_id': score.id},
 			util.mongoify(score.serialize()), 
 			upsert=True,
-			safe=True
+			w=1
 		)
 	
 	def get(self, limit=100):
@@ -26,7 +26,7 @@ class Scores:
 	def complete(self, score):
 		doc = self.mongo.db.scores.remove(
 			score.id,
-			safe=True
+			w=1
 		)
 		return doc['n']
 	
@@ -34,7 +34,7 @@ class Scores:
 		doc = self.mongo.db.scores.update(
 			{'_id': score.id}, 
 			util.mongoify(score.serialize()), 
-			upsert=True, safe=True
+			upsert=True, w=1
 		)
 		doc['n']
 	
@@ -51,6 +51,6 @@ class Scores:
 					}
 				]
 			},
-			safe=True
+			w=1
 		)
 		return doc['n']

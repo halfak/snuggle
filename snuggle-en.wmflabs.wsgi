@@ -1,9 +1,9 @@
 import sys, os, random
 
-sys.path.append(os.path.dirname(__file__))
+sys.path.append(os.path.dirname(os.path.join(os.getcwd(), __file__)))
 
 # get into our directory
-os.chdir(os.path.dirname(__file__))
+os.chdir(os.path.dirname(os.path.join(os.getcwd(), __file__)))
 
 # load the server code
 from snuggle import configuration

@@ -41,12 +41,12 @@ class Users:
 			if not upsert:
 				self.mongo.db.users.insert(
 					util.mongoify(user.serialize()),
-					safe=True
+					w=1
 				)
 			else:
 				self.mongo.db.users.save(
 					util.mongoify(user.serialize()),
-					safe=True
+					w=1
 				)
 			return 1
 		except DuplicateKeyError:
@@ -125,7 +125,7 @@ class Users:
 					'activity.counts.%s' % revision.page.namespace: 1
 				}
 			},
-			safe=True
+			w=1
 		)
 	
 	def set_reverted(self, user_id, rev_id, revert):
@@ -147,7 +147,7 @@ class Users:
 				},
 				'$inc': inc
 			},
-			safe=True
+			w=1
 		)
 	
 	def get_talk(self, user_id=None, name=None, title=None):
@@ -163,7 +163,7 @@ class Users:
 		
 		doc = self.mongo.db.users.find_one(
 			spec,
-			fields={'talk': 1}
+			projection=['talk']
 		)
 		if doc != None:
 			return doc['_id'], types.Talk.deserialize(doc['talk'])
@@ -186,7 +186,7 @@ class Users:
 			{'$set': {
 				'talk': talk.serialize()
 			}},
-			safe=True
+			w=1
 		)
 	
 	def set_talk_page(self, title):
@@ -196,7 +196,7 @@ class Users:
 			{'$set': {
 				'has_talk_page': True
 			}},
-			safe=True
+			w=1
 		)
 	
 	def set_user_page(self, title):
@@ -206,7 +206,7 @@ class Users:
 			{'$set': {
 				'has_user_page': True
 			}},
-			safe=True
+			w=1
 		)
 	
 	def add_view(self, user_id):
@@ -215,7 +215,7 @@ class Users:
 			{
 				'$inc': {'views': 1},
 			},
-			safe=True
+			w=1
 		)
 	
 	def categorize(self, user_id, categorization):
@@ -226,7 +226,7 @@ class Users:
 				"$set": {'category.category': categorization.category},
 				"$push": {'category.history': categorization.serialize()}
 			},
-			safe=True,
+			w=1,
 			fields=['category'],
 			new=True
 		)

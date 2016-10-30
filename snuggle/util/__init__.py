@@ -1,8 +1,9 @@
-import importlib, re, json, yaml, calendar, time, datetime
+import importlib, re, json, yaml, calendar, time, datetime, sys
 
 from . import desirability
 
 def import_class(path):
+	sys.path.insert(0, ".")
 	modules = path.split(".")
 	
 	try:

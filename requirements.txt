@@ -1,4 +1,7 @@
 argparse
+beaker
+bottle
+mwoauth
 pymongo
 pyyaml
 requests
