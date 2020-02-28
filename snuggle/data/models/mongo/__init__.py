@@ -12,8 +12,11 @@ logger = logging.getLogger("snuggle.data.models.mongo")
 
 class Mongo:
 	
-	def __init__(self, db, thread_parser):
-		self.db            = db
+	def __init__(self, host, port, name, thread_parser):
+		self._db           = None
+		self.host          = host
+		self.port          = port
+		self.name          = name
 		self.thread_parser = thread_parser
 		
 		self.changes   = Changes(self)
@@ -21,7 +24,15 @@ class Mongo:
 		self.reverteds = Reverteds(self)
 		self.scores    = Scores(self)
 		self.users     = Users(self)
-	
+
+	@property
+	def db(self):
+		if self._db is None:
+			self._db = pymongo.MongoClient(
+                                host=self.host,
+                                port=self.port
+                        )[self.name]
+		return self._db
 	
 	def cull(self, older_than):
 		deaths = [doc['_id'] for doc in self.db.users.find({'registration': {"$lt": older_than}})]
@@ -39,10 +50,9 @@ class Mongo:
 		)
 		
 		return Mongo(
-			pymongo.MongoClient(
-				host=config.snuggle['model']['host'],
-				port=config.snuggle['model']['port']
-			)[config.snuggle['model']['database']],
-			threads.Parser.from_config(config)
+			host=config.snuggle['model']['host'],
+			port=config.snuggle['model']['port'],
+			name=config.snuggle['model']['database'],
+			thread_parser=threads.Parser.from_config(config)
 		)
 	

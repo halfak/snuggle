@@ -49,7 +49,7 @@ class Events:
 		if after != None: query['spec']['system_time'] = {'$gt': after}
 		if before != None: query['spec']['system_time'] = {'$lt': before}
 		
-		docs = self.mongo.db.events.find(**query)
+		docs = self.mongo.db.events.find(query['spec']).sort(query['sort']).limit(query['limit'])
 		
 		if deserialize:
 			return (data_types.Event.deserialize(util.demongoify(doc)) for doc in docs)
